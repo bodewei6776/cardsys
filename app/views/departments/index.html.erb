@@ -1,0 +1,29 @@
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<label align="right">
+  <%= link_to '创建部门', new_department_path %>
+  <br />
+</label>
+<br />
+<h1>部门列表</h1>
+
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:10%;">部门名称</li>
+    <li style="width:20%;">操作</li>
+  </ul>
+
+<% @departments.each do |department| %>
+    <ul>
+      <li style="width:10%;"><%=department.name%></li>
+      <li style="width:20%;"><%= link_to '修改', edit_department_path(department) %>
+        | <%= link_to '删除', department, :confirm => '确定删除?', :method => :delete %>
+        | <%= link_to '设置权限', '/departments/department_power_index?id='+department.id.to_s%>
+      </li>
+    </ul>
+<% end %>
+
+  </fieldset>
+
+
+
+

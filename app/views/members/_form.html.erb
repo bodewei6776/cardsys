@@ -1,0 +1,77 @@
+<%= form_for(@member,:html  => {:id => 'member_form'}) do |f| %>
+  <div class="item">
+    <%= error_messages_for :member %>
+    <fieldset class="hidden_330h">
+      <legend>属性信息</legend>
+      <p>
+        <label for="name"><em>*</em>会员名称：</label>
+        <input type="hidden" name="member[is_member]" value=1 />
+        <input type="hidden" name="member_id" value="" />
+        <input type="text" name="member[name]" maxlength="24" value="<%= @member.name %>" onblur="return;" id="name" class="inputtext" />
+        <a class="blank_element_68"></a>
+        <label for="created_at"><em>*</em>注册日期：</label>
+        <%= DateUtil::timeshort(Time.now) %>
+        <input type="hidden" name="created_at" value="<%= DateUtil::timelong(Time.now) %>" />
+      </p>
+      <p>
+        <label for="nickname"><a class="blank_element_6"></a>会员昵称：</label>
+        <input type="text" name="member[nickname]" maxlength="12" value="<%= @member.nickname %>" onblur="return;" id="nickname" class="inputtext" />
+        <a class="blank_element_68"></a>
+        <label for="gender"><em>*</em>会员性别：</label>
+        <%= radio_button_tag("member[gender]",CommonResource::Gender_Man, true)%>男
+        <%= radio_button_tag("member[gender]",CommonResource::Gender_Woman, @member.gender == CommonResource::Gender_Woman)%>女
+      </p>
+      <p>
+        <label for="mobile"><em>*</em>会员手机：</label>
+        <input type="text" name="member[mobile]" maxlength="20" value="<%= @member.mobile %>" onblur="return;" id="mobile" class="inputtext" />
+        <a class="blank_element_68"></a>
+        <label for="mentor"><a class="blank_element_6"></a>会员生日：</label>
+        <input type="text" name="member[birthday]" maxlength="20" value="<%= ftime_date(@member.birthday) %>" onblur="return;" id="birthday" class="inputtext" />
+      </p>
+      <p>
+        <label for="email"><a class="blank_element_6"></a>邮<a class="blank_element_20"></a>箱：</label>
+        <input type="text" name="member[email]" maxlength="30" value="<%= @member.email %>" onblur="return;" id="email" class="inputtext" />
+        <a class="blank_element_68"></a>
+        <label for="job"><a class="blank_element_6"></a>工<a class="blank_element_20"></a>作：</label>
+        <input type="text" name="member[job]" value="<%= @member.job %>" onblur="return;" id="job" class="inputtext" />
+      </p>
+
+      <p><label for="cert_type"><em>&nbsp;</em>证件类型：</label>
+        <select name="member[cert_type]" id="cert_type" class="select">
+          <%= generate_cert_type_options(@member)  %>
+        </select>
+        <a class="blank_element_120"></a>
+        <label for="cert_num"><em>&nbsp;</em>证件号码：</label>
+        <input type="text" name="member[cert_num]" maxlength="20" value="<%= @member.cert_num %>" onblur="return;" id="cert_num" class="inputtext" />
+      </p>
+
+      <p>
+        <label for="address"><a class="blank_element_6"></a>联系地址：</label>
+        <input type="text" name="member[address]" maxlength="20" value="<%= @member.address %>" onblur="return;" id="address" class="inputtext" />
+        <a class="blank_element_68"></a>
+        <label for="mentor"><a class="blank_element_6"></a>介<a class="blank_element_3"></a>绍<a class="blank_element_3"></a>人：</label>
+        <input type="text" name="member[mentor]" maxlength="20" value="<%= @member.mentor %>" onblur="return;" id="mentor" class="inputtext" />
+      </p>
+      <p>        
+        <label for="description"><a class="blank_element_6"></a>备<a class="blank_element_20"></a>注：</label>
+        <textarea name="member[description]" cols="47" rows="3" id="description"><%= @member.description %></textarea>
+      </p></fieldset>
+  </div>
+
+  <div class="btn t_center">
+    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>
+    <% if !@member.id.blank? %>
+      <%= link_to '查看', @member %>
+    <%  end %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+   $(function() {
+        $("#birthday").datepicker({dateFormat: 'yy-mm-dd'});
+    });
+  function fsubmit(){
+    var form = $("form[0]");
+    form.submit();
+  }
+</script>

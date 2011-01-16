@@ -1,0 +1,50 @@
+<h1>会员查询</h1>
+<fieldset class="hidden">
+  <form method="post" action="/members/search" class="form-profile" id="search_form">
+    <label for="name">会员名：</label>
+    <input type="text" name="name" maxlength="30" tabindex="1" value="<%=params[:name] %>" class="inputtext" autocomplete="/members/autocomplete_name"/>
+    <label for="card_id">会员卡号：</label>
+    <input type="text" name="card_serial_num" tabindex="1" value="<%=@serial_num%>" class="inputtext" autocomplete="/members/autocomplete_card_serial_num" />
+    <label for="card_id">注册日期：</label>
+    <input type="text" name="search_date" value="<%=params[:search_date]%>" onblur="return;" id="search_date" class="inputtext" />
+    <input type="submit" name="search" class="inputsubmit" value="查询"  tabindex="10" />
+  </form>
+</fieldset>
+<br>
+<label align="right">
+  <a href="/members/new">新增会员</a>
+  <br></br>
+</label>
+<br></br>
+<h1>会员列表</h1>
+
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:15%;">会员名称</li>
+    <li>性别</li>
+    <li style="width:20%;">会员卡号</li>
+    <li style="width:15%;">移动电话</li>
+    <li style="width:15%;">注册日期</li>
+    <li>操作</li>
+  </ul>
+
+  <% for member in @members %>
+    <ul>
+      <li style="width:15%;"><%= link_to member.name, member %></li>
+      <li><%= gender_desc(member.gender) %></li>
+      <li style="width:20%;text-align:left;"><%= member.card_serial_nums %></li>
+      <li style="width:15%;"><%= member.mobile %></li>
+      <li style="width:15%;"><%= member.created_at.nil? ? "" : DateUtil::timeshort(member.created_at) %></li>
+      <li style="width:25%;"><%= link_to '查看', member %> | <%= link_to '修改', edit_member_path(member)%> | <%= link_to '删除', member, :confirm => '确定删除吗?', :method => :delete %>
+        | <%= link_to '会员卡管理',{:controller => :members, :action => :member_card_index, :member_id => member.id} %>
+        | <%= link_to '授权人管理',{:controller => :members, :action => :granter_index, :member_id => member.id}%>
+      </li>
+    </ul>
+  <% end %>
+</fieldset>
+
+<script type="text/javascript">
+  $(function() {
+    $("#search_date").datepicker({dateFormat: 'yy-mm-dd'});
+  });
+</script>

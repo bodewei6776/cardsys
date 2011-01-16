@@ -1,0 +1,87 @@
+<h1>商品消费列表</h1>
+<% form_tag(batch_update_order_order_items_path(order),{:class => 'batch-update-item'}) do %>
+  <fieldset class="table">
+    <ul class="title_ul">
+      <li style="width:10%;">商品类别</li>
+      <li style="width:10%;">商品名称</li>
+      <li style="width:10%;">商品价格</li>
+      <li style="width:15%;">数量</li>
+      <li style="width:15%;">总额</li>
+      <li style="width:15%;">操作</li>
+    </ul>
+    <% unless (coach_items = order.coach_items).blank?  -%>
+      <% coach_items.each do |coach_item|  -%>
+        <% coach = coach_item.related_entry %>
+        <ul>
+          <li style="width:10%;">教练</li>
+          <li style="width:10%;"><%= coach.name%></li>
+          <li style="width:10%;">
+            <input type='hidden' name='order_item[][id]' value='<%= coach_item.id%>' />
+            <input type='text'   name='order_item[][price]' value='<%=  coach_item.price %>' />
+          </li>
+          <li style="width:15%;">
+            <input type='text' name='order_item[][quantity]' value='<%= coach_item.quantity %>'/>
+          </li>
+          <li style="width:15%;"><%= coach_item.amount %></li>
+          <li style="width:15%;">
+            <%= link_to "删除", order_order_item_path(order,coach_item),:class => 'destory_order_item' %>
+          </li>
+        </ul>
+      <%end  -%>
+    <%end -%>
+    <% for good_item in good_items %>
+      <% next if (good = good_item.product).blank?  %>
+      <ul>
+        <li style="width:10%;"><%= generate_good_type_str(good.good_type) %></li>
+        <li style="width:10%;"><%= good.name%></li>
+        <li style="width:10%;"><%= good.price %></li>
+        <li style="width:15%;">
+          <input type='hidden' name='order_item[][id]' value='<%= good_item.id%>' />
+          <input type='text' name='order_item[][quantity]' value='<%= good_item.quantity %>' />
+        </li>
+        <li style="width:15%;"><%= good_item.amount %></li>
+        <li style="width:15%;">
+          <%= link_to "删除", order_order_item_path(order,good_item),:class => 'destory_order_item' %>
+        </li>
+      </ul>
+    <% end %>
+    <ul class='amount-info'>
+      <li style="width:10%;">累计</li>
+      <li style="width:10%;"></li>
+      <li style="width:10%;"></li>
+      <li style="width:15%;"></li>
+      <li style="width:15%;"><%= order.product_amount %></li>
+      <li style="width:15%;"></li>
+    </ul>
+  </fieldset>
+  <div class="btn t_center">
+    <input type='button' value="修改消费" class='update-order_items-button'/>
+    <img src='/images/loading.gif' id='loading-img' style='display:none' />
+  </div>
+<% end -%>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){
+    $('.update-order_items-button').live('click',function(){
+      var load_img = $('#loading-img');
+      load_img.show();
+      var form = $('.batch-update-item');
+      $.post(form.attr('action'),form.serialize(),function(reply){
+        $('.note-tip-msg').remove();
+        load_img.after("<span class='note-tip-msg' style='color:red'>"+reply+"</span>").hide();
+        location.reload();
+      });
+    });
+		
+    $('.destory_order_item').live('click',function(){
+      if(confirm('确认要删除么？')){
+        var link = $(this);
+        $.post(link.attr('href'),{_method:'delete',book_record_id:'<%= params[:id] %>'},function(reply){
+          link.parents('ul').remove();
+          $('.amount-info').after(reply).remove();
+        });
+      }
+      return false;
+    });
+    $(".one-good-list").colorbox({width:"80%", height:"80%", iframe:false});
+  });
+</script>

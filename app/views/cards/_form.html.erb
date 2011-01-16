@@ -1,0 +1,104 @@
+<%if @card.id.blank?%>
+  <% path = "/cards/create"%>
+<%else%>
+  <% path = "/cards/#{@card.id}"%>
+<%end%>
+
+<div class="item">
+  <%= error_messages_for :card %>
+  <%= form_for :card, :url => path,:html => {:class => "form-profile", :method => @card.id.blank? ? :post : :put} do |f|%>
+  <div class="item">
+    <fieldset class="hidden">
+      <legend>属性信息</legend>
+      <p>
+        <label for="name"><em>*</em>卡<a class="blank_element_10"></a>&nbsp;名：</label>
+        <input type="text" name="card[name]" maxlength="12" value="<%= @card.name %>" onblur="return;" id="name" class="inputtext" />
+        <a class="blank_element_68"></a>
+        <label for="homeProvince"><em>*</em>基础类型：</label>
+        <select name="card[card_type]" onchange="type_change()" id="card_type" class="select">
+          <%= generate_card_type_options(@card)%>
+        </select>
+      </p>
+      <p>
+        <label for="name"><em>*</em>卡<a class="blank_element_3"></a>前<a class="blank_element_3"></a>缀：</label>
+        <input type="text" name="card[card_prefix]" value="<%= @card.card_prefix %>" maxlength="4"  value="" class="inputtext" />
+      <a class="blank_element_68"></a>
+        <label for="name"><em>*</em>有<a class="blank_element_3"></a>效<a class="blank_element_3"></a>期：</label>
+        <input type="text" name="card[expired]" value="<%= @card.expired %>" maxlength="3" size="3" tabindex="1" value="12" id="expired" class="inputtext" />
+        <span class="hint gray">个月</span>
+      </p>
+      <p>
+        <label for="name"><a class="blank_element_5"></a>&nbsp;说<a class="blank_element_10"></a>&nbsp;明：</label>
+        <textarea name="card[description]" cols="54" rows="3" ><%= @card.description %></textarea>
+      </p>
+      <p></p>
+      <p></p>
+      <p id="consume_type">
+        <label for="consume_type"><em>*</em>可消费类型：</label>
+        <label for="consume_type1" class="labelRadio">
+        <input type="radio" name="card[consume_type]" value="1" id="consume_type1"/>仅限场地消费</label>
+        <label for="consume_type2" class="labelRadio">
+        <input type="radio" name="card[consume_type]" value="2" checked="checked" id="consume_type2"/>全部商品库</label>
+      </p>
+      <!--
+      <p>
+        <label for="amount"><a class="blank_element_5"></a>授权人数量：</label>
+        <input type="text" name="card[shared_amount]" size="2" maxlength="2" tabindex="1" value="<%#= @card.shared_amount %>" id="name" class="inputtext" />人
+      </p>-->
+    </fieldset>
+
+    <fieldset class="table" >
+      <legend>时段折扣价</legend>
+      <ul class="title_ul">
+        <li style="text-align:center;width:150px;">时段</li>
+        <li></li>
+         <li style="text-align:center;width:100px;">标准收费（/小时）</li>
+         <li></li>
+         <li>可用</li>
+         <li></li>
+         <li>折扣收费</li>
+         <li></li>
+         <li>说明</li>
+      </ul>
+      <%for period_price in @period_prices%>
+      <% available_period = @card.generate_card_period_price(period_price)%>
+        <ul>
+          <li style="text-align:center;width:150px;"><%=period_price.name%>：<%=period_price.start_time%>:00-<%=period_price.end_time%>:00</li>
+          <li></li>
+          <li style="text-align:center;width:100px;"><%=period_price.price%> </li>
+          <li></li>
+          <li><input type="checkbox" name="time_available_<%=period_price.id%>"  value="1" <%if available_period %> checked <%end%> class="inputtext" /></li>
+          <li></li>
+          <li><input type="text" name="time_discount_<%=period_price.id%>" maxlength="4" size="4"  value="<%= @card.generate_card_period_price(period_price).nil? ? period_price.price : @card.generate_card_period_price(period_price).card_price%>" class="inputtext" /></li>
+          <li></li>
+          <li><%=period_price.description%></li>
+        </ul>
+      <%end%>
+    </fieldset>
+  </div>
+    <div id="rule4count" style="display:none">
+      <fieldset class="table" >
+        <h1><legend>计次规则</legend></h1>
+        <p style="text-align:left;">
+          <label class="labelRadio">
+            初始次数<input type="text" name="card[counts]" maxlength="4" size="4"  value="" class="inputtext" />
+          </label>
+        </p>
+      </fieldset>
+    </div>
+
+  <div class="btn t_center">
+      <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
+      <%= link_to '返回', cards_path %>
+  </div>
+  <%end%>
+
+</div>
+
+<script language="javascript">
+  function fsubmit()
+  {
+    var form = $("form[0]");
+    form.submit();
+  }
+</script>

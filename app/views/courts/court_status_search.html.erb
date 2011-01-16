@@ -1,0 +1,74 @@
+<br />
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<h1>场地预定信息查询</h1>
+<fieldset class="hidden">
+  <form method="post" action="/courts/court_status_search" class="form-profile" id="search_form">
+    <label for="name">场地名：</label>
+    <input type="text" name="name" maxlength="30" tabindex="1" value="<%=params[:name] %>" class="inputtext"/>
+    <label for="card_id">预定日期:</label>
+    <input type="text" name="search_date" value="<%=params[:search_date]%>" onblur="return;" id="search_date" class="inputtext" />
+    <label for="name">预定人：</label>
+    <input type="text" name="member_name" maxlength="30" tabindex="1" value="<%=params[:member_name] %>" class="inputtext" autocomplete="/members/autocomplete_name"/>
+    <label for="name">时段：</label>
+        <select name="start_hour" id="start_hour" class="select" onchange="check_time();">
+          <%= generate_time_options(0) %>
+        </select>-
+        <select name="end_hour" id="end_hour" class="select" onchange="check_time();">
+          <%= generate_time_options(24) %>
+        </select>
+    <input type="submit" name="search" class="inputsubmit" value="查询"  tabindex="10" />
+  </form>
+</fieldset>
+<br />
+
+<%if @order_items.size > 0 %>
+<h1>场地预定列表</h1>
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:15%;">场地</li>
+    <li>会员姓名</li>
+    <li style="width:10%;">当前状态</li>
+    <li style="width:15%;">日期</li>
+    <li style="width:10%;">时段</li>
+    <li style="width:10%;">详情</li>
+  </ul>
+
+  <% for order_item in @order_items %>
+    <ul>
+      <li style="width:15%;"><%= order_item.product.court.name %></li>
+      <li><%= order_item.member_name %></li>
+      <li style="width:10%;"><%= order_item.status_str %></li>
+      <li style="width:15%;"><%= DateUtil.timeshort(order_item.product.record_date) %></li>
+      <li style="width:10%;"><%= order_item.product.start_hour %> - <%= order_item.product.end_hour %></li>
+      <li style="width:10%;"></li>
+    </ul>
+  <% end %>
+</fieldset>
+
+  <%= will_paginate @order_items %>
+<%end%>
+
+<div class="btn t_center">
+</div>
+<script type="text/javascript">
+  $(function() {
+    $("#search_date").datepicker({dateFormat: 'yy-mm-dd'});
+  });
+
+  function fsubmit(){
+    var form = $("form[0]");
+    form.submit();
+  }
+  $(".record_detail").colorbox({width:"80%", height:"80%", iframe:false});
+  
+  function check_time(){
+    var start_time = $("#start_hour")[0].value;
+    var end_time = $("#end_hour")[0].value;
+   if(start_time - end_time > 0){
+      alert("开始时间应该小于结束时间！");
+      return false;
+   }else{
+     return true;
+  }
+  }
+</script>

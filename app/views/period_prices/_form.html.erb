@@ -1,0 +1,64 @@
+<div class="item">
+  <%= error_messages_for :period_price %>  
+  <%= form_for(@period_price) do |f| %>
+    <fieldset class="hidden">
+      <legend>属性信息</legend>
+      <p>
+        <label for="name"><em>*</em>时段名称：</label>
+        <input type="text" name="period_price[name]" maxlength="12" value="<%= @period_price.name %>" onblur="return;" id="name" class="inputtext" />
+        <a class="blank_element_20"></a>
+        <label for="homeProvince"><em>*</em>时段类型：</label>
+        <select name="period_price[period_type]" id="type" class="select" <%if(!@period_price.id.blank?)%> disabled="true" <%end%>>
+          <%= generate_period_price_type_options(@period_price)  %>
+        </select>
+      </p>
+      <p>
+        <label for="name"><em>*</em>开始时间：</label>
+        <select name="period_price[start_time]" id="start_time" class="select" onchange="check_time();">
+          <%= generate_time_options(@period_price.start_time) %>
+        </select>
+       <a class="blank_element_20"></a>
+        <label for="name"><em>*</em>结束时间：</label>
+        <select name="period_price[end_time]" id="end_time" class="select" onchange="check_time();">
+          <%= generate_time_options(@period_price.end_time) %>
+        </select>
+      </p>
+      <p>
+        <label for="name"><em>*</em>价<a class="blank_element_20" ></a>格：</label>
+        <input type="text" name="period_price[price]" value="<%= @period_price.price %>" maxlength="10" size="3" tabindex="1" value="" onblur="return;" id="name" class="inputtext" />
+      </p>
+      <p>
+        <label for="name"><a class="blank_element_5" ></a>说<a class="blank_element_10"></a>明：</label>
+        <textarea name="period_price[description]" cols="47" rows="3" value="<%= @period_price.description %>"><%= @period_price.description %></textarea>
+      </p>
+      <p></p>
+
+    </fieldset>
+
+    <div class="btn t_center">
+      <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
+      <%= link_to '返回', period_prices_path %>
+    </div>
+
+  <%end%>
+
+</div>
+<script type="text/javascript">
+  function fsubmit(){
+    if(check_time()){
+      var form = $("form[0]");
+      form.submit();
+    }
+  }
+
+  function check_time(){
+    var start_time = $("#start_time")[0].value;
+    var end_time = $("#end_time")[0].value;
+   if(start_time - end_time > 0){
+      alert("开始时间应该小于结束时间！");
+      return false;
+   }else{
+     return true;
+  }
+  }
+</script>

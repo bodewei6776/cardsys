@@ -1,0 +1,34 @@
+<h1>会员查询</h1>
+<fieldset class="hidden">
+  <form method="post" action="/members/search" class="form-profile">
+    <label for="name">会员名：</label>
+    <input type="text" name="name" maxlength="30" tabindex="1" value=""  class="inputtext" />
+    <label for="card_id">会员卡号</label>
+    <input type="text" name="card_serial_num" tabindex="1" value="" class="inputtext"/>
+    <input type="submit" name="search" class="inputsubmit" value="查询"  tabindex="10" />
+  </form>
+</fieldset>
+<br>
+<h1>会员列表</h1>
+
+<fieldset class="table">
+  <ul>
+    <li>会员名称</li>
+    <li>性别</li>
+    <li>会员卡号</li>
+    <li>移动电话</li>
+    <li>登记日期</li>
+    <li>删除</li>
+  </ul>
+
+  <% for member in @members %>
+    <ul>
+      <li><%= link_to member.name, :action => 'show', :id => member %></li>
+      <li><%=h member.sex_desc %></li>
+      <li><%=h member.card_ids %></li>
+      <li><%=h member.mobile_phone %></li>
+      <li><%= member.register_date.nil? ? "" : DateUtil::timelong(member.register_date) %></li>
+      <li><%= link_to '删除', member, :confirm => 'Are you sure?', :method => :delete %></li>
+    </ul>
+  <% end %>
+</fieldset>

@@ -1,0 +1,15 @@
+<h1>场地 <%= @court.name %> 在<%= @record_date%> <%= @search_hour%>点的预定详情</h1>
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:15%;">开始时间</li>
+    <li style="width:15%;">结束时间</li>
+    <li>预定会员</li>
+  </ul>
+  <% for order_info in @order_infos %>
+    <ul id="num_ul">
+      <li style="width:15%;"><%= order_info[0] %></li>
+      <li style="width:15%;"><%= order_info[1] %></li>
+      <li><%= order_info[2] %></li>
+    </ul>
+  <%end%>
+</fieldset>

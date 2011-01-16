@@ -1,0 +1,27 @@
+<h1><%=@common_resource.description%>的选项列表</h1>
+
+<table>
+  <tr>
+    <th>名称</th>
+    <th></th>
+    <th>选项</th>
+    <th></th>
+  </tr>
+
+<% @common_resource_details.each do |common_resource_detail| %>
+  <tr>
+    <td><%= common_resource_detail.common_resource.name %></td>
+    <td><%= common_resource_detail.detail_name %></td>
+    <td><%= link_to '编辑资源选项名称', {:action => "edit_detail", :detail_id => common_resource_detail, :id => @common_resource}, :class => "edit_detail_id" %></td>
+    <td><%= link_to '删除资源选项', {:action => "delete_detail", :detail_id => common_resource_detail, :common_resource_id => @common_resource}, :confirm => '确定要删除选项?' %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to '新加资源选项', {:action => "edit_detail", :id => @common_resource}, :class => "edit_detail_id" %>
+<%= link_to '资源列表', "/common_resources" %>
+<script type="text/javascript">
+  $(".edit_detail_id").colorbox({width:"50%", height:"50%", iframe:false});
+</script>

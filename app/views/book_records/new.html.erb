@@ -1,0 +1,8 @@
+<div class="tab_content">
+  <h1 class="title">场地预定</h1>
+  <%= error_messages_for :order %>
+  <%=  form_for(:order,:url =>"/book_records/create",:html => {:method => :post,:class => "form-profile"}) do |order_form| %>
+    <%= render :partial => '/book_records/form',:f => order_form %>
+  <%end%>
+</div>
+<%= render :partial => '/book_records/share_js' %>

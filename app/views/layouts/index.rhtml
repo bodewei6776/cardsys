@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="description"/>
+    <meta name="keywords" content="keywords"/>
+    <meta name="author" content="author"/>
+    <meta name="csrf-token" content="<%= form_authenticity_token %>" />
+    <meta name="csrf-param" content="authenticity_token" />
+    <%= javascript_include_tag 'jquery-1.4.2','jquery.ui.core','jquery-ui-1.8.2.custom.min',
+      'jquery.ui.datepicker','rails'%>
+	<%= javascript_include_tag "jquery.colorbox-min.js"   %>
+    <%= javascript_include_tag "autocomplete-rails.js"   %>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#datepicker').datepicker({
+          onSelect: function(dateText, inst) {
+            $("#calendar_con").val(dateText);
+             var domain = document.domain;
+             if(domain == 'localhost'){
+				var url = 'http://localhost:3000/book_records?date=' + dateText;
+              }else{var url = 'http://'+domain+'/book_records?date=' + dateText;}
+             window.location.href=url;
+          },
+          dateFormat: 'yy-mm-dd'
+        });
+        $('#datepicker').datepicker('setDate','<%= ftime_date(@date) %>')
+      });
+    </script>
+    <%= stylesheet_link_tag 'common', 'jquery-ui-1.8.2.custom','colorbox' %>
+    <title>网球管理系统</title>
+  </head>
+  <body id="body" class="clearfix">
+    <%= render :partial => "layouts/header" %>
+    <div class="main clearfix">
+      <%= render :partial => "layouts/sidenav" %>
+
+      <div class="content clearfix">
+        <%= yield %>
+      </div>
+    </div>
+    <%= render :partial => "layouts/footer" %>
+
+    <script type="text/javascript">
+
+      function isNum(str){
+      if(str != ""){
+        return /^\d+$/.test(str);
+      }else{
+        return true;
+      }
+    }
+    </script>
+  </body>
+</html>

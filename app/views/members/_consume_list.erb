@@ -1,0 +1,40 @@
+<p id="notice" class=""></p>
+
+<h1>会员 <%= @member.name %> 的消费记录列表</h1>
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:80%;">消费明细</li>
+  </ul>
+  <ul id="num_ul">
+    <li style="width:4%;">序号</li>
+    <li style="width:10%;">消费日期</li>
+    <li style="width:10%;">消费金额</li>
+    <li style="width:10%;">消费类型</li>
+    <li style="width:10%;">订单数量</li>
+    <li style="width:10%;">起止时间</li>
+
+  </ul>
+  <% for order in @orders %>
+    <input type="hidden" id="order_id" value="<%= order.id%>"/>
+    <%total_fee=0%><% for order_item in order.order_items %><%total_fee = total_fee + order_item.price%><%end%>
+    <h3 style="height:25px;" align="right">
+      订单：<%=order.id%> 的消费明细
+      消费时间：<%= DateUtil::timeshort(order.order_time)%>
+      总金额（￥）：<%= total_fee%>
+      <%if order.balance_record -%>
+      <a href="<%= order_balance_path(order,order.balance_record) %>">详细</a>
+      <%end -%>
+    </h3>
+    <%i=1%>
+    <% for order_item in order.order_items %>
+      <ul id="num_ul">
+        <li style="width:4%;"><%=i%></li><%i=i+1%>
+        <li style="width:10%;"><%= order_item.order_date %></li>
+        <li style="width:10%;"><%= order_item.price %></li>
+        <li style="width:10%;"><%= order_item.order_item_type_str %></li>
+        <li style="width:10%;"><%= order_item.quantity %></li>
+        <li style="width:10%;"><%= order_item.start_hour %>点-<%= order_item.end_hour %>点</li>
+      </ul>
+    <%end%>
+  <%end%>
+</fieldset>

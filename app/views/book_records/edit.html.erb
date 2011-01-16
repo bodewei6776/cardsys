@@ -1,0 +1,15 @@
+<div class="tab_content">
+  <h1 class="title">场地预定</h1>
+  <%if advanced_order = @order.advanced_order  %>
+    <%= render :partial => advanced_order %>
+  <% end  %>
+  <%= error_messages_for :order %>
+  <%=  form_for(@book_record,:html => {:class => "form-profile"}) do |order_form| %>
+    <%= render :partial => "/book_records/form",:f => order_form %>
+    <input type='hidden' name='order_id' value="<%= @order.id %>" id="order_id" />
+  <%end%>
+</div>
+<% if @book_record.should_to_balance? %>
+ <%= render :partial => "/orders/order_items",:locals => {:good_items => @good_items||[],:order => @order} %>
+<% end %>
+<%= render :partial => '/book_records/share_js' %>

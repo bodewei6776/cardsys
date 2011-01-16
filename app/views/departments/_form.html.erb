@@ -1,0 +1,25 @@
+<%= form_for(@department) do |f| %>
+<div class="item" >
+    <%= error_messages_for :department%>
+    <fieldset class="hidden">
+      <legend>属性信息</legend>
+      <p>
+        <label for="name"><a class="blank_element_20"></a><em>*</em>部门名称：</label>
+        <input type="text" name="department[name]" value="<%=@department.name%>" onblur="return;" id="name" class="inputtext" />
+      </p>
+    
+    </fieldset>
+</div>
+<div class="btn t_center">
+    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a> |
+<%= link_to '返回', departments_path %>
+</div>
+<% end %>
+<script type="text/javascript">
+  
+    function fsubmit(){
+      var form = $("form[0]");
+      form.submit();
+    }
+</script>
+

@@ -1,0 +1,44 @@
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<label align="right">
+  <a href="/cards/new">创建卡模板</a>
+  <br />
+</label>
+<br />
+<h1>卡模板列表</h1>
+
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:10%;">名称</li>
+    <li>类型</li>
+    <li>前缀</li>
+    <li>状态</li>
+    <li style="width:25%;">说明</li>
+    <li style="width:15%;">操作</li>
+  </ul>
+  <% for card in @cards %>
+    <ul>
+      <li style="width:10%;"><%=card.name%></li>
+      <li><%=display_card_type_desc(card)%></li>
+      <li><%=card.card_prefix%></li>
+      <li><%=card.status_desc%></li>
+      <li style="width:25%;"><%=card.description%></li>
+      <li style="width:15%;"><%= link_to '查看', card %> |
+        <% if card.status == CommonResource::CARD_ON  %>
+          <% if card.member_cards.blank? %>
+            <%= link_to '停用', {:controller => :cards, :action => :change_status, :status => 2, :id => card.id}, {:confirm => '确定停用吗?'} %> |
+          <% elsif card.status == CommonResource::CARD_OFF || card.status == CommonResource::CARD_INIT %>
+               <%= link_to '启用', {:controller => :cards, :action => :change_status, :status => 1, :id => card.id}, {:confirm => '确定启用吗?'} %> |
+          <%end%>
+         <%else%>
+            <%= link_to '启用', {:controller => :cards, :action => :change_status, :status => 1, :id => card.id}, {:confirm => '确定启用吗?'} %> |
+        <%end%>
+       <a href="/cards/<%= card.id  %>/edit">修改</a>
+       | <%= link_to '删除', card, :confirm => '确定删除？', :method => :delete %>
+       </li>
+    </ul>
+  <% end %>
+</fieldset>
+<br />
+<script type="text/javascript">
+ 
+</script>

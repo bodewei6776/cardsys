@@ -1,0 +1,51 @@
+<div class="tab_content">
+  <h1 class="title">消费内容列表</h1>
+    <div class="listcontent_w clearfix cleft">
+      <ul class="clearfix">
+        <li class="cleft">
+          <div class="w3">会员：</div>
+          <div class="w4"><%= @order.member_name %></div>
+        </li>
+        <% if @order.is_member? && @current_card %>
+        <li class="cleft">
+          <div class="w3">会员卡：</div>
+          <div class="w4">
+             <%= @current_card.card_serial_num %>  类型:<%= @current_card.card.card_type_desc %>
+              余额(次):<%= @current_card.left_fee_value %>
+	      </div>
+        </li>
+        <% end %>
+        <li class="cleft">
+          <div class="w3">场地：</div>
+          <div class="w4">
+          <%= @book_record.court.name %><%= @book_record.record_date.to_s(:db)%>   
+          <%= @book_record.start_hour %>:00-<%= @book_record.end_hour %>:00
+          </div>
+        </li>
+        <li class="cleft">
+          <div class="w3">场地消费：</div>
+          <div class="w4">
+          <span class="red"><%=  @balance.book_record_amount_desc %></span>
+            <label class="labelRadio"><%= @balance.balance_way_desc %></label>
+          </div>
+        </li>
+        <li class="cleft">
+          <div class="w3">其他消费：</div>
+          <div class="w4"><span class="red"><%= @balance.goods_amount_desc %></span>元
+	         <label class="labelRadio"><%= @balance.goods_balance_type_desc %></label>
+          </div>
+        </li>
+        <li class="cleft">
+          <div class="w3">消费合计：</div>
+          <div class="w4">
+	        <%= @balance.balance_amount_desc%>
+	      </div>
+        </li>
+      </ul>
+      <div class="btn t_center">
+        <input  name="print"  type="button"  value="打印收条" onClick=""/>
+      </div>
+    </div>
+ <% unless @good_items.blank? %>
+  <%= render :partial => "/orders/order_items_list",:locals => {:good_items => @good_items||[],:order => @order} %>
+ <% end %>

@@ -1,0 +1,54 @@
+
+<h1 class="title">会员<%= @base_member.name %>的授权人 <%= @granter.name %> 的详细资料</h1>
+
+<div class="listcontent_w clearfix cleft">
+  <ul class="clearfix">
+    <fieldset class="hidden">
+      <legend>属性信息</legend>
+      <li class="cleft">
+        <div class="w1">会员名称：</div>
+        <div class="w2">
+          <%= @granter.name %><%if @granter.name.blank?%><a class="blank_element"></a><%end%>
+        </div>
+        <div class="w1">注册日期：</div>
+        <div class="w2">
+          <%= DateUtil::timeshort(@granter.created_at) %>
+        </div>
+      </li>
+      <li class="cleft">
+        
+        <div class="w1">会员性别：</div>
+        <div class="w2">
+          <%= gender_desc(@granter) %>
+        </div>
+        <div class="w1">移动电话：</div>
+        <div class="w2">
+          <%= @granter.mobile %>
+        </div>
+      </li>
+      <li class="cleft">
+        <div class="w1">证件类型：</div>
+        <div class="w2">
+          <%= generate_cert_type_str(@granter.cert_type) %><%if generate_cert_type_str(@granter.cert_type).blank?%><a class="blank_element"></a><%end%>
+        </div>
+        <div class="w1">证件号码：</div>
+        <div class="w2">
+          <%= @granter.cert_num%>
+        </div>
+      </li>
+      <li class="cleft">
+        <div class="w1">备注：</div>
+        <div class="w2">
+          <%= @granter.description %>
+        </div>
+      </li>
+    </fieldset>    
+
+  </ul>
+</div>
+
+
+<div class="btn t_center">
+    <%= link_to '修改',{:controller => :members, :action => :granter_edit, :granter_id => @granter.id, :member_id => @base_member.id}%> |
+    <%= link_to '返回',{:controller => :members, :action => :granter_index, :member_id => @base_member.id}%>
+  </div>

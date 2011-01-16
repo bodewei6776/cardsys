@@ -1,0 +1,72 @@
+<label align="right">
+  <a href="/cards/new">创建卡模板</a>
+  <br />
+</label>
+<br />
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<h1>卡模板信息</h1>
+<div class="listcontent_w clearfix cleft">
+  <ul class="clearfix">
+    <fieldset class="hidden">
+      <legend>属性信息</legend>
+      <li class="cleft">
+        <div class="w1">卡名：</div>
+        <div class="w2">
+          <%= @card.name%><%if @card.name.blank?%><a class="blank_element"></a><%end%>
+        </div>
+        <div class="w1">基础类型：</div>
+        <div class="w2">
+          <%=display_card_type_desc(@card)%>
+        </div>
+      </li>
+
+      <li class="cleft">
+        <div class="w1">卡前缀：</div>
+        <div class="w2">
+          <%= @card.card_prefix%><%if @card.card_prefix.blank?%><a class="blank_element"></a><%end%>
+        </div>
+        <div class="w1">有效期：</div>
+        <div class="w2">
+          <%=  @card.expired%><span class="hint gray">个月</span>
+        </div>
+      </li>
+
+      <li class="cleft">
+        <div class="w1">授权人数量：</div>
+        <div class="w2">
+          <%= @card.shared_amount%><%if @card.shared_amount.blank?%><a class="blank_element"></a><%end%>
+        </div>
+        <div class="w1">说明：</div>
+        <div class="w2">
+          <%= @card.description%>
+        </div>
+      </li>
+
+    </fieldset></ul></div>
+
+<%= render :partial => "period_prices/period_price_list", :locals => { :period_prices => @period_prices, :model => @card, :flag => 'card' } %>
+
+<%if @card.card_type == 3%>
+  <div id="rule4count" style="display:none">
+    <fieldset class="table" >
+      <h1><legend>计次规则</legend></h1>
+      <p>
+        <%if @card.is_counter_card? == 1%>
+          <label class="labelRadio">初始次数<%@card.counter%>次
+          </label>
+        <%else%>
+          <label class="labelRadio">不限次数
+          </label>
+        <%end%>
+      </p>
+    </fieldset>
+  </div>
+<%end%>
+
+<br />
+<div class="btn t_center">
+  <%= link_to '修改', "/cards/"+@card.id.to_s+"/edit" %> |
+  <%= link_to '返回', :back %>
+</div>
+
+

@@ -1,0 +1,62 @@
+<label align="right">
+  <%= link_to '添加商品', new_good_path %>
+ <br />
+</label>
+<br />
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<h1>商品信息</h1>
+<div class="listcontent_w clearfix cleft">
+  <ul class="clearfix">
+    <fieldset class="hidden">
+      <legend>属性信息</legend>
+      <li class="cleft">
+        <div class="w1" >商品名称：</div>
+        <div class="w2" >
+          <%= @good.name %>
+        </div>
+        <div class="w1">商品类型：</div>
+        <div class="w2">
+          <%= generate_good_type_str(@good.good_type) %>
+        </div>
+      </li>
+      <li class="cleft">
+        <div class="w1" >入库价格：</div>
+        <div class="w2" >
+          <%= @good.purchasing_price %>
+        </div>
+        <div class="w1">零售价格：</div>
+        <div class="w2">
+          <%= @good.price %>
+        </div>
+      </li>
+      <li class="cleft">
+        <div class="w1" >库存总数：</div>
+        <div class="w2" >
+          <%= @good.count_total_now %>
+        </div>
+        <div class="w1">后台库总数：</div>
+        <div class="w2">
+          <%= @good.count_back_stock %>
+        </div>
+      </li>
+      <li>
+        <div class="w1">前台库总数：</div>
+        <div class="w2">
+          <%= @good.count_front_stock %>
+        </div>
+      </li>
+      <li>
+        <div class="w1">商品来源：</div>
+        <div class="w2">
+          <%= generate_good_source_str(@good.good_source) %>
+        </div>
+      </li>
+    </fieldset>
+  </ul>
+</div>
+    <div class="btn t_center">
+      <%= link_to '修改', edit_good_path(@good) %> |
+      <%= link_to '返回', goods_path %>
+    </div>
+
+

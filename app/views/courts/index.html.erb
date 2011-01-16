@@ -1,0 +1,35 @@
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<label align="right">
+  <%= link_to '创建新场地', new_court_path %>
+ <br />
+</label>
+<br />
+<h1>场地列表</h1>
+
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:10%;">名称</li>    
+    <li style="width:8%;">开始时间</li>
+    <li style="width:8%;">结束时间</li>
+    <li style="width:10%;">状态</li>
+    <li style="width:15%;">说明</li>
+    <li style="width:20%;">操作</li>
+  </ul>
+  <% for court in @courts %>
+    <ul>
+      <li style="width:10%;"><%= court.name%></li>      
+      <li style="width:8%;"><%= court.start_time %></li>
+      <li style="width:8%;"><%= court.end_time %></li>
+      <li style="width:10%;"><%= generate_court_status_str(court.status) %></li>
+      <li style="width:15%;"><%= court.description %></li>
+      <li style="width:20%;"><%= link_to '查看', court %>
+          | <%= link_to '修改', edit_court_path(court) %>
+          | <% if court.status == CommonResource::COURT_ON  %>
+            <%= link_to '停用', {:controller => :courts, :action => :change_status, :status => 0, :id => court.id}, {:confirm => '确定停用吗?'} %>
+            <% elsif court.status == CommonResource::COURT_OFF%>
+            <%= link_to '启用', {:controller => :courts, :action => :change_status, :status => 1, :id => court.id}, {:confirm => '确定启用吗?'} %>
+            <%end%>
+        </li>
+      </ul>
+<% end %>
+</fieldset>

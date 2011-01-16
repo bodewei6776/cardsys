@@ -1,0 +1,2 @@
+module MemberCardsHelper
+end

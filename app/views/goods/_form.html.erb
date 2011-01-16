@@ -1,0 +1,55 @@
+<%= form_for(@good,:html  => {:id => 'member_form'}) do |f| %>
+  <div class="item">
+    <%= error_messages_for :good%>
+    <fieldset class="hidden">
+      <legend>属性信息</legend>
+      <p>
+        <label for="name"><em>*</em>商品名称：</label>
+        <input type="text" name="good[name]" value="<%=@good.name%>" onblur="return;" id="name" class="inputtext" />
+        
+      </p>
+      <p>
+        <label for="good_type"><em>*</em>商品类别：</label>
+        <select name="good[good_type]" id="good_type" class="select">
+          <%= generate_good_type_options((@good.nil?) ? "0" : @good.good_type)  %>
+        </select>
+      </p>
+      <p>
+        <label for="name"><em>*</em>商品来源：</label>
+        <select name="good[good_source]" id="good_source" class="select">
+          <%= generate_good_source_options(@good)  %>
+        </select>
+      </p>
+      <p>
+        <label for="name"><em>*</em>入库价格：</label>
+        <input type="text" name="good[purchasing_price]" value="<%=@good.purchasing_price%>" onblur="return;" id="purchasing_price" class="inputtext" />
+          <a class="blank_element_20"></a>
+        <label for="price"><em>*</em>零售价格：</label>
+        <input type="text" name="good[price]" value="<%=@good.price%>" onblur="return;" id="price" class="inputtext" />
+      </p>
+      <p>
+        <label for="name"><em>*</em>初次入库数量：</label>
+        <input type="text" name="good[count_back_stock]" value="<%=@good.count_back_stock%>" onblur="return;" id="count_back_stock" class="inputtext" />
+      </p>
+
+    </fieldset>
+  </div>
+  <div class="btn t_center">
+    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
+    <% if !@good.id.blank? %>
+      <%= link_to '查看', @good %> |
+    <%  end %>
+    <%= link_to '返回', goods_path %>
+  </div>
+<%end%>
+<script type="text/javascript">
+  function fsubmit(){
+    var form = $("form[0]");
+    //验证商品类型是否选择
+    if($("#good_type")[0].value == ""){
+        alert("请选择商品类型！");
+    }else{
+      form.submit();
+    }
+  }
+</script>

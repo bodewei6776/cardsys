@@ -1,0 +1,43 @@
+<label align="right">
+  <%= link_to '创建新连锁店', new_catena_path %>
+ <br />
+</label>
+<br />
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<h1>连锁店信息</h1>
+
+<div class="listcontent_w clearfix cleft">
+  <ul class="clearfix">
+    <fieldset class="hidden">
+      <legend>属性信息</legend>
+      <li class="cleft">
+        <div class="w1">连锁店名称：</div>
+        <div class="w2">
+          <%= @catena.name %><%if @catena.name.blank?%><a class="blank_element"></a><%end%>
+        </div>
+        <div class="w1">联系人：</div>
+        <div class="w2">
+          <%= @catena.contact%>
+        </div>
+      </li>
+
+      <li class="cleft">
+        <div class="w1">联系电话：</div>
+        <div class="w2">
+          <%= @catena.telephone %><%if @catena.telephone.blank?%><a class="blank_element"></a><%end%>
+        </div>        
+      </li>
+      <li class="cleft">
+        <div class="w1">说明：</div>
+        <div class="w2">
+          <%= @catena.description %><%if @catena.description.blank?%><a class="blank_element"></a><%end%>
+        </div>
+      </li>
+    </fieldset>
+  </ul>
+</div>
+
+<div class="btn t_center">
+<%= link_to '修改', edit_catena_path(@catena) %> |
+<%= link_to '返回', catenas_path %>
+</div>

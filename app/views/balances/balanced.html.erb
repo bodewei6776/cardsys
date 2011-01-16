@@ -1,0 +1,48 @@
+<h1>待结算查询</h1>
+<fieldset class="hidden">
+  <form method="post" action="/balances/balance" class="form-profile">
+    <label for="name">卡号：</label>
+    <input type="text" name="id" maxlength="30" tabindex="1" value=""  class="inputtext" />
+    <label for="name">场地：</label>
+    <input type="text" name="court_id" maxlength="30" tabindex="1" value=""  class="inputtext" />
+    <label for="name">日期：</label>
+     <input type='text' name='record_date' class='date-type-input' />
+    <input type="submit" name="search" class="inputsubmit" value="查询"  tabindex="10" />
+  </form>
+</fieldset>
+<%if !@member.nil?%>
+  <fieldset class="hidden">
+    <label for="name">会员姓名：</label><%=h @member.name %>
+    <label>日期：</label><%=@date %>
+  </fieldset>
+<%end%>
+<h1>待结算列表</h1>
+<fieldset class="table">
+  <ul>
+    <li>预定人姓名</li>
+    <li>卡号</li>
+    <li>场地号</li>
+    <li style="width:10%;">日期</li>
+    <li style="width:10%;">时段</li>
+    <li style="width:15%;">场地费</li>
+    <li style="width:15%;">其他费</li>
+    <li style="">操作</li>
+  </ul>
+    <% for record in @book_records %>
+      <ul>
+        <li><%=h record.order.order_member.name %></li>
+        <li><%=h record.order.member_card_number %></li>
+        <li><%=h record.court.name %></li>
+        <li style="width:10%;"><%= DateUtil::timeshort(record.record_date) %></li>
+        <li style="width:10%;"><%= record.start_hour %>:00-<%=h record.end_hour %>:00</li>
+        <li style="width:15%;">
+          <%= record.order.balance_record.book_record_amount_desc %>(<%= record.order.balance_record.balance_way_desc %>)
+        </li>
+        <li style="width:15%;">
+          <%= record.order.balance_record.goods_amount_desc %>
+          (<%= record.order.balance_record.goods_balance_type_desc %>)
+        </li>
+        <li><a href="<%= order_balance_path(record.order,record.order.balance_record) %>">查看</a></li>
+      </ul>
+    <% end -%>
+</fieldset>

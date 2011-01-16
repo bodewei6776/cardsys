@@ -1,0 +1,32 @@
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<label align="right">
+  <%= link_to '创建节假日', new_vacation_path %>
+  <br />
+</label>
+<br />
+<h1>节假日列表</h1>
+
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:10%;">名称</li>
+    <li style="width:10%;">开始日期</li>
+    <li style="width:10%;">结束日期</li>
+    <li style="width:10%;">节假日类型</li>
+    <li style="width:10%;">操作</li>
+  </ul>
+
+<% @vacations.each do |vacation| %>
+    <ul>
+      <li style="width:10%;"><%=vacation.name%></li>
+      <li style="width:10%;"><%=ftime_date(vacation.start_date)%></li>
+      <li style="width:10%;"><%=ftime_date(vacation.end_date)%></li>
+      <li style="width:10%;"><%=vacation.status==1?"节假日":"平日"%></li>
+      <li style="width:10%;"><%= link_to '修改', edit_vacation_path(vacation) %> | <%= link_to '删除', vacation, :confirm => '确定删除?', :method => :delete %></li>
+    </ul>
+<% end %>
+
+  </fieldset>
+
+
+
+

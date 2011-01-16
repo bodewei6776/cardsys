@@ -1,0 +1,36 @@
+<fieldset class="hidden">
+  <form method="post" action="/goods/index" class="search-goods-form" id="search_form">
+    <label for="good_type">按照商品类别：</label>
+    <select name="good_type" id="good_type" class="select">
+      <%= generate_good_type_options(@good_type)  %>
+    </select>
+    <a class="blank_element_20"></a>
+    <label for="name">按照商品名称：</label>
+    <input type="text"class="inputtext" autocomplete="/goods/autocomplete_name" id="name" name="name" value="<%= params[:name] %>"/>
+    <input type="submit" name="search" id="search_member" class="inputsubmit" value="查询"  tabindex="10" />
+    <span style='margin-left:30px;'><input type='button' value="确认添加" class='submit-goods-button'/></span>
+  </form>
+</fieldset>
+<%= render :partial => "goods", :locals => { :goods => @goods } %>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){
+    $('input[autocomplete]').each(function(i){
+      $(this).autocomplete({
+        source: $(this).attr('autocomplete'),
+        select: function(ui, li){
+          var item = li.item;
+          $(this).val(item.value);
+          $('.search-goods-form').submit();
+        }
+      });
+    });
+    $('.search-goods-form').submit(function(){
+      $.post($(".search-goods-form").attr('action'),$(".search-goods-form").serialize(),
+      function(reply){
+        $('fieldset.table').remove();
+        $('fieldset.hidden').after(reply);
+      });
+      return false;
+    });
+  });
+</script>

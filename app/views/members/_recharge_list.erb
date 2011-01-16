@@ -1,0 +1,24 @@
+<p id="notice" class=""></p>
+
+<h1>会员 <%= @member.name %> 的充值记录列表</h1>
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:10%;">序号</li>
+    <li style="width:10%;">卡号</li>
+    <li style="width:10%;">充值日期</li>
+    <li style="width:10%;">充值金额(￥)</li>
+    <li style="width:10%;">充值次数(次)</li>
+    <li style="width:10%;">卡有效期</li>
+  </ul>
+  <%i=1%>
+  <% for recharge_record in @recharge_records %>
+    <ul id="num_ul">
+      <li style="width:10%;"><%=i%></li><%i=i+1%>
+      <li style="width:10%;"><%=recharge_record.member_card.card_serial_num%></li>
+      <li style="width:10%;"><%= DateUtil::timeshort(recharge_record.created_at) %></li>
+      <li style="width:10%;"><%= (recharge_record.recharge_fee == 0) ? '' : recharge_record.recharge_fee%></li>
+      <li style="width:10%;"><%= (recharge_record.recharge_times == 0) ? '' : recharge_record.recharge_times %></li>
+      <li style="width:10%;"><%= DateUtil.timeshort(recharge_record.member_card.expire_date) %></li>
+    </ul>
+  <%end%>
+</fieldset>

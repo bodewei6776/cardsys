@@ -1,0 +1,23 @@
+<label align="right">
+  <a href="/users/new">新增用户</a>
+  <br></br>
+</label>
+<br></br>
+<h1>会员列表</h1>
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:15%;">ID</li>
+    <li style="width:15%;">昵称</li>
+    <li style="width:40%;">操作</li>
+  </ul>
+  <% for user in @users %>
+    <ul>
+      <li style="width:15%;"><%=h user.login %></li>
+      <li style="width:15%;"><%=h user.user_name %></li>
+      <li style="width:40%;"><%= link_to '查看', user %> | <%= link_to '修改密码', edit_user_path(user)%>
+        | <%= link_to '删除', user, :confirm => '确定删除吗?', :method => :delete %> 
+        | <%= link_to '设置权限', '/users/user_power_index?id='+user.id.to_s%>
+      </li>
+    </ul>
+  <% end %>
+</fieldset>

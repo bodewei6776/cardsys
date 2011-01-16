@@ -1,0 +1,44 @@
+<label align="right">
+  <%= link_to '创建新场地', new_court_path %>
+ <br />
+</label>
+<br />
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<h1>场地信息</h1>
+
+<div class="listcontent_w clearfix cleft">
+  <ul class="clearfix">
+    <fieldset class="hidden">
+      <legend>属性信息</legend>
+      <li class="cleft">
+        <div class="w1">场地名称：</div>
+        <div class="w2">
+          <%= @court.name %><%if @court.name.blank?%><a class="blank_element"></a><%end%>
+        </div>
+        <div class="w1">联系人：</div>
+        <div class="w2">
+          <%= get_user_name(@court.contact)%>
+        </div>
+      </li>
+
+      <li class="cleft">
+        <div class="w1">开放时间：</div>
+        <div class="w2">
+          <%= generate_time_str(@court.start_time)  %>
+          至
+          <%= generate_time_str(@court.end_time)  %>
+        </div>
+      </li>
+      <li class="cleft">
+        <div class="w1">说明：</div>
+        <div class="w2">
+          <%= @court.description %><%if @court.description.blank?%><a class="blank_element"></a><%end%>
+        </div>
+      </li>
+    </fieldset></ul></div>
+
+<%= render :partial => "period_prices/period_price_list", :locals => { :period_prices => @period_prices, :model => @court, :flag => 'court' } %>
+<div class="btn t_center">
+<%= link_to '修改', edit_court_path(@court) %> |
+<%= link_to '返回', courts_path %>
+</div>

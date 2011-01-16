@@ -1,0 +1,60 @@
+<label align="right">
+  <%= link_to '添加新教练', new_coach_path %>
+ <br />
+</label>
+<br />
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<h1>教练信息</h1>
+<div class="listcontent_w clearfix cleft">
+  <ul class="clearfix">
+    <fieldset class="hidden">
+      <legend>属性信息</legend>
+      <li class="cleft">
+        <div class="w1" style="height: 120px;">教练头像：</div>
+        <div class="" style="height: 120px;">
+          <img src="<%#= url_for_file_column @coach, 'portrait', "medium"%>"></img>
+        </div>
+      </li>
+      <li>
+        <div class="w1">教练名称：</div>
+        <div class="w2">
+          <%= @coach.name %><%if @coach.name.blank?%><a class="blank_element"></a><%end%>
+        </div>
+        <div class="w1">教练性别：</div>
+        <div class="w2">
+          <%= gender_desc(@coach.gender) %>
+        </div>        
+      </li>
+      <li>
+        <div class="w1">联系电话：</div>
+        <div class="w2">
+          <%= @coach.telephone %><%if @coach.telephone.blank?%><a class="blank_element"></a><%end%>
+        </div>
+        <div class="w1">email：</div>
+        <div class="w2">
+          <%= @coach.email %>
+        </div>
+      </li>
+      <li>
+        <div class="w1">教练类型：</div>
+        <div class="w2">
+          <%= generate_coach_type_str(@coach.coach_type) %><%if generate_coach_type_str(@coach.coach_type).blank?%><a class="blank_element"></a><%end%>
+        </div>
+        <div class="w1">教练费用：</div>
+        <div class="w2">
+          <%= @coach.fee %>
+        </div>
+      </li>
+      <li>
+        <div class="w1">教练简介：</div>
+        <div class="w2">
+          <%= @coach.description %><%if @coach.description.blank?%><a class="blank_element"></a><%end%>
+        </div>
+      </li>
+    </fieldset>
+  </ul></div>
+
+    <div class="btn t_center">
+      <%= link_to '修改', edit_coach_path(@coach) %> |
+      <%= link_to '返回', coaches_path %>
+    </div>

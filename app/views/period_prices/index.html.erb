@@ -1,0 +1,36 @@
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<label align="right">
+  <a href="/period_prices/new">创建新时段</a>
+  <br></br>
+</label>
+<br />
+<h1>时段价格列表</h1>
+
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:10%;">名称</li>
+    <li>时段类型</li>
+    <li>开始时间</li>
+    <li>结束时间</li>
+    <li>价格</li>
+    <li style="width:25%;">说明</li>
+    <li style="width:15%;">操作</li>
+  </ul>
+  <% for period_price in @period_prices %>
+    <ul>
+      <li style="width:10%;"><%=period_price.name%></li>
+      <li><%=display_period_price_type_desc(period_price.period_type)%></li>
+      <li><%=period_price.start_time%>:00</li>
+      <li><%=period_price.end_time%>:00</li>
+      <li><%=period_price.price%></li>
+      <li style="width:25%;"><%=period_price.description%></li>
+      <li style="width:15%;"><%= link_to '查看', period_price %> |
+        <a href="/period_prices/<%= period_price.id  %>/edit">修改</a>
+      <% if period_price.card_period_prices.blank? %> |
+       <%= link_to '删除', period_price, :confirm => '确定删除吗?', :method => :delete %>
+      <%end%>
+
+       </li>
+    </ul>
+  <% end %>
+</fieldset>

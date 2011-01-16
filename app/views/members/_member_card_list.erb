@@ -1,0 +1,33 @@
+<p id="notice" class=""></p>
+
+<h1>会员 <%= @member.name %> 的卡列表</h1>
+<fieldset class="table">
+  <ul class="title_ul">
+    <li>序号</li>
+    <li style="width:10%;">卡号</li>
+    <li style="width:10%;">卡状态</li>
+    <li>卡内余额</li>
+    <li>卡内次数</li>
+    <li>卡有效期</li>
+    <li>授权人</li>
+  </ul>
+  <%i=1%>
+  <% for card in @member_cards %>
+    <ul id="num_ul">
+      <input type="hidden" id="member_id" value="<%= @member.id%>" />
+      <li><%= i %></li><%i=i+1%>
+      <li style="width:10%;"><%= card.card_serial_num %></li>
+      <li style="width:10%;"><%= member_card_status_str(card.status) %></li>
+      <li><%= card.left_fee %></li>
+      <li><%= card.left_times %></li>
+      <li><%= DateUtil.timeshort(card.expire_date) %></li>
+      <li>
+      <% for granter in generate_granter_options(@member) %>
+              <%if @member.is_granter(granter[1], card.id)%>
+               <%=granter[0]%>
+             <%end%>
+            <%end%>
+          </li>
+    </ul>
+  <%end%>
+</fieldset>

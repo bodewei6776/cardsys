@@ -1,0 +1,42 @@
+<label align="right">
+  <%= link_to '创建新用户', new_user_path %>
+  <br />
+</label>
+<br />
+<%if @notice%><p class="notice"><%= @notice %></p><%end%>
+<h1>权限列表</h1>
+
+<%= form_for :user, @user, :url => {:action => "user_power_update"}, :html => {:class => "form-profile"} do |f|%>
+  <div>
+    <fieldset class="table" >
+      <legend>可用权限信息</legend>
+      <ul class="title_ul">
+        <input type="hidden" name="user_id" value="<%=@user.id%>" />
+        <li style="text-align:center;width:260px;">权限名称</li><li>设置权限</li>
+      </ul>
+      <%for power in @powers%>
+        <% available_power = @user.has_power?(power)%>
+        <ul>
+          <li style="text-align:center;width:260px;">
+            <span style="width:100px;right:20px;"><%= power.subject%></span>
+          </li>
+          <li>
+            <input type="checkbox" name="user_power_<%= power.id %>" value="<%= power.id %>" <%if available_power %> checked <%end%> class="inputtext" />
+          </li>
+        </ul>
+      <%end%>
+    </fieldset>
+
+  </div>
+  <div class="btn t_center">
+    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
+    <a href="/users" onclick="javascript:window.history.back();">返回用户列表</a>
+  </div>
+<%end%>
+
+<script type="text/javascript">
+  function fsubmit(){
+    var form = $("form[0]");
+    form.submit();
+  }
+</script>

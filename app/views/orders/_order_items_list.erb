@@ -1,0 +1,46 @@
+<h1>商品消费列表</h1>
+<fieldset class="table">
+  <ul class="title_ul">
+	<li style="width:10%;">商品类别</li>
+    <li style="width:10%;">商品名称</li>
+    <li style="width:10%;">商品价格</li>
+    <li style="width:15%;">数量</li>
+    <li style="width:15%;">总额</li>
+  </ul>
+  <% unless (coach_items = order.coach_items).blank?  -%>
+   <% coach_items.each do |coach_item|  -%> 
+   <% coach = coach_item.related_entry %>
+  <ul>
+	<li style="width:10%;">教练</li>
+    <li style="width:10%;"><%= coach.name%></li>
+    <li style="width:10%;">
+	  <%=  coach.fee %>
+	</li>
+    <li style="width:15%;">
+	 <%= coach_item.quantity %>
+	</li>
+    <li style="width:15%;"><%= coach_item.amount %></li>
+  </ul>
+  <%end  -%>
+ <%end -%> 
+  <% for good_item in good_items %>
+    <% next if (good = good_item.product).blank? %>
+    <ul>
+	  <li style="width:10%;"><%= generate_good_type_str(good.good_type) %></li>
+      <li style="width:10%;"><%= good.name%></li>
+      <li style="width:10%;"><%= good.price %></li>
+      <li style="width:15%;">
+	    <%= good_item.quantity %>
+	  </li>
+      <li style="width:15%;"><%= good_item.amount %></li>
+    </ul>
+  <% end %>
+  <ul class='amount-info'>
+    <li style="width:10%;">累计</li>
+    <li style="width:10%;"></li>
+    <li style="width:10%;"></li>
+    <li style="width:15%;"></li>
+    <li style="width:15%;"><%= order.product_amount %></li>
+    <li style="width:15%;"></li>
+  </ul>
+</fieldset>

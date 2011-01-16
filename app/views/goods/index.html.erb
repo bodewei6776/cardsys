@@ -1,0 +1,63 @@
+<h1>商品查询</h1>
+<fieldset class="hidden">
+  <form method="post" action="/goods/index?p=<%=@p%>" class="form-profile" id="search_form">
+    <label for="good_type">按照商品类别：</label>
+        <select name="good_type" id="good_type" class="select">
+          <%= generate_good_type_options(@good_type)  %>
+        </select>
+    <a class="blank_element_20"></a>
+    <label for="name">按照商品名称：</label>
+    <input type="text"class="inputtext" autocomplete="/goods/autocomplete_name" id="name" name="name" value="<%= params[:name] %>"/>
+    <input type="submit" name="search" id="search_member" class="inputsubmit" value="查询"  tabindex="10" />
+  </form>
+</fieldset>
+<br />
+<label align="right">
+  <%= link_to '添加商品', new_good_path %>
+  <br />
+</label>
+<br />
+<%if notice%><p class="notice"><%= notice %></p><%end%>
+<h1>商品列表</h1>
+<fieldset class="table">
+  <ul class="title_ul">
+    <li style="width:10%;">商品名称</li>
+    <li style="width:10%;">商品分类</li>
+    <li style="width:10%;">入库价格（￥）</li>
+    <li style="width:10%;">零售价（￥）</li>
+    <li style="width:8%;">商品总数</li>
+    <li style="width:8%;">库房商品数</li>
+    <li style="width:8%;">前台商品数</li>
+    <li style="width:20%;">操作</li>
+  </ul>
+
+  <% for good in @goods %>
+    <ul>
+      <li style="width:10%;"><%= good.name%></li>
+      <li style="width:10%;"><%= generate_good_type_str(good.good_type) %></li>
+      <li style="width:10%;"><%= good.purchasing_price %></li>
+      <li style="width:10%;"><%= good.price %></li>
+      <li style="width:8%;"><%= good.count_total_now %></li>
+      <li style="width:8%;"><%= good.count_back_stock %></li>
+      <li style="width:8%;"><%= good.count_front_stock %></li>
+      <li style="width:20%;">
+        <% if @p =='back'%>
+          <%= link_to '库存管理', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index' %>
+        <% elsif @p == 'front'%>
+          <%= link_to '商品出库', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index'%>
+        <% else %>
+          <%= link_to '查看', good %> | <%= link_to '修改', edit_good_path(good) %>
+          | <%= link_to '删除', good, :confirm => '确定删除商品'+good.name+"？", :method => :delete %>
+          <% if good.status == CommonResource::GOOD_ON  %>
+               | <%= link_to '停用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_OFF, :id => good.id}, {:confirm => '确定停用该商品吗?'} %>
+          <%else%>
+               | <%= link_to '启用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_ON, :id => good.id}, {:confirm => '确定重新使用该商品吗?'} %>
+          <%end%>
+       <%end%>
+      </li>
+    </ul>
+  <% end %>
+</fieldset>
+<script type="text/javascript">
+  $(".store_manage_index").colorbox({width:"60%", height:"70%", iframe:false});
+</script>

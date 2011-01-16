@@ -1,0 +1,36 @@
+zh_cn:
+  order_msg:
+    order:
+      member: '请完善会员信息，会员、会员卡为必填项'
+      non_member: '请完善预订人信息,定金、名字、电话为必填内容'
+    book_record:
+      invalid_time_span: '请选择正确的开始时间和结束时间'
+      invalid_status: '此时段已被占用，不能预定'
+      exist_time_span: '在%{date} %{start_time}:00-%{end_time}:00已存在被预定等记录'
+      invalid_agent: '错误代买时间段，代买时间段不能在%{start_time}:00-%{end_time}:00之间，必须包含任意起点或者结点'
+    member:
+      non_card: '此会员没开通任何会员卡，不能订场'
+    member_card:
+      expired: '卡已经过期，不能预订'
+      notavalible: '卡状态不正常，已被挂起或者其他'
+      invalid_time_span: '卡在%{unusable_span}时段不可用'
+    coache:
+      conflict: '教练%{coach_name}在%{start_hour}:00-%{end_hour}:00之间,请换别的教练'
+    non_member:
+      earnest_not_enougth: '定金不足 ，不能订场'
+      mobile_no_presence: '为了方便联系本人，手机号不能为空！'
+      invalid_mobile_format: '手机(座机)号格式不正确，请正确填写'
+    advanced_order:
+      member: '请完善会员信息,并选择会员卡'
+      date: '请选择正确的开始结束日期'
+      hour: '请选择正确的开始结束时间,开始时间必须小于结束时间'
+      week: '请选择星期日期'
+      court_id: '请选择场地'
+      no_card: '该会员没开通会员卡，不能周期预定'
+      non_advanced_order: "所选择的卡，不能周期性预定"   
+      conflict: "预定时间段冲突，请预定别的时段."
+      valid_date: '俄开始日期不能大于结束日期'
+      old_start_date: '请预定今天以后的场地'
+    good:
+      count_front_stock: "前台%{name}库存不够,目前只有%{count}件;仓库还有%{back_count}件"
+          

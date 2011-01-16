@@ -1,0 +1,83 @@
+<div class="tab_content">
+  <h1 class="title">周期预定结果</h1>
+  <div class="listcontent_w clearfix cleft">
+	  <ul id="rel_member">
+	    <li class="cleft">
+		  <div class="w1">会员名称：</div>
+		  <div class="w2">
+		    <%= @member.name %>
+		  </div>
+		  <div class="w1">联系电话：</div>
+		  <div class="w2">
+		    <%= @member.mobile %>
+		  </div>
+		</li>
+		  <li>
+		    <div class="w1">会员卡号：</div>
+		    <div class="w2">
+			  <%= @current_card.card_serial_num %>
+		    </div>
+		    <div class="w1">卡内余额：</div>
+		    <div class="w2">
+		      <%= @current_card.left_fee %>元
+		    </div>
+		  </li>
+		  <li>
+		    <div class="w1">卡类型：</div>
+		    <div class="w2">
+		      <%= @current_card.card.card_type_desc %>
+		    </div>
+		    <div class="w1">卡状态：</div>
+		    <div class="w2">
+
+		    </div>
+		  </li>
+	  </ul>
+  <ul class="clearfix">
+    <li class="cleft">
+      <div class="w1">场地：</div>
+      <div class="w2">
+        <%= @order.court.name %>
+      </div>
+      <div class="w1">每周：</div>
+      <div class="w2">
+        <%= @order.wday %>
+      </div>
+    </li>
+    <li class="cleft">
+      <div class="w1">开始日期：</div>
+      <div class="w2">
+        <%= @order.start_date.to_s%>
+      </div>
+      <div class="w1">结束日期：</div>
+      <div class="w2">
+        <%= @order.end_date.to_s %>
+      </div>
+    </li>
+    <li class="cleft">
+      <div class="w1">开始时间：</div>
+      <div class="w2">
+        <%= @order.start_hour %>:00
+      </div>
+      <div class="w1">结束时间：</div>
+      <div class="w2">
+        <%= @order.end_hour %>:00
+      </div>
+    </li>
+  </ul>
+ <ul class="clearfix">
+    <li class="cleft">
+      <div class="w1">统计：</div>
+      <div class="w2">
+        一共<%= @order.orders.size %>次
+      </div>
+      <div class="w1">明细：</div>
+      <div class="w2">
+        <% @order.orders.each do |o| -%>
+         <%= o.book_record.record_date.to_date.to_s(:db) %>
+        <%end -%>
+      </div>
+    </li>
+  </ul>
+</div>
+</div>

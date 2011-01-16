@@ -1,0 +1,95 @@
+<%if @court.id.blank?%>
+  <% @path = "/courts/create"%>
+<%else%>
+  <% @path = "/courts/#{@court.id}"%>
+<%end%>
+<%= form_for :court, :url => @path,:html => {:class => "form-profile", :method => @court.id.blank? ? :post : :put, :id => "new_post"} do |f|%>
+  <div class="item">
+    <%= error_messages_for :court %>
+    <fieldset class="hidden" style="height:200px;">
+      <legend>属性信息</legend>
+      <p>
+        <label for="name"><em>*</em>场地名称：</label>
+        <input type="text" name="court[name]" maxlength="12" value="<%=@court.name%>" onblur="return;" id="name" class="inputtext" />
+        <!-- <a class="blank_element_20"></a>
+        <label for="contact"><em>*</em>联系人：</label>
+        <select name="court[contact]" id="contact" class="select">
+          <#%= generate_court_contact_options(@court)  %>
+        </select> -->
+      </p>
+      <!--
+      <p>
+        <label for="telephone"><a class="blank_element_6"></a>联系电话：</label>
+        <input type="text" name="court[telephone]" maxlength="12" value="<#%= @court.telephone %>" onblur="return;" id="telephone" class="inputtext" />
+      </p>-->
+      <p>
+        <label for="start_time"><em>*</em>开始时间：</label>
+        <select name="court[start_time]" id="start_time" class="select" onchange ="check_time();">
+          <%= generate_time_options(@court)  %>
+        </select>
+        <a class="blank_element_68"></a>
+        <label for="end_time"><em>*</em>结束时间：</label>
+        <select name="court[end_time]" id="end_time" class="select" onchange ="check_time();">
+          <%= generate_time_options(@court.end_time)  %>
+        </select>
+
+      </p>
+      <p>
+        <label for="description"><a class="blank_element_6"></a>描<a class="blank_element_10"></a>述：</label>
+        <textarea name="court[description]" cols="47" rows="3" ><%= @court.description %></textarea>
+      </p>
+
+    </fieldset>
+
+  </div>
+<%if !@court.id.blank?%>
+  
+    <fieldset class="table">
+      <legend>时段折扣价格</legend>
+      <ul>
+        <li style="text-align:center;width:140px;">时段</li>
+        <li style="text-align:center;width:100px;">标准收费（/小时）</li>
+        <li>可用</li>
+        <li>说明</li>
+      </ul>
+      <%for period_price in @period_prices%>
+        <% available_period = @court.generate_court_period_price(period_price)%>
+        <ul>
+          <li style="text-align:center;width:140px;"><%=period_price.name%>：<%=period_price.start_time%>:00-<%=period_price.end_time%>:00</li>
+          <li style="text-align:center;width:100px;"><%= period_price.price %></li>
+         <li><input type="checkbox" name="time_available_<%= period_price.id %>"  value="1" <%if available_period %> checked <%end%>class="inputtext" /></li>
+          <li> <%=period_price.description%> </li>
+        </ul>
+      <%end%>
+    </fieldset>
+
+<%end%>
+  <div class="btn t_center">
+    <a href="javascript:void(0);" onclick="fsubmit();return false;" id="submit_bt">提交 </a>|
+    <% if !@court.id.blank? %>
+      <%= link_to '查看', @court %> |
+    <%  end %>
+    <%= link_to '返回', courts_path %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  function fsubmit(){
+   if(check_time()){
+    var form = $("form[id=new_post]");
+    form.submit();
+   }
+  }
+
+  function check_time(){
+    var start_time = $("#start_time")[0].value;
+    var end_time = $("#end_time")[0].value;
+   if(start_time - end_time > 0){
+      alert("开始时间应该小于结束时间！");
+      return false;
+   }else{
+     return true;
+  }
+  }
+  
+</script>

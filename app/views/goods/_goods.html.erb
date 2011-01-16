@@ -1,0 +1,70 @@
+<% form_tag("/goods/add_to_cart", :name => "add_to_cart_form") do %>
+  <fieldset class="table">
+    <ul class="title_ul">
+      <li style="width:10%;">商品分类</li>
+      <li style="width:10%;">商品名称</li>
+      <li style="width:10%;">零售价</li>
+      <li style="width:15%;">商品总数</li>
+      <li style="width:15%;">库房商品数</li>
+      <li style="width:15%;">前台商品数</li>
+      <li style="width:20%;">操作</li>
+    </ul>
+    <% for good in goods %>
+      <ul class="add-goods-line" entry_id="<%= good.id%>">
+        <li style="width:10%;"><%= good.name%></li>
+        <li style="width:10%;"><%= generate_good_type_str(good.good_type) %></li>
+        <li style="width:10%;"><%= good.price %></li>
+        <li style="width:15%;"><%= good.count_total_now %></li>
+        <li style="width:15%;"><%= good.count_back_stock %></li>
+        <li style="width:15%;"><%= good.count_front_stock %></li>
+        <li style="width:20%;"><input type='text' size=5 class='for-display-only'/>
+          <input type='button' value='添加' class='reduce-goods-button' entry_id='<%= good.id %>'/>
+        </li>
+      </ul>
+    <% end -%>
+  </fieldset>
+<% end -%>
+<div class="btn t_center">
+  <input type='button' value="确 认添加" class='submit-goods-button'/>
+</div>
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){
+    $('.reduce-goods-button').click(function(){
+      var input = $(this);
+      var input_value = input.prev('input:text').val();
+      var count = isNaN(parseInt(input_value))  ? 0 : parseInt(input_value);
+      count += 1;
+      input.prev('input:text').val(count);
+      if(input.next('.goods_id').size()==0){
+        input.after('<input type="hidden" name="goods[][count]" class="goods_count" value=0>');
+        input.after('<input type="hidden" name="goods[][id]" class="goods_id" value="">');
+        input.next('.goods_id').val(input.attr('entry_id'));
+      }
+      input.next('.goods_id').next('.goods_count').val(count);
+    });
+    $('.for-display-only').change(function(){
+      var input = $(this).next('input');
+      if(input.next('.goods_id').size()==0){
+        input.after('<input type="hidden" name="goods[][count]" class="goods_count" value=0>');
+        input.after('<input type="hidden" name="goods[][id]" class="goods_id" value="">');
+        input.next('.goods_id').val(input.attr('entry_id'));
+      }
+      input.next('.goods_id').next('.goods_count').val($(this).val());
+    });
+	
+    $('.submit-goods-button').click(function(){
+      var cart_form = $(document.add_to_cart_form);
+      var input = $(this);
+      var url = cart_form.attr('action') + "?order_id=" + $('#order_id').val();
+      $.post(url,cart_form.serialize(),function(reply){
+        if(reply.match(/class='error'/)){
+          input.next('span').remove();
+          input.after(reply);
+        }else{
+          $('#cboxClose').click();
+          window.location.reload();
+        }
+      });
+    });
+  });	
+</script>	

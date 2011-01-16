@@ -1,0 +1,26 @@
+<div class="tab_content">
+  <h1 class="title">周期预定</h1>
+<%= error_messages_for :order %>
+  <%=  form_for(@order,:html => {:class => "form-profile"}) do |order_form| %>
+    <%= render :partial => "form",:locals => {:f => order_form,:order => @order} %>
+    <div class="btn t_center">
+      <input value="预定" type="submit">
+    </div>
+  <% end  %>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $( ".date-type-input" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    $("#order_member_name" ).autocomplete({
+      source:  "/book_records/complete_for_members",
+      select:  function(ui,li){
+        var item = li.item
+        var reqest_url  = "/book_records/complete_member_infos?id=" + item.id;
+        $.get(reqest_url,function(returned_data)
+        {
+          $('#rel_member').html(returned_data);
+        });
+      }
+    });
+  });
+</script>

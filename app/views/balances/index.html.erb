@@ -1,0 +1,49 @@
+<h1>待结算查询</h1>
+<fieldset class="hidden">
+  <form method="post" action="/balances/balance" class="form-profile">
+    <label for="name">卡号：</label>
+    <input type="text" name="id" maxlength="30" tabindex="1" value=""  class="inputtext" />
+    <label for="name">场地：</label>
+    <input type="text" name="court_id" maxlength="30" tabindex="1" value=""  class="inputtext" />
+    <label for="name">日期：</label>
+    <input type='text' name='record_date' class='date-type-input' />
+    <input type="submit" name="search" class="inputsubmit" value="查询"  tabindex="10" />
+  </form>
+</fieldset>
+<%if !@member.nil?%>
+  <fieldset class="hidden">
+    <label for="name">会员姓名：</label><%=h @member.name %>
+    <label>日期：</label><%=@date %>
+  </fieldset>
+<%end%>
+<h1>待结算列表</h1>
+<fieldset class="table">
+  <ul>
+    <li>预定人姓名</li>
+    <li>卡号</li>
+    <li>场地号</li>
+    <li style="width:15%;">消费金额</li>
+    <li style="width:15%;">日期</li>
+    <li style="width:15%;">时段</li>
+    <li style="width:15%;">操作</li>
+  </ul>
+  <% for record in @book_records %>
+    <ul>
+      <% if record.order.member %>
+        <li><%=h record.order.member.name %></li>
+        <li><%=h record.order.member_card.card_serial_num %></li>
+      <%else%>
+        <li><%=h record.order.non_member.name %></li>
+        <li>散客</li>
+      <%end%>
+      <li><%=h record.court.name %></li>
+      <li style="width:15%;"><%= record.order.amount %></li>
+      <li style="width:15%;"><%= DateUtil::timeshort(record.record_date) %></li>
+      <li style="width:15%;"><%= record.start_hour %>:00-<%=h record.end_hour %>:00</li>
+      <li style="width:15%;">
+        <a href="<%= new_order_balance_path(record.order)%>">结算</a>|
+        <a href="<%= edit_book_record_path(record)%>" >添加商品</a>
+      </li>
+    </ul>
+  <% end -%>
+</fieldset>

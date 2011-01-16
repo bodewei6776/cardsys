@@ -1,0 +1,30 @@
+development:
+  adapter: mysql
+  encoding: utf8
+  reconnect: false
+  database: cardsys_dev
+  socket: /var/run/mysqld/mysqld.sock
+  pool: 5
+  username: root
+  password:
+
+test:
+  adapter: mysql
+  encoding: utf8
+  reconnect: false
+  database: cardsys_test
+  socket: /var/run/mysqld/mysqld.sock
+  pool: 5
+  username: root
+  password:
+  host: localhost
+
+production:
+  adapter: mysql
+  encoding: utf8
+  reconnect: false
+  database: cardsys
+  socket: /var/run/mysqld/mysqld.sock
+  pool: 5
+  username: root
+  password:
