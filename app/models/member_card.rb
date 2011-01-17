@@ -37,7 +37,6 @@ class MemberCard < ActiveRecord::Base
   #TODO
   def should_advanced_order?(start_hour,end_hour)
     true
-    #card.should_advanced_order?
   end
   
   def has_enough_money_to_record?(record)
@@ -45,7 +44,7 @@ class MemberCard < ActiveRecord::Base
   end
 
   def has_enough_money_to_balance?(balance)
-    left_mouny_order_counter(balance) > balance.amount_by_card
+    left_mouny_order_counter(balance) >= balance.amount_by_card
   end
 
   def member_card_type_opt

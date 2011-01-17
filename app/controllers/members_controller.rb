@@ -312,26 +312,6 @@ class MembersController < ApplicationController
       member_card.update_attribute(:expire_date, params[:expire_date])
       notice = "有效期修改成功！"
    end
-
-#    member_card = MemberCard.find(params[:member_card_id])
-#    charge_fee = params[:type]=="1" ? fee.to_f : (-fee.to_f)
-#     if member_card.card.is_balance_card?
-#      if member_card.update_attribute(:left_fee, member_card.left_fee.to_f + charge_fee)
-#        RechargeRecord.new(:member_id => member_card.member_id,
-#          :member_card_id => member_card.id,
-#          :recharge_fee => charge_fee
-#          ).save
-#        notice = params[:type]=="1" ? "会员卡充值成功！" : "会员卡退款成功！"
-#      end
-#     elsif member_card.card.is_counter_card?
-#      if member_card.update_attribute(:left_times, member_card.left_times.to_f + charge_fee)
-#        RechargeRecord.new(:member_id => member_card.member_id,
-#          :member_card_id => member_card.id,
-#          :recharge_times => charge_fee).save
-#        notice = params[:type]=="1" ? "会员卡充次成功！" : "会员卡退款成功！"
-#      end
-#    end
-#    member_card.update_attribute(:expire_date, params[:expire_date]) if !params[:expire_date].blank?
     render :inline => notice.to_json
   end
 

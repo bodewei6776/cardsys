@@ -72,7 +72,6 @@
       $(".notice").show();
       $(".notice").attr("class", "notice");
       $(".notice").attr("innerHTML", data);
-      //location.reload();
       var form = $("form[0]");
       form.attr("action", "/member_cards/search?p=num");
       form.submit();
@@ -92,8 +91,6 @@
     }
   }
   function isNumTemp(obj){
-    //var re = /^[1-9]\d*$/;
-    //return re.test(obj);
-    return /^\d+$/.test(obj);
+    return /^[+-]?\d+$/.test(obj);
   }
 </script>
