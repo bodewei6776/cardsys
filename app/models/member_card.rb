@@ -83,9 +83,11 @@ class MemberCard < ActiveRecord::Base
   end
   
   def status_desc
-    desc_str = member_card_status_opt
-    desc_str << "*已过期"if is_expired?
-    desc_str
+    if is_expired?
+      "已过期"
+    else
+      member_card_status_opt
+    end
   end
   
   def has_less_count?

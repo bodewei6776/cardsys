@@ -8,6 +8,7 @@
 
 <fieldset class="table">
   <ul class="title_ul">
+    <li>编号</li>
     <li style="width:10%;">教练名称</li>
     <li style="width:10%;">性别</li>
     <li style="width:10%;">教练类型</li>
@@ -16,9 +17,11 @@
     <li style="width:15%;">状态</li>
     <li style="width:20%;">操作</li>
   </ul>
-  
+<% i = 0 %>
 <% @coaches.each do |coach| %>
+  <% i += 1 %>
    <ul>
+     <li><%= i %></li>
       <li style="width:10%;"><%= coach.name%></li>
       <li style="width:10%;"><%= gender_desc(coach.gender) %></li>
       <li style="width:10%;"><%= generate_coach_type_str(coach.coach_type) %></li>

@@ -21,6 +21,7 @@
 <h1>商品列表</h1>
 <fieldset class="table">
   <ul class="title_ul">
+    <li>编号</li>
     <li style="width:10%;">商品名称</li>
     <li style="width:10%;">商品分类</li>
     <li style="width:10%;">入库价格（￥）</li>
@@ -30,9 +31,11 @@
     <li style="width:8%;">前台商品数</li>
     <li style="width:20%;">操作</li>
   </ul>
-
+  <% i = 0 %>
   <% for good in @goods %>
+    <% i += 1 %>
     <ul>
+      <li><%= i %></li>
       <li style="width:10%;"><%= good.name%></li>
       <li style="width:10%;"><%= generate_good_type_str(good.good_type) %></li>
       <li style="width:10%;"><%= good.purchasing_price %></li>

@@ -8,15 +8,18 @@
 
 <fieldset class="table">
   <ul class="title_ul">
+    <li>编号</li>
     <li style="width:10%;">名称</li>
     <li style="width:10%;">开始日期</li>
     <li style="width:10%;">结束日期</li>
     <li style="width:10%;">节假日类型</li>
     <li style="width:10%;">操作</li>
   </ul>
-
+<% i = 0 %>
 <% @vacations.each do |vacation| %>
+    <% i += 1 %>
     <ul>
+      <li><%= i %></li>
       <li style="width:10%;"><%=vacation.name%></li>
       <li style="width:10%;"><%=ftime_date(vacation.start_date)%></li>
       <li style="width:10%;"><%=ftime_date(vacation.end_date)%></li>

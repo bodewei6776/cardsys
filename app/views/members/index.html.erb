@@ -53,9 +53,10 @@
 <h1>会员列表</h1>
 <fieldset class="table">
   <ul class="title_ul">
+    <li>编号</li>
     <li style="width:10%;">会员名称</li>
     <li>性别</li>
-    <li style="width:20%;">会员卡信息</li>
+    <li style="width:15%;">会员卡信息</li>
     <li style="width:10%;">移动电话</li>
     <li style="width:8%;">注册日期</li>
     <li >现有金额</li>
@@ -64,11 +65,14 @@
     <li style="width:8%;">会员生日</li>
     <li style="width:12%;">操作</li>
   </ul>
+  <% i = 0 %>
   <% for member in @members %>
+   <% i += 1 %>
     <ul>
+       <li><%= i %></li>
         <li style="width:10%;"><%= link_to member.name,member %></li>
         <li><%= gender_desc(member.gender) %></li>
-        <li style="width:20%;"><%= member.card_serial_nums %></li>
+        <li style="width:15%;"><%= member.card_serial_nums %></li>
         <li style="width:10%;"><%= member.mobile %></li>
         <li style="width:8%;"><%= member.created_at.nil? ? "" : DateUtil::timeshort(member.created_at) %></li>
         <li><%= member.member_card_left_fees %></li>
