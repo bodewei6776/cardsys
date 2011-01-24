@@ -19,7 +19,7 @@
              var domain = document.domain;
              if(domain == 'localhost'){
 				var url = 'http://localhost:3000/book_records?date=' + dateText;
-              }else{var url = 'http://'+domain+'/book_records?date=' + dateText;}
+              }else{var url = 'http://'+domain+':3000/book_records?date=' + dateText;}
              window.location.href=url;
           },
           dateFormat: 'yy-mm-dd'
