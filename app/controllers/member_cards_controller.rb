@@ -25,9 +25,6 @@ class MemberCardsController < ApplicationController
 #     @name = params[:name]
      @member_name = params[:member_name]
      @serial_num = params[:card_serial_num]
-#     @member_cards = MemberCard.order('card_serial_num')
-      p '---'
-      p params[:p] 
      if !@member_name.blank?
        @serial_num = "" if params[:p].nil?
        member = Member.where(:name => @member_name).where(:status => CommonResource::MEMBER_STATUS_ON).first
@@ -38,16 +35,9 @@ class MemberCardsController < ApplicationController
        end
      end
      if "num" == params[:p] && !@serial_num.blank?
-       #@member_cards 只有一个值
        @member_cards = [MemberCard.where(:card_serial_num => @serial_num).first]
        @member_card = @member_cards.first
      end
-#     @member_cards = @member_cards.paginate(:page => params[:page]||1,:per_page => Member_Perpage)
-
-#     if @p =="index1"
-#       @member_card = nil
-#       @member_cards = []
-#     end
      respond_to do |format|
        format.html # index.html.erb
        format.xml  { render :xml => @member_cards }
@@ -59,9 +49,4 @@ class MemberCardsController < ApplicationController
      render :layout => false
   end
 
-#  def to_recharge
-#    @member_card = MemberCard.find(params[:id])
-#    @type = params[:type]
-#    render :layout => false
-#  end
 end

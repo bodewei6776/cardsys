@@ -49,7 +49,7 @@ module BookRecordsHelper
           li_class << "book-reocrd-droppable"
         end
         info_htmls << [realy_time_span[0],content_tag(:li,content_tag("a",display_content,:href => url,
-        :class =>book_record.status_color ,:title => display_content,
+        :class =>book_record.status_color ,:title => display_content,:target => '_blank',
         :style => "height:#{li_height}px;display:block;"),:style => "height:#{li_height}px;",
         :class => li_class.join(' '), :id => "book-record-#{book_record.id}")]
       else

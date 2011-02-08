@@ -16,6 +16,8 @@ class Good < ActiveRecord::Base
   before_create :set_catena_id, :geneate_name_pinyin
   attr_accessor :order_count
 
+  scope :valid_goods,where(:status => 0)
+
   def set_catena_id
     self.catena_id = current_catena.id
   end

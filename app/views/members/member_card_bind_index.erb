@@ -1,90 +1,95 @@
 <%if @notice%><p class="notice"><%= @notice %></p><%end%>
 <%if @notice_error%><p class="notice_error"><%= @notice_error %></p><%end%>
 
-  <h1>会员卡绑定信息表</h1>
-  <div class="item">
-    <fieldset class="hidden_240h">
-      <legend>属性信息</legend>        
-      <form method="post" action="/members/member_card_bind_index" class="form-profile" id ="search_form">
-        <p>
-          <label for="name"><em>*</em>会员名称：</label>
-          <input type="text" name="member_name" maxlength="24" tabindex="1" value="<%=params[:member_name] %>" class="inputtext" autocomplete="/members/autocomplete_name" />
-          <%if !@member.nil?%>
-            <%= link_to '绑定卡类模板', {:action => "member_card_bind_list", :member_id => @member.nil? ? 0 : @member.id}, :class => "member_card_bind_index" %>
-          <%end%>
-          <label for="nickname">卡名称：</label><a id="card_name"></a>
-        </p>
-      </form>        
-      <%= form_for :member_card, @member_card, :url => {:action => "member_card_bind_update"}, :html => {:id=>"member_card_form",:class => "form-profile"} do |f|%>
-        <input type="hidden" name="member_id" value="<%=@member.nil? ? 0 : @member.id%>" />
-        <input type="hidden" name="binded_card_id" id="binded_card_id" value="" />
-        <input type="hidden" name="binded_card_type" id="binded_card_type" value="" />
+<h1>会员卡绑定信息表</h1>
+<div class="item">
+  <fieldset class="hidden_240h">
+    <legend>属性信息</legend>
+    <form method="post" action="/members/member_card_bind_index" class="form-profile" id ="search_form">
       <p>
-          <label for="nickname"><a class="blank_element_6"></a>卡<a class="blank_element_20"></a>号：</label>
-          <input type="text" name="member_card[card_serial_num]" maxlength="12" value="" id="card_serial_num" class="inputtext"/>
-
-          <a class="blank_element_68"></a>
-          <label for="gender" id="card_type_desc"><em>*</em>卡内金额/次数：</label>
-          <input type="text" id="card_type_name" name="member_card[left_fee]" maxlength="12" value="" class="inputtext" />
-        </p>
-        <p>
-          <label for="mobile"><em>*</em>&nbsp;有 效 期：</label>
-         <input type="text" value="<%= DateUtil::timeshort(Time.now + 1.year) %>" name="member_card[expire_date]" class="date-type-input"/>
-        </p>
-        <p>
-          <label for="description"><a class="blank_element_6"></a>备<a class="blank_element_20"></a>注：</label>
-          <textarea name="member_card[description]" cols="47" rows="3" id="description"></textarea>
-        </p>
+        <label for="name"><em>*</em>会员名称：</label>
+        <input type="text" name="member_name" maxlength="24" tabindex="1" value="<%=params[:member_name] %>" class="inputtext" autocomplete="/members/autocomplete_name" />
+        <%if !@member.nil?%>
+          <%= link_to '绑定卡类模板', {:action => "member_card_bind_list", :member_id => @member.nil? ? 0 : @member.id}, :class => "member_card_bind_index" %>
+        <%end%>
+        <label for="nickname">卡名称：</label><a id="card_name"></a>
+      </p>
+    </form>
+    <%= form_for :member_card, @member_card, :url => {:action => "member_card_bind_update"}, :html => {:id=>"member_card_form",:class => "form-profile"} do |f|%>
+      <input type="hidden" name="member_id" value="<%=@member.nil? ? 0 : @member.id%>" />
+      <input type="hidden" name="binded_card_id" id="binded_card_id" value="" />
+      <input type="hidden" name="binded_card_type" id="binded_card_type" value="" />
+      <p>
+        <label for="nickname"><a class="blank_element_6"></a>卡<a class="blank_element_20"></a>号：</label>
+        <input type="text" name="member_card[card_serial_num]" maxlength="12" value="" id="card_serial_num" class="inputtext"/>
+        <a class="blank_element_68"></a>
+        <label for="mobile"><em>*</em>&nbsp;有 效 期：</label>
+        <input type="text" value="<%= DateUtil::timeshort(Time.now + 1.year) %>" name="member_card[expire_date]" class="date-type-input"/>
+       
+      </p>
+      <p>
+        <label for="gender" id="card_type_desc"><em>*</em>充值金额：</label>
+        <input type="text" id="card_type_name" name="member_card[left_fee]" maxlength="12" value="" class="inputtext" />
+        <a class="blank_element_68"></a>
+        <label for="gender" ><em>*</em>充值次数：</label>
+        <input type="text"  name="member_card[left_times]" maxlength="12" value="" class="inputtext" />
+      </p>
+      <p>
+        <label for="description"><a class="blank_element_6"></a>备<a class="blank_element_20"></a>注：</label>
+        <textarea name="member_card[description]" cols="47" rows="3" id="description"></textarea>
+      </p>
+    <%end%>
+  </fieldset>
+</div>
+<div class="btn t_center">
+  <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>
+</div>
+<div>
+  <% if !@member_cards.nil? && @member_cards.size > 0 %>
+    <fieldset class="table" >
+      <legend>已绑定的卡</legend>
+      <ul class="title_ul">
+        <li style="text-align:center;width:100px;">卡名称</li>
+        <li style="text-align:center;width:100px;">卡类型</li>
+        <li style="text-align:center;width:100px;">卡余额/余次</li>
+        <li style="text-align:center;width:150px;">有效期</li>
+        <li style="text-align:center;width:100px;">授权人</li>
+        <li></li>
+        <li style="text-align:center;width:100px;">取消绑定</li>
+      </ul>
+      <%for member_card in @member_cards%>
+        <ul>
+          <li style="text-align:center;width:100px;">
+            <span style="width:100px;right:20px;"><%= member_card.card_serial_num%></span>
+          </li>
+          <li style="text-align:center;width:100px;">
+            <span style="width:100px;right:20px;"><%= member_card.card.card_type_desc%></span>
+          </li>
+          <li style="text-align:center;width:100px;">
+            <span style="width:100px;right:20px;">
+             <%= member_card.left_fee_value %>
+            </span>
+          </li>
+          <li style="text-align:center;width:150px;">
+            <span style="width:100px;right:20px;"><%= DateUtil::timelong(member_card.expire_date)%></span>
+          </li>
+          <li style="text-align:center;width:100px;">
+            <%= link_to '添加授权人', {:action => :granter_new, :member_id => @member.id, :member_card_id => member_card.id}, :class => "granter_new" %>
+          </li>
+          <li> <% for granter in generate_granter_options(@member) %>
+              <%if @member.is_granter(granter[1], member_card.id)%>
+                <%=granter[0]%>
+              <%end%>
+            <%end%>
+          </li>
+          <li style="text-align:center;width:100px;">
+            <%= link_to '注销此卡', {:action => :member_card_freeze, :member_id => @member.id, :member_card_id => member_card.id, :type => 1}, :confirm => "确定要进行此操作？" %>
+          </li>
+        </ul>
       <%end%>
     </fieldset>
   </div>
-  <div class="btn t_center">
-    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>
-  </div>
-  <div>
-  <% if !@member_cards.nil? && @member_cards.size > 0 %>
-  <fieldset class="table" >
-        <legend>已绑定的卡</legend>
-        <ul class="title_ul">
-          <li style="text-align:center;width:100px;">卡名称</li>
-          <li style="text-align:center;width:100px;">卡类型</li>
-          <li style="text-align:center;width:100px;">卡余额/余次</li>
-          <li style="text-align:center;width:150px;">有效期</li>
-          <li style="text-align:center;width:100px;">授权人</li>
-          <li></li>
-          <li style="text-align:center;width:100px;">取消绑定</li>
-        </ul>
-        <%for member_card in @member_cards%>
-          <ul>
-            <li style="text-align:center;width:100px;">
-              <span style="width:100px;right:20px;"><%= member_card.card_serial_num%></span>
-            </li>
-            <li style="text-align:center;width:100px;">
-              <span style="width:100px;right:20px;"><%= member_card.card.card_type_desc%></span>
-            </li>
-            <li style="text-align:center;width:100px;">
-              <span style="width:100px;right:20px;"><%= member_card.left_times == 0 ? member_card.left_fee : member_card.left_times%></span>
-            </li>
-            <li style="text-align:center;width:150px;">
-              <span style="width:100px;right:20px;"><%= DateUtil::timelong(member_card.expire_date)%></span>
-            </li>
-            <li style="text-align:center;width:100px;">
-              <%= link_to '添加授权人', {:action => :granter_new, :member_id => @member.id, :member_card_id => member_card.id}, :class => "granter_new" %>
-            </li>
-            <li> <% for granter in generate_granter_options(@member) %>
-                <%if @member.is_granter(granter[1], member_card.id)%>
-                 <%=granter[0]%>
-               <%end%>
-              <%end%>
-            </li>
-            <li style="text-align:center;width:100px;">
-              <%= link_to '注销此卡', {:action => :member_card_freeze, :member_id => @member.id, :member_card_id => member_card.id, :type => 1}, :confirm => "确定要进行此操作？" %>
-            </li>
-          </ul>
-        <%end%>
-    </fieldset>  
-    </div>
-    <%end%>
+<%end%>
 
 <script type="text/javascript">
   function fsubmit(){

@@ -279,9 +279,10 @@ class MembersController < ApplicationController
     @member_card.card_id = params[:binded_card_id]
     @member_card.user_id = current_user.id
     @member_card.password = @member.name
-    @member_card.save
+    notice = @member_card.save ? '会员卡绑定成功！' : @member_card.errors.full_messages.values.join(';')
     respond_to do |format|
-      format.html { redirect_to :action => "member_card_bind_index", :member_name => @member.name, :member_id => params[:member_id], :notice => '会员卡绑定成功！'}
+      format.html { redirect_to :action => "member_card_bind_index",
+        :member_name => @member.name, :member_id => params[:member_id], :notice => notice}
       format.xml  { head :ok }
     end
   end

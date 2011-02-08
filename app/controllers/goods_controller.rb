@@ -131,13 +131,13 @@ class GoodsController < ApplicationController
     if params[:id].to_i > 0
       @goods = [Good.find(params[:id])]
     else
-      @goods = Good.order('sale_count desc').limit(30)
+      @goods = Good.valid_goods.order('sale_count desc').limit(30)
     end
     render :layout => false
   end
   
   def to_buy
-    @goods = Good.order('sale_count desc').limit(30)
+    @goods = Good.valid_goods.order('sale_count desc').limit(30)
     render :action => 'goods'
   end
   

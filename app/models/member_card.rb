@@ -12,6 +12,8 @@ class MemberCard < ActiveRecord::Base
   Free_Count_Limit = 2
   Free_Amount_limit = 500
 
+  validates :card_serial_num,:uniqueness => {:message => "卡号已经存在，请更换卡号"}
+
   #  #default_scope where({:catena_id => current_catena.id})
 
   def calculate_amount_in_time_span(date,start_hour,end_hour)
@@ -104,6 +106,14 @@ class MemberCard < ActiveRecord::Base
     desc << "卡余额不足#{Free_Amount_limit}元，请及时充值" if has_less_fee?
   end
   
+  def should_charge_counter?
+    card.is_zige_card? || card.is_counter_card?
+  end
+  
+  def should_recharge_amount?
+    card.is_zige_card? || !card.is_counter_card?
+  end
+
   def order_tip_message
     msg = []
     msg << "卡已经过期，或者状态不正常" unless is_avalible?
