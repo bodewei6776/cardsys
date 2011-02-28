@@ -14,7 +14,7 @@ module ApplicationHelper
 
   def should_display_common_memu?
     %{period_prices tennis_courts courts coaches cards common_resources vacations}.include?(controller_name.to_s) &&
-    action_name.to_s != 'coach_status_search' && action_name.to_s != 'court_status_search'
+      action_name.to_s != 'coach_status_search' && action_name.to_s != 'court_status_search'
   end
 
   def should_display_member_memu?
@@ -32,13 +32,40 @@ module ApplicationHelper
   def should_display_authorize_menu?
     controller_name =~ /users|department/
   end
-  
-  def should_display_book_record_menu?
-    action_name.to_s == 'coach_status_search' || action_name.to_s == 'court_status_search' ||
-    controller_name.to_s =~ /book_records|coaches|advanced_order/
+
+  def should_display_balance_menu?
+    controller_name =~ /balances|product_records/
   end
 
-  ##############            card        ##############
+  def should_display_book_record_menu?
+    action_name.to_s == 'coach_status_search' || action_name.to_s == 'court_status_search' ||
+      controller_name.to_s =~ /book_records|coaches|advanced_order/
+  end
+
+  def should_display_report_menu?
+    false
+  end
+
+  def display_current_menu
+    current_menu = case
+    when should_display_common_memu? then 'common_memu'
+    when should_display_member_memu? then 'member_memu'
+    when should_display_member_card_memu? then 'member_card_memu'
+    when should_display_goods_memu? then 'goods_memu'
+    when should_display_authorize_menu? then 'authorize_menu'
+    when should_display_balance_menu? then 'balance_menu'
+    when should_display_book_record_menu? then 'book_record_menu'
+    when should_display_report_menu? then 'report_menu'
+    end
+    js =<<js
+    <script type="text/javascript">
+    $('.menu_item').hide();
+    $('##{current_menu}').show();
+    </script>
+js
+    js.html_safe
+  end
+
   def generate_card_type_options(card)
     options = generate_res_options CommonResource::CARD_TYPE
     options_for_select(options, card.card_type ? card.card_type : nil)
@@ -62,10 +89,7 @@ module ApplicationHelper
     options = generate_res_options CommonResource::PERIOD_TYPE
     options_for_select(options, period_price.period_type ? period_price.period_type.to_s : nil)
   end
-  ##############          end                 ##############
-
-
-  ##############        period_price          ##############
+  
   def display_period_price_type_desc(period_price)
     get_res_item(CommonResource::PERIOD_TYPE, period_price)
   end
@@ -96,13 +120,9 @@ module ApplicationHelper
     options_for_select(options, model.cert_type.nil? ? model.cert_type : 0)
   end
 
-   def generate_cert_type_str(type)
+  def generate_cert_type_str(type)
     get_res_item(CommonResource::CERT_TYPE, type)
   end
-
-##############          end                 ##############
-
-################# good  ##############
 
   def generate_good_type_options(good_type)
     options = generate_res_options CommonResource::GOOD_TYPE
@@ -123,10 +143,7 @@ module ApplicationHelper
     get_res_item(CommonResource::GOOD_SOURCE, source)
   end
 
-  ##############          end                 ##############
-
-  ################# member  ##############
-   def generate_granter_options(member)
+  def generate_granter_options(member)
     options = []
     granter_ids = MemberCardGranter.where(:catena_id => member.catena_id).where(:member_id => member.id)
     for granter in granter_ids
@@ -137,38 +154,24 @@ module ApplicationHelper
     granters
   end
 
-   ##############          end                 ##############
+  def generate_court_status_str(status)
+    CommonResource::COURT_ON == status ? '启用' : '停用'
+  end
 
-   #################  court ################
-   def generate_court_status_str(status)
-     if(CommonResource::COURT_ON == status)
-       '启用'
-     else
-       '停用'
-     end
-   end
+  def get_user_name(id)
+    id.blank? ? "" : User.find(id).user_name
+  end
 
-   def get_user_name(id) 
-     id == "" ? "" : User.find(id).user_name
-   end
-
-   ############      end  ###########
-
-   ###############  user_session ################
-
-   def generate_catena_options
+  def generate_catena_options
     options = []
     Catena.all.each{|x|options << [x.name, x.id]}
     options_for_select(options, 1)#TODO
   end
 
-   ############## end ##############
-
-############ member_card ############
   def member_card_status_str card_status
     (CommonResource::MEMBER_CARD_FREEZE == card_status) ? "已作废" : "正常"
   end
-   ############# end ##############
+
   def ftime(time)
     return '' if time.nil?
     return time.strftime("%Y年%m月%d日 %H点%M分")
@@ -180,20 +183,13 @@ module ApplicationHelper
   end
 
   def gender_desc(gender)
-    if gender == 1
-      return "男"
-    else
-      return "女"
-    end
+    gender == 1 ? '男' : '女'
   end
-
 
   def get_coach_avater
     image = MiniMagick::Image.from_file("/coach/william.jpg")
     image.resize "400X300"
-    #now save it with a different name
     image.write("william_medium.jpg")
-
   end
 
   def generate_department_options(model)
@@ -201,10 +197,9 @@ module ApplicationHelper
     Department.all.each{|x| options << [x.name, x.id]}
     options_for_select(options, model.department.nil? ? 1 : model.department.id)
   end
-
+  
   private
 
-  #得到资源
   def generate_res_options res_type
     com_res = CommonResource.where(:name => res_type).last
     options = []

@@ -1,151 +1,272 @@
-<%if @p !='mc'%>
-<label align="right">
-  <%= link_to '创建新会员', new_member_path %>
-  <br />
-</label>
-<%end%>
-<br />
-<h1 class="title">会员详细资料</h1>
-<%if notice%><p class="notice"><%= notice %></p><%end%>
-<div class="listcontent_w clearfix cleft">
-  <ul class="clearfix">
-    <fieldset class="hidden">
-      <legend>属性信息</legend>
-      <li class="cleft">
-        <div class="w1">会员名称：</div>
-        <div class="w2">
-          <%= @member.name %><%if @member.name.blank?%><a class="blank_element"></a><%end%>
-        </div>
-        <div class="w1">注册日期：</div>
-        <div class="w2">
-          <%= DateUtil::timeshort(@member.created_at) %>
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">会员昵称：</div>
-        <div class="w2">
-          <%= @member.nickname %><%if @member.nickname.blank?%><a class="blank_element"></a><%end%>
-        </div>
-        <div class="w1">会员性别：</div>
-        <div class="w2">
-          <%= gender_desc(@member.gender) %>
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">移动电话：</div>
-        <div class="w2">
-          <%= @member.mobile %><%if @member.mobile.blank?%><a class="blank_element"></a><%end%>
-        </div>
-        <div class="w1">固定电话：</div>
-        <div class="w2">
-          <%= @member.telephone%>
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">工作：</div>
-        <div class="w2">
-          <%= @member.job%><%if @member.job.blank?%><a class="blank_element"></a><%end%>
-        </div>
-        <div class="w1">邮箱：</div>
-        <div class="w2">
-          <%= @member.email%>
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">证件类型：</div>
-        <div class="w2">
-          <%= generate_cert_type_str(@member.cert_type) %>
-            <%if generate_cert_type_str(@member.cert_type).blank?%>
-              <a class="blank_element"></a>
-            <%end%>
-        </div>
-        <div class="w1">证件号码：</div>
-        <div class="w2">
-           <%if !generate_cert_type_str(@member.cert_type).blank?%>
-             <%= @member.cert_num%>
-            <%end%>
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">联系地址：</div>
-        <div class="w2">
-          <%= @member.address %><%if @member.address.blank?%><a class="blank_element"></a><%end%>
-        </div>
-        <div class="w1">介绍人：</div>
-        <div class="w2">
-          <%= @member.mentor %>
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">备注：</div>
-        <div class="w2">
-          <%= @member.memo %>
-        </div>
-      </li>
-    </fieldset>
-  </ul>
-</div>
-<div class="listcontent_w clearfix cleft">
-  <ul class="clearfix">
-    <fieldset class="hidden">
-      <legend>其他信息</legend>
-      <li class="cleft">
-        <div class="w1">刷卡次数：</div>
-        <div class="w2">
-          <a class="blank_element"></a>
-        </div>
-        <div class="w1">最近来店日期：</div>
-        <div class="w2">
-          <%= @member.latest_comer_date %>
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">消费总金额：</div>
-        <div class="w2">
-          <%= @member.member_consume_amounts %><%if @member.member_consume_amounts.blank?%><a class="blank_element"></a><%end%>
-        </div>
-        <div class="w1">卡内余额：</div>
-        <div class="w2">
-          <%= @member.member_card_left_fees %>
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">卡付金额：</div>
-        <div class="w2">
-          <a class="blank_element"></a>
-        </div>
-        <div class="w1">现金支付：</div>
-        <div class="w2">          
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">总充值金额：</div>
-        <div class="w2">
-          <%=@member.recharge_fees%>
-        </div>
-        <div class="w1">卡内次数：</div>
-        <div class="w2">
-          <%= @member.member_card_left_times%>
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">卡付次数：</div>
-        <div class="w2">
-          <a class="blank_element"></a>
-        </div>
-        <div class="w1">总充值次数（次）：</div>
-        <div class="w2">
-          <%=@member.recharge_times%>
-        </div>
-      </li>
-    </fieldset>
-  </ul>
-</div>
-<%= render :partial => "member_card_list"%>
-<%= render :partial => "recharge_list"%>
-<%= render :partial => "consume_list"%>
-
-<div class="btn t_center">
-    <a href="/members/<%=@member.id %>/edit">修改</a> |
-    <a href="/members" >返回</a>
+<div class="w96">
+  <div class=" r_bt">
+    <div class=" r_bt_l">
+      <div class=" r_bt_l_a"></div>
+      <div class=" r_bt_l_c fb white">会员详细资料</div>
+    </div>
+    <div class=" r_bt_r"></div>
   </div>
+  <div class="info">
+    <div class="infobox">
+      <div class="infobox_bt"><p>会员 <%= @member.name %> 的基本资料</p></div>
+      <div class="infobox_nr">
+        <ul>
+          <li class="cleft">
+            <div class="w1">会员名称：</div>
+            <div class="w2">
+              <%= @member.name %><%if @member.name.blank?%><a class="blank_element"></a><%end%>
+            </div>
+            <div class="w1">注册日期：</div>
+            <div class="w2">
+              <%= DateUtil::timeshort(@member.created_at) %>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li class="cleft">
+            <div class="w1">会员昵称：</div>
+            <div class="w2">
+              <%= @member.nickname %><%if @member.nickname.blank?%><a class="blank_element"></a><%end%>
+            </div>
+            <div class="w1">会员性别：</div>
+            <div class="w2">
+              <%= gender_desc(@member.gender) %>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li class="cleft">
+            <div class="w1">移动电话：</div>
+            <div class="w2">
+              <%= @member.mobile %><%if @member.mobile.blank?%><a class="blank_element"></a><%end%>
+            </div>
+            <div class="w1">固定电话：</div>
+            <div class="w2">
+              <%= @member.telephone%>
+            </div>
+          </li>
+
+        </ul>
+        <ul>
+          <li class="cleft">
+            <div class="w1">工作：</div>
+            <div class="w2">
+              <%= @member.job%><%if @member.job.blank?%><a class="blank_element"></a><%end%>
+            </div>
+            <div class="w1">邮箱：</div>
+            <div class="w2">
+              <%= @member.email%>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li class="cleft">
+            <div class="w1">证件类型：</div>
+            <div class="w2">
+              <%= generate_cert_type_str(@member.cert_type) %>
+              <%if generate_cert_type_str(@member.cert_type).blank?%>
+                <a class="blank_element"></a>
+              <%end%>
+            </div>
+            <div class="w1">证件号码：</div>
+            <div class="w2">
+              <%if !generate_cert_type_str(@member.cert_type).blank?%>
+                <%= @member.cert_num%>
+              <%end%>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li class="cleft">
+            <div class="w1">联系地址：</div>
+            <div class="w2">
+              <%= @member.address %><%if @member.address.blank?%><a class="blank_element"></a><%end%>
+            </div>
+            <div class="w1">介绍人：</div>
+            <div class="w2">
+              <%= @member.mentor %>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">备注：</div>
+            <div class="ww2"><%= @member.memo %></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="h10"></div>
+    <div class="infobox">
+      <div class="infobox_bt"><p>会员 丁俊晖 的卡列表</p></div>
+      <div class="infobox_nr">
+        <ul>
+          <li class="cleft">
+            <div class="w1">刷卡次数：</div>
+            <div class="w2">
+              <a class="blank_element"></a>
+            </div>
+            <div class="w1">最近来店日期：</div>
+            <div class="w2">
+              <%= @member.latest_comer_date %>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li class="cleft">
+            <div class="w1">消费总金额：</div>
+            <div class="w2">
+              <%= @member.member_consume_amounts %><%if @member.member_consume_amounts.blank?%><a class="blank_element"></a><%end%>
+            </div>
+            <div class="w1">卡内余额：</div>
+            <div class="w2">
+              <%= @member.member_card_left_fees %>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li class="cleft">
+            <div class="w1">卡付金额：</div>
+            <div class="w2">
+              <a class="blank_element"></a>
+            </div>
+            <div class="w1">现金支付：</div>
+            <div class="w2">
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li class="cleft">
+            <div class="w1">总充值金额：</div>
+            <div class="w2">
+              <%=@member.recharge_fees%>
+            </div>
+            <div class="w1">卡内次数：</div>
+            <div class="w2">
+              <%= @member.member_card_left_times%>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li class="cleft">
+            <div class="w1">卡付次数：</div>
+            <div class="w2">
+              <a class="blank_element"></a>
+            </div>
+            <div class="w1">总充值次数（次）：</div>
+            <div class="w2">
+              <%=@member.recharge_times%>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="h10"></div>
+    <div class="infobox">
+      <div class="infobox_bt"><p>会员 <%= @member.name %> 的卡列表</p></div>
+
+      <div class=" table2">
+        <ul class="bttitle black fb ">
+          <li class="w5">序号</li>
+          <li class="w10">卡号</li>
+          <li class="w10">卡状态</li>
+          <li class="w15">卡内余额</li>
+          <li class="w10">卡内次数</li>
+          <li class="w10">卡有效期</li>
+          <li class="w15">授权人</li>
+        </ul>
+        <% @member_cards.each_with_index do |card,index|  %>
+          <ul class="table_items">
+            <input type="hidden" id="member_id" value="<%= @member.id%>" />
+            <li class="w5"><%= index + 1 %></li><%i=i+1%>
+            <li class="w10"><%= card.card_serial_num %></li>
+            <li class="w10"><%= member_card_status_str(card.status) %></li>
+            <li class="w15"><%= card.left_fee %></li>
+            <li class="w10"><%= card.left_times %></li>
+            <li class="w10"><%= DateUtil.timeshort(card.expire_date) %></li>
+            <li class="w15">
+              <% for granter in generate_granter_options(@member) %>
+                <%if @member.is_granter(granter[1], card.id)%>
+                  <%=granter[0]%>
+                <%end%>
+              <%end%>
+            </li>
+          </ul>
+        <%end%>
+      </div>
+    </div>
+    <div class="h10"></div>
+    <div class="infobox">
+      <div class="infobox_bt"><p>会员 丁俊晖 的充值记录列表</p></div>
+      <div class=" table2">
+
+        <ul class="bttitle black fb ">
+          <li class="w15">充值日期</li>
+          <li class="w15">充值金额/次数</li>
+        </ul>
+        <ul style="background: none repeat scroll 0% 0% rgb(255, 255, 255);" onmouseover="javascript:this.style.background='#c8f8a0';" onmouseout="javascript:this.style.background='#ffffff';">
+          <li class="w15">2010-11-15</li>
+          <li class="w15">300.0/1</li>
+        </ul>
+        <ul style="background: none repeat scroll 0% 0% rgb(239, 255, 200);" class="bglvse" onmouseover="javascript:this.style.background='#c8f8a0';" onmouseout="javascript:this.style.background='#efffc8';">
+          <li class="w15">2010-11-15</li>
+          <li class="w15">300.0/1</li>
+
+        </ul>
+        <ul style="background: none repeat scroll 0% 0% rgb(255, 255, 255);" onmouseover="javascript:this.style.background='#c8f8a0';" onmouseout="javascript:this.style.background='#ffffff';">
+          <li class="w15">2010-11-15</li>
+          <li class="w15">300.0/1</li>
+        </ul>
+        <ul style="background: none repeat scroll 0% 0% rgb(239, 255, 200);" class="bglvse" onmouseover="javascript:this.style.background='#c8f8a0';" onmouseout="javascript:this.style.background='#efffc8';">
+          <li class="w15">2010-11-15</li>
+          <li class="w15">300.0/1</li>
+        </ul>
+
+      </div>
+    </div>
+    <div class="h10"></div>
+    <div class="infobox">
+      <div class="infobox_bt"><p>会员 丁俊晖 的消费记录列表</p></div>
+      <div class=" table2">
+        <ul class="bttitle black fb ">
+          <li class="w15">消费类型</li>
+          <li class="w15">订单数量</li>
+
+          <li class="w15">消费价格</li>
+          <li class="w15">起止时间</li>
+          <li class="w15">订单时间</li>
+        </ul>
+        <ul style="background: none repeat scroll 0% 0% rgb(255, 255, 255);" onmouseover="javascript:this.style.background='#c8f8a0';" onmouseout="javascript:this.style.background='#ffffff';">
+          <li class="w15">自助</li>
+          <li class="w15">2</li>
+          <li class="w15">200.0</li>
+          <li class="w15">2010-11-15</li>
+
+          <li class="w15">2010-11-15</li>
+        </ul>
+        <ul style="background: none repeat scroll 0% 0% rgb(239, 255, 200);" class="bglvse" onmouseover="javascript:this.style.background='#c8f8a0';" onmouseout="javascript:this.style.background='#efffc8';">
+          <li class="w15">自助</li>
+          <li class="w15">2</li>
+          <li class="w15">200.0</li>
+          <li class="w15">2010-11-15</li>
+          <li class="w15">2010-11-15</li>
+
+        </ul>
+      </div>
+    </div>
+    <div class="h10"></div>
+    <div class="input_bd"><button class="submit1 hand" tabindex="100" name="loginsubmit" type="submit" value="true">修改</button>&nbsp;&nbsp;&nbsp;&nbsp;<button class="submit3 hand" tabindex="100" name="loginsubmit" type="submit" value="true">返回</button></div>
+    <div class=" clear"></div>
+  </div>
+  <div class="h10"></div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('.table_items').mouseover(function(){
+      $(this).css('background-color','#c8f8a0');
+    });
+    $('.table_items').mouseout(function(){
+      $(this).css('background-color','#ffffff');
+    });
+  });
+</script>

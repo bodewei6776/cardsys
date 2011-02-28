@@ -3,6 +3,8 @@ class MembersController < ApplicationController
   before_filter :get_granters, :only => [:granter_index]
   autocomplete :members, :name
 
+  layout  'main'
+
   Member_Perpage = 15
 
   def autocomplete_name
@@ -22,7 +24,6 @@ class MembersController < ApplicationController
   # GET /members
   # GET /members.xml
   def index
-    @sp = params[:sp]
     @name = params[:name]#会员名
     @serial_num = params[:card_serial_num]#会员卡号
     @reg_date_start = params[:reg_date_start]#注册日期

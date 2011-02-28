@@ -7,20 +7,19 @@
     <meta name="author" content="author"/>
     <meta name="csrf-token" content="<%= form_authenticity_token %>" />
     <meta name="csrf-param" content="authenticity_token" />
-    <%= javascript_include_tag 'jquery-1.4.2','jquery.ui.core','jquery-ui-1.8.2.custom.min',
-      'jquery.ui.datepicker','rails'%>
-	<%= javascript_include_tag "jquery.colorbox-min.js"   %>
+    <%= javascript_include_tag 'jquery-1.4.2','jquery.ui.core','jquery-ui-1.8.2.custom.min','jquery.ui.datepicker','rails'%>
+    <%= javascript_include_tag "jquery.colorbox-min.js"   %>
     <%= javascript_include_tag "autocomplete-rails.js"   %>
     <script type="text/javascript">
       $(document).ready(function() {
         $('#datepicker').datepicker({
           onSelect: function(dateText, inst) {
             $("#calendar_con").val(dateText);
-             var domain = document.domain;
-             if(domain == 'localhost'){
-				var url = 'http://localhost:3000/book_records?date=' + dateText;
-              }else{var url = 'http://'+domain+':3000/book_records?date=' + dateText;}
-             window.location.href=url;
+            var domain = document.domain;
+            if(domain == 'localhost'){
+              var url = 'http://localhost:3000/book_records?date=' + dateText;
+            }else{var url = 'http://'+domain+':3000/book_records?date=' + dateText;}
+            window.location.href=url;
           },
           dateFormat: 'yy-mm-dd'
         });
@@ -44,12 +43,12 @@
     <script type="text/javascript">
 
       function isNum(str){
-      if(str != ""){
-        return /^\d+$/.test(str);
-      }else{
-        return true;
+        if(str != ""){
+          return /^\d+$/.test(str);
+        }else{
+          return true;
+        }
       }
-    }
     </script>
   </body>
 </html>

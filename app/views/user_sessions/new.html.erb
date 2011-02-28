@@ -1,119 +1,71 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" lang="en"><head>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>博德维网球管理系统</title>
+    <%= stylesheet_link_tag 'main' %>
+    <style type="text/css">
+      <!--
+      body{background: url(/images/new/login_bg.jpg) repeat-x top center #dfff92 ;}
+      #errorExplanation {
+        background-color: #FFDCD7;
+        border: 2px solid #D01E5E;
+        margin: 0 2px 2px 10px;
+        padding: 7px 8px 12px;
+        width: 460px;
+      }
+      -->
+    </style>
+    <%= javascript_include_tag 'jquery-1.4.2'%>
+  </head>
+  <body>
+    <div class="login">
+      <div class="login_bt white fmic30">博德维网球管理系统</div>
+      <div class="login_tu"></div>
+      <%= form_for @user_session, :url => user_session_path,:html => {:id => 'new_user_action'} do |f| -%>
+        <%= error_messages_for :user_session %>
+        <div class="login_bd">
+          <ul>
+            <li class="w25 tright" >选择分店：</li>
+            <li >
+              <label>
+                <select name="catena_id" id="catena_id">
+                  <%= generate_catena_options%>
+                </select>
+              </label>
+            </li>
+          </ul>
+          <ul>
+            <li class="w25  tright" >用户名：</li>
+            <li>
+              <label>
+                <%= f.text_field :login,:size => 40,:style => "height:20px; line-height:20px;" %>
+              </label>
+            </li>
+          </ul>
 
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-  <title>登录 - 系统</title>
-
-  <meta name="keywords" content="登录">
-  <meta name="description" content="登录">
-    <meta name="csrf-token" content="<%= form_authenticity_token %>" />
-    <meta name="csrf-param" content="authenticity_token" />
-
-  <%= stylesheet_link_tag 'login', 'jquery-ui-1.8.2.custom' %>
-
-</head><body>
-
-
-<a name="top"></a>
-
-<div id="site_nav_bk">
-  
-</div>
-
-<div id="site_header" class="site_head_not_index">
-	<div id="site_nav">
-		<div class="site_logo"><DIV id=texture style="WIDTH: 273px; HEIGHT:33px"><DIV style="FONT-SIZE: 27px; FILTER: Chroma(color=#FCFBFA); FLOAT: left; WIDTH: 273px; HEIGHT:33px;" align=center><FONT color=#FCFBFA><b>博德维网球管理系统</b></FONT></DIV></DIV>
-		</div>
-	</div>
-</div>
-
-<div id="main">
-<div class="container">
-  <div id="content">
-			<div id="main_content">
-
-    <div class="site_box float_left site_login_box">
-      <b class="rc-tp" style="background-position: -162px -195px;">
-        <b style="background-position: -159px -195px;"></b>
-      </b>
-      <div class="site_box_in">
-          <div class="box_title">
-              <h1>登录</h1>
-          </div>
-          <div class="box_content">
-              <%= form_for @user_session, :url => user_session_path do |f| %>
-            
-              <div style="margin: 0pt; padding: 0pt; display: inline;">
-                  <input name="authenticity_token" value="BFTLfkVDC0talpgzRLjFvmXOND252S+M+TQ5cipE5N0=" type="hidden"></div>
-          <table>
-          <tbody>
-            <tr>
-                  <td style="width: 5em; text-align: right;"><label for="login">选择分店:</label></td>
-                  <td>
-                    <select name="catena_id" id="" class="select">
-          <%= generate_catena_options%>
-        </select>
-                  </td>
-          </tr>
-
-            <tr>
-                  <td style="width: 5em; text-align: right;"><label for="login">用户名:</label></td>
-                  <td><%= f.text_field :login,:size => 20,:class => "input_text"%></td>
-          </tr>
-
-          <tr>
-                  <td style="text-align: right;"><label for="password">密码:</label></td>
-                  <td>
-                    <%= f.password_field :password,:size => 20,:class => "input_text" %></td>
-          </tr>
-
-          <tr>
-                  <td></td>
-                  <td>
-                    <label for="remember_me">
-                      <%= f.check_box :remember_me,{:size => 20}, 1 , 1%>
-                      记住我的密码</label>
-                    <br>
-                    <label style="float: right;"><a href="/users/new">忘记密码</a></label>
-                  </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>
-              <input id="ret" name="ret" type="hidden">
-              <input class="input_btn" name="commit" value="登录" type="submit">
-            </td>
-          </tr>
-          </tbody></table>
-          <%end%>            <hr>
-            还没有注册？
-              <a href="/users/new">马上注册！</a>
-          </div>
-      </div>
+          <ul>
+            <li class="w25  tright" >密码：</li>
+            <li >
+              <label>
+                <%= f.password_field :password,:size => 40,:style => "height:20px; line-height:20px;" %>
+              </label>
+            </li>
+          </ul>
+          <ul>
+            <li class="w25  tright" ></li>
+            <li >
+              <label>
+                <%= f.check_box :remember_me,{:size => 20}, 1 , 1%>  记住我的密码
+              </label>
+            </li>
+          </ul>
+        </div>
+        <div class="login_bb">
+          <a title="登录" href="#" onclick="$('#new_user_action').submit();return false;"><img src="/images/new/login_dl.gif" alt="登录" /></a>
+          <a title="新用户注册" href="#"><img src="/images/new/login_zc.gif" alt="新用户注册" /></a>
+        </div>
+      <%end -%>
     </div>
-
-</div>
-        <div class="clear"></div>
-	</div>
-  	<div id="site_hot_products_more" class="pop_win_show">
-       </div>
-</div>
-<br style="clear: both;">
-</div>
-<div id="footer"><div class="container000">
-	<div class="footer_content">		
-
-		<div class="clear"></div>
-		<div class="foot_logo">
-
-		</div>
-		<div class="copyright">
-
-			<p class="icp"></p>
-		</div>
-		<div class="clear"></div>
-	</div>
-</div></div>
-
-
-</body></html>
+  </body>
+</html>
