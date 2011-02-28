@@ -1,0 +1,50 @@
+<style type="text/css">
+  #adv_search div{width:750px;padding: 5px;margin-left:-30px }
+  #adv_search div label{width: 80px;text-align: right;}
+</style>
+<div id="adv_search" <% if params[:sp].to_i == 0 %>style="display: none;"<%end%> class="w95">
+  <input type="hidden" name="sp" id ="sp" value="<%=params[:sp]||0%>"/>
+  <div>
+    <label for="card_id">注册日期：</label>
+    <input type="text" name="reg_date_start" value="<%=params[:reg_date_start]%>" onblur="return;" id="reg_date_start"/>
+    - <input type="text" name="reg_date_end" value="<%=params[:reg_date_end]%>" onblur="return;" id="reg_date_end" />
+    <label for="card_id">到期时间：</label>
+    <input type="text" name="expire_date_start" value="<%=params[:expire_date_start]%>" onblur="return;" id="expire_date_start" class="inputtext" />
+    - <input type="text" name="expire_date_end" value="<%=params[:expire_date_end]%>" onblur="return;" id="expire_date_end" class="inputtext" />
+  </div>
+  <div>
+    <label for="name">来店日期：</label>
+    <input type="text" name="comer_date_start" value="<%=params[:comer_date_start]%>" onblur="return;" id="comer_date_start" class="inputtext" />
+    - <input type="text" name="comer_date_end" value="<%=params[:comer_date_end]%>" onblur="return;" id="comer_date_end" class="inputtext" />
+    <label for="card_id">刷卡次数：</label>
+    <input type="text" name="consume_count_start" tabindex="1" value="<%=params[:consume_count_start]%>" class="inputtext"/>
+    - <input type="text" name="consume_count_end" tabindex="1" value="<%=params[:consume_count_end]%>" class="inputtext"/>
+  </div>
+  <div>
+    <label for="card_id">消费总额：</label>
+    <input type="text" name="consume_fees_start" value="<%=params[:consume_fees_start]%>" onblur="return;" id="search_date_start" class="inputtext" />
+    - <input type="text" name="consume_fees_end" value="<%=params[:consume_fees_end]%>" onblur="return;" id="search_date_end" class="inputtext" />
+
+    <label for="card_id">卡内余额：</label>
+    <input type="text" name="left_fees_start" value="<%=params[:left_fees_start]%>" onblur="return;" id="search_date_start" class="inputtext" />
+    - <input type="text" name="left_fees_end" value="<%=params[:left_fees_end]%>" onblur="return;" id="search_date_end" class="inputtext" />
+  </div>
+  <div>
+    <label for="card_id">现有次数：</label>
+    <input type="text" name="left_times_start" value="<%=params[:left_times_start]%>" onblur="return;" id="search_date_start" class="inputtext" />
+    - <input type="text" name="left_times_end" value="<%=params[:left_times_end]%>" onblur="return;" id="search_date_end" class="inputtext" />
+
+    <label for="card_id">会员生日：</label>
+    <input type="text" name="member_birthday_start" value="<%=params[:member_birthday_start]%>" onblur="return;" id="search_date_start" class="inputtext" />
+    - <input type="text" name="member_birthday_end" value="<%=params[:member_birthday_end]%>" onblur="return;" id="search_date_end" class="inputtext" />
+  </div>
+  <div class="clear"></div>
+  <div>
+    <label for="card_id">会员性别：</label>
+    <%gender = params[:member_gender]%>
+    <%= radio_button_tag("member_gender","", ( gender.to_i == "")?true:false)%>全部
+    <%= radio_button_tag("member_gender",CommonResource::Gender_Man, ( gender.to_i == CommonResource::Gender_Man)?true:false)%>男
+    <%= radio_button_tag("member_gender",CommonResource::Gender_Woman, (gender.to_i == CommonResource::Gender_Woman)?true:false)%>女
+  </div>
+  <div class="clear"></div>
+</div>

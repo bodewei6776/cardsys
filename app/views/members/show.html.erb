@@ -14,7 +14,7 @@
           <li class="cleft">
             <div class="w1">会员名称：</div>
             <div class="w2">
-              <%= @member.name %><%if @member.name.blank?%><a class="blank_element"></a><%end%>
+              <%= @member.name %>
             </div>
             <div class="w1">注册日期：</div>
             <div class="w2">
@@ -26,7 +26,7 @@
           <li class="cleft">
             <div class="w1">会员昵称：</div>
             <div class="w2">
-              <%= @member.nickname %><%if @member.nickname.blank?%><a class="blank_element"></a><%end%>
+              <%= @member.nickname %>
             </div>
             <div class="w1">会员性别：</div>
             <div class="w2">
@@ -38,7 +38,7 @@
           <li class="cleft">
             <div class="w1">移动电话：</div>
             <div class="w2">
-              <%= @member.mobile %><%if @member.mobile.blank?%><a class="blank_element"></a><%end%>
+              <%= @member.mobile %>
             </div>
             <div class="w1">固定电话：</div>
             <div class="w2">
@@ -51,7 +51,7 @@
           <li class="cleft">
             <div class="w1">工作：</div>
             <div class="w2">
-              <%= @member.job%><%if @member.job.blank?%><a class="blank_element"></a><%end%>
+              <%= @member.job%>
             </div>
             <div class="w1">邮箱：</div>
             <div class="w2">
@@ -80,7 +80,7 @@
           <li class="cleft">
             <div class="w1">联系地址：</div>
             <div class="w2">
-              <%= @member.address %><%if @member.address.blank?%><a class="blank_element"></a><%end%>
+              <%= @member.address %>
             </div>
             <div class="w1">介绍人：</div>
             <div class="w2">
@@ -98,7 +98,7 @@
     </div>
     <div class="h10"></div>
     <div class="infobox">
-      <div class="infobox_bt"><p>会员 丁俊晖 的卡列表</p></div>
+      <div class="infobox_bt"><p>会员 <%= @member.name %>的卡列表</p></div>
       <div class="infobox_nr">
         <ul>
           <li class="cleft">
@@ -116,7 +116,7 @@
           <li class="cleft">
             <div class="w1">消费总金额：</div>
             <div class="w2">
-              <%= @member.member_consume_amounts %><%if @member.member_consume_amounts.blank?%><a class="blank_element"></a><%end%>
+              <%= @member.member_consume_amounts %>
             </div>
             <div class="w1">卡内余额：</div>
             <div class="w2">
@@ -178,7 +178,7 @@
         <% @member_cards.each_with_index do |card,index|  %>
           <ul class="table_items">
             <input type="hidden" id="member_id" value="<%= @member.id%>" />
-            <li class="w5"><%= index + 1 %></li><%i=i+1%>
+            <li class="w5"><%= index + 1 %></li>
             <li class="w10"><%= card.card_serial_num %></li>
             <li class="w10"><%= member_card_status_str(card.status) %></li>
             <li class="w15"><%= card.left_fee %></li>

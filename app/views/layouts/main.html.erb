@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>博德维网球管理系统</title>
+    <%= javascript_include_tag 'jquery-1.4.2','jquery.ui.core','jquery-ui-1.8.2.custom.min','jquery.ui.datepicker','rails'%>
+    <%= javascript_include_tag "jquery.colorbox-min.js"   %>
+    <%= javascript_include_tag "autocomplete-rails.js"   %>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#datepicker').datepicker({
+          onSelect: function(dateText, inst) {
+            $("#calendar_con").val(dateText);
+            var domain = document.domain;
+            if(domain == 'localhost'){
+              var url = 'http://localhost:3000/book_records?date=' + dateText;
+            }else{var url = 'http://'+domain+':3000/book_records?date=' + dateText;}
+            window.location.href=url;
+          },
+          dateFormat: 'yy-mm-dd'
+        });
+        $('#datepicker').datepicker('setDate','<%= ftime_date(@date) %>')
+      });
+    </script>
+    <%= stylesheet_link_tag 'main', 'jquery-ui-1.8.2.custom','colorbox' %>
+  </head>
+  <body>
+    <div class="top">
+      <div class="top_logo white fmic30">博德维网球管理系统</div>
+      <div class="top_user">
+        <strong>登录用户:</strong> ADMIN
+        [ <a class="cyellow" href="login.html">退出</a> ]
+        [ <a class="cyellow" href="#">修改密码</a> ]
+      </div>
+    </div>
+    <div class="clear"></div>
+    <div class="dh"  >
+      <%= render :partial => "layouts/header_menu" %>
+    </div>
+    <div class="clear"></div>
+    <div class="left">
+      <div class="h10"></div>
+      <div class="bt_time">
+        <div id="linkweb"></div>
+      </div>
+      <div class="w178" id="datepicker">
+      </div>
+      <div class="h10"></div>
+      <%= render :partial => "layouts/menu" %>
+    </div>
+    <div class="right">
+      <div class="right_ddd"><img src="/images/new/r_ddd_yj.jpg" alt="" /></div>
+      <%= yield %>
+      <div class="foot">Showr Tennis Mangement System &copy; 2010 <a href="#">博德维网球管理系统</a> showr.com</div>
+    </div>
+  </body>
+</html>
