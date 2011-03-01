@@ -1,3 +1,7 @@
+<style type="text/css">
+  div .w1{height: 80px;}
+  div .w2{height: 80px;}
+</style>
 <div class="w96">
   <div class=" r_bt">
     <div class=" r_bt_l">
@@ -42,7 +46,7 @@
             </div>
             <div class="w1">固定电话：</div>
             <div class="w2">
-              <%= @member.telephone%>
+              <%= @member.telephone.blank? ? '无' : @member.telephone%>
             </div>
           </li>
 
@@ -51,11 +55,11 @@
           <li class="cleft">
             <div class="w1">工作：</div>
             <div class="w2">
-              <%= @member.job%>
+              <%= @member.job.blank? ? '无' : @member.jon %>
             </div>
             <div class="w1">邮箱：</div>
             <div class="w2">
-              <%= @member.email%>
+              <%= @member.email.blank? ? '无' : @member.email%>
             </div>
           </li>
         </ul>
@@ -80,11 +84,11 @@
           <li class="cleft">
             <div class="w1">联系地址：</div>
             <div class="w2">
-              <%= @member.address %>
+              <%= @member.address.blank? ? '无' : @member.address %>
             </div>
             <div class="w1">介绍人：</div>
             <div class="w2">
-              <%= @member.mentor %>
+              <%= @member.mentor.blank? ? '无' : @member.mentor %>
             </div>
           </li>
         </ul>
@@ -104,7 +108,7 @@
           <li class="cleft">
             <div class="w1">刷卡次数：</div>
             <div class="w2">
-              <a class="blank_element"></a>
+              统计中
             </div>
             <div class="w1">最近来店日期：</div>
             <div class="w2">
@@ -197,36 +201,27 @@
     </div>
     <div class="h10"></div>
     <div class="infobox">
-      <div class="infobox_bt"><p>会员 丁俊晖 的充值记录列表</p></div>
+      <div class="infobox_bt"><p>会员 <%= @member.name %> 的充值记录列表</p></div>
       <div class=" table2">
-
         <ul class="bttitle black fb ">
+          <li class="w5">序号</li>
+          <li class="w15">卡号</li>
+          <li class="w15">充值金额(￥)/次数</li>
           <li class="w15">充值日期</li>
-          <li class="w15">充值金额/次数</li>
         </ul>
-        <ul style="background: none repeat scroll 0% 0% rgb(255, 255, 255);" onmouseover="javascript:this.style.background='#c8f8a0';" onmouseout="javascript:this.style.background='#ffffff';">
-          <li class="w15">2010-11-15</li>
-          <li class="w15">300.0/1</li>
+        <%@recharge_records.each_with_index  do |recharge_record,index|%>
+        <ul class="table_items">
+          <li class="w5"><%=  index + 1%></li>
+          <li class="w15"><%=recharge_record.member_card.card_serial_num%></li>
+          <li class="w15"><%= recharge_record.display_recharge_info %></li>
+          <li class="w15"><%= DateUtil::timeshort(recharge_record.created_at) %></li>
         </ul>
-        <ul style="background: none repeat scroll 0% 0% rgb(239, 255, 200);" class="bglvse" onmouseover="javascript:this.style.background='#c8f8a0';" onmouseout="javascript:this.style.background='#efffc8';">
-          <li class="w15">2010-11-15</li>
-          <li class="w15">300.0/1</li>
-
-        </ul>
-        <ul style="background: none repeat scroll 0% 0% rgb(255, 255, 255);" onmouseover="javascript:this.style.background='#c8f8a0';" onmouseout="javascript:this.style.background='#ffffff';">
-          <li class="w15">2010-11-15</li>
-          <li class="w15">300.0/1</li>
-        </ul>
-        <ul style="background: none repeat scroll 0% 0% rgb(239, 255, 200);" class="bglvse" onmouseover="javascript:this.style.background='#c8f8a0';" onmouseout="javascript:this.style.background='#efffc8';">
-          <li class="w15">2010-11-15</li>
-          <li class="w15">300.0/1</li>
-        </ul>
-
+        <%end%>
       </div>
     </div>
     <div class="h10"></div>
     <div class="infobox">
-      <div class="infobox_bt"><p>会员 丁俊晖 的消费记录列表</p></div>
+      <div class="infobox_bt"><p>会员 <%= @member.name %> 的消费记录列表</p></div>
       <div class=" table2">
         <ul class="bttitle black fb ">
           <li class="w15">消费类型</li>
@@ -262,11 +257,13 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function(){
+    $(".table_items").filter(':even').css("background-color", "#EFFFC8");
     $('.table_items').mouseover(function(){
-      $(this).css('background-color','#c8f8a0');
+      $(this).css('background-color','#E78F08');
     });
     $('.table_items').mouseout(function(){
       $(this).css('background-color','#ffffff');
+      $(".table_items").filter(':even').css("background-color", "#EFFFC8");
     });
   });
 </script>

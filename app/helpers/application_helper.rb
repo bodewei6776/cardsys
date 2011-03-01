@@ -197,6 +197,40 @@ js
     Department.all.each{|x| options << [x.name, x.id]}
     options_for_select(options, model.department.nil? ? 1 : model.department.id)
   end
+
+  #column_options => {:name => {:class => xx,:chn => '',:formater => }}
+  def dispay_as_table(objects,columns,column_options)
+    header_items = []
+    columns.each do |column|
+      css_klass = column_options[column][:class]
+      column_chn = column_options[column][:chn]
+      header_items << "<li class='#{css_klass}'>#{column_chn}</li>"
+    end
+    header = <<tb_header
+    <ul class="bttitle black fb ">
+          #{header_items.join('')}
+    </ul>
+tb_header
+    body_items = []
+    objects.each do |object|
+      columns.each do |column|
+        css_klass = column_options[column][:class]
+        display_value = if !(formater = column_options[column][:formater]).blank?
+          send(formater,object,column)
+        else
+          object.send(column)
+        end
+        body_items << "<ul class='table_items'><li class='#{css_klass}'>#{display_value}</li></ul>"
+      end
+    end
+    table = <<tbl
+    <ul class="bttitle black fb ">
+       #{header_items.join('')}
+    </ul>
+    #{body_items.join(',')}
+tbl
+    table.html_safe
+  end
   
   private
 
