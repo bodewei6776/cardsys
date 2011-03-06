@@ -43,8 +43,8 @@ module DateUtil
     end
 
     def month_days(month)
-     m_dates = [31,28,31,30,31,30,31,31,30,31,30,31]
-     m_dates[month - 1]
+      m_dates = [31,28,31,30,31,30,31,31,30,31,30,31]
+      m_dates[month - 1]
     end
 
     def distance_of_time_in_words(minutes)
@@ -64,7 +64,13 @@ module DateUtil
       else
         "#{(minutes / 1440).round} days"
       end
-    end  
+    end
+
+    def format_to_chinese_date(time)
+      return  nil if time.blank?
+      "%4d年%1d月%1d日" % [time.year, time.month, time.day]
+    end
+  
   end
 
   def get_date_format_str(date)
