@@ -1,49 +1,61 @@
-<label align="right">
-  <a href="/period_prices/new">创建新时段</a>
-  <br></br>
-</label>
-<br />
-<%if notice%><p class="notice"><%= notice %></p><%end%>
-<h1>时段价格信息</h1>
+<div class="w96">
+  <div class=" r_bt">
+    <div class=" r_bt_l">
+      <div class=" r_bt_l_a"></div>
+      <div class=" r_bt_l_c fb white">时段价格信息</div>
+    </div>
+    <div class=" r_bt_r">
+      <button onclick="window.location.href='/period_prices/new'" class="submit2 hand" type="button">创建时段</button>
+    </div>
+  </div>
+  <div class="info">
+    <div class="infobox">
+      <div class="infobox_bt"><p>时段 <%= @period_price.name %> 的基本信息</p></div>
+      <div class="infobox_nr">
+        <ul>
+          <li>
+            <div class="w1">时段：</div>
+            <div class="w2">
+              <%= @period_price.name %><%if @period_price.name.blank?%><a class="blank_element"></a><%end%>
+            </div>
+            <div class="w1">时段类型：</div>
+            <div class="w2">
+              <%= display_period_price_type_desc(@period_price.period_type) %>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">开始时间：</div>
+            <div class="w2">
+              <%= @period_price.start_time %>:00<%if @period_price.start_time.blank?%><a class="blank_element"></a><%end%>
+            </div>
+            <div class="w1">结束时间：</div>
+            <div class="w2">
+              <%= @period_price.end_time %>:00
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">标准收费：</div>
+            <div class="w2">
+              <%= @period_price.price %><%if @period_price.price.blank?%><a class="blank_element"></a><%end%>
+            </div>
+            <div class="w1">时段描述：</div>
+            <div class="w2">
+              <%= @period_price.description %>
+            </div>
+          </li>
+        </ul>
 
-<div class="listcontent_w clearfix cleft">
-  <ul class="clearfix">
-    <fieldset class="hidden">
-      <legend>属性信息</legend>
-      <li class="cleft">
-        <div class="w1">时段：</div>
-        <div class="w2">
-          <%= @period_price.name %><%if @period_price.name.blank?%><a class="blank_element"></a><%end%>
-        </div>
-        <div class="w1">时段类型：</div>
-        <div class="w2">
-          <%= display_period_price_type_desc(@period_price.period_type) %>
-        </div>
-      </li>
-      <li class="cleft">
-        <div class="w1">开始时间：</div>
-        <div class="w2">
-          <%= @period_price.start_time %>:00<%if @period_price.start_time.blank?%><a class="blank_element"></a><%end%>
-        </div>
-        <div class="w1">结束时间：</div>
-        <div class="w2">
-          <%= @period_price.end_time %>:00
-        </div>
-      </li>
-<li class="cleft">
-        <div class="w1">标准收费：</div>
-        <div class="w2">
-          <%= @period_price.price %><%if @period_price.price.blank?%><a class="blank_element"></a><%end%>
-        </div>
-        <div class="w1">时段描述：</div>
-        <div class="w2">
-          <%= @period_price.description %>
-        </div>
-      </li>
-
-    </fieldset></ul></div>
-
-      <div class="btn t_center">
-        <%= link_to '修改', edit_period_price_path(@period_price) %> |
-        <%= link_to '返回', period_prices_path %>
       </div>
+    </div>
+    <div class="h10"></div>
+    <div class="input_bd">
+      <button class="submit1 hand" type="button" onclick="window.location.href='<%= edit_period_price_path(@period_price) %>'">修改</button>&nbsp;&nbsp;&nbsp;&nbsp;
+      <button class="submit3 hand" type="button" onclick="window.location.href='<%= period_prices_path %>'">返回</button></div>
+    <div class=" clear"></div>
+  </div>
+  <div class="h10"></div>
+</div>

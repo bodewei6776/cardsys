@@ -1,55 +1,99 @@
-<%if @member.id.blank?%>
-  <% path = "/members/create"%>
-<%else%>
-  <% path = "/members/#{@member.id}"%>
+<% path = @member.id.blank? ? "/members/create" : "/members/#{@member.id}"%>
+<%= form_for :member, :url =>path, :html => {:id=>"granter_form", :method => @member.id.blank? ? :post : :put} do |f| %>
+  <%= error_messages_for :member %>
+  <div class="fformbox_nr">
+    <ul>
+      <li>
+        <div class="w1">名称：</div>
+        <div class="w2">
+          <input type="hidden" name="member[is_member]" value=0 />
+          <input type="hidden" name="member_id" value="<%=@member_base.id%>" />
+          <input type="hidden" name="member_card_id" value="<%=@member_card_id%>" />
+          <input type="text" name="member[name]" value="<%= @member.name %>" />
+        </div>
+        <div class="w1">性别：</div>
+        <div class="w2">
+          <%= radio_button_tag("member[gender]",CommonResource::Gender_Man, true)%>男
+          <%= radio_button_tag("member[gender]",CommonResource::Gender_Woman, @member.gender == CommonResource::Gender_Woman)%>女
+        </div>
+      </li>
+    </ul>
+    <ul>
+      <li>
+
+        <div class="w1">会员昵称：</div>
+        <div class="w2">
+          <%= f.text_field :nickname %>
+        </div>
+        <div class="w1">性别：</div>
+        <div class="w2">
+          <%= f.radio_button :gender,CommonResource::Gender_Man %>男
+          <%= f.radio_button :gender,CommonResource::Gender_Woman %>女
+        </div>
+      </li>
+    </ul>
+
+    <ul>
+      <li>
+        <div class="w1">证件类型：</div>
+        <div class="w2">
+          <select name="member[cert_type]" id="cert_type" class="select">
+            <%= generate_cert_type_options(@member)  %>
+          </select>
+        </div>
+        <div class="w1">证件号码：</div>
+        <div class="w2">
+          <input type="text" name="member[cert_num]" value="<%= @member.cert_num %>" id="cert_num" />
+        </div>
+      </li>
+    </ul>
+
+    <ul>
+      <li>
+        <div class="w1">手机号：</div>
+        <div class="w2">
+          <input type="text" name="member[mobile]" value="<%= @member.mobile %>" id="mobile" />
+        </div>
+        <div class="w1">电子邮箱：</div>
+        <div class="w2">
+          <%= f.text_field :email %>
+        </div>
+      </li>
+    </ul>
+
+    <ul>
+      <li>
+        <div class="w1">证件类型：</div>
+        <div class="w2">
+          <select name="member[cert_type]" id="cert_type" class="select">
+            <%= generate_cert_type_options(@member)  %>
+          </select>
+        </div>
+        <div class="w1">证件号码：</div>
+        <div class="w2">
+          <%= f.text_field :cert_num %>
+        </div>
+      </li>
+
+    </ul>
+    <ul>
+      <li>
+        <div class="w1">联系地址：</div>
+        <div class="w2">
+          <%= f.text_field :address %>
+        </div>
+      </li>
+    </ul>
+    <ul style="height:80px;">
+      <li>
+        <div class="w1">备注：</div>
+        <div class="ww2">
+          <textarea name="member[description]" cols="45" rows="4"><%= @member.description %></textarea>
+        </div>
+      </li>
+    </ul>
+  </div>
 <%end%>
-
-<%= form_for :member, :url =>path, :html => {:id=>"granter_form",:class => "form-profile", :method => @member.id.blank? ? :post : :put} do |f| %>
-  <div class="item">
-    <%= error_messages_for :member %>
-    <fieldset class="hidden_240h">
-      <legend>属性信息</legend>
-      <p>
-        <label for="name"><em>*</em>名<a class="blank_element_20"></a>称：</label>
-        <input type="hidden" name="member[is_member]" value=0 />
-        <input type="hidden" name="member_id" value="<%=@member_base.id%>" />
-        <input type="hidden" name="member_card_id" value="<%=@member_card_id%>" />
-        <input type="text" name="member[name]" maxlength="24" value="<%= @member.name %>" onblur="return;" id="name" class="inputtext" />
-        <a class="blank_element_20"></a>
-
-        <label for="gender"><em>*</em>性<a class="blank_element_20"></a>别：</label>
-        <%= radio_button_tag("member[gender]",CommonResource::Gender_Man, true)%>男
-        <%= radio_button_tag("member[gender]",CommonResource::Gender_Woman, @member.gender == CommonResource::Gender_Woman)%>女
-
-      </p>
-
-      <p><label for="cert_type"><em>*</em>证件类型：</label>
-        <select name="member[cert_type]" id="cert_type" class="select">
-          <%= generate_cert_type_options(@member)  %>
-        </select>
-        <a class="blank_element_68"></a>
-        <label for="cert_num"><em>*</em>证件号码：</label>
-        <input type="text" name="member[cert_num]" maxlength="20" value="<%= @member.cert_num %>" onblur="return;" id="cert_num" class="inputtext" />
-      </p>
-
-      <p>
-        <label for="mobile"><em>*</em>手<a class="blank_element_20"></a>机：</label>
-        <input type="text" name="member[mobile]" maxlength="20" value="<%= @member.mobile %>" onblur="return;" id="mobile" class="inputtext" />
-      </p>
-
-      <p>
-        <label for="description"><a class="blank_element_6"></a>备<a class="blank_element_20"></a>注：</label>
-        <textarea name="member[description]" cols="47" rows="3" id="description"><%= @member.description %></textarea>
-      </p></fieldset>
-  </div>
-
-
-
-  <div class="btn t_center">
-    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>
-  </div>
-<% end %>
-
 <script type="text/javascript">
   function fsubmit(){
     $("#colorbox").hide();

@@ -11,7 +11,46 @@
     <span style='margin-left:30px;'><input type='button' value="确认添加" class='submit-goods-button'/></span>
   </form>
 </fieldset>
-<%= render :partial => "goods", :locals => { :goods => @goods } %>
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >商品查询</div>
+    </div>
+    <div class=" r_bt_r" >
+      <button onclick="window.location.href='/goods/new'" class="submit2 hand" type="button">添加商品</button>
+    </div>
+  </div>
+  <div class="soso">
+    <form method="post" action="/goods/index?p=<%=@p%>" class="form-profile" id="search_form">
+      <div class="w95">
+        照商品类别：
+        <label>
+          <select name="good_type" id="good_type" class="select">
+            <%= generate_good_type_options(@good_type)  %>
+          </select>
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        按照商品名称：
+        <label>
+          <input type="text"class="inputtext" autocomplete="/goods/autocomplete_name" id="name" name="name" value="<%= params[:name] %>"/>
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="submit" name="search" id="search_member" class="inputsubmit" value="查询"  tabindex="10" />
+      </div>
+    </form>
+  </div>
+  <div class="h10"></div>
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >商品列表</div>
+    </div>
+    <div class=" r_bt_r" ></div>
+  </div>
+  <%= render :partial => "goods", :locals => { :goods => @goods } %>
+  <div class="h10"></div>
+</div>
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function(){
     $('input[autocomplete]').each(function(i){

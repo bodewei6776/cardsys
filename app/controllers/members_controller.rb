@@ -117,8 +117,8 @@ class MembersController < ApplicationController
     @member = Member.find(params[:id])
     @member_cards = MemberCard.where(:member_id => params[:id])
     @recharge_records = RechargeRecord.where(:member_id => params[:id])#充值记录
-    @orders = Order.balanced.where(:member_id => params[:id])#消费记录的显示方式
-
+    #@orders = Order.balanced.where(:member_id => params[:id])#消费记录的显示方式
+    @balances = Balance.balanced.where(:member_id => params[:id]).paginate(:page => params[:page]||1)
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @member }

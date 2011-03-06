@@ -1,50 +1,39 @@
-<div class="setlist clearfix">
-  <div class="color clearfix"><span class="color01">红色-已预定</span><span class="color02">浅灰色-已过期</span><span class="color03">紫色-开打中</span><span class="color04">绿色-已结算</span><span class="color05">褐色-代卖中</span>
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >博德维店<%= DateUtil.format_to_chinese_date(@date) %>的场地预定</div>
+    </div>
+    <div class=" r_bt_r" >
+      <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@predate%>"'><< 前一天</button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' onclick="location.href='/book_records'">今天</button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@nextdate%>"'>后一天>></button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' value="true">刷新</button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' value="true">打印</button></div>
   </div>
-  <h1 class="pagemenu">
-    <input type="button" value="<<前一天" onclick='location.href="/book_records?date=<%=@predate%>"'/>
-    <input type="button" value="今天" onclick="location.href='/book_records'"/>
-    <input type="button" value="后一天>>" onclick='location.href="/book_records?date=<%=@nextdate%>"'/>
-    <input type="button" value="刷新" />
-    <input type="button" value="打印" />
-  </h1>
-  <%(0...([(@courts.length%6 == 0 ? @courts.length/6  : @courts.length/6+1),1].max )).each do |row|  tcs = @courts[6*row,6]%>
-    <ul id="time">
-      <li class="tit">时段/场地</li>
-      <% for period in @daily_periods %>
-        <% period.start_time.upto(period.end_time - 1) do |i|  %>
-          <li><%=i%>:00-<%=i+1%>:00</li>
+  <div class="content">
+    <%(0...([(@courts.length%6 == 0 ? @courts.length/6  : @courts.length/6+1),1].max )).each do |row|  tcs = @courts[6*row,6]%>
+      <ul class="time">
+        <li class="tit">时段/场地</li>
+        <% for period in @daily_periods %>
+          <% period.start_time.upto(period.end_time - 1) do |i|  %>
+            <li><%=i%>:00-<%=i+1%>:00</li>
+          <%end%>
         <%end%>
-      <%end%>
-    </ul>
-    <% for court in tcs %>
-      <ul id="date">
-        <li class="tit"><%=court.name%></li>
-        <%= display_period_per_hour(@daily_periods,court,@date) %>
       </ul>
+      <% tcs.each_with_index do |court,index| %>
+        <ul class="<%= index == (tcs.size - 1) ? 'date2' : 'date' %>">
+          <li class="tit"><%=court.name%></li>
+          <%= display_period_per_hour(@daily_periods,court,@date) %>
+        </ul>
+      <%end%>
     <%end%>
-  <%end%>
+  </div>
+  <div class="h10"></div>
+  <div class="color">
+    <span class="color01">红色-已预定</span><span class="color02">浅灰色-已过期</span>
+    <span class="color03">紫色-开打中</span><span class="color04">绿色-已结算</span>
+    <span class="color05">褐色-代卖中</span>
+  </div>
+  <div class="h10"></div>
 </div>
-<script type="text/javascript" charset="utf-8">
-	$(function() {
-			$(".book-reocrd-draggable").draggable();
-			$(".book-reocrd-droppable").droppable({
-				drop: function( event, ui ){
-				alert($(this).attr('class'))
-				alert(ui.draggable.attr('class'))
-				}
-			});
-			$(".book-reocrd-draggablesss").mouseover(function(){
-			 var li = $(this);
-			 li.css('z-index',1000);
-			 li.unbind('mouseover');
-			 li.animate({ 
-			    width: li.width()*2,
-			    height: li.height()*2,
-			    opacity: 0.4,
-			    borderWidth: "5px"
-			  }, 1500 );	
-			});
-		 
-	})
-</script>

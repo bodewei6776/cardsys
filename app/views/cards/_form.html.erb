@@ -1,101 +1,96 @@
-<%if @card.id.blank?%>
-  <% path = "/cards/create"%>
-<%else%>
-  <% path = "/cards/#{@card.id}"%>
-<%end%>
-
-<div class="item">
-  <%= error_messages_for :card %>
-  <%= form_for :card, :url => path,:html => {:class => "form-profile", :method => @card.id.blank? ? :post : :put} do |f|%>
-  <div class="item">
-    <fieldset class="hidden">
-      <legend>属性信息</legend>
-      <p>
-        <label for="name"><em>*</em>卡<a class="blank_element_10"></a>&nbsp;名：</label>
-        <input type="text" name="card[name]" maxlength="12" value="<%= @card.name %>" onblur="return;" id="name" class="inputtext" />
-        <a class="blank_element_68"></a>
-        <label for="homeProvince"><em>*</em>基础类型：</label>
-        <select name="card[card_type]" onchange="type_change()" id="card_type" class="select">
-          <%= generate_card_type_options(@card)%>
-        </select>
-      </p>
-      <p>
-        <label for="name"><em>*</em>卡<a class="blank_element_3"></a>前<a class="blank_element_3"></a>缀：</label>
-        <input type="text" name="card[card_prefix]" value="<%= @card.card_prefix %>" maxlength="4"  value="" class="inputtext" />
-      <a class="blank_element_68"></a>
-        <label for="name"><em>*</em>有<a class="blank_element_3"></a>效<a class="blank_element_3"></a>期：</label>
-        <input type="text" name="card[expired]" value="<%= @card.expired %>" maxlength="3" size="3" tabindex="1" value="12" id="expired" class="inputtext" />
-        <span class="hint gray">个月</span>
-      </p>
-      <p>
-        <label for="name"><a class="blank_element_5"></a>&nbsp;说<a class="blank_element_10"></a>&nbsp;明：</label>
-        <textarea name="card[description]" cols="54" rows="3" ><%= @card.description %></textarea>
-      </p>
-      <p></p>
-      <p></p>
-      <p id="consume_type">
-        <label for="consume_type"><em>*</em>可消费类型：</label>
-        <label for="consume_type1" class="labelRadio">
-        <input type="radio" name="card[consume_type]" value="1" id="consume_type1"/>仅限场地消费</label>
-        <label for="consume_type2" class="labelRadio">
-        <input type="radio" name="card[consume_type]" value="2" checked="checked" id="consume_type2"/>全部商品库</label>
-      </p>
-      <!--
-      <p>
-        <label for="amount"><a class="blank_element_5"></a>授权人数量：</label>
-        <input type="text" name="card[shared_amount]" size="2" maxlength="2" tabindex="1" value="<%#= @card.shared_amount %>" id="name" class="inputtext" />人
-      </p>-->
-    </fieldset>
-
-    <fieldset class="table" >
-      <legend>时段折扣价</legend>
-      <ul class="title_ul">
-        <li style="text-align:center;width:150px;">时段</li>
-        <li></li>
-         <li style="text-align:center;width:100px;">标准收费（/小时）</li>
-         <li></li>
-         <li>可用</li>
-         <li></li>
-         <li>折扣收费</li>
-         <li></li>
-         <li>说明</li>
-      </ul>
-      <%for period_price in @period_prices%>
-      <% available_period = @card.generate_card_period_price(period_price)%>
+<%form_for card  do |f|%>
+  <div class="fform">
+    <div class="fformbox" >
+      <div class="fformbox_bt"><p>基本属性</p></div>
+      <%= error_messages_for :card %>
+      <div class="fformbox_nr">
         <ul>
-          <li style="text-align:center;width:150px;"><%=period_price.name%>：<%=period_price.start_time%>:00-<%=period_price.end_time%>:00</li>
-          <li></li>
-          <li style="text-align:center;width:100px;"><%=period_price.price%> </li>
-          <li></li>
-          <li><input type="checkbox" name="time_available_<%=period_price.id%>"  value="1" <%if available_period %> checked <%end%> class="inputtext" /></li>
-          <li></li>
-          <li><input type="text" name="time_discount_<%=period_price.id%>" maxlength="4" size="4"  value="<%= @card.generate_card_period_price(period_price).nil? ? period_price.price : @card.generate_card_period_price(period_price).card_price%>" class="inputtext" /></li>
-          <li></li>
-          <li><%=period_price.description%></li>
+          <li>
+            <div class="w1">卡名：</div>
+            <div class="w2">
+              <%= f.text_field :name %>
+            </div>
+            <div class="w1">基础类型：</div>
+            <div class="w2">
+              <select name="card[card_type]" onchange="type_change()" id="card_type" class="select">
+                <%= generate_card_type_options(card)%>
+              </select>
+            </div>
+          </li>
         </ul>
-      <%end%>
-    </fieldset>
-  </div>
-    <div id="rule4count" style="display:none">
-      <fieldset class="table" >
-        <h1><legend>计次规则</legend></h1>
-        <p style="text-align:left;">
-          <label class="labelRadio">
-            初始次数<input type="text" name="card[counts]" maxlength="4" size="4"  value="" class="inputtext" />
-          </label>
-        </p>
-      </fieldset>
+        <ul>
+          <li>
+            <div class="w1">卡前缀：</div>
+            <div class="w2">
+              <%= f.text_field :card_prefix %>
+            </div>
+            <div class="w1">有效期：</div>
+            <div class="w2">
+              <%= f.text_field :expired%>个月
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">可消费类型：</div>
+            <div class="w2">
+              <%= f.radio_button :consume_type,1%>仅限场地消费
+              <%= f.radio_button :consume_type,2%>所有消费
+            </div>
+          </li>
+        </ul>
+        <ul style="height:80px;">
+          <li>
+            <div class="w1" >说明：</div>
+            <div class="ww2" >
+              <textarea name="card[description]" cols="45" rows="4"><%= card.description %></textarea>
+              <div class="clear"></div></div>
+          </li>
+        </ul>
+        <div class="clear"></div>
+      </div>
     </div>
+    <div class="h10"></div>
+    <div class="fformbox" >
+      <div class="fformbox_bt"><p>时段折扣价</p></div>
+      <div class=" table2">
 
-  <div class="btn t_center">
-      <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
-      <%= link_to '返回', cards_path %>
+        <ul class="bttitle black fb " >
+          <li class="w5">序号</li>
+          <li class="w25">时段</li>
+          <li class="w18">标准收费(/小时)</li>
+          <li class="w10">可用</li>
+          <li class="w15">折扣收费</li>
+          <li class="w27">说明</li>
+        </ul>
+        <%@period_prices.each_with_index do |period_price,index|%>
+          <% available_period = card.generate_card_period_price(period_price)%>
+          <ul class="table_items">
+            <li><%= index + 1%></li>
+            <li class="w25">
+              <%=period_price.name%>：<%=period_price.start_time%>:00-<%=period_price.end_time%>:00
+            </li>
+            <li class="w18"><%=period_price.price%></li>
+            <li class="w10">
+              <input type="checkbox" name="time_available_<%=period_price.id%>"  value="1" <%if available_period %> checked <%end%> />
+            </li>
+            <li class="w15">
+              <input type="text" name="time_discount_<%=period_price.id%>" maxlength="4" size="4"  value="<%= card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price%>" />
+            </li>
+            <li class="w27"><%=period_price.description%></li>
+          </ul>
+        <%end%>
+      </div>
+    </div>
+    <div class="h10"></div>
+    <div class="input_bd">
+      <button class="submit1 hand" type="submit">提交</button>&nbsp;&nbsp;&nbsp;&nbsp;
+      <button onclick="window.location.href='/cards'" class="submit2 hand" type="button">返回</button>
+    </div>
+    <div class=" clear"></div>
   </div>
-  <%end%>
-
-</div>
-
-<script language="javascript">
+<%end%>
+<script type="text/javascript">
   function fsubmit()
   {
     var form = $("form[0]");

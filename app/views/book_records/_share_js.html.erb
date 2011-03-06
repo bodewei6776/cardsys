@@ -3,11 +3,11 @@
     $('.is_member_jsjq').click(function(){
       if($(this).attr('value') == '1'){
         $('#rel_member').show();
-        $('#nonmember').hide();
+        $('.nonmember').hide();
       }else{
         $('#rel_member').hide();
         recaculateAmount(true);
-        $('#nonmember').show();
+        $('.nonmember').show();
       }
     });
   });

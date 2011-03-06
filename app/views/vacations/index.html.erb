@@ -1,35 +1,34 @@
-<%if notice%><p class="notice"><%= notice %></p><%end%>
-<label align="right">
-  <%= link_to '创建节假日', new_vacation_path %>
-  <br />
-</label>
-<br />
-<h1>节假日列表</h1>
-
-<fieldset class="table">
-  <ul class="title_ul">
-    <li>编号</li>
-    <li style="width:10%;">名称</li>
-    <li style="width:10%;">开始日期</li>
-    <li style="width:10%;">结束日期</li>
-    <li style="width:10%;">节假日类型</li>
-    <li style="width:10%;">操作</li>
-  </ul>
-<% i = 0 %>
-<% @vacations.each do |vacation| %>
-    <% i += 1 %>
-    <ul>
-      <li><%= i %></li>
-      <li style="width:10%;"><%=vacation.name%></li>
-      <li style="width:10%;"><%=ftime_date(vacation.start_date)%></li>
-      <li style="width:10%;"><%=ftime_date(vacation.end_date)%></li>
-      <li style="width:10%;"><%=vacation.status==1?"节假日":"平日"%></li>
-      <li style="width:10%;"><%= link_to '修改', edit_vacation_path(vacation) %> | <%= link_to '删除', vacation, :confirm => '确定删除?', :method => :delete %></li>
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >节假日列表</div>
+    </div>
+    <div class=" r_bt_r" >
+      <button onclick="window.location.href='/vacations/new'" class="submit2 hand" type="button">创建节假日</button>
+    </div>
+  </div>
+  <div class=" table">
+    <ul class="bttitle black fb " >
+      <li class="w5">序号</li>
+      <li class="w10">名称</li>
+      <li class="w10">开始日期</li>
+      <li class="w10">结束日期</li>
+      <li class="w10">节假日类型</li>
+      <li class="w10">操作</li>
     </ul>
-<% end %>
-
-  </fieldset>
-
-
-
-
+    <%@vacations.each_with_index do |vacation,index|%>
+      <ul class="table_items">
+        <li class="w5"><%= index + 1 %></li>
+        <li class="w10"><%=vacation.name%></li>
+        <li class="w10"><%=ftime_date(vacation.start_date)%></li>
+        <li class="w10"><%=ftime_date(vacation.end_date)%></li>
+        <li class="w10"><%=vacation.status==1?"节假日":"平日"%></li>
+        <li class="w10">
+          <%= link_to '修改', edit_vacation_path(vacation) %> |
+          <%= link_to '删除', vacation, :confirm => '确定删除?', :method => :delete %>
+        </li>
+      </ul>
+    <%end%>
+  </div>
+</div>

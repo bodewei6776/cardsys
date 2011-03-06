@@ -1,81 +1,95 @@
-<div class="listcontent_w clearfix cleft">
-  <ul class="clearfix">
-    <li class="cleft">
-      <div class="w1">场地：</div>
-      <div class="w2">
-        <select name="order[court_id]" id="order_court_id">
-          <%= generate_book_record_status_options(@order.court_id) %>
-        </select>
-      </div>
-      <div class="w1">每周：</div>
-      <div class="w2">
-        <select name="order[wday]">
-          <%= generate_week_options(@order.wday) %>
-        </select>
-      </div>
-    </li>
-    <li class="cleft">
-      <div class="w1">开始日期：</div>
-      <div class="w2">
-        <input type="text" value="<%= @order.start_date.to_s%>" name="order[start_date]" class="date-type-input"/>
-      </div>
-      <div class="w1">结束日期：</div>
-      <div class="w2">
-        <input type="text" value="<%= @order.end_date.to_s %>" name="order[end_date]" class="date-type-input"/>
-      </div>
-    </li>
-    <li class="cleft">
-      <div class="w1">开始时间：</div>
-      <div class="w2">
-        <select name="order[start_hour]" tabindex="4" class="select order_hour" id="order_start_hour">
-          <% 7.upto(22) do |i| %>
-            <option value="<%=i%>" <%if i==@order.start_hour.to_i%>selected<%end%> ><%=i%>:00</option>
-          <%end%>
-        </select>
-      </div>
-      <div class="w1">结束时间：</div>
-      <div class="w2">
-        <select name="order[end_hour]" tabindex="4" class="select order_hour" id="order_end_hour">
-          <% 7.upto(22) do |i| %>
-            <option value="<%=i%>" <%if i==@order.end_hour.to_i%>selected<%end%> ><%=i%>:00</option>
-          <%end%>
-        </select>
-      </div>
-    </li>
-  </ul>
-  <ul id="rel_member">
+<div class="fformbox" >
+  <div class="fformbox_bt"><p>请填写周期预定信息</p></div>
+  <%= error_messages_for :order %>
+  <div class="fformbox_nr">
+    <ul>
+      <li>
+        <div class="w1">场地：</div>
+        <div class="w2">
+          <select name="order[court_id]" id="order_court_id">
+            <%= generate_book_record_status_options(@order.court_id) %>
+          </select>
+        </div>
+        <div class="w1">每周：</div>
+        <div class="w2">
+          <select name="order[wday]">
+            <%= generate_week_options(@order.wday) %>
+          </select>
+        </div>
+      </li>
+    </ul>
+    <ul
+      <li>
+        <div class="w1">开始日期：</div>
+        <div class="w2">
+          <input type="text" value="<%= @order.start_date.to_s%>" name="order[start_date]" class="date-type-input"/>
+        </div>
+        <div class="w1">结束日期：</div>
+        <div class="w2">
+          <input type="text" value="<%= @order.end_date.to_s %>" name="order[end_date]" class="date-type-input"/>
+        </div>
+      </li>
+    </ul>
+    <ul
+      <li>
+        <div class="w1">开始时间：</div>
+        <div class="w2">
+          <select name="order[start_hour]" tabindex="4" class="select order_hour" id="order_start_hour">
+            <% 7.upto(22) do |i| %>
+              <option value="<%=i%>" <%if i==@order.start_hour.to_i%>selected<%end%> ><%=i%>:00</option>
+            <%end%>
+          </select>
+        </div>
+        <div class="w1">结束时间：</div>
+        <div class="w2">
+          <select name="order[end_hour]" tabindex="4" class="select order_hour" id="order_end_hour">
+            <% 7.upto(22) do |i| %>
+              <option value="<%=i%>" <%if i==@order.end_hour.to_i%>selected<%end%> ><%=i%>:00</option>
+            <%end%>
+          </select>
+        </div>
+      </li>
+    </ul>
     <%if @member%>
       <%=  render :partial => "/book_records/serial_num",:locals => {:cards => @cards,
         :member => @member,:current_card => @current_card,:member_cards => @member_cards}%>
     <%else%>
-      <li class="cleft">
-            <div class="w1">会员姓名：</div>
-        <div class="w2">
-              <input type="text" name="member_name" id="order_member_name">
-        </div>
-        <div class="w1">会员卡号：</div>
-        <div class="w2" id="member_serial_num">
-          <input type="text" id="sn" name="serial_num" id="card_serial_num" size=20   value=""  class="input01"/>
-        </div>			
-      </li>
+      <ul>
+        <li>
+          <div class="w1">会员姓名：</div>
+          <div class="w2">
+            <input type="text" name="member_name" id="order_member_name" />
+          </div>
+          <div class="w1">会员卡号：</div>
+          <div class="w2" id="member_serial_num">
+            <input type="text" id="sn" name="serial_num" id="card_serial_num" size=20   value=""  class="input01"/>
+          </div>
+        </li>
+      </ul>
     <%end%>
-  </ul>
-  <ul>
-    <li class="cleft">
-      <div class="w1">教练：</div>
-      <div class="w2 coach-list">
-	  <% @order.coaches.map(&:id).each do |coach_id|  -%>
-	   <select name="order[coach_attributes][id][]" class='data-coach-select'>
-	    <%= generate_coaches_options(@coaches,coach_id) %>
-	   </select><input type="button"   value="删除" class="data-remove-coach"/>
-	  <%end -%>
-	 <%if @order.coaches.blank? -%>
-	  <select name="order[coach_attributes][id][]" class='data-coach-select'>
-	    <%= generate_coaches_options(@coaches) %>
-	   </select>
-	 <%end -%>
-	  <input type="button"  value="添加" class="data-add-coach"/>
+    <ul>
+      <li>
+        <div class="w1">教练：</div>
+        <div class="w2 coach-list">
+          <% @order.coaches.map(&:id).each do |coach_id|  -%>
+            <select name="order[coach_attributes][id][]" class='data-coach-select'>
+              <%= generate_coaches_options(@coaches,coach_id) %>
+            </select><input type="button"   value="删除" class="data-remove-coach"/>
+          <%end -%>
+          <%if @order.coaches.blank? -%>
+            <select name="order[coach_attributes][id][]" class='data-coach-select'>
+              <%= generate_coaches_options(@coaches) %>
+            </select>
+          <%end -%>
+          <input type="button"  value="添加" class="data-add-coach"/>
+        </div>
+      </li>
+    </ul>
+    <ul style="height:80px;">
+      <div class="w1" style="">备注：</div>
+      <div class="ww2">
+        <textarea name="memo" cols="45" rows="4"><%=  %></textarea>
       </div>
-    </li>
-  </ul>
+    </ul>
+  </div>
 </div>

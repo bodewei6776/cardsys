@@ -1,45 +1,65 @@
-<h1>商品出入库登记</h1>
-<%= form_for :good, @good,:url => {:action => "store_manage_update", :id => @good.id, :p => @p}, :html => {:class => "form-profile",:id => 'goods_stock_form'} do |f|%>
-  <div class="item">
-    <fieldset class="hidden">
-      <legend>属性信息</legend>
-      <p>
-        <label for="name"><em>*</em>商品名称：</label>
-        <%=@good.name%>
-      </p>
-      <p>
-        <label for="name"><em>*</em>库房数：</label>
-        <input type="hidden" id="ct_num_1" value="<%=@good.count_back_stock%>"/>
-        <%=@good.count_back_stock%>
-       <a class="blank_element_20"></a>
-        <label for="name"><em>*</em>前台数：</label>
-        <input type="hidden" id="ct_num_2" value="<%=@good.count_front_stock%>"/>
-        <%=@good.count_front_stock%>
-      </p>
-      <% if @p =='back' %>
-        <p>
-          <label for="name"><em>*</em>新入库房数：</label>
-          <input type="text" name="good[count_back_stock_in]" value="" onblur="return;" id="count_back_stock_in" class="inputtext" />
-        </p>
-        <p>
-          <label for="name"><em>*</em>商品退货数：</label>
-          <input type="text" name="good[count_back_stock_out]" value="" onblur="return;" id="count_back_stock_out" class="inputtext" />
-          <a id="reCount" href="javascript:void(0);"> 获取全部退货数</a>
-        </p>
-      <%else%>
-        <p>
-          <input type="hidden" name="good[count_back_stock_out]" value="" onblur="return;" id="count_back_stock_out" class="inputtext" />
-          <label for="name"><em>*</em>前台新进数：</label>
-          <input type="text" name="good[count_front_stock_in]" value="" onblur="return;" id="count_front_stock_in" class="inputtext" />
-         </p>         
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >商品出入库登记</div>
+    </div>
+    <div class=" r_bt_r" ></div>
+  </div>
+  <div class="fform">
+    <div class="fformbox" >
+      <%= form_for :good, @good,:url => {:action => "store_manage_update", :id => @good.id, :p => @p}, :html => {:id => 'goods_stock_form'} do |f|%>
+        <div class="fformbox_bt"><p>入库等级</p></div>
+        <div class="fformbox_nr">
+          <ul>
+            <li>
+              <div class="w1">商品名称：</div>
+              <div class="w2">
+                <%=@good.name%>
+              </div>
+              <div class="w1">现库存数：</div>
+              <div class="w2">
+                <input type="hidden" id="ct_num_1" value="<%=@good.count_back_stock%>"/>
+                <input type="hidden" id="ct_num_2" value="<%=@good.count_front_stock%>"/>
+                前台:<%=@good.count_front_stock%>;后台:<%=@good.count_back_stock%>
+              </div>
+            </li>
+          </ul>
+          <% if @p =='back' %>
+            <ul>
+              <li>
+                <div class="w1">新入库数：</div>
+                <div class="w2">
+                  <input type="text" name="good[count_back_stock_in]" value="" onblur="return;" id="count_back_stock_in"/>
+                </div>
+                <div class="w1">退货数：</div>
+                <div class="w2">
+                  <input type="text" name="good[count_back_stock_out]" value="" onblur="return;" id="count_back_stock_out"/>
+                  <a id="reCount" href="javascript:void(0);"> 获取全部退货数</a>
+                </div>
+              </li>
+            </ul>
+          <%else%>
+            <ul>
+              <li>
+                <div class="w1">前台入库数：</div>
+                <div class="w2">
+                  <input type="hidden" name="good[count_back_stock_out]" value="" onblur="return;" id="count_back_stock_out"/>
+                  <input type="text" name="good[count_front_stock_in]" value="" onblur="return;" id="count_front_stock_in"/>
+                </div>
+              </li>
+            </ul>
+          <%end%>
+        </div>
       <%end%>
-    </fieldset>
+    </div>
+    <div class="h10"></div>
+    <div class="input_bd">
+      <button class="submit1 hand" type="submit" onclick="fsubmit('<%= @p %>');return false;">提交</button>
+    </div>
+    <div class=" clear"></div>
   </div>
-  <div class="btn t_center">
-    <input style="display: none;" />
-    <a href="javascript:void(0);" onclick="fsubmit('<%= @p %>');return false;" >提交 </a>
-  </div>
-<%end%>
+</div>
 <script type="text/javascript">
   function fsubmit(p){
     var _form = $('#goods_stock_form');
@@ -72,9 +92,9 @@
       }
       var out_num_4 = $("#count_back_stock_in")[0].value;
       if(!isNumTemp(out_num_4)){
-         alert("新入库房数量不为有效数字！");
-         $("#count_back_stock_in").focus();
-         return false;
+        alert("新入库房数量不为有效数字！");
+        $("#count_back_stock_in").focus();
+        return false;
       }
     }else{
       var out_num_2 = $("#count_front_stock_in")[0].value;
@@ -132,12 +152,12 @@
       if(ct2 < 0) ct2 = (0 - ct2);
       $("#count_back_stock_out")[0].value = ct1 - (-ct2);
     })
-    })
+  })
 
   function isNumTemp(str){
     if(str != ""){
-       var re = /^[1-9]\d*$/;
-       return re.test(str);
+      var re = /^[1-9]\d*$/;
+      return re.test(str);
     }else{
       return true;
     }

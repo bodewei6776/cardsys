@@ -1,4 +1,7 @@
 class VacationsController < ApplicationController
+
+  layout 'main'
+
   # GET /vacations
   # GET /vacations.xml
   def index

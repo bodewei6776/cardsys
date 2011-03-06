@@ -1,136 +1,143 @@
-<div class="listcontent_w clearfix cleft">
-  <ul class="clearfix">
-    <li class="cleft">
-      <div class="w1">是否是会员：</div>
-      <div class="w2">
-        <input type="hidden" name="order[operation]" value="" id="order_operation_type" />
-        <input type="radio" name="order[member_type]"  value="<%= Const::YES %>" class="is_member_jsjq" <%if @order.is_member? %> checked="zzz" <%end%>/>是
-        <input type="radio" name="order[member_type]"  value="<%= Const::NO %>"  class="is_member_jsjq" <%unless @order.is_member?%> checked="checked" <%end%> />否
-      </div>
-    </li>
-    <li class="cleft">
-      <div class="w1">场地：</div>
-      <div class="w2">
-        <% unless @book_record.new_record? %>
-          <input type="hidden" name="order[book_record_attributes][id]" value="<%= @book_record.id %>"/>
-        <%end%>
-        <select name="order[book_record_attributes][court_id]" id="order_court_id">
-          <%= generate_book_record_status_options(@court.id) %>
-        </select>
-      </div>
-      <div class="w1">预定日期：</div>
-      <div class="w2">
-        <input type="hidden" id="book_record_status" name="order[book_record_attributes][status]" value="<%= @book_record.status %>"/>
-        <input type="hidden" id="order_date" name="order[book_record_attributes][record_date]" value="<%= DateUtil::timeshort @book_record.record_date %>"/>
-        <%= DateUtil::timeshort @book_record.record_date %>
-      </div>
-    </li>
-    <li class="cleft">
-      <div class="w1">开始时间：</div>
-      <div class="w2">
-        <select name="order[book_record_attributes][start_hour]" tabindex="4" class="select order_hour" id="order_start_hour">
-         <% @court.start_hour(@date).upto(@court.end_hour(@date)) do |i| %>
-            <option value="<%=i%>" <%if i==@book_record.start_hour%>selected<%end%> ><%=i%>:00</option>
-          <%end%>
-        </select>
-      </div>
-      <div class="w1">结束时间：</div>
-      <div class="w2">
-        <select name="order[book_record_attributes][end_hour]" tabindex="4" class="select order_hour" id="order_end_hour">
-         <% @court.start_hour(@date).upto(@court.end_hour(@date)) do |i| %>
-            <option value="<%=i%>" <%if i==@book_record.end_hour%>selected<%end%> ><%=i%>:00</option>
-          <%end%>
-        </select>
-      </div>
-    </li>
-  </ul>
-  <ul <% if @order.is_member? %> style="display:none;" <%  end %> id="nonmember">
-    <li>
-      <div class="w1">散客姓名：</div>
-      <div class="w2">
-        <%if @non_member && !@non_member.new_record?%>
-          <input type="hidden" name="order[non_member_attributes][id]" value="<%= @non_member.id %>" />
-        <%end%>
-        <input type="text" name="order[non_member_attributes][name]" value="<%= @non_member && @non_member.name %>" size=20 class="input01" />
-      </div>
-      <div class="w1">标准收费：</div>
-      <div class="w2" id="stand_amount">
-
-      </div>
-    </li>
-    <li>
-      <div class="w1">电话(手机/座机)：</div>
-      <div class="w2">
-        <input type="text" name="order[non_member_attributes][telephone]"  value="<%= @non_member && @non_member.telephone %>" size=20 class="input01" />
-      </div>
-      <div class="w1">定金：</div>
-      <div class="w2">
-        <input type="text" name="order[non_member_attributes][earnest]" value="<%= @non_member && @non_member.earnest%>" size=20 class="input01" />
-      </div>
-    </li>
-  </ul>
-  <ul id="rel_member" <% unless @order.is_member? %> style="display:none;" <%  end %> >
-    <%if @member %>
-      <%=  render :partial => "/book_records/serial_num",:locals => {:cards => @cards,
-        :member => @member,:current_card => @current_card,:member_cards => @member_cards}%>
-    <%else%>
-      <li class="cleft">
-        <div class="w1">会员姓名：</div>
+<div class="fformbox" >
+  <div class="fformbox_bt"><p>请填写预定信息</p></div>
+  <%= error_messages_for :order %>
+  <div class="fformbox_nr">
+    <ul>
+      <li>
+        <div class="w1">场地：</div>
         <div class="w2">
-          <input type="text" name="member_name" order_autocomplete='/book_records/complete_for_members' />
+          <% unless @book_record.new_record? %>
+            <input type="hidden" name="order[book_record_attributes][id]" value="<%= @book_record.id %>"/>
+          <%end%>
+          <select name="order[book_record_attributes][court_id]" id="order_court_id">
+            <%= generate_book_record_status_options(@court.id) %>
+          </select>
         </div>
-        <div class="w1">会员卡号：</div>
-        <div class="w2" id="member_serial_num">
-          <input type="text" name="serial_num"  order_autocomplete='/book_records/complete_for_member_card'/>
+        <div class="w1">预定日期：</div>
+        <div class="w2">
+          <input type="hidden" id="book_record_status" name="order[book_record_attributes][status]" value="<%= @book_record.status %>"/>
+          <input type="hidden" id="order_date" name="order[book_record_attributes][record_date]" value="<%= DateUtil::timeshort @book_record.record_date %>"/>
+          <%= DateUtil::timeshort @book_record.record_date %>
         </div>
-        <script type="text/javascript">
-          $(document).ready(function(){
-	 		orderAutocomplete();	
-          });
-        </script>
       </li>
-    <%end%>
-  </ul>
-  <ul>
-    <li class="cleft">
-      <div class="w1">教练：</div>
-      <div class="w2 coach-list">
-	  <% @order.coaches.map(&:id).each do |coach_id|  -%>
-	   <select name="order[coach_attributes][id][]" class='data-coach-select'>
-	    <%= generate_coaches_options(@coaches,coach_id) %>	
-	   </select><input type="button"   value="删除" class="data-remove-coach"/>
-	  <%end -%>
-	 <%if @order.coaches.blank? -%>
-	  <select name="order[coach_attributes][id][]" class='data-coach-select'>
-	    <%= generate_coaches_options(@coaches) %>	
-	   </select>
-	 <%end -%>
-	  <input type="button"  value="添加" class="data-add-coach"/>
+    </ul>
+    <ul>
+      <li>
+        <div class="w1">教练：</div>
+        <div class="w2 coach-list">
+          <% @order.coaches.map(&:id).each do |coach_id|  -%>
+            <select name="order[coach_attributes][id][]" class='data-coach-select'>
+              <%= generate_coaches_options(@coaches,coach_id) %>
+            </select><input type="button"   value="删除" class="data-remove-coach"/>
+          <%end -%>
+          <%if @order.coaches.blank? -%>
+            <select name="order[coach_attributes][id][]" class='data-coach-select'>
+              <%= generate_coaches_options(@coaches) %>
+            </select>
+          <%end -%>
+          <input type="button"  value="添加" class="data-add-coach"/>
+        </div>
+        <div class="w1">是否是会员：</div>
+        <div class="w2">
+          <input type="hidden" name="order[operation]" value="" id="order_operation_type" />
+          <input type="radio" name="order[member_type]"  value="<%= Const::YES %>" class="is_member_jsjq" <%if @order.is_member? %> checked="zzz" <%end%>/>是
+          <input type="radio" name="order[member_type]"  value="<%= Const::NO %>"  class="is_member_jsjq" <%unless @order.is_member?%> checked="checked" <%end%> />否
+        </div>
+
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <div class="w1">开始时间：</div>
+        <div class="w2">
+          <select name="order[book_record_attributes][start_hour]" tabindex="4" class="select order_hour" id="order_start_hour">
+            <% @court.start_hour(@date).upto(@court.end_hour(@date)) do |i| %>
+              <option value="<%=i%>" <%if i==@book_record.start_hour%>selected<%end%> ><%=i%>:00</option>
+            <%end%>
+          </select>
+        </div>
+        <div class="w1">结束时间：</div>
+        <div class="w2">
+          <select name="order[book_record_attributes][end_hour]" tabindex="4" class="select order_hour" id="order_end_hour">
+            <% @court.start_hour(@date).upto(@court.end_hour(@date)) do |i| %>
+              <option value="<%=i%>" <%if i==@book_record.end_hour%>selected<%end%> ><%=i%>:00</option>
+            <%end%>
+          </select>
+        </div>
+      </li>
+    </ul>
+    <ul <% if @order.is_member? %> style="display:none;" <%  end %> class="nonmember">
+      <li>
+        <div class="w1">散客姓名：</div>
+        <div class="w2">
+          <%if @non_member && !@non_member.new_record?%>
+            <input type="hidden" name="order[non_member_attributes][id]" value="<%= @non_member.id %>" />
+          <%end%>
+          <input type="text" name="order[non_member_attributes][name]" value="<%= @non_member && @non_member.name %>"  />
+        </div>
+        <div class="w1">标准收费：</div>
+        <div class="w2" id="stand_amount">
+
+        </div>
+      </li>
+    </ul>
+    <ul <% if @order.is_member? %> style="display:none;" <%  end %> class="nonmember">
+      <li>
+        <div class="w1">手机/座机：</div>
+        <div class="w2">
+          <input type="text" name="order[non_member_attributes][telephone]"  value="<%= @non_member && @non_member.telephone %>"  />
+        </div>
+        <div class="w1">定金：</div>
+        <div class="w2">
+          <input type="text" name="order[non_member_attributes][earnest]" value="<%= @non_member && @non_member.earnest%>"  />
+        </div>
+      </li>
+    </ul>
+    <div id="rel_member" <% unless @order.is_member? %> style="display:none;" <%  end %>>
+      <%if @member %>
+        <%=  render :partial => "/book_records/serial_num",:locals => {:cards => @cards,
+          :member => @member,:current_card => @current_card,:member_cards => @member_cards}%>
+      <%else%>
+        <ul>
+          <li>
+            <div class="w1">会员姓名：</div>
+            <div class="w2">
+              <input type="text" name="member_name" order_autocomplete='/book_records/complete_for_members' />
+            </div>
+            <div class="w1">会员卡号：</div>
+            <div class="w2" id="member_serial_num">
+              <input type="text" name="serial_num"  order_autocomplete='/book_records/complete_for_member_card'/>
+            </div>
+            <script type="text/javascript">
+              $(document).ready(function(){
+                orderAutocomplete();
+              });
+            </script>
+          </li>
+        </ul>
+      <%end%>
+    </div>
+    <ul style="height:80px;">
+      <div class="w1" style="">备注：</div>
+      <div class="ww2">
+        <textarea name="order[memo]" cols="45" rows="4"><%= @order.memo %></textarea>
       </div>
-      <div class="w1">备注：(最多30字)</div>
-      <div class="w2" style="width:100px;">
-        <input type="text" name="order[memo]" value="<%= @order.memo %>" size='30' class="input01" />
-      </div>
-    </li>
-  </ul>
-</div>
-<div class="btn t_center">
-  <%= display_enable_buttons(@book_record) %>
-  <input value="返回" type="button" onclick="window.history.back();"/>
+    </ul>
+  </div>
 </div>
 <script type="text/javascript" charset="utf-8">
-	$(document).ready(function(){
-		$('.data-add-coach').click(function(){
-			var select = $(this).prev();
-			if(select.attr('type') == 'button'){select = select.prev();}
-			select.clone().appendTo('.coach-list').after('<input type="button"   value="删除" class="data-remove-coach">');
-		});
-		$('.data-remove-coach').live('click',function(){
-			$(this).prev('select').remove();
-			$(this).remove();
-		});
-		$('.data-coach-select').change(function(){
-			
-		});
-	});
+  $(document).ready(function(){
+    $('.data-add-coach').click(function(){
+      var select = $(this).prev();
+      if(select.attr('type') == 'button'){select = select.prev();}
+      select.clone().appendTo('.coach-list').after('<input type="button"   value="删除" class="data-remove-coach">');
+    });
+    $('.data-remove-coach').live('click',function(){
+      $(this).prev('select').remove();
+      $(this).remove();
+    });
+    $('.data-coach-select').change(function(){
+
+    });
+  });
 </script>

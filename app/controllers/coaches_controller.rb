@@ -1,4 +1,7 @@
 class CoachesController < ApplicationController
+
+  layout 'main'
+
   # GET /coaches
   # GET /coaches.xml
   def index

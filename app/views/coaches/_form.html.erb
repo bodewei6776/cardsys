@@ -1,67 +1,88 @@
-<%if @coach.id.blank?%>
-  <% @path = "/coaches/create"%>
-<%else%>
-  <% @path = "/coaches/#{@coach.id}"%>
+<%= form_for(@coach) do |f| %>
+  <div class="fform">
+    <div class="fformbox" >
+      <div class="fformbox_bt"><p>填写教练信息</p></div>
+      <%= error_messages_for :coach %>
+      <div class="fformbox_nr">
+        <ul>
+          <li>
+            <div class="w1">名称：</div>
+            <div class="w2">
+              <%= f.text_field :name %>
+            </div>
+            <div class="w1">性别：</div>
+            <div class="w2">
+              <%= f.radio_button(:gender,CommonResource::Gender_Man)%>男
+              <%= f.radio_button(:gender,CommonResource::Gender_Woman)%>女
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">头像：</div>
+            <div class="w2">
+              <%= f.text_field :portrait %>
+            </div>
+            <div class="w1">类型：</div>
+            <div class="w2">
+              <select name="coach[coach_type]" id="coach_type" class="select">
+                <%= generate_coach_type_options(@coach)  %>
+              </select>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">电话：</div>
+            <div class="w2">
+              <%= f.text_field :telephone %>
+            </div>
+            <div class="w1">email：</div>
+            <div class="w2">
+              <%= f.text_field :email %>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">证件类型：</div>
+            <div class="w2">
+              <select name="coach[cert_type]" id="cert_type" class="select">
+                <%= generate_cert_type_options(@coach)  %>
+              </select>
+            </div>
+            <div class="w1">证件号码：</div>
+            <div class="w2">
+              <%= f.text_field :cert_num %>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">费用：</div>
+            <div class="w2">
+              <%= f.text_field :fee %>
+            </div>
+          </li>
+        </ul>
+        <ul style="height:80px;">
+          <li>
+            <div class="w1">描述：</div>
+            <div class="ww2">
+              <textarea name="coach[description]" cols="45" rows="4"><%= @coach.description  %></textarea>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="h10"></div>
+    <div class="input_bd">
+      <button class="submit1 hand" type="submit">提交</button>&nbsp;&nbsp;&nbsp;&nbsp;
+      <button onclick="window.location.href='/coaches'" class="submit2 hand" type="button">返回</button>
+    </div>
+    <div class=" clear"></div>
+  </div>
 <%end%>
-<%= form_for :coach, :url => @path,:html => {:class => "form-profile", :method => @coach.id.blank? ? :post : :put, :id => "new_post", :enctype => "multipart/form-data"} do |f|%>
-  <div class="item" >
-    <%= error_messages_for :coach%>
-    <fieldset class="hidden_330h">
-      <legend>属性信息</legend>
-      <p>
-        <label for="name"><em>*</em>教练名称：</label>
-        <input type="text" name="coach[name]" value="<%=@coach.name%>" onblur="return;" id="name" class="inputtext" />
-        <a class="blank_element_20"></a>
-        <label for="contact"><em>*</em>性<a class="blank_element_20"></a>别：</label>
-        <%= radio_button_tag("coach[gender]",CommonResource::Gender_Man, true)%>男
-        <%= radio_button_tag("coach[gender]",CommonResource::Gender_Woman, @coach.gender == CommonResource::Gender_Woman)%>女
-      </p>
-      <p>
-        <label for="name"><a class="blank_element_6"></a>教练头像：</label>
-        <%#= file_column_field 'coach', 'portrait' %>
-      </p>
-      <p>
-        <label for="name"><em>*</em>教练类型：</label>
-        <select name="coach[coach_type]" id="coach_type" class="select">
-          <%= generate_coach_type_options(@coach)  %>
-        </select>
-      </p>
-      <p>
-        <label for="telephone"><em>*</em>联系电话：</label>
-        <input type="text" name="coach[telephone]" value="<%=@coach.telephone%>" onblur="return;" id="telephone" class="inputtext" />
-      </p>
-      <p>
-        <label for="email"><a class="blank_element_12"></a>email：</label>
-        <input type="text" name="coach[email]" value="<%=@coach.email%>" onblur="return;" id="email" class="inputtext" />
-      </p>
-      <p>
-        <label for="fee"><em>*</em>教练费用：</label>
-        <input type="text" name="coach[fee]" maxlength="10" value="<%=@coach.fee%>" onblur="return;" id="fee" class="inputtext" />(￥/小时)
-      </p>
-      <p>
-        <label for="cert_type"><a class="blank_element_6"></a>有效证件：</label>
-        <select name="coach[cert_type]" id="cert_type" class="select">
-          <%= generate_cert_type_options(@coach)  %>
-        </select>
-        <a class="blank_element_68"></a>
-        <label for="cert_num"><a class="blank_element_6"></a>证<a class="blank_element_3"></a>件<a class="blank_element_3"></a>号：</label>
-        <input type="text" name="coach[cert_num]" value="<%=@coach.cert_num%>" />
-      </p>
-      <p>
-        <label for="cert_type"><a class="blank_element_6"></a>教练介绍：</label>
-        <textarea name="coach[description]" cols="47" rows="2" value="<%= @coach.description %>"><%= @coach.description %></textarea>
-      </p>
-    </fieldset>
-  </div>
-  <div class="btn t_center">
-    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
-    <% if !@coach.id.blank? %>
-      <%= link_to '查看', @coach %> |
-    <%  end %>
-    <%= link_to '返回', coaches_path %>
-  </div>
-<% end %>
-
 <script type="text/javascript">
   function fsubmit(){
     var form = $("form[0]");

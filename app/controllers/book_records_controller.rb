@@ -1,5 +1,7 @@
 class BookRecordsController < ApplicationController
 
+  layout  'main'
+
   # GET /book_records
   # GET /book_records.xml
   def index
@@ -127,7 +129,7 @@ class BookRecordsController < ApplicationController
     @members = Member.where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name",
         {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
     hash_results = @members.collect {|member| {"id" => member.id, "label" => "#{member.name} #{member.mobile}", 
-    "value" => "#{member.name}"} }
+        "value" => "#{member.name}"} }
     render :json  => hash_results
   end
   
@@ -137,7 +139,7 @@ class BookRecordsController < ApplicationController
     end
     @member_cards = MemberCard.where(["LOWER(card_serial_num) like ?", "%#{card_nmuber.downcase}%"]).limit(10)
     hash_results = @member_cards.collect {|member_card| {"id" => member_card.card_serial_num, "label" => member_card.card_serial_num, 
-    "value" => member_card.card_serial_num} }
+        "value" => member_card.card_serial_num} }
     render :json  => hash_results
   end
   
@@ -155,7 +157,7 @@ class BookRecordsController < ApplicationController
         current_card = entry
       end
       render :partial => "/book_records/serial_num",
-      :locals => {:member_cards => member.member_cards,:member => member,:current_card => current_card}
+        :locals => {:member_cards => member.member_cards,:member => member,:current_card => current_card}
     else
       render :nothing => true
     end

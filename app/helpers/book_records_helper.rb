@@ -31,7 +31,7 @@ module BookRecordsHelper
     base_book_url = "#{new_book_record_path}?date=#{date.to_s(:db)}&court_id=#{court.id}"
     for realy_time_span in realy_time_spans
       book_url = "#{base_book_url}&start_hour=#{realy_time_span[0]}&end_hour=#{realy_time_span[1]}"
-      li_height = 24*(realy_time_span[1]-realy_time_span[0])
+      li_height = 15*(realy_time_span[1]-realy_time_span[0])
       unless (book_record = realy_time_span.last).nil?
         display_content = "#{book_record.order.member_name}"
         unless (coaches = book_record.order.coaches).blank?
@@ -57,8 +57,8 @@ module BookRecordsHelper
           info_htmls << [realy_time_span[0],content_tag(:li,tag("input",{:type => 'button', :disabled => 'disabled',:value => '过 期',
             :class => "color02",:style => "height:#{li_height}px;"}))]
         else
-          info_htmls << [realy_time_span[0],content_tag(:li,tag("input",{:type => 'button', :onclick => "location.href='#{book_url}'",
-          :value => '预定',:style => "height:#{li_height}px;" }))]
+          info_htmls << [realy_time_span[0],content_tag(:li,content_tag("button",'预定',{:type => 'button', :onclick => "location.href='#{book_url}'",
+          :value => '预定',:class => "submit1 hand"  }))]
         end
       end
     end
@@ -71,45 +71,43 @@ module BookRecordsHelper
     
     buton_htmls = []
 
-    db_book_record.new_record? and !db_book_record.is_to_do_agent? and buton_htmls << tag("input",
-    {:type => 'submit',:value => '预定',:operation => :book})
+    db_book_record.new_record? and !db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","预定",
+    {:type => 'submit',:operation => :book})
     
-    db_book_record.should_application_to_agent? and buton_htmls << tag("input",{:type => 'button',
-      :value => '申请代卖',:class => "data-agent-to-buy confirm",:conform_msg => "确认要变更为代卖预定么",:operation => :agent})
+    db_book_record.should_application_to_agent? and buton_htmls << content_tag("button","申请代卖",{:type => 'button',
+      :class => "data-agent-to-buy confirm submit1 hand",:conform_msg => "确认要变更为代卖预定么",:operation => :agent})
 
-    db_book_record.should_to_agent_to_buy? and buton_htmls << tag("input",{:type => 'button',:value => '代卖',
-      :class => "data-do-agent confirm",:conform_msg => "确认要代卖么",:operation => :do_agent})
+    db_book_record.should_to_agent_to_buy? and buton_htmls << content_tag("button","代卖",{:type => 'button',
+      :class => "data-do-agent confirm submit1 hand",:conform_msg => "确认要代卖么",:operation => :do_agent})
 
-    db_book_record.is_to_do_agent? and buton_htmls << tag("input",{:type => 'submit',:value => '代卖',
+    db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","代卖",{:type => 'submit',
       :operation => :do_agent})
 
-    db_book_record.is_to_do_agent? and buton_htmls << tag("input",{:type => 'submit',:value => '取消代卖',
-      :operation => :cancle_agent,:class => 'data-cancle-agent confirm',:conform_msg => "确认要取消代买么?"})
+    db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","取消代卖",{:type => 'submit',
+      :operation => :cancle_agent,:class => 'data-cancle-agent confirm submit1 hand',:conform_msg => "确认要取消代买么?"})
 
-    db_book_record.should_to_cancle? and buton_htmls << tag("input",{:type => 'button',:value => '取消预定',
-      :class => "data-cancle-booke confirm",:conform_msg => "确认要取消预定么？",:operation => :cancle})
+    db_book_record.should_to_cancle? and buton_htmls << content_tag("button","取消预定",{:type => 'button',
+      :class => "data-cancle-booke confirm submit1 hand",:conform_msg => "确认要取消预定么？",:operation => :cancle})
     
-    db_book_record.should_changed? and buton_htmls << tag("input",{:type => 'button',:value => '变更本次预定',
-      :class => "data-change-booke confirm",:conform_msg => "确认要变更预定么？",:operation => :book})
+    db_book_record.should_changed? and buton_htmls << content_tag("button","变更本次预定",{:type => 'button',
+      :class => "data-change-booke confirm submit1 hand",:conform_msg => "确认要变更预定么？",:operation => :book})
     
-    db_book_record.should_blance_as_expired?  and buton_htmls << tag("input",
-      {:type => 'button',:value => "#{db_book_record.is_booked? ? '预定已过期，请结算' : '代买已过期，请结算'}",
-      :class => "data-balance-order",:operation => :balance})
+    db_book_record.should_blance_as_expired?  and buton_htmls << content_tag("button","#{db_book_record.is_booked? ? '预定已过期，请结算' : '代买已过期，请结算'}",
+      {:type => 'button',:class => "data-balance-order submit1 hand",:operation => :balance})
 
-    db_book_record.should_to_active? and buton_htmls << tag("input",{:type => 'button',:value => '开场',
-      :class => "data-active-booke confirm",:operation => :active,:conform_msg => "确认要开场？"})
+    db_book_record.should_to_active? and buton_htmls << content_tag("button","开场",{:type => 'button',
+      :class => "data-active-booke confirm submit1 hand",:operation => :active,:conform_msg => "确认要开场？"})
     
-    db_book_record.should_to_balance? and buton_htmls << tag("input",
-      {:type => 'button',:value => '结算',:class => "data-balance-order",:operation => :balance})
+    db_book_record.should_to_balance? and buton_htmls << content_tag("button",
+      {:type => 'button',:value => '结算',:class => "data-balance-order submit1 hand",:operation => :balance})
       
-    db_book_record.should_to_balance? and buton_htmls << tag("input",{:type => 'button',:value => '添加消费',
-         :class => 'goods-list',:title => "商品列表",:rel => "goodslist",:href => '/goods/goods'})
+    db_book_record.should_to_balance? and buton_htmls << content_tag("button","添加消费",{:type => 'button',
+         :class => 'goods-list submit1 hand',:title => "商品列表",:rel => "goodslist",:href => '/goods/goods'})
          
-   db_book_record.should_to_balance? and buton_htmls << tag("input",{:type => 'button',:value => '变更教练',
-              :class => 'update-coaches confirm',:conform_msg => '确定要改变教练么?',:operation => 'change_coaches'})     
+   db_book_record.should_to_balance? and buton_htmls << content_tag("button","变更教练",{:type => 'button',
+              :class => 'update-coaches confirm submit1 hand',:conform_msg => '确定要改变教练么?',:operation => 'change_coaches'})
          
-    db_book_record.is_balanced? and  buton_htmls << tag("input",{:type => 'button',:value => '打印消费记录',
-              :class => 'print-order-list'})
+    db_book_record.is_balanced? and  buton_htmls << content_tag("button","打印消费记录",{:type => 'button',:class => 'print-order-list submit1 hand'})
     
     buton_htmls.join(' ').html_safe
     

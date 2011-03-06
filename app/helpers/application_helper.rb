@@ -232,6 +232,17 @@ tbl
     table.html_safe
   end
   
+  def display_notice_div(title,msg)
+    return "" if title.blank? || msg.blank?
+    info = <<notice
+    <div id="errorExplanation" class="errorExplanation">
+	   <h2>#{title}</h2><br>
+	   <ul>#{msg}</ul>
+</div>
+notice
+    info.html_safe
+  end
+
   private
 
   def generate_res_options res_type

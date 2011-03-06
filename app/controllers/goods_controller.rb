@@ -1,5 +1,7 @@
 class GoodsController < ApplicationController
 
+  layout 'main'
+
   def autocomplete_name
     @goods = Good.where(["pinyin_abbr like ? or name like ?", "%#{params[:term]}%", "%#{params[:term]}%"]).where(:status => CommonResource::GOOD_ON).limit(10)
     @goods.each { |g| @names = [] << g.name }
@@ -13,8 +15,9 @@ class GoodsController < ApplicationController
     @good_type = params[:good_type]
     @name = params[:name]
     @goods = Good.order("id desc")
-    @goods = @goods.where(["good_type = ? ", @good_type]) if !params[:good_type].blank?
-    @goods = @goods..where(["name = ? ", @name]) if !params[:name].blank?
+    @goods = @goods.where(["good_type = ? ", @good_type]) unless params[:good_type].blank?
+    @goods = @goods.where(["name = ? ", @name]) unless params[:name].blank?
+    @goods = @goods.paginate(:page => params[:page]||1)
     respond_to do |format|
       format.html {
         if request.xhr?
@@ -22,7 +25,7 @@ class GoodsController < ApplicationController
         else
           render :template =>  '/goods/index'
         end
-        }
+      }
       format.xml  { render :xml => @goods }
     end
   end
@@ -145,16 +148,16 @@ class GoodsController < ApplicationController
     goods = []
     (params[:goods]||[]).map{|hash_good|
       next if  hash_good[:count].to_i <= 0
-       good = Good.find(hash_good[:id])
-       good.order_count = hash_good[:count].to_i
-       goods << good
-     }
-     order = Order.find(params[:order_id])
-     unless (good_items = order.order_goods(goods)).blank?
-        render :partial => "/orders/order_item", :locals => {:good_items => good_items,:order => order}
-     else
-        render :text => "<span class='error' style='color:red'>#{order.errors.full_messages.join('<br/>')}</span>"
-     end
+      good = Good.find(hash_good[:id])
+      good.order_count = hash_good[:count].to_i
+      goods << good
+    }
+    order = Order.find(params[:order_id])
+    unless (good_items = order.order_goods(goods)).blank?
+      render :partial => "/orders/order_item", :locals => {:good_items => good_items,:order => order}
+    else
+      render :text => "<span class='error' style='color:red'>#{order.errors.full_messages.join('<br/>')}</span>"
+    end
   end
 
 end

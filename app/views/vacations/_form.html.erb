@@ -1,40 +1,53 @@
 <%= form_for(@vacation) do |f| %>
-<div class="item" >
-    <%= error_messages_for :vacation%>
-    <fieldset class="hidden">
-      <legend>属性信息</legend>
-      <p>
-        <label for="name"><a class="blank_element_20"></a><em>*</em>节假日名称：</label>
-        <input type="text" name="vacation[name]" value="<%=@vacation.name%>" onblur="return;" id="name" class="inputtext" />
-      </p>
-      <p>
-        <label for="start_date"><em>*</em>节假日开始时间：</label>
-        <input type="text" name="vacation[start_date]" value="<%=ftime_date(@vacation.start_date)%>" onblur="return;" id="start_date" class="inputtext" />
-        <a class="blank_element_68"></a>
-        <label for="end_date"><em>*</em>节假日结束时间：</label>
-        <input type="text" name="vacation[end_date]" value="<%=ftime_date(@vacation.end_date)%>" onblur="return;" id="end_date" class="inputtext" />
-      </p>
-      <p>
-        <label for="status"><em>*</em></label>
-        <%= radio_button_tag("vacation[status]", "1", 1 == @vacation.status)%>节假日
-        <%= radio_button_tag("vacation[status]", "0", 0 == @vacation.status)%>平时日
-      </p>
-    </fieldset>
-</div>
-<div class="btn t_center">
-    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a> |
-<%= link_to '返回', vacations_path %>
-</div>
-<% end %>
+  <div class="fform">
+    <div class="fformbox" >
+      <div class="fformbox_bt"><p>填写节假日信息</p></div>
+      <%= error_messages_for :vacation %>
+      <div class="fformbox_nr">
+        <ul>
+          <li>
+            <div class="w1">假日名称：</div>
+            <div class="w2">
+              <%= f.text_field :name %>
+            </div>
+            <div class="w1">假日类型：</div>
+            <div class="w2">
+              <%= radio_button_tag("vacation[status]", "1", 1 == @vacation.status)%>节假日
+              <%= radio_button_tag("vacation[status]", "0", 0 == @vacation.status)%>平时日
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">开始时间：</div>
+            <div class="w2">
+              <input type="text" name="vacation[start_date]" value="<%=ftime_date(@vacation.start_date)%>" id="start_date"/>
+            </div>
+            <div class="w1">结束时间：</div>
+            <div class="w2">
+              <input type="text" name="vacation[end_date]" value="<%=ftime_date(@vacation.end_date)%>" id="end_date"/>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="h10"></div>
+    <div class="input_bd">
+      <button class="submit1 hand" type="submit">提交</button>&nbsp;&nbsp;&nbsp;&nbsp;
+      <button onclick="window.location.href='/vacations'" class="submit2 hand" type="button">返回</button>
+    </div>
+    <div class=" clear"></div>
+  </div>
+<%end%>
 <script type="text/javascript">
-    $(function() {      
-        $("#start_date").datepicker({dateFormat: 'yy-mm-dd'});
-        $("#end_date").datepicker({dateFormat: 'yy-mm-dd'});
-    });
+  $(function() {
+    $("#start_date").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#end_date").datepicker({dateFormat: 'yy-mm-dd'});
+  });
 
-    function fsubmit(){
-      var form = $("form[0]");
-      form.submit();
-    }
+  function fsubmit(){
+    var form = $("form[0]");
+    form.submit();
+  }
 </script>
 

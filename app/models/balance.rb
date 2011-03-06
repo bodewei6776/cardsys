@@ -14,6 +14,8 @@ class Balance < ActiveRecord::Base
   
   belongs_to :order
   attr_accessor :operation
+
+  scope :balanced,where(:status => Const::YES)
   
   validate do |instance|
     if instance.use_card_to_balance_goods? && !order.should_use_card_to_balance_goods?
@@ -127,7 +129,7 @@ class Balance < ActiveRecord::Base
     when Balance_Way_Use_Bank then '银行'
     when Balance_Way_Use_Guazhang then '挂账'
     when Balance_Way_Use_Counter  then '计次'
-    else ''
+    else '无'
     end
   end
 

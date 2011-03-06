@@ -1,53 +1,64 @@
 <%= form_for(@good,:html  => {:id => 'member_form'}) do |f| %>
-  <div class="item">
-    <%= error_messages_for :good%>
-    <fieldset class="hidden">
-      <legend>属性信息</legend>
-      <p>
-        <label for="name"><em>*</em>商品名称：</label>
-        <input type="text" name="good[name]" value="<%=@good.name%>" onblur="return;" id="name" class="inputtext" />
-        
-      </p>
-      <p>
-        <label for="good_type"><em>*</em>商品类别：</label>
-        <select name="good[good_type]" id="good_type" class="select">
-          <%= generate_good_type_options((@good.nil?) ? "0" : @good.good_type)  %>
-        </select>
-      </p>
-      <p>
-        <label for="name"><em>*</em>商品来源：</label>
-        <select name="good[good_source]" id="good_source" class="select">
-          <%= generate_good_source_options(@good)  %>
-        </select>
-      </p>
-      <p>
-        <label for="name"><em>*</em>入库价格：</label>
-        <input type="text" name="good[purchasing_price]" value="<%=@good.purchasing_price%>" onblur="return;" id="purchasing_price" class="inputtext" />
-          <a class="blank_element_20"></a>
-        <label for="price"><em>*</em>零售价格：</label>
-        <input type="text" name="good[price]" value="<%=@good.price%>" onblur="return;" id="price" class="inputtext" />
-      </p>
-      <p>
-        <label for="name"><em>*</em>初次入库数量：</label>
-        <input type="text" name="good[count_back_stock]" value="<%=@good.count_back_stock%>" onblur="return;" id="count_back_stock" class="inputtext" />
-      </p>
-
-    </fieldset>
-  </div>
-  <div class="btn t_center">
-    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
-    <% if !@good.id.blank? %>
-      <%= link_to '查看', @good %> |
-    <%  end %>
-    <%= link_to '返回', goods_path %>
+  <div class="fform">
+    <div class="fformbox" >
+      <div class="fformbox_bt"><p>填写商品信息</p></div>
+      <%= error_messages_for :good %>
+      <div class="fformbox_nr">
+        <ul>
+          <li>
+            <div class="w1">商品名称：</div>
+            <div class="w2">
+              <%= f.text_field :name %>
+            </div>
+            <div class="w1">商品类别：</div>
+            <div class="w2">
+              <select name="good[good_type]" id="good_type" class="select">
+                <%= generate_good_type_options((@good.nil?) ? "0" : @good.good_type)  %>
+              </select>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">入库价格：</div>
+            <div class="w2">
+              <%= f.text_field :purchasing_price %>
+            </div>
+            <div class="w1">零售价格：</div>
+            <div class="w2">
+              <%= f.text_field :price %>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">商品来源：</div>
+            <div class="w2">
+              <select name="good[good_source]" id="good_source" class="select">
+                <%= generate_good_source_options(@good)  %>
+              </select>
+            </div>
+            <div class="w1">入库数量：</div>
+            <div class="w2">
+              <%= f.text_field :count_back_stock %>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="h10"></div>
+    <div class="input_bd">
+      <button class="submit1 hand" type="submit">提交</button>&nbsp;&nbsp;&nbsp;&nbsp;
+      <button onclick="window.location.href='/goods'" class="submit2 hand" type="button">返回</button>
+    </div>
+    <div class=" clear"></div>
   </div>
 <%end%>
 <script type="text/javascript">
   function fsubmit(){
     var form = $("form[0]");
-    //验证商品类型是否选择
     if($("#good_type")[0].value == ""){
-        alert("请选择商品类型！");
+      alert("请选择商品类型！");
     }else{
       form.submit();
     }

@@ -1,2 +1,14 @@
-<h1>编辑卡模板</h1>
-<%= render 'form' %>
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >编辑卡模版</div>
+    </div>
+
+    <div class=" r_bt_r" >
+      <button onclick="window.location.href='/cards/new'" class="submit2 hand" type="button">创建卡模板</button>
+    </div>
+  </div>
+  <%= render 'form',:card => @card %>
+  <div class="h10"></div>
+</div>

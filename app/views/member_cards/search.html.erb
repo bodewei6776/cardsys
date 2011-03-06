@@ -1,53 +1,97 @@
-<p class="notice" style="display: none;"></p>
-<h1>会员卡充值</h1>
-<div class="item">
-  <fieldset class="hidden">
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >会员查询</div>
+    </div>
+
+    <div class=" r_bt_r" ></div>
+  </div>
+  <div class="soso">
     <form method="post" action="/member_cards/search" class="form-profile" id="search_form">
-      <p>
-        <label for="name"><em>*</em>会员名称：</label>
-        <input type="text" name="member_name" maxlength="24" tabindex="1" value="<%=params[:member_name] %>" class="inputtext" autocomplete="/members/autocomplete_name" />
-        <input type="submit" name="search" id="search_member" class="inputsubmit" value="查询"  tabindex="10" /></p>
-      <p>
-        <%if @member_cards!= nil && @member_cards.size > 0 %>
+      <div class="w95">
+        会员名称：
+        <label for="name">
+          <input type="text" name="member_name" maxlength="24" tabindex="1" value="<%=params[:member_name] %>" class="inputtext" autocomplete="/members/autocomplete_name" />
+        </label>&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <input type="submit" name="search" id="search_member" class="inputsubmit" value="查询"  tabindex="10" />
+        <%unless @member_cards.blank? %>
           <label for="card_id">选择充值的会员卡号：</label>
-          <%i=0%>
           <% for member_card in @member_cards %>
-            <% if(i%6==0)%></p><p><%end%>
-            <% if member_card.card_serial_num != "" %>
+            <% unless member_card.card_serial_num.blank? %>
               <%= radio_button_tag("card_serial_num", member_card.card_serial_num, (member_card.card_serial_num == @serial_num)? true : false)%><%=member_card.card_serial_num%>
-              <%i=i+1 %>
             <%end%>
           <%end%>
         <%end%>
-      </p>
-
+      </div>
     </form>
-    <% if !@member_card.nil? %>
-      <p><label for="name">所属会员：<%=  @member_card.nil? ? "" : @member_card.member.name%> </label>
-        <a class="blank_element_20"></a><label for="name">卡类型：<%= display_card_type_desc(@member_card.nil? ? nil : @member_card.card) %></label>
-        <a class="blank_element_20"></a><label for="name">卡内金额（￥）：<%= @member_card.left_fee%> </label>
-        <a class="blank_element_20"></a><label for="name">卡内次数（次）：<%= @member_card.left_times%> </label>
-        <a class="blank_element_20"></a><label for="name">有效期：<%= DateUtil.timeshort(@member_card.expire_date.nil? ? nil : @member_card.expire_date) %></label>
-      </p>
-      <p>
-        <% if @member_card.should_recharge_amount? -%>
-        <label for="name">充值金额：</label>
-        <input name="fee" id="fee" value="" onchange="javascript:checkNum(this.value)" class="inputtext"/>
-        <% end -%>
-        <% if @member_card.should_charge_counter? -%>
-          <label for="name">充值次数：</label>
-          <input name="times" id="times" value="" onchange="javascript:checkNum(this.value)" class="inputtext"/>
-        <% end -%>
-        <label for="name">修改有效期到：</label>
-        <input name="expire_date" id="expire_date" value="" class="inputtext"/>
-      </p>
-      <p align="center">
-        <a href="javascript:void(0);" onclick="recharge_submit(<%=@member_card.id%>, 1);return false;">确认操作</a>
-      </p>
-    <%end%>
-  </fieldset>
-</div>
+  </div>
+  <% if @member_card %>
+  <div class="fform">
+    <div class="fformbox" >
+      <div class="fformbox_bt"><p>会员卡充值</p></div>
 
+      <div class="fformbox_nr">
+        <ul>
+          <li>
+            <div class="w1">所属会员：</div>
+            <div class="w2">
+              <%=  @member_card.nil? ? "" : @member_card.member.name%>
+            </div>
+            <div class="w1">卡类型：</div>
+            <div class="w2">
+              <%= display_card_type_desc(@member_card.nil? ? nil : @member_card.card) %>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">卡内金额（￥）：</div>
+            <div class="w2">
+              <%= @member_card.left_fee%>
+            </div>
+            <div class="w1">卡内次数（次）：</div>
+            <div class="w2">
+              <%= @member_card.left_times%>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">有效期：</div>
+            <div class="w2">
+              <%= DateUtil.timeshort(@member_card.expire_date.nil? ? nil : @member_card.expire_date) %>
+            </div>
+            <div class="w1">修改有效期：</div>
+            <div class="w2">
+              <input name="expire_date" id="expire_date" value=""/>
+            </div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <div class="w1">充金额：</div>
+            <div class="w2">
+              <input name="fee" id="fee" value="" onchange="javascript:checkNum(this.value)"/>
+            </div>
+            <div class="w1">充次数：</div>
+            <div class="w2">
+              <input name="times" id="times" value="" onchange="javascript:checkNum(this.value)"/>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="h10"></div>
+    <div class="input_bd">
+      <button class="submit1 hand" type="button" onclick="recharge_submit(<%=@member_card.id%>, 1);">修改</button>
+    </div>
+    <div class=" clear"></div>
+  </div>
+  <%end%>
+  <div class="h10"></div>
+</div>
 <script type="text/javascript">
   $(".member_card_detail").colorbox({width:"80%", height:"80%", iframe:false});
   $(".member_card_recharge").colorbox({width:"50%", height:"40%", iframe:false});

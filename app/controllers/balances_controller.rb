@@ -50,6 +50,7 @@ class BalancesController < ApplicationController
     @order    = Order.find(params[:order_id])
     @balance  = Balance.find(params[:id])
     pre_date_for_new_create
+    render :layout => params[:layout].blank?
   end
   
   protected

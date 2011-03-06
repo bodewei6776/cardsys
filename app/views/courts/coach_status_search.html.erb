@@ -1,58 +1,84 @@
-<br />
-<%if notice%><p class="notice"><%= notice %></p><%end%>
-<h1>教练预定信息查询</h1>
-<fieldset class="hidden">
-  <form method="post" action="/courts/coach_status_search" class="form-profile" id="search_form">
-    <label for="name">教练：</label>
-    <select name="name">
-      <%= generate_coaches_options_for_courts(@caoches,params[:name]) %>
-    </select>
-    <label for="card_id">开始日期:</label>
-    <input type="text" name="start_date"  value="<%= params[:start_date] %>" onblur="return;" class="search_date" />
-    <label for="card_id">结束日期:</label>
-    <input type="text" name="end_date"  value="<%= params[:end_date] %>" onblur="return;"  class="search_date" /><br/>
-    <label for="name">预定人：</label>
-    <input type="text" name="member_name" maxlength="30" tabindex="1" value="<%=params[:member_name] %>" class="inputtext" autocomplete="/members/autocomplete_name"/>
-    <label for="name">时段：</label>
-        <select name="start_hour" id="start_hour" class="select" onchange="check_time();">
-          <%= generate_time_options(0) %>
-        </select>-
-        <select name="end_hour" id="end_hour" class="select" onchange="check_time();">
-          <%= generate_time_options(24) %>
-        </select>
-    <input type="submit" name="search" class="inputsubmit" value="查询"  tabindex="10" />
-  </form>
-</fieldset>
-<br />
-
-<%if @order_items.size > 0 %>
-<h1>教练预定列表</h1>
-<fieldset class="table">
-  <ul class="title_ul">
-    <li style="width:15%;">教练</li>
-    <li>会员姓名</li>
-    <li style="width:15%;">日期</li>
-    <li style="width:10%;">场地</li>
-    <li style="width:10%;">时段</li>
-    <li style="width:10%;">当前状态</li>
-  </ul>
-
-  <% for order_item in @order_items %>
-   <ul>
-      <li style="width:15%;"><%= order_item.coach_name %></li>
-      <li><%= order_item.member_name %></li>
-      <li style="width:15%;"><%= DateUtil.timeshort(order_item.order_time) %></li>
-      <li style="width:10%;"><%= order_item.order.book_record.court.name %></li>
-      <li style="width:10%;"><%= order_item.start_hour %>点 - <%= order_item.end_hour %>点</li>
-      <li style="width:10%;"><%= order_item.status_str %></li>
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >教练预定信息查询</div>
+    </div>
+    <div class=" r_bt_r" >
+    </div>
+  </div>
+  <div class="soso">
+    <form method="post" action="/courts/coach_status_search" class="form-profile" id="search_form">
+      <div class="w95">
+        教练：
+        <label>
+          <select name="good_type" id="good_type" class="select">
+            <%= generate_coaches_options_for_courts(@caoches,params[:name]) %>
+          </select>
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="submit" name="search" id="search_member" class="inputsubmit" value="查询"  tabindex="10" />
+        <style type="text/css">
+          #adv_search div{width:750px;padding: 5px;margin-left:-30px }
+          #adv_search div label{width: 80px;text-align: right;}
+        </style>
+        <div id="adv_search"  class="w95">
+          <div>
+            <label for="card_id">开始日期：</label>
+            <input type="text" name="start_date"  value="<%= params[:start_date] %>" onblur="return;" class="search_date" />
+            <label for="card_id">结束日期：</label>
+            <input type="text" name="end_date"  value="<%= params[:end_date] %>" onblur="return;"  class="search_date" />
+          </div>
+          <div>
+            <label for="card_id">预定会员：</label>
+            <input type="text" name="member_name" maxlength="30"  value="<%=params[:member_name] %>" autocomplete="/members/autocomplete_name"/>
+            <label for="card_id">预定时段：</label>
+            <select name="start_hour" id="start_hour" class="select" onchange="check_time();">
+              <%= generate_time_options(0) %>
+            </select>-
+            <select name="end_hour" id="end_hour" class="select" onchange="check_time();">
+              <%= generate_time_options(24) %>
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="h10"></div>
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >教练预定列表</div>
+    </div>
+    <div class=" r_bt_r" ></div>
+  </div>
+  <div class=" table">
+    <ul class="bttitle black fb " >
+      <li class="w5">序号</li>
+      <li class="w10">教练</li>
+      <li class="w10">会员姓名</li>
+      <li class="w15">日期</li>
+      <li class="w10">场地</li>
+      <li class="w10">时段</li>
+      <li class="w10">当前状态</li>
     </ul>
-  <% end %>
-</fieldset>
-
-  <%= will_paginate @order_items %>
-<%end%>
-
-<div class="btn t_center">
+    <%@order_items.each_with_index do |order_item,index|%>
+      <ul class="table_items">
+        <li class="w5"><%= index + 1 %></li>
+        <li class="w10"><%= order_item.coach_name %></li>
+        <li class="w10"><%= order_item.member_name %></li>
+        <li class="w10"><%= DateUtil.timeshort(order_item.order_time) %></li>
+        <li class="w10"><%= order_item.order.book_record.court.name %></li>
+        <li class="w10"><%= order_item.start_hour %>点 - <%= order_item.end_hour %>点</li>
+        <li class="w10"><%= order_item.status_str %></li>
+      </ul>
+    <%end%>
+  </div>
+  <div class="h10"></div>
+  <div class="pages">
+    <%= will_paginate @order_items, :sp => 1%>
+  </div>
+  <div class="h10"></div>
 </div>
 <script type="text/javascript">
   $(function() {

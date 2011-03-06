@@ -1,3 +1,14 @@
-<h1>修改教练信息</h1>
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >修改教练信息</div>
+    </div>
 
-<%= render 'form' %>
+    <div class=" r_bt_r" >
+      <button onclick="window.location.href='/coaches/new'" class="submit2 hand" type="button">添加教练</button>
+    </div>
+  </div>
+  <%= render 'form',:coach => @coach %>
+  <div class="h10"></div>
+</div>

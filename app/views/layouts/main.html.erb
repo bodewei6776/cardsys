@@ -22,8 +22,25 @@
         });
         $('#datepicker').datepicker('setDate','<%= ftime_date(@date) %>')
       });
+ 
+      $(document).ready(function(){
+        $(".table_items").filter(':even').css("background-color", "#EFFFC8");
+        $('.table_items').mouseover(function(){
+          $(this).css('background-color','#E78F08');
+        });
+        $('.table_items').mouseout(function(){
+          $(this).css('background-color','#ffffff');
+          $(".table_items").filter(':even').css("background-color", "#EFFFC8");
+        });
+        $(".balance_detail").colorbox({width:"900", height:"400", iframe:false});
+      });
+
     </script>
     <%= stylesheet_link_tag 'main', 'jquery-ui-1.8.2.custom','colorbox' %>
+    <style type="text/css">
+      div .w1{height: 80px;}
+      div .w2{height: 80px;}
+    </style>
   </head>
   <body>
     <div class="top">

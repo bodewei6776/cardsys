@@ -1,4 +1,5 @@
 class CardsController < ApplicationController
+  layout 'main'
   # GET /card_templates
   # GET /card_templates.xml
   def index
@@ -71,16 +72,7 @@ class CardsController < ApplicationController
 
     CardPeriodPrice.delete_all("card_id = #{params[:id]}")
     format_card_period_price @card
-#    for period_price in @period_prices
-#      time_available = params["time_available_#{period_price.id}"]
-#      if time_available
-#        card_price = params["time_discount_#{period_price.id}"].blank? ? 0 : params["time_discount_#{period_price.id}"]
-#          @card.card_period_prices << CardPeriodPrice.new(:period_price_id => period_price.id,
-#            :card_price =>  card_price,
-#            :catena_id =>  session[:catena_id])
-#      end
-#
-#    end
+
     respond_to do |format|
       if @card.update_attributes(params[:card])
         format.html { redirect_to(@card, :notice => '卡信息修改成功！') }
@@ -98,9 +90,7 @@ class CardsController < ApplicationController
     @card = Card.find(params[:id])    
     if @card.member_cards.first
       flash[:notice] = "此类型的卡已经有绑定，不能删除！"
-#      redirect_to :action => :index
     else
-#      @card.card_period_prices.delete_all if @card.card_period_prices.size > 0#要不要
       @card.destroy
       flash[:notice] = "删除成功！"
     end
@@ -111,8 +101,8 @@ class CardsController < ApplicationController
   end
 
   def change_status
-     @card = Card.find(params[:id])
-     @card.update_attribute("status", params[:status])
+    @card = Card.find(params[:id])
+    @card.update_attribute("status", params[:status])
     respond_to do |format|
       format.html { redirect_to(cards_url) }
       format.xml  { head :ok }
@@ -121,7 +111,7 @@ class CardsController < ApplicationController
 
   private
   def format_card_period_price(card)
-     for period_price in PeriodPrice.search_order
+    for period_price in PeriodPrice.search_order
       #被选中可用的时段
       if params["time_available_#{period_price.id}"]
         price = params["time_discount_#{period_price.id}"]
