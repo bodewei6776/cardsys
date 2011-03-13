@@ -34,7 +34,7 @@ module BookRecordOrder
   end
 
   def is_time_span_ready_to_order?
-    if end_hour <= start_hour
+    if end_hour  <= start_hour
       order_errors << I18n.t('order_msg.book_record.invalid_time_span')
     elsif  !is_to_do_agent? and exist_conflict_record? 
       order_errors << I18n.t('order_msg.book_record.exist_time_span',:date => record_date.to_s(:db),:start_time => start_hour,:end_time => end_hour)

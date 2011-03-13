@@ -1,33 +1,35 @@
-<div class=" table">
-  <ul class="bttitle black fb " >
-    <li class="w5">编号</li>
-    <li class="w10">商品分类</li>
-    <li class="w10">商品名称</li>
-    <li class="w10">零售价</li>
-    <li class="w10">商品总数</li>
-    <li class="w10">库房商品数</li>
-    <li class="w10">前台商品数</li>
-    <li class="w20">操作</li>
-  </ul>
-  <%@goods.each_with_index do |good,index|%>
-    <ul class="table_items" entry_id="<%= good.id%>">
-      <li class="w5"><%= index + 1 %></li>
-      <li class="w10"><%= good.name%></li>
-      <li class="w10"><%= generate_good_type_str(good.good_type) %></li>
-      <li class="w10"><%= good.price %></li>
-      <li class="w10"><%= good.count_total_now %></li>
-      <li class="w10"><%= good.count_back_stock %></li>
-      <li class="w10"><%= good.count_front_stock %></li>
-      <li class="w20">
-        <input type='text' size=5 class='for-display-only'/>
-        <input type='button' value='添加' class='reduce-goods-button' entry_id='<%= good.id %>'/>
-      </li>
+<form action="/goods/add_to_cart" id="add_to_cart_form">
+  <div class=" table">
+    <ul class="bttitle black fb " >
+      <li class="w5">编号</li>
+      <li class="w10">商品分类</li>
+      <li class="w10">商品名称</li>
+      <li class="w10">零售价</li>
+      <li class="w10">商品总数</li>
+      <li class="w10">库房商品数</li>
+      <li class="w10">前台商品数</li>
+      <li class="w20">操作</li>
     </ul>
-  <%end%>
-</div>
+    <%@goods.each_with_index do |good,index|%>
+      <ul class="table_items" entry_id="<%= good.id%>">
+        <li class="w5"><%= index + 1 %></li>
+        <li class="w10"><%= good.name%></li>
+        <li class="w10"><%= generate_good_type_str(good.good_type) %></li>
+        <li class="w10"><%= good.price %></li>
+        <li class="w10"><%= good.count_total_now %></li>
+        <li class="w10"><%= good.count_back_stock %></li>
+        <li class="w10"><%= good.count_front_stock %></li>
+        <li class="w20">
+          <input type='text' size=5 class='for-display-only'/>
+          <input type='button' value='添加' class='reduce-goods-button' entry_id='<%= good.id %>'/>
+        </li>
+      </ul>
+    <%end%>
+  </div>
+</form>
 <div class="h10"></div>
 <div class="input_bd">
-  <input type='button' value="确 认添加" class='submit-goods-button'/>
+  <input type='button' value="确认添加" class='submit-goods-button'/>
 </div>
 <div class=" clear"></div>
 <script type="text/javascript" charset="utf-8">
@@ -56,7 +58,7 @@
     });
 	
     $('.submit-goods-button').click(function(){
-      var cart_form = $(document.add_to_cart_form);
+      var cart_form = $('#add_to_cart_form');
       var input = $(this);
       var url = cart_form.attr('action') + "?order_id=" + $('#order_id').val();
       $.post(url,cart_form.serialize(),function(reply){

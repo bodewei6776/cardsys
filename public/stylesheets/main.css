@@ -24,7 +24,7 @@ body{width:100%;/*<随屏幕大小自动充满>*/
 
 a:link {line-height:22px;color:#009944;text-decoration: none;}
 a:visited{line-height:22px;color:#009944;text-decoration: none;}
-a:hover {line-height:22px;color:#f00;text-decoration:underline;}
+a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 
 .csxred,a.csxred:link,a.csxred:visited{color:#fb6142; text-decoration:underline;/*<山西红>*/}
 .csxred,a.csxred:hover{color:#000000;/*<山西红变黑>*/}

@@ -9,12 +9,23 @@ class PeriodPrice < ActiveRecord::Base
   validates :price, :numericality => {:message => "时段价格必须为数字！"}
   validates :period_type, :uniqueness => {:scope => [:start_time, :end_time], :message => "该价格时段已经存在，请重新设置价格时段！"}
 
+  validate :validate_start_time_end_time
+
   before_create :set_catena_id
   def set_catena_id
     self.catena_id = current_catena.id
   end
 
   PERIOD_START_TIME, PERIOD_END_TIME  = 7, 24
+
+  def validate_start_time_end_time
+    conflict_period = self.class.where(["start_time < :end_time AND end_time > :start_time",
+        {:start_time => start_time,:end_time => end_time}])
+    conflict_period = conflict_period.where("id <> #{id}") unless new_record
+    if conflict_period
+      errors['base'] << "时段冲突，#{start_time}-#{end_time}已经存在"
+    end
+  end
 
   def is_in_time_span(date = Date.today, start_hour = nil, end_hour = nil)
     start_hour ||= PERIOD_START_TIME

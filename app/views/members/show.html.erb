@@ -98,7 +98,7 @@
     </div>
     <div class="h10"></div>
     <div class="infobox">
-      <div class="infobox_bt"><p>会员 <%= @member.name %>的卡列表</p></div>
+      <div class="infobox_bt"><p>会员 <%= @member.name %>信息统计</p></div>
       <div class="infobox_nr">
         <ul>
           <li>
@@ -106,9 +106,9 @@
             <div class="w2">
               统计中
             </div>
-            <div class="w1">最近来店日期：</div>
+            <div class="w1">最近来店：</div>
             <div class="w2">
-              <%= @member.latest_comer_date %>
+              <%= @member.latest_comer_date.blank? ? '无' : @member.latest_comer_date %>
             </div>
           </li>
         </ul>

@@ -8,6 +8,7 @@
         <div class="w2">
           <% unless @book_record.new_record? %>
             <input type="hidden" name="order[book_record_attributes][id]" value="<%= @book_record.id %>"/>
+            <input type="hidden" value="<%= @order.id %>" name="order_id" id="order_id" type="hidden" />
           <%end%>
           <select name="order[book_record_attributes][court_id]" id="order_court_id">
             <%= generate_book_record_status_options(@court.id) %>
@@ -23,27 +24,12 @@
     </ul>
     <ul>
       <li>
-        <div class="w1">教练：</div>
-        <div class="w2 coach-list">
-          <% @order.coaches.map(&:id).each do |coach_id|  -%>
-            <select name="order[coach_attributes][id][]" class='data-coach-select'>
-              <%= generate_coaches_options(@coaches,coach_id) %>
-            </select><input type="button"   value="删除" class="data-remove-coach"/>
-          <%end -%>
-          <%if @order.coaches.blank? -%>
-            <select name="order[coach_attributes][id][]" class='data-coach-select'>
-              <%= generate_coaches_options(@coaches) %>
-            </select>
-          <%end -%>
-          <input type="button"  value="添加" class="data-add-coach"/>
-        </div>
         <div class="w1">是否是会员：</div>
         <div class="w2">
           <input type="hidden" name="order[operation]" value="" id="order_operation_type" />
           <input type="radio" name="order[member_type]"  value="<%= Const::YES %>" class="is_member_jsjq" <%if @order.is_member? %> checked="zzz" <%end%>/>是
           <input type="radio" name="order[member_type]"  value="<%= Const::NO %>"  class="is_member_jsjq" <%unless @order.is_member?%> checked="checked" <%end%> />否
         </div>
-
       </li>
     </ul>
     <ul>
@@ -117,6 +103,22 @@
         </ul>
       <%end%>
     </div>
+    <ul style="height:80px;">
+      <div class="w1">教练：</div>
+      <div class="w2 coach-list">
+        <% @order.coaches.map(&:id).each do |coach_id|  -%>
+          <select name="order[coach_attributes][id][]" class='data-coach-select'>
+            <%= generate_coaches_options(@coaches,coach_id) %>
+          </select><input type="button"   value="删除" class="data-remove-coach"/>
+        <%end -%>
+        <%if @order.coaches.blank? -%>
+          <select name="order[coach_attributes][id][]" class='data-coach-select'>
+            <%= generate_coaches_options(@coaches) %>
+          </select>
+        <%end -%>
+        <input type="button"  value="添加" class="data-add-coach"/>
+      </div>
+    </ul>
     <ul style="height:80px;">
       <div class="w1" style="">备注：</div>
       <div class="ww2">

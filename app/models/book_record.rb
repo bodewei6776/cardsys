@@ -231,9 +231,9 @@ class BookRecord < ActiveRecord::Base
     color = case
     when  is_default?      then  ""
     when  is_booked?         then  "color01"
-    when  is_balanced?       then  "color04"
+    when  is_balanced?       then  "color05"
     when  is_cancled?        then  ""
-    when  is_agented?        then  "color05"
+    when  is_agented?        then  "color04"
     when  is_actived?        then  "color03"
     else "color02"
     end

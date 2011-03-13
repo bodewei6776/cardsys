@@ -8,7 +8,7 @@
   </div>
   <div class="fform">
     <%  form_for(@book_record) do |order_form| %>
-      <% render :partial => 'book_records/form',:f => order_form %>
+      <%= render :partial => 'book_records/form',:f => order_form %>
       <div class="h10"></div>
       <div class="input_bd">
         <%= display_enable_buttons(@book_record) %>

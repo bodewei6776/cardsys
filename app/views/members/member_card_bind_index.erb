@@ -32,6 +32,9 @@
             <li>
               <div class="w1">会员卡号：</div>
               <div class="w2">
+                <input type="hidden" name="member_id" value="<%= @member && @member.id %>" />
+                <input type="hidden" name="binded_card_id" id="binded_card_id" value="<%= params[:binded_card_id] %>"/>
+                <input type="hidden" name="binded_card_type" id="binded_card_type" value="<%= params[:binded_card_type] %>"/>
                 <input type="text" name="member_card[card_serial_num]" value="" id="card_serial_num"/>
               </div>
               <div class="w1">卡有效期：</div>
