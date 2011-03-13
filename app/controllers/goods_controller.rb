@@ -16,7 +16,7 @@ class GoodsController < ApplicationController
     @name = params[:name]
     @goods = Good.order("id desc")
     @goods = @goods.where(["good_type = ? ", @good_type]) unless params[:good_type].blank?
-    @goods = @goods.where(["name = ? ", @name]) unless params[:name].blank?
+    @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @goods = @goods.paginate(:page => params[:page]||1)
     respond_to do |format|
       format.html {

@@ -31,7 +31,8 @@ module BookRecordsHelper
     base_book_url = "#{new_book_record_path}?date=#{date.to_s(:db)}&court_id=#{court.id}"
     for realy_time_span in realy_time_spans
       book_url = "#{base_book_url}&start_hour=#{realy_time_span[0]}&end_hour=#{realy_time_span[1]}"
-      li_height = 15*(realy_time_span[1]-realy_time_span[0])
+      hours = realy_time_span[1]-realy_time_span[0]
+      li_height = 30*(hours) + (hours - 1)*1
       unless (book_record = realy_time_span.last).nil?
         display_content = "#{book_record.order.member_name}:#{book_record.order.member_card.card_serial_num}"
         unless (coaches = book_record.order.coaches).blank?
@@ -51,7 +52,7 @@ module BookRecordsHelper
         title = "#{display_content}(#{book_record.status_desc})"
         info_htmls << [realy_time_span[0],content_tag(:li,content_tag("a",display_content,:href => url,
               :class =>book_record.status_color ,:title => title,:target => '_blank',
-              :style => "display:block;"),
+              :style => "height:#{li_height}px;display:block;"),:style => "height:#{li_height}px;",
             :class => li_class.join(' '), :id => "book-record-#{book_record.id}")]
       else
         if date < Date.today || (date == Date.today && realy_time_span[0] < DateTime.now.hour)
