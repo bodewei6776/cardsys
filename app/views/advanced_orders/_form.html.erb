@@ -54,18 +54,20 @@
       <%=  render :partial => "/book_records/serial_num",:locals => {:cards => @cards,
         :member => @member,:current_card => @current_card,:member_cards => @member_cards}%>
     <%else%>
-      <ul>
-        <li>
-          <div class="w1">会员姓名：</div>
-          <div class="w2">
-            <input type="text" name="member_name" id="order_member_name" />
-          </div>
-          <div class="w1">会员卡号：</div>
-          <div class="w2" id="member_serial_num">
-            <input type="text" id="sn" name="serial_num" id="card_serial_num" size=20   value=""  class="input01"/>
-          </div>
-        </li>
-      </ul>
+      <div id="rel_member" >
+        <ul>
+          <li>
+            <div class="w1">会员姓名：</div>
+            <div class="w2">
+              <input type="text" name="member_name" id="order_member_name" />
+            </div>
+            <div class="w1">会员卡号：</div>
+            <div class="w2" id="member_serial_num">
+              <input type="text" id="sn" name="serial_num" id="card_serial_num" size=20   value=""  class="input01"/>
+            </div>
+          </li>
+        </ul>
+      </div>
     <%end%>
     <ul>
       <li>

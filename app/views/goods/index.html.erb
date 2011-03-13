@@ -40,7 +40,6 @@
       <li class="w5">编号</li>
       <li class="w10">商品名称</li>
       <li class="w10">商品分类</li>
-      <li class="w10">入库价格（￥）</li>
       <li class="w10">零售价（￥）</li>
       <li class="w10">商品总数</li>
       <li class="w10">库房商品数</li>
@@ -52,7 +51,6 @@
         <li class="w5"><%= index + 1 %></li>
         <li class="w10"><%= good.name%></li>
         <li class="w10"><%= generate_good_type_str(good.good_type) %></li>
-        <li class="w10"><%= good.purchasing_price %></li>
         <li class="w10"><%= good.price %></li>
         <li class="w10"><%= good.count_total_now %></li>
         <li class="w10"><%= good.count_back_stock %></li>
