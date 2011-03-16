@@ -19,10 +19,10 @@ class PeriodPrice < ActiveRecord::Base
   PERIOD_START_TIME, PERIOD_END_TIME  = 7, 24
 
   def validate_start_time_end_time
-    conflict_period = self.class.where(["start_time < :end_time AND end_time > :start_time",
+    conflict_period = self.class.where(["start_time < :end_time AND end_time > :start_time AND period_type=#{period_type}",
         {:start_time => start_time,:end_time => end_time}])
-    conflict_period = conflict_period.where("id <> #{id}") unless new_record
-    if conflict_period
+    conflict_period = conflict_period.where("id <> #{id}") unless new_record?
+    if conflict_period.first
       errors['base'] << "时段冲突，#{start_time}-#{end_time}已经存在"
     end
   end
