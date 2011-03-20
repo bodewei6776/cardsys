@@ -73,9 +73,9 @@
     </ul>
     <ul>
       <li>
-        <div class="w1">联系地址：</div>
+        <div class="w1">备用电话：</div>
         <div class="w2">
-          <%= f.text_field :address %>
+          <%= f.text_field :standby_phone %>
         </div>
         <div class="w1">介绍人：</div>
         <div class="w2">
@@ -83,11 +83,19 @@
         </div>
       </li>
     </ul>
-    <ul style="height:80px;">
+    <ul style="height:60px;">
+      <li>
+        <div class="w1">联系地址：</div>
+        <div class="ww2">
+          <textarea name="member[address]" cols="45" rows="2"><%= @member.address %></textarea>
+        </div>
+      </li>
+    </ul>
+    <ul style="height:60px;">
       <li>
         <div class="w1">备注：</div>
         <div class="ww2">
-          <textarea name="member[description]" cols="45" rows="4"><%= @member.description %></textarea>
+          <textarea name="member[description]" cols="45" rows="2"><%= @member.description %></textarea>
         </div>
       </li>
     </ul>

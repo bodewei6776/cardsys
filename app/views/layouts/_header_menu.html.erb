@@ -4,27 +4,27 @@
 <div class='menu'>
   <ul id='menu'>
     <li>
-      <a title="基础信息管理" id="a" href="#" class="header_menu" sub_menu="common_memu">
+      <a title="基础信息管理" id="a" href="/period_prices" class="header_menu" sub_menu="common_memu">
         <p><img src="/images/new/tb_01.gif"  alt="" />基础信息管理</p>
       </a>
     </li>
     <li>
-      <a title="会员管理" id="d" href="#" class="header_menu" sub_menu="member_memu">
+      <a title="会员管理" id="d" href="/members" class="header_menu" sub_menu="member_memu">
         <p><img src="/images/new/tb_04.gif"  alt=""/> 会员管理</p>
       </a>
     </li>
     <li>
-      <a title="会员卡管理" id="c" href="#" class="header_menu" sub_menu="member_card_memu">
+      <a title="会员卡管理" id="c" href="/members/member_card_bind_index" class="header_menu" sub_menu="member_card_memu">
         <p><img src="/images/new/tb_03.gif"  alt=""/> 会员卡管理</p>
       </a>
     </li>
     <li>
-      <a title="场地预定" id="f" href="#" class="header_menu" sub_menu="book_record_menu">
+      <a title="场地预定" id="f" href="/book_records" class="header_menu" sub_menu="book_record_menu">
         <p><img src="/images/new/tb_06.gif"  alt=""/> 场地预定</p>
       </a>
     </li>
     <li>
-      <a title="商品库存管理" id="b" href="#" class="header_menu" sub_menu="goods_memu">
+      <a title="商品库存管理" id="b" href="/goods" class="header_menu" sub_menu="goods_memu">
         <p><img src="/images/new/tb_02.gif"  alt=""/> 商品库存管理</p>
       </a>
     </li>
@@ -34,12 +34,12 @@
       </a>
     </li>
     <li>
-      <a title="消费结算" id="g" href="#" class="header_menu" sub_menu="balance_menu">
+      <a title="消费结算" id="g" href="/balances" class="header_menu" sub_menu="balance_menu">
         <p><img src="/images/new/tb_07.gif"  alt=""/> 消费结算</p>
       </a>
     </li>
     <li>
-      <a title="权限管理" id="h" href="#" class="header_menu" sub_menu="authorize_menu">
+      <a title="权限管理" id="h" href="/users" class="header_menu" sub_menu="authorize_menu">
         <p><img src="/images/new/tb_08.gif"  alt=""/> 权限管理</p>
       </a>
     </li>
@@ -55,7 +55,7 @@
     $('.header_menu').click(function(){
       $('.menu_item').hide();
       $("#"+$(this).attr('sub_menu')).show();
-      return false;
+      return true;
     });
   });
 </script>

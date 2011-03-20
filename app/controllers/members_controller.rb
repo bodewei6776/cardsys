@@ -21,6 +21,10 @@ class MembersController < ApplicationController
     render :inline => @names.to_json
   end
 
+  def index
+
+  end
+
   # GET /members
   # GET /members.xml
   def index

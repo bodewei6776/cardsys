@@ -68,7 +68,7 @@ js
 
   def generate_card_type_options(card)
     options = generate_res_options CommonResource::CARD_TYPE
-    options_for_select(options, card.card_type ? card.card_type : nil)
+    options_for_select(options, card.card_type)
   end
 
   def generate_card_status_options(selected_value)
@@ -87,7 +87,7 @@ js
 
   def generate_period_price_type_options(period_price)
     options = generate_res_options CommonResource::PERIOD_TYPE
-    options_for_select(options, period_price.period_type ? period_price.period_type.to_s : nil)
+    options_for_select(options, period_price.period_type)
   end
   
   def display_period_price_type_desc(period_price)
