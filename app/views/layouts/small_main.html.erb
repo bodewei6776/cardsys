@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>博德维网球管理系统</title>
+    <%= javascript_include_tag 'jquery-1.4.2','jquery.ui.core','jquery-ui-1.8.2.custom.min','jquery.ui.datepicker','rails','jquery-ui-datepicker-zh-CN'%>
+    <%= javascript_include_tag "jquery.colorbox-min.js"   %>
+    <%= javascript_include_tag "autocomplete-rails.js","jquery.popupWindow.js"   %>
+    <%= stylesheet_link_tag 'main', 'jquery-ui-1.8.2.custom','colorbox' %>
+    <style type="text/css">
+      div .w1{height: 80px;}
+      div .w2{height: 80px;}
+    </style>
+  </head>
+  <body>
+    <div class="clear"></div>
+    <div>
+      <div class="right_ddd"><img src="/images/new/r_ddd_yj.jpg" alt="" /></div>
+      <%= yield %>
+      <div class="foot">Showr Tennis Mangement System &copy; 2010 <a href="#">博德维网球管理系统</a> showr.com</div>
+    </div>
+  </body>
+</html>
