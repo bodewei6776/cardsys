@@ -5,17 +5,20 @@
     <title>博德维网球管理系统</title>
     <%= javascript_include_tag 'jquery-1.4.2','jquery.ui.core','jquery-ui-1.8.2.custom.min','jquery.ui.datepicker','rails','jquery-ui-datepicker-zh-CN'%>
     <%= javascript_include_tag "jquery.colorbox-min.js"   %>
-    <%= javascript_include_tag "autocomplete-rails.js"   %>
+    <%= javascript_include_tag "autocomplete-rails.js","jquery.popupWindow.js"   %>
     <script type="text/javascript">
       $(document).ready(function() {
         $('#datepicker').datepicker({
           onSelect: function(dateText, inst) {
             $("#calendar_con").val(dateText);
             var domain = document.domain;
-            if(domain == 'localhost'){
-              var url = 'http://localhost:3000/book_records?date=' + dateText;
-            }else{var url = 'http://'+domain+':3000/book_records?date=' + dateText;}
-            window.location.href=url;
+            var port = window.location.port
+            var urls = ["http://",domain];
+            if(port && port != ''){
+              urls.push(":" + port)
+            }
+            urls.push("/book_records?date=" + dateText)
+            window.location.href=urls.join('');
           },
           dateFormat: 'yy-mm-dd',
           changeMonth: true,

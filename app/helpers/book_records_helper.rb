@@ -51,7 +51,7 @@ module BookRecordsHelper
         end
         title = "#{display_content}(#{book_record.status_desc})"
         info_htmls << [realy_time_span[0],content_tag(:li,content_tag("a",display_content,:href => url,
-              :class =>book_record.status_color ,:title => title,:target => '_blank',
+              :class =>book_record.status_color ,:title => title,
               :style => "height:#{li_height}px;display:block;"),:style => "height:#{li_height}px;",
             :class => li_class.join(' '), :id => "book-record-#{book_record.id}")]
       else
@@ -59,8 +59,8 @@ module BookRecordsHelper
           info_htmls << [realy_time_span[0],content_tag(:li,tag("input",{:type => 'button', :disabled => 'disabled',:value => '过 期',
                   :class => "color02",:style => "height:#{li_height}px;"}))]
         else
-          info_htmls << [realy_time_span[0],content_tag(:li,content_tag("button",'预定',{:type => 'button', :onclick => "location.href='#{book_url}'",
-                  :value => '预定',:class => "submit1 hand"  }))]
+          info_htmls << [realy_time_span[0],content_tag(:li,content_tag("button",'预定',{:type => 'button', :href => book_url,
+                  :value => '预定',:class => "submit1 hand popup-new-window"  }))]
         end
       end
     end

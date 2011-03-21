@@ -18,5 +18,7 @@
     <%end%>
   </div>
   <div class="h10"></div>
+  <%= render :partial => "/orders/order_items",:locals => {:order => @order,:good_items => @good_items} %>
+  <div class="h10"></div>
 </div>
 <%= render :partial => '/book_records/share_js' %>

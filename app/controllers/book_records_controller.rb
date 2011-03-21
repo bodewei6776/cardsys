@@ -9,7 +9,7 @@ class BookRecordsController < ApplicationController
     @date = params[:date].blank? ? Date.today : Date.parse(params[:date])
     @daily_periods   = PeriodPrice.all_periods_in_time_span(@date)
     @predate      = @date.yesterday.strftime("%Y-%m-%d")
-    @nextdate     = @date.tomorrow.strftime("%Y-%m-%d")
+    @nextdate     = @date.tomorrow.strftime("%Y-%m-%d")    
   end
 
   # GET /book_records/1
@@ -31,6 +31,7 @@ class BookRecordsController < ApplicationController
     @date = @book_record.record_date
     @order = Order.new
     @order.book_record  = @book_record
+    render :layout => 'small_main'
   end
 
   # GET /book_records/1/edit
@@ -58,7 +59,7 @@ class BookRecordsController < ApplicationController
         format.html { redirect_to("/book_records?date=#{@order.book_record.record_date.to_s(:db)}", :notice => '订场成功.') }
       else
         inite_related_order_objects
-        format.html { render :action => "new" }
+        format.html { render :action => "new",:layout => 'small_main' }
       end
     end
   end
