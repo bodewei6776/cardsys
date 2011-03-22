@@ -11,7 +11,7 @@ class Coach < ActiveRecord::Base
   validates :telephone, :format => {:with =>/^0{0,1}(13[0-9]|15[0-9])[0-9]{8}$/, :if => Proc.new { |coach| !coach.telephone.nil? && !coach.telephone.blank? }, :message => '联系电话格式无效！'}
   validates :email, :format => {:with =>/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/, :allow_blank => true,:message => '邮箱格式不正确！'}
 
-  before_create :set_catena_id
+  #before_create :set_catena_id
 
   scope :default_coaches,where(:status => Const::NO)
 
