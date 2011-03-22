@@ -3,20 +3,20 @@ development:
   encoding: utf8
   reconnect: false
   database: cardsys_dev
-  socket: /var/run/mysqld/mysqld.sock
+  socket: /tmp/mysql.sock
   pool: 5
   username: root
-  password:
+  password: xcm
 
 test:
   adapter: mysql
   encoding: utf8
   reconnect: false
   database: cardsys_test
-  socket: /var/run/mysqld/mysqld.sock
+  socket: /tmp/mysql.sock
   pool: 5
   username: root
-  password:
+  password: xcm
   host: localhost
 
 production:
@@ -24,7 +24,7 @@ production:
   encoding: utf8
   reconnect: false
   database: cardsys
-  socket: /var/run/mysqld/mysqld.sock
+  socket: /tmp/mysql.sock
   pool: 5
   username: root
-  password:
+  password: xcm

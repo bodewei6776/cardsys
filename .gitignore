@@ -1,4 +1,20 @@
 Gemfile.lock
 tmp
 log
+public/system/*
+nbproject/*
+.DS_Store
+tmp/**/*
+doc/**/*
+db/schema.rb
+*.cache
+*.pid
+db/*.sqlite3
+db/cstore/**
+vender/rails
+*.swp
+.irbrc
+public/system/**
+public/ckeditor_assets/**
+public/javascripts/.DS_Store
 

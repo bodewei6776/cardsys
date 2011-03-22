@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110108044310) do
+ActiveRecord::Schema.define(:version => 20110320134206) do
 
   create_table "advanced_orders", :force => true do |t|
     t.integer  "court_id",                    :default => 0, :null => false
@@ -26,20 +26,23 @@ ActiveRecord::Schema.define(:version => 20110108044310) do
   end
 
   create_table "balances", :force => true do |t|
-    t.integer  "order_id",                                                              :default => 0,   :null => false
-    t.decimal  "book_record_amount",                     :precision => 10, :scale => 2, :default => 0.0, :null => false
-    t.decimal  "book_record_realy_amount",               :precision => 10, :scale => 2, :default => 0.0, :null => false
-    t.string   "change_note",              :limit => 80,                                :default => "",  :null => false
-    t.integer  "catena_id",                                                             :default => 0,   :null => false
-    t.integer  "balance_way",              :limit => 1,                                 :default => 0,   :null => false
-    t.integer  "member_type",              :limit => 1,                                 :default => 0,   :null => false
+    t.integer  "order_id",                                                                :default => 0,   :null => false
+    t.decimal  "book_record_amount",                       :precision => 10, :scale => 2, :default => 0.0, :null => false
+    t.decimal  "book_record_realy_amount",                 :precision => 10, :scale => 2, :default => 0.0, :null => false
+    t.string   "change_note",                :limit => 80,                                :default => "",  :null => false
+    t.integer  "catena_id",                                                               :default => 0,   :null => false
+    t.integer  "balance_way",                :limit => 1,                                 :default => 0,   :null => false
+    t.integer  "member_type",                :limit => 1,                                 :default => 0,   :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "goods_balance_type",       :limit => 1,                                 :default => 0,   :null => false
-    t.integer  "status",                   :limit => 1,                                 :default => 0,   :null => false
-    t.integer  "count_amount",                                                          :default => 0,   :null => false
-    t.decimal  "goods_amount",                           :precision => 10, :scale => 0
-    t.decimal  "goods_realy_amount",                     :precision => 10, :scale => 0, :default => 0
+    t.integer  "goods_balance_type",         :limit => 1,                                 :default => 0,   :null => false
+    t.integer  "status",                     :limit => 1,                                 :default => 0,   :null => false
+    t.integer  "count_amount",                                                            :default => 0,   :null => false
+    t.decimal  "goods_amount",                             :precision => 10, :scale => 0
+    t.decimal  "goods_realy_amount",                       :precision => 10, :scale => 0, :default => 0
+    t.integer  "goods_member_card_id",                                                    :default => 0,   :null => false
+    t.integer  "book_reocrd_member_card_id",                                              :default => 0,   :null => false
+    t.integer  "member_id",                                                               :default => 0,   :null => false
   end
 
   create_table "book_records", :force => true do |t|
@@ -215,28 +218,31 @@ ActiveRecord::Schema.define(:version => 20110108044310) do
   end
 
   create_table "members", :force => true do |t|
-    t.string   "name",                        :null => false
-    t.string   "name_pinyin",                 :null => false
+    t.string   "name",                                                                         :null => false
+    t.string   "name_pinyin",                                                                  :null => false
     t.string   "nickname"
-    t.integer  "gender",      :default => 0,  :null => false
+    t.integer  "gender",                                                       :default => 0,  :null => false
     t.datetime "birthday"
     t.string   "telephone"
-    t.string   "mobile",                      :null => false
+    t.string   "mobile",                                                                       :null => false
     t.string   "email"
-    t.string   "address",     :default => ""
+    t.string   "address",                                                      :default => ""
     t.string   "job"
-    t.integer  "cert_type",                   :null => false
-    t.string   "cert_num",                    :null => false
+    t.integer  "cert_type",                                                                    :null => false
+    t.string   "cert_num",                                                                     :null => false
     t.string   "memo"
     t.string   "mentor"
     t.integer  "fax"
     t.text     "description"
-    t.integer  "status",      :default => 1,  :null => false
-    t.integer  "catena_id",   :default => 0,  :null => false
+    t.integer  "status",                                                       :default => 1,  :null => false
+    t.integer  "catena_id",                                                    :default => 0,  :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "is_member",   :default => 1,  :null => false
+    t.integer  "is_member",                                                    :default => 1,  :null => false
     t.string   "pinyin_abbr"
+    t.string   "standby_phone",   :limit => 16,                                :default => "", :null => false
+    t.decimal  "consume_amount",                :precision => 10, :scale => 0, :default => 0,  :null => false
+    t.integer  "consume_counter",                                              :default => 0,  :null => false
   end
 
   create_table "non_members", :force => true do |t|
