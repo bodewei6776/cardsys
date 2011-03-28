@@ -68,8 +68,8 @@ class MembersController < ApplicationController
     MemberCard.where("expire_date <= ?", @expire_date_end).each { |i| ids << i.member_id }if !params[:expire_date_end].blank?
     @members = @members.where("id in (?)", ids) if ids.size > 0
 
-    @members = @members.where("birthday >= ?", @member_birthday_start) if !params[:member_birthday_start].blank?
-    @members = @members.where("birthday <= ?", @member_birthday_end) if !params[:member_birthday_end].blank?
+    @members = @members.where("concat(month(birthday),\"-\",dayofmonth(birthday)) >= ?", @member_birthday_start) if !params[:member_birthday_start].blank?
+    @members = @members.where("concat(month(birthday),\"-\",dayofmonth(birthday)) <= ?", @member_birthday_end) if !params[:member_birthday_end].blank?
 
     @members = @members.where("gender = ?", @member_gender) if !params[:member_gender].blank?
     @members = @members.where("created_at >= ?", @reg_date_start ) if !params[:reg_date_start].blank?

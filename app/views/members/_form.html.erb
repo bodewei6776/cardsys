@@ -103,7 +103,7 @@
 <%end%>
 <script type="text/javascript">
   $(function() {
-    $("#member_birthday").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#member_birthday").datepicker({dateFormat: 'yy-mm-dd',changeYear:true,yearRange:'c-100:c-4'});
   });
   function fsubmit(){
     var form = $("form[0]");

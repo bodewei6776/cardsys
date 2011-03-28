@@ -19,7 +19,7 @@ body{width:100%;/*<随屏幕大小自动充满>*/
 	 font-family:arial,verdana, helvetica, sans-serif;/*<定义字体系列>*/
 	 word-break:normal;/*<允许在词间换行>*/
 	 word-wrap:break-word;/*<内容将在边界内换行>*/
-	 background: #dfff92;/*<背景颜色及图片定义>*/
+	 /*background: #dfff92;*//*<背景颜色及图片定义>*/
 }
 
 a:link {line-height:22px;color:#009944;text-decoration: none;}
@@ -315,8 +315,10 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 
 
 /*<定义左侧样式---开始>*/
-.left{ width:200px; height:auto; position:absolute; left:0px; }
-.bt_time{ width:200px; height:23px; margin:0 auto; text-align:center;}
+
+.left{ width:200px; height:auto; position:absolute; left:0px; background: #dfff92; }
+.bt_time{ width:200px; height:23px; margin:0 auto; text-align:center;position:relative;}
+#arrow_holder{ position:absolute;right:0px;top:0px;}
 .bt1{ width:178px; height:27px; line-height:27px; margin:0 auto; background:url(/images/new/bt1.jpg)  no-repeat 0 0; text-align:center;}
 .left_nav{ width:178px; margin:0 auto; background:url(/images/new/xdh_di.jpg) #ccc no-repeat bottom center;}
 .xdh{ width:176px; margin:0 auto}

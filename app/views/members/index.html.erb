@@ -51,7 +51,7 @@
       <ul class="member_items table_items">
         <li class="w5"><%= index + 1 %></li>
         <li class="w10"><%= link_to member.name,member %></li>
-        <li class="w15"><%= member.card_serial_nums %></li>
+        <li class="w15" style='overflow:hidden;' title="<%= raw member.card_serial_nums %>"><%= raw member.card_serial_nums %></li>
         <li class="w10"><%= member.mobile %></li>
         <li class="w8"><%= member.created_at.nil? ? "" : DateUtil::timeshort(member.created_at) %></li>
         <li class="w8"><%= member.member_card_left_fees %></li>
@@ -101,4 +101,5 @@
     }
     return false;
   }
+
 </script>
