@@ -27,7 +27,7 @@
             </li>
           </ul>
         </form>
-        <%= form_for :member_card, @member_card, :url => {:action => "member_card_bind_update"}, :html => {:id=>"member_card_form",:class => "form-profile"} do |f|%>
+        <%= form_for(@member_card, :url => {:action => "member_card_bind_update"}, :html => {:id=>"member_card_form",:class => "form-profile"}) do |f|%>
           <ul>
             <li>
               <div class="w1">会员卡号：</div>

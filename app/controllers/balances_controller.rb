@@ -1,4 +1,5 @@
 class BalancesController < ApplicationController
+  layout 'main'
   
   def index
     @book_records = BookRecord.playing.order('record_date,start_hour').paginate(:page => params[:page]||1)

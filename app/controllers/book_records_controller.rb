@@ -56,7 +56,10 @@ class BookRecordsController < ApplicationController
     @order.parent_id = 0
     respond_to do |format|
       if @order.save
-        format.html { redirect_to("/book_records?date=#{@order.book_record.record_date.to_s(:db)}", :notice => '订场成功.') }
+        format.html { 
+          render :js=> "<script type='text/javascript'>window.parent.location.reload();window.close();</script>"
+          #redirect_to("/book_records?date=#{@order.book_record.record_date.to_s(:db)}", :notice => '订场成功.') 
+        }
       else
         inite_related_order_objects
         format.html { render :action => "new",:layout => 'small_main' }

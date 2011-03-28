@@ -265,6 +265,7 @@ class MembersController < ApplicationController
   def member_card_bind_index
     @member_name = params[:member_name]
     @member = Member.where(:name => params[:member_name]).first if !params[:member_name].nil?
+    @member_card = MemberCard.new
     @notice = params[:notice]
     @notice_error = params[:notice_error]
     @cards = Card.where(:status => CommonResource::CARD_ON)
@@ -284,7 +285,7 @@ class MembersController < ApplicationController
     @member_card.card_id = params[:binded_card_id]
     @member_card.user_id = current_user.id
     @member_card.password = @member.name
-    notice = @member_card.save ? '会员卡绑定成功！' : @member_card.errors.full_messages.values.join(';')
+    notice = @member_card.save ? '会员卡绑定成功！' : @member_card.errors.full_messages.join(';')
     respond_to do |format|
       format.html { redirect_to :action => "member_card_bind_index",
         :member_name => @member.name, :member_id => params[:member_id], :notice => notice}

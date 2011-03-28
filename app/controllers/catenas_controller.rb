@@ -1,6 +1,7 @@
 class CatenasController < ApplicationController
   # GET /catenas
   # GET /catenas.xml
+  layout 'main'
   def index
     @catenas = Catena.all
 
