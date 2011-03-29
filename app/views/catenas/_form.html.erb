@@ -1,34 +1,39 @@
 <%= form_for(@catena) do |f| %>
-  <div class="item">
-    <%= error_messages_for :catena %>
-    <fieldset class="hidden" style="height:200px;">
-      <legend>属性信息</legend>
-      <p>
-        <label for="name"><em>*</em>连锁名称：</label>
+  <%= error_messages_for :catena %>
+  <div class='fformbox_nr'>
+    <ul>
+      <li> 
+      <div class='w1'>连锁名称：</div>
+      <div class='w2'>
         <input type="text" name="catena[name]" maxlength="12" value="<%=@catena.name%>" onblur="return;" id="name" class="inputtext" />
-        <a class="blank_element_20"></a>
-        <label for="contact">联系人：</label>
+      </div>
+      <div class='w1'> 联系人：</div>
+      <div class='w2'>
         <input type="text" name="catena[contact]" maxlength="12" value="<%=@catena.contact%>" onblur="return;" id="name" class="inputtext" />
-        </p>
-      
-      <p>
-        <label for="telephone"><a class="blank_element_6"></a>联系电话：</label>
-        <input type="text" name="catena[telephone]" maxlength="12" value="<%= @catena.telephone %>" onblur="return;" id="telephone" class="inputtext" />
-      </p>
-      <p>
-        <label for="description"><a class="blank_element_6"></a>描<a class="blank_element_10"></a>述：</label>
-        <textarea name="catena[description]" cols="47" rows="3" ><%= @catena.description %></textarea>
-      </p>
-    </fieldset>
+      </div>
+      </li>
+    </ul>
+
+    <ul>
+      <li> 
+      <div class='w1'>联系电话：</div>
+      <div class='w2'>
+        <input type="text" name="catena[telephone]"  value="<%= @catena.telephone %>" onblur="return;" />
+      </div>
+      </li>
+    </ul>
+
+    <ul>
+      <li>
+      <div class='w1'>
+        描<a class="blank_element_10"></a>述：</div>
+      <div class='w2'>
+        <input name="catena[description]" type='text'><%= @catena.description %></input>
+      </div>
+      </li>
+    </ul>
   </div>
 
-  <div class="btn t_center">
-    <a href="javascript:void(0);" onclick="fsubmit();return false;" id="submit_bt">提交 </a>|
-    <% if !@catena.id.blank? %>
-      <%= link_to '查看', @catena %> |
-    <%  end %>
-    <%= link_to '返回', catenas_path %>
-  </div>
 <% end %>
 
 <script type="text/javascript">

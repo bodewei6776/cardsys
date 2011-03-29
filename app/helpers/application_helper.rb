@@ -30,7 +30,7 @@ module ApplicationHelper
   end
 
   def should_display_authorize_menu?
-    controller_name =~ /users|department/
+    controller_name =~ /users|department|catena/
   end
 
   def should_display_balance_menu?

@@ -1,4 +1,7 @@
 class Department < ActiveRecord::Base
+  validates :name, :presence => {:message => "名称不能为空！"}
+  validates :name, :uniqueness => { :message => '名称已经存在了！'}
+
 
   has_many  :users
   has_many  :powers

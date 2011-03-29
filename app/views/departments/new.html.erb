@@ -1,3 +1,21 @@
-<h1>新建部门</h1>
-
-<%= render 'form' %>
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >添加部门</div>
+    </div>
+    <div class=" r_bt_r" ></div>
+  </div>
+  <div class="fform">
+    <div class="fformbox" >
+      <div class="fformbox_bt"><p>请填写部门资料</p></div>
+      <%= render :partial => 'form' %>
+    </div>
+    <div class="h10"></div>
+    <div class="input_bd">
+      <button class="submit1 hand" tabindex="100" name="loginsubmit" type="submit" value="true" onclick="fsubmit();return false;">提交</button>
+    </div>
+    <div class=" clear"></div>
+  </div>
+  <div class="h10"></div>
+</div>

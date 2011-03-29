@@ -1,47 +1,53 @@
 <%= form_for @user do |f| %>
-  <div class="item">
-    <%= error_messages_for :user %>
-    <fieldset class="hidden">
-      <legend>属性信息</legend>
-      <p>
-        <label for="login"><em>*</em>用户名：</label>        
+  <%= error_messages_for :user %>
+  <div class="fformbox_nr">
+    <ul>
+      <li>
+      <div class="w1"> 用户名：</div>
+      <div class="w2">
         <input type="text" name="user[login]" maxlength="24" value="<%= @user.login %>" onblur="return;" id="name" class="inputtext" />
-        <a class="blank_element_68"></a>
-        <label for="user_name"><em>*</em>昵&nbsp;&nbsp;&nbsp;称：</label>
+      </div>
+      </li>
+      <li>
+      <div class='w1'> 昵&nbsp;&nbsp;&nbsp;称：</div>
+      <div class='w2'>
         <input type="text" name="user[user_name]" value="<%= @user.user_name %>" />
-      </p>
+      </div>
+      </li>
+    </ul>
 
-      <p>
-        <label for="password"><em>*</em>密&nbsp;&nbsp;&nbsp;码：</label>
+    <ul>
+      <li>
+      <div class='w1'>  密&nbsp;&nbsp;&nbsp;码：</div>
+      <div class='w2'>
         <input type="text" name="user[password]" maxlength="20" value="<%= @user.password_salt %>" onblur="return;" id="password" class="inputtext" />
-         <a class="blank_element_68"></a>
-        <label for="password_confirmation"><em>*</em>密码确认：</label>
+      </div>
+      </li>
+      <li>
+      <div class='w1'> 密码确认：</div>
+      <div class='w2'>
         <input type="text" name="user[password_confirmation]" maxlength="20" value="<%= @user.password_confirmation %>" onblur="return;" id="password_confirmation" class="inputtext" />
-        </p>
-        <p>
-          <label for="mobile"><em>*</em>所属部门：</label>
-          <select name="department_id" id="" class="select">
-              <%= generate_department_options @user%>
-          </select>
-        </p>
-      </fieldset>
-  </div>
+      </div>
+      </li>
+    </ul>
+    <ul>
+      <li>
+      <div class='w1'> 所属部门：</div>
+      <div class='w2'>
+        <select name="department_id" id="" class="select">
+          <%= generate_department_options @user%>
+        </select>
+      </div>
+      </li>
+    </ul>
+  <% end %>
 
-  <div class="btn t_center">
-    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
-    <% if !@user.id.blank? %>
-      <%= link_to '查看', @user %> |
-    <%  end %>
-    <a href="/users">返回</a>
-  </div>
-<% end %>
-
-<script type="text/javascript">
-  function fsubmit(){
-    var form = $("form[0]");
-    form.submit();
-  }
-</script>
+  <script type="text/javascript">
+    function fsubmit(){
+      var form = $("form[0]");
+      form.submit();
+    }
+  </script>
 
 
 

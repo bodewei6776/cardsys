@@ -45,7 +45,7 @@ class CatenasController < ApplicationController
 
     respond_to do |format|
       if @catena.save
-        format.html { redirect_to(@catena, :notice => 'Catena was successfully created.') }
+        format.html { redirect_to(catenas_path, :notice => 'Catena was successfully created.') }
         format.xml  { render :xml => @catena, :status => :created, :location => @catena }
       else
         format.html { render :action => "new" }

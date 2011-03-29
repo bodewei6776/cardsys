@@ -1,11 +1,3 @@
-<label align="right">
-  <%= link_to '创建新部门', new_department_path %>
-  <br />
-</label>
-<br />
-<%if @notice%><p class="notice"><%= @notice %></p><%end%>
-<h1>权限列表</h1>
-
 <%= form_for :department, @department, :url => {:action => "department_power_update"}, :html => {:class => "form-profile"} do |f|%>
   <div>
     <fieldset class="table" >
@@ -30,7 +22,6 @@
   </div>
   <div class="btn t_center">
     <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
-    <a href="/departments" onclick="javascript:window.history.back();">返回部门列表</a>
   </div>
 <%end%>
 

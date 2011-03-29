@@ -6,7 +6,7 @@
     </div>
 
     <div class=" r_bt_r" >
-      <button onclick="window.location.href="/departments/new"" class="submit2 hand" type="button">添加部门</button>
+      <button onclick="window.location.href='/departments/new'" class="submit2 hand" type="button">添加部门</button>
     </div>
   </div>
   <div class="table">
@@ -15,7 +15,7 @@
       <li class='w30'>操作</li>
     </ul>
 <% @departments.each do |department| %>
-    <ul class='member_items'>
+    <ul class='table_items'>
       <li class='w15'><%=department.name%></li>
       <li class='w30'><%= link_to '修改', edit_department_path(department) %>
         | <%= link_to '删除', department, :confirm => '确定删除?', :method => :delete %>
