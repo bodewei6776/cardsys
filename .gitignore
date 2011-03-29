@@ -7,6 +7,7 @@ nbproject/*
 tmp/**/*
 doc/**/*
 db/schema.rb
+config/database.yml
 *.cache
 *.pid
 db/*.sqlite3
