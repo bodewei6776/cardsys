@@ -71,8 +71,9 @@ class MembersController < ApplicationController
     if !params[:expire_date_end].blank?
       @members = @members.where("member_cards.expire_date <= ?",@expire_date_end).joins(:member_cards)
     end 
-   @members = @members.where("concat(month(birthday),\"-\",dayofmonth(birthday)) >= ?", @member_birthday_start) if !params[:member_birthday_start].blank?
-    @members = @members.where("concat(month(birthday),\"-\",dayofmonth(birthday)) <= ?", @member_birthday_end) if !params[:member_birthday_end].blank?
+
+    @members = @members.where("date_format(birthday,'%m-%D') >= ?", @member_birthday_start) if !params[:member_birthday_start].blank?
+    @members = @members.where("date_format(birthday,'%m-%D') <= ?", @member_birthday_end) if !params[:member_birthday_end].blank?
 
     @members = @members.where("gender = ?", @member_gender) if !params[:member_gender].blank?
     @members = @members.where("created_at >= ?", @reg_date_start ) if !params[:reg_date_start].blank?
