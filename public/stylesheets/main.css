@@ -316,7 +316,7 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 
 /*<定义左侧样式---开始>*/
 
-.left{ width:200px; height:auto; position:absolute; left:0px; background: #dfff92; }
+.left{ width:200px; height:100%; position:absolute; left:0px; background: #dfff92; }
 .bt_time{ width:200px; height:23px; margin:0 auto; text-align:center;position:relative;}
 #arrow_holder{ position:absolute;right:0px;top:0px;}
 .bt1{ width:178px; height:27px; line-height:27px; margin:0 auto; background:url(/images/new/bt1.jpg)  no-repeat 0 0; text-align:center;}
