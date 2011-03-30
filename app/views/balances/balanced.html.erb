@@ -38,25 +38,23 @@
       <li class='w15'>场地号</li>
       <li class='w15'>日期</li>
       <li class='w15'>时段</li>
-      <li class='w5'>场地费</li>
-      <li class='w5'>其他费</li>
-      <li class='w15'>操作</li>
+      <li class='w10'>场地费</li>
+      <li class='w10'>其他费</li>
+      <li class='w5'>操作</li>
     </ul>
     <% for record in @book_records %>
-      <ul class=''>
-        <li><%=h record.order.order_member.name %></li>
-        <li><%=h record.order.member_card_number %></li>
-        <li><%=h record.court.name %></li>
-        <li style="width:10%;"><%= DateUtil::timeshort(record.record_date) %></li>
-        <li style="width:10%;"><%= record.start_hour %>:00-<%=h record.end_hour %>:00</li>
-        <li style="width:15%;">
+      <ul class='table_items'>
+        <li class='w15'><%=h record.order.order_member.name %></li>
+        <li class='w10'><%=h record.order.member_card_number %></li>
+        <li class='w15'><%=h record.court.name %></li>
+        <li  class='w15'><%= DateUtil::timeshort(record.record_date) %></li>
+        <li  class='w15'><%= record.start_hour %>:00-<%=h record.end_hour %>:00</li>
+        <li  class='w10'>
         <%= record.order.balance_record.book_record_amount_desc %>(<%= record.order.balance_record.balance_way_desc %>)
         </li>
-        <li style="width:15%;">
-        <%= record.order.balance_record.goods_amount_desc %>
-        (<%= record.order.balance_record.goods_balance_type_desc %>)
+        <li  class='w10'> <%= record.order.balance_record.goods_amount_desc %> (<%= record.order.balance_record.goods_balance_type_desc %>)
         </li>
-        <li><a href="<%= order_balance_path(record.order,record.order.balance_record) %>">查看</a></li>
+        <li class='w5'><a href="<%= order_balance_path(record.order,record.order.balance_record) %>">查看</a></li>
       </ul>
     <% end -%>
   </fieldset>

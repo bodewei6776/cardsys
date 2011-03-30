@@ -67,8 +67,8 @@ $(document).ready(function(){
     <div class="top">
       <div class="top_logo white fmic30">博德维网球管理系统</div>
       <div class="top_user">
-        <strong>登录用户:</strong> ADMIN
-        [ <a class="cyellow" href="login.html">退出</a> ]
+        <strong>登录用户:</strong> <%= current_user.login || current_user.email%>
+        [ <%= link_to "退出",user_session_path(current_user),:method =>:delete,:class => "cyellow"%> ]
         [ <a class="cyellow" href="#">修改密码</a> ]
       </div>
     </div>

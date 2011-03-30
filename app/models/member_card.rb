@@ -12,6 +12,13 @@ class MemberCard < ActiveRecord::Base
   Free_Count_Limit = 2
   Free_Amount_limit = 500
 
+  after_save :left_times_and_left_money_can_not_be_blank
+
+  def left_times_and_left_money_can_not_be_blank
+    self.left_times = 0 if self.left_times.nil?
+    self.left_fee = 0 if self.left_fee.nil?
+  end
+
   validates :card_serial_num,:uniqueness => {:message => "卡号已经存在，请更换卡号"}
 
   #  #default_scope where({:catena_id => current_catena.id})

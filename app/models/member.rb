@@ -6,6 +6,7 @@ class Member < ActiveRecord::Base
   default_scope :order =>  'id desc'
 
   has_many     :member_cards
+  has_many :orders
   #has_many     :cards,:through => :member_cards #注释掉了先
 
   before_save :geneate_name_pinyin

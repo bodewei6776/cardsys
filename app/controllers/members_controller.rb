@@ -42,7 +42,7 @@ class MembersController < ApplicationController
     @consume_fees_start = params[:consume_fees_start]#消费金额
     @consume_fees_end = params[:consume_fees_end]
     @left_fees_start = params[:left_fees_start]#卡内余
-    @left_fees_end = params[:left_fees_start]
+    @left_fees_end = params[:left_fees_end]
     @left_times_start = params[:left_times_start]#现有次数
     @left_times_end = params[:left_times_end]
     @member_birthday_start = params[:member_birthday_start]#会员生日
@@ -52,30 +52,33 @@ class MembersController < ApplicationController
     @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER)
     @members = @members.where(["name like ?", "%#{@name}%"] ) if !@name.blank?
     if !@serial_num.blank?
-      member = MemberCard.where(:card_serial_num => @serial_num).first
-      @members = @members.where(:id => member.member.id) if !member.nil?
+      #member = MemberCard.where(:card_serial_num => @serial_num).first
+      #@members = @members.where(:id => member.member.id) if !member.nil?
+      @members = @members.where("member_cards.card_serial_num like '#{@serial_num}'").joins(:member_cards)
     end
     if !params[:comer_date_start].blank?
-      order = Order.where("order_time >= ?", @comer_date_start).first
-      @members = @members.where(:id => order.member_id) if !order.nil?
+      @members = @members.where("orders.order_time >= ?",@comer_date_start).joins(:orders)
     end
     if !params[:comer_date_end].blank?
-      order = Order.where("order_time <= ?", @comer_date_end).first
-     @members = @members.where(:id => order.member_id) if !order.nil?
+      @members = @members.where("orders.order_time <= ?",@comer_date_end).joins(:orders)
     end    
-    ids = []    
-    MemberCard.where("expire_date >= ?", @expire_date_start).each { |i| ids << i.member_id }if !params[:expire_date_start].blank?
-    MemberCard.where("expire_date <= ?", @expire_date_end).each { |i| ids << i.member_id }if !params[:expire_date_end].blank?
-    @members = @members.where("id in (?)", ids) if ids.size > 0
 
-    @members = @members.where("concat(month(birthday),\"-\",dayofmonth(birthday)) >= ?", @member_birthday_start) if !params[:member_birthday_start].blank?
+    if !params[:expire_date_start].blank?
+      @members = @members.where("member_cards.expire_date >= ?",@expire_date_start).joins(:member_cards)
+    end 
+
+
+    if !params[:expire_date_end].blank?
+      @members = @members.where("member_cards.expire_date <= ?",@expire_date_end).joins(:member_cards)
+    end 
+   @members = @members.where("concat(month(birthday),\"-\",dayofmonth(birthday)) >= ?", @member_birthday_start) if !params[:member_birthday_start].blank?
     @members = @members.where("concat(month(birthday),\"-\",dayofmonth(birthday)) <= ?", @member_birthday_end) if !params[:member_birthday_end].blank?
 
     @members = @members.where("gender = ?", @member_gender) if !params[:member_gender].blank?
     @members = @members.where("created_at >= ?", @reg_date_start ) if !params[:reg_date_start].blank?
     @members = @members.where("created_at <= ?", @reg_date_end ) if !params[:reg_date_end].blank?
 
-     if !params[:consume_count_start].blank?
+    if !params[:consume_count_start].blank?
       @members = @members.delete_if { |mem| mem.use_card_times < @consume_count_start.to_i }
     end
 
@@ -90,6 +93,7 @@ class MembersController < ApplicationController
     if !params[:left_fees_end].blank?
       @members = @members.delete_if { |member| member.member_card_left_fees > @left_fees_end.to_i }
     end
+
 
     if !params[:left_times_start].blank?
       @members = @members.delete_if { |member| member.member_card_left_times < @left_times_start.to_i }
@@ -108,7 +112,7 @@ class MembersController < ApplicationController
     end
 
     @members = @members.paginate(:page => params[:page]||1,:per_page => Member_Perpage)
-    
+
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @members }
@@ -309,16 +313,16 @@ class MembersController < ApplicationController
 
     if (member_card.update_attribute(:left_fee, member_card.left_fee.to_f + charge_fee) &&
         member_card.update_attribute(:left_times, member_card.left_times.to_f + charge_times))
-        RechargeRecord.new(:member_id => member_card.member_id,
-          :member_card_id => member_card.id,
-          :recharge_fee => charge_fee#增加一个记录次数的字段或者换算
-          ).save
-        notice = params[:type]=="1" ? "会员卡充值成功！" : "会员卡退款成功！"
+      RechargeRecord.new(:member_id => member_card.member_id,
+                         :member_card_id => member_card.id,
+                         :recharge_fee => charge_fee#增加一个记录次数的字段或者换算
+                        ).save
+                        notice = params[:type]=="1" ? "会员卡充值成功！" : "会员卡退款成功！"
     end
-   if !params[:expire_date].blank?
+    if !params[:expire_date].blank?
       member_card.update_attribute(:expire_date, params[:expire_date])
       notice = "有效期修改成功！"
-   end
+    end
     render :inline => notice.to_json
   end
 
@@ -359,25 +363,25 @@ class MembersController < ApplicationController
   end
 
   def member_card_num4(card)
-      last_member_card = MemberCard.where(:card_id => card.id).order("card_serial_num desc").first#return nil if do not find
+    last_member_card = MemberCard.where(:card_id => card.id).order("card_serial_num desc").first#return nil if do not find
 
-      if last_member_card.nil?
-          num = "0001"
-          n2 = ((num[-4, num.length].to_s).to_i).to_s
-      else
-         num = last_member_card.card_serial_num
-         n2 = ((num[-4, num.length].to_s).to_i+1).to_s
-      end
+    if last_member_card.nil?
+      num = "0001"
+      n2 = ((num[-4, num.length].to_s).to_i).to_s
+    else
+      num = last_member_card.card_serial_num
+      n2 = ((num[-4, num.length].to_s).to_i+1).to_s
+    end
 
-      if(n2.length == 1)
-        n2=("000"+n2)
-      end
-      if(n2.length == 2)
-        n2=("00"+n2)
-      end
-      if(n2.length == 3)
-        n2=("0"+n2)
-      end
-      n2
+    if(n2.length == 1)
+      n2=("000"+n2)
+    end
+    if(n2.length == 2)
+      n2=("00"+n2)
+    end
+    if(n2.length == 3)
+      n2=("0"+n2)
+    end
+    n2
   end
 end

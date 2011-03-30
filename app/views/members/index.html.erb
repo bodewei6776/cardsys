@@ -77,10 +77,10 @@
 
 <script type="text/javascript">
   $(function() {
-    $("#reg_date_start").datepicker({dateFormat: 'yy-mm-dd'});
-    $("#reg_date_end").datepicker({dateFormat: 'yy-mm-dd'});
-    $("#expire_date_start").datepicker({dateFormat: 'yy-mm-dd'});
-    $("#expire_date_end").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#reg_date_start").datepicker({dateFormat: 'yy-mm-dd',changeYear:true});
+    $("#reg_date_end").datepicker({dateFormat: 'yy-mm-dd',changeYear:true});
+    $("#expire_date_start").datepicker({dateFormat: 'yy-mm-dd',changeYear:true});
+    $("#expire_date_end").datepicker({dateFormat: 'yy-mm-dd',changeYear:true});
     $(".birthday_input").datepicker({dateFormat: 'mm-dd'});
   });
   $(function() {

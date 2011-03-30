@@ -13,11 +13,14 @@ class ApplicationController < ActionController::Base
 
   before_filter :configure_charsets ,:set_date
   before_filter :require_user#,:require_very_user #应该过滤掉登陆用户
-  
+
   helper_method :current_user_session, :current_user
-  before_filter :set_current_catena_to_thread
-  helper_method :current_catena
-  #  filter_parameter_logging :password, :password_confirmation
+  filter_parameter_logging :password, :password_confirmation
+  before_filter :set_catena
+
+  def set_catena
+    Catena.current=(current_user.catena || Catena.default_catena) if current_user
+  end
 
   self.allow_forgery_protection = false
 
@@ -37,20 +40,8 @@ class ApplicationController < ActionController::Base
       redirect_to(:controller => "login", :action => "signup")
     end
   end
-  
-  def set_current_catena_to_thread
-    Thread.current[:current_catena]= current_catena
-  end
-
-  #TODO @echo
-  #should related to user,when login ,set current catena
-  def current_catena
-    session[:catena_id] = (current_user.nil? || current_user.catena_id.nil?) ? Catena.default.id : current_user.catena_id
-    Catena.find(session[:catena_id])
-  end
-
   private
-  
+
   def current_user_session
     return @current_user_session if defined?(@current_user_session)    
     @current_user_session = UserSession.find
