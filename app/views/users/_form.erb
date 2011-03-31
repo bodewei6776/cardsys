@@ -33,10 +33,10 @@
     <ul>
       <li>
       <div class='w1'> 所属部门：</div>
-      <div class='w2'>
-        <select name="department_id" id="" class="select">
-          <%= generate_department_options @user%>
-        </select>
+      <div style='width:500px;'>
+        <%@departments.each do |d|%>
+          <%= check_box_tag "dep[]",d.id.to_s, @user.departments.presence && @user.departments.include?(d) %><%= d.name%>
+        <%end%>
       </div>
       </li>
     </ul>

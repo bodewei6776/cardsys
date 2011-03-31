@@ -214,3 +214,5 @@ zh_cn:
     edit: "编辑"
     create: "创建"
     update: "更新"
+    destroy: "删除"
+    cancle: "取消"

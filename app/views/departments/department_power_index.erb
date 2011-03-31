@@ -1,16 +1,16 @@
 <%= form_for :department, @department, :url => {:action => "department_power_update"}, :html => {:class => "form-profile"} do |f|%>
   <div>
     <fieldset class="table" >
-      <legend>可用权限信息</legend>
+      <legend>部门：　(<%= @department.name%>)</legend>
       <ul class="title_ul">
         <input type="hidden" name="department_id" value="<%=@department.id%>" />
-        <li style="text-align:center;width:260px;">权限名称</li><li>设置权限</li>
+        <li style="text-align:center;width:460px;">权限名称</li><li>设置权限</li>
       </ul>
       <%for power in @powers%>
         <% available_power = @department.has_power?(power)%>
         <ul>
-          <li style="text-align:center;width:260px;">
-            <span style="width:100px;right:20px;"><%= power.subject%></span>
+          <li style="text-align:center;width:460px;">
+            <span style="width:250px;right:20px;"><%= power.description%></span>
           </li>
           <li>
             <input type="checkbox" name="department_power_<%= power.id %>" value="<%= power.id %>" <%if available_power %> checked <%end%> class="inputtext" />
@@ -21,7 +21,7 @@
 
   </div>
   <div class="btn t_center">
-    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
+    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>
   </div>
 <%end%>
 

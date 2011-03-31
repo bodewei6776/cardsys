@@ -7,7 +7,7 @@ task :get_power => :environment do
   Dir.glob("#{Rails.root}/app/controllers/*.rb").sort.each { |file| require_dependency file }
   #Dir.glob("#{Rails.root}/app/models/*.rb").sort.each { |file| require_dependency file }
   ApplicationController.subclasses.each do |c|
-    c.action_methods.each do |a|
+    (c.action_methods - ApplicationController.action_methods).each do |a|
       Power.create(:subject => (t(c.to_s,"controllers") + " | " + t(a,"actions")),
                    :controller => t(c.to_s,"controllers"),:action => t(a,"actions"),:description => (t(c.to_s,"controllers") + " | " + t(a,"actions")))
     end

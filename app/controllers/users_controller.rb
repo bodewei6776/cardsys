@@ -9,21 +9,24 @@ class UsersController < ApplicationController
   before_filter :user_can
   
   def index
-    @users = User.all
+    @users = User.paginate(:page => params[:page]||1,:per_page => 20)
   end
 
   def new
+    @departments = Department.all
     @user = User.new
+    @user.departments << @departments.first
   end
   
   def create    
     @user = User.new(params[:user])
+    @user.departments = Department.find(params[:dep])
     if @user.save
-      dp = DepartmentUser.new(:user_id => @user.id, :department_id => params[:department_id])
-      dp.save
       flash[:notice] = "用户注册成功！"
-      redirect_back_or_default "/user_sessions/new" #modify by lixj
+      redirect_to users_path
+      #redirect_back_or_default "/user_sessions/new" #modify by lixj
     else     
+      @departments = Department.all
       render :action => :new
     end
   end
@@ -34,15 +37,18 @@ class UsersController < ApplicationController
   end
 
   def edit
+  @departments = Department.all
     @user = User.find(params[:id])
   end
   
   def update
     @user = @current_user # makes our views "cleaner" and more consistent
+    @user.departments = @user.departments | Department.find(params[:dep])
     if @user.update_attributes(params[:user])
       flash[:notice] = "用户信息修改成功！"
       redirect_to account_url
     else
+      @departments = Department.all
       render :action => :edit
     end
   end
@@ -60,14 +66,7 @@ class UsersController < ApplicationController
 
   def user_power_index
     @user = User.find(params[:id])
-    #本部门的所有权限
-    department ||= 1
-    if @user.department 
-      department = @user.department
-    end
-    power_ids = DepartmentPower.where(:department_id => department).each { |i| i.power }
-    @powers = Power.where(["id in (?)", power_ids])
-    @notice = params[:notice]
+    @powers = Power.all
   end
 
   def user_power_update

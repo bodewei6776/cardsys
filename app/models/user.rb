@@ -1,9 +1,11 @@
 class User < ActiveRecord::Base
 
+  has_many :department_users
+  has_many :departments,:through => :department_users
   acts_as_authentic
 
-  belongs_to :department
   has_many   :user_powers
+  has_many :powers,:through => :user_powers
   #  has_and_belongs_to_many :powers   #some error when user.save
 
   #  validates :login, :presence => {:message => "用户名不能为空！"},
@@ -12,6 +14,13 @@ class User < ActiveRecord::Base
   #  validates :user_name, :presence => {:message => "昵称不能为空！"}
 
   belongs_to :catena
+
+  after_create :set_powers
+  
+  def set_powers
+    self.powers = self.departments ? self.departments.collect(&:powers).flatten : []
+    self.save
+  end
 
 
   def is_admin?
@@ -37,7 +46,7 @@ class User < ActiveRecord::Base
   end
 
   def has_power? power
-    !UserPower.where(:power_id => power.id).where(:user_id => self.id).first.nil?
+    self.powers and self.powers.include? power
   end
 
 end
