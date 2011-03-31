@@ -52,33 +52,52 @@ class MembersController < ApplicationController
     @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER)
     @members = @members.where(["name like ?", "%#{@name}%"] ) if !@name.blank?
     if !@serial_num.blank?
-      #member = MemberCard.where(:card_serial_num => @serial_num).first
-      #@members = @members.where(:id => member.member.id) if !member.nil?
       @members = @members.where("member_cards.card_serial_num like '#{@serial_num}'").joins(:member_cards)
     end
-    if !params[:comer_date_start].blank?
-      @members = @members.where("orders.order_time >= ?",@comer_date_start).joins(:orders)
+
+    # 来店日期
+    if @comer_date_start.present? &&  @comer_date_end.present?
+      @members = @members.where("date_format(orders.order_time,'%Y-%m-%d') >= ? and " + 
+                                " date_format(orders.order_time,'%Y-%m-%d') <= ?",
+                                @comer_date_start,@comer_date_end).joins(:orders)
+    elsif @comer_date_start.present? || @comer_date_end.present?
+      @members = @members.where("date_format(orders.order_time,'%Y-%m-%d') = ?",
+                                @comer_date_start.presence || @comer_date_end.presence).joins(:orders)
     end
-    if !params[:comer_date_end].blank?
-      @members = @members.where("orders.order_time <= ?",@comer_date_end).joins(:orders)
-    end    
 
-    if !params[:expire_date_start].blank?
-      @members = @members.where("member_cards.expire_date >= ?",@expire_date_start).joins(:member_cards)
-    end 
+    # 到期时间
+    if @expire_date_start.present? && @expire_date_end.present?
+      @members = @members.where("date_format(member_cards.expire_date,'%Y-%m-%d') >= ? and" +
+                                "date_format(member_cards.expire_date,'%Y-%m-%d') <= ?",
+                                @expire_date_start,@expire_date_end).joins(:member_cards)
+    elsif @expire_date_start.present? || @expire_date_end.present?
+      @members = @members.where("date_format(member_cards.expire_date,'%Y-%m-%d') = ?",
+                                @expire_date_end.presence || @expire_date_start.presence).joins(:member_cards)
+    end
+
+    # 生日
+    if @member_birthday_start.present? && @member_birthday_end.present?
+      @members = @members.where("date_format(birthday,'%m-%d') >= ? and " +
+                                "date_format(birthday,'%m-%d') <= ?", 
+                                @member_birthday_start,@member_birthday_end)
+    elsif @member_birthday_end.present? || @member_birthday_start.present?
+      @members = @members.where("date_format(birthday,'%m-%d') = ?", 
+                                @member_birthday_end.presence || @member_birthday_start.presence)
+    end
+
+    # 注册时间
+    if @reg_date_start.present? && @reg_date_end.present?
+      @members = @members.where("date_format(members.created_at,'%Y-%m-%d') >= ? and " +
+                                "date_format(members.created_at,'%Y-%m-%d') <= ?",
+                                @reg_date_start,@reg_date_end) 
+    elsif @reg_date_end.present? || @reg_date_start.present?
+      @members = @members.where("date_format(members.created_at,'%Y-%m-%d') = ?", 
+                                @reg_date_end.presence || @reg_date_start.presence )
+    end
 
 
-    if !params[:expire_date_end].blank?
-      @members = @members.where("member_cards.expire_date <= ?",@expire_date_end).joins(:member_cards)
-    end 
-
-    @members = @members.where("date_format(birthday,'%m-%D') >= ?", @member_birthday_start) if !params[:member_birthday_start].blank?
-    @members = @members.where("date_format(birthday,'%m-%D') <= ?", @member_birthday_end) if !params[:member_birthday_end].blank?
 
     @members = @members.where("gender = ?", @member_gender) if !params[:member_gender].blank?
-    @members = @members.where("created_at >= ?", @reg_date_start ) if !params[:reg_date_start].blank?
-    @members = @members.where("created_at <= ?", @reg_date_end ) if !params[:reg_date_end].blank?
-
     if !params[:consume_count_start].blank?
       @members = @members.delete_if { |mem| mem.use_card_times < @consume_count_start.to_i }
     end
