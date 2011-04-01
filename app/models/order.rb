@@ -2,7 +2,7 @@ class Order < ActiveRecord::Base
 
   #default_scope where({:catena_id => current_catena.id})
 
-  has_many    :order_items
+  has_many    :order_items,:dependent => :destroy
   belongs_to  :card
   has_many    :coach_items,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Coache} "
   has_one     :book_record_item,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Book_Record}"
@@ -14,7 +14,6 @@ class Order < ActiveRecord::Base
   end
 
   before_create :init_attributes
-  before_save   :set_catena_id
   before_save   :auto_save_order_associations
   after_save    :auto_generate_coaches_items
   after_create  :auto_generate_book_record_item

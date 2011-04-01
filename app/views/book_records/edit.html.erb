@@ -7,7 +7,7 @@
     <div class=" r_bt_r" ></div>
   </div>
   <div class="fform">
-    <%  form_for(@book_record) do |order_form| %>
+    <%=  form_for(@book_record,:html => {:id => "book_record_id"}) do |order_form| %>
       <%= render :partial => 'book_records/form',:f => order_form %>
       <div class="h10"></div>
       <div class="input_bd">

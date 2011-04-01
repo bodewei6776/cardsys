@@ -14,14 +14,28 @@ class OrderItem < ActiveRecord::Base
   belongs_to    :order
 
   before_create :set_initialize_attributes
-  before_save   :set_catena_id
+
+  before_save :update_good_inventory,:only => [:update] 
+
+
+
+  # 恢复前面库存的数量
+  def update_good_inventory
+    puts '2' * 1000
+    product = self.product
+    puts product
+    puts is_product?
+    puts product.is_a?(Good)
+    if is_product? && product.is_a?(Good)
+      puts '1' * 100
+      product.count_front_stock_in += ( self.quantity - self.quantity_was ) 
+      product.count_front_stock -= (self.quantity - self.quantity_was) 
+      product.save
+    end
+  end
 
   def set_initialize_attributes
     self.order_time = DateTime.now
-  end
-
-  def set_catena_id
-    self.catena_id = current_catena.id
   end
 
   def related_entry
@@ -50,7 +64,7 @@ class OrderItem < ActiveRecord::Base
     exist_coaches = coaches.where("item_id in (#{order.coaches.map(&:id).join(',')})")
     exist_coaches = exist_coaches.where("order_id <> #{order.id}") unless order.new_record?
     exist_coaches.where(:order_date => order.record_date).where(["start_hour < :end_time AND end_hour > :start_time",
-      {:start_time => order.start_hour,:end_time => order.end_hour}]).all
+                                                                {:start_time => order.start_hour,:end_time => order.end_hour}]).all
   end
 
   def self.order_coaches(order)
@@ -85,7 +99,7 @@ class OrderItem < ActiveRecord::Base
     book_record_item.order_date = Date.today
     book_record_item.save
   end
-  
+
   def self.order_goolds(order,good)
     book_record  = order.book_record
     orignial_good = where(:order_id => order.id,:item_type => Item_Type_Product,:item_id => good.id).first
@@ -117,7 +131,7 @@ class OrderItem < ActiveRecord::Base
     self.quantity   = order.hours
     save
   end
-  
+
   def product 
     case item_type
     when Item_Type_Product then Good.find_by_id(item_id)
@@ -126,11 +140,11 @@ class OrderItem < ActiveRecord::Base
       Coach.find_by_id(item_id)
     end
   end
-  
+
   def amount
     is_book_record? ? product.amount(self) :  price*(quantity.to_f)
   end
-  
+
   def balance
     self.paid_status = Const::YES
     save
@@ -139,7 +153,7 @@ class OrderItem < ActiveRecord::Base
   def status_str
     paid_status == Const::YES ? '已结算' : '预定中'
   end
-  
+
   def court_name
     begin Court.find(self.item_id).name rescue "" end
   end
@@ -154,10 +168,10 @@ class OrderItem < ActiveRecord::Base
 
   def order_item_type_str
     case
-      when is_book_record? then "场地预定"
-      when is_coache? then "教练预定"
-      when is_product? then "购买商品"
-      else ""
+    when is_book_record? then "场地预定"
+    when is_coache? then "教练预定"
+    when is_product? then "购买商品"
+    else ""
     end
   end
 end

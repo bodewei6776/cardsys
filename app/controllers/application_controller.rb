@@ -15,7 +15,6 @@ class ApplicationController < ActionController::Base
   before_filter :require_user#,:require_very_user #应该过滤掉登陆用户
 
   helper_method :current_user_session, :current_user
-  filter_parameter_logging :password, :password_confirmation
   before_filter :set_catena
 
   def set_catena

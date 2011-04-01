@@ -1,4 +1,4 @@
-<% form_tag(batch_update_order_order_items_path(order),{:class => 'batch-update-item'}) do %>
+<%= form_tag(batch_update_order_order_items_path(order),{:class => 'batch-update-item',:id => "order_update_form"}) do %>
   <div class="infobox">
     <div class="infobox_bt"><p>商品消费列表</p></div>
     <div class="table">
@@ -24,7 +24,7 @@
               <input type='text'   name='order_item[][price]' value='<%=  coach_item.price %>' />
             </li>
             <li class="w15">
-              <input type='text' name='order_item[][quantity]' value='<%= coach_item.quantity %>'/>
+              <input type='text' name='order_item[][quantity]' value='<%= coach_item.quantity %>'  class='line_item_quantity'/>
             </li>
             <li class="w15"><%= coach_item.amount %></li>
             <li class="w15">
@@ -42,7 +42,7 @@
           <li class="w10"><%= good.price %></li>
           <li class="w15">
             <input type='hidden' name='order_item[][id]' value='<%= good_item.id%>' />
-            <input type='text' name='order_item[][quantity]' value='<%= good_item.quantity %>' />
+            <input type='text' name='order_item[][quantity]' value='<%= good_item.quantity %>' class='line_item_quantity'/>
           </li>
           <li class="w15"><%= good_item.amount %></li>
           <li class="w15">
@@ -71,27 +71,31 @@
 <% end -%>
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function(){
-    $('.update-order_items-button').live('click',function(){
+      function update_order_items(){
       var load_img = $('#loading-img');
       load_img.show();
       var form = $('.batch-update-item');
       $.post(form.attr('action'),form.serialize(),function(reply){
         $('.note-tip-msg').remove();
         load_img.after("<span class='note-tip-msg' style='color:red'>"+reply+"</span>").hide();
-        location.reload();
-      });
-    });
-		
-    $('.destory_order_item').live('click',function(){
-      if(confirm('确认要删除么？')){
+       location.reload();
+        });
+      }
+      $('.update-order_items-button').live('click',function(){
+          update_order_items();
+        });
+      $('.line_item_quantity').live('blur',function(){ update_order_items();});
+
+      $('.destory_order_item').live('click',function(){
+        if(confirm('确认要删除么？')){
         var link = $(this);
         $.post(link.attr('href'),{_method:'delete',book_record_id:'<%= params[:id] %>'},function(reply){
           link.parents('ul').remove();
           $('.amount-info').after(reply).remove();
+          });
+        }
+        return false;
         });
-      }
-      return false;
-    });
-    $(".one-good-list").colorbox({width:"80%", height:"80%", iframe:false});
+      $(".one-good-list").colorbox({width:"80%", height:"80%", iframe:false});
   });
 </script>

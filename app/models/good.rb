@@ -1,7 +1,6 @@
 require 'pinyin/pinyin'
 class Good < ActiveRecord::Base
 
-  #default_scope where({:catena_id => current_catena.id})
 
   validates :name, :presence => {:message => "名称不能为空！"}, :uniqueness => {:on => :create, :message => '名称已经存在！', 
     :if => Proc.new { |member| !member.name.nil? && !member.name.blank? }}
@@ -13,14 +12,10 @@ class Good < ActiveRecord::Base
   validates :count_front_stock_in, :numericality => {:message => "新入小库数必须为数字！", :allow_blank => true}
   validates :count_front_stock_out, :numericality => {:message => "新出小库数必须为数字！", :allow_blank => true}
   
-  before_create :set_catena_id, :geneate_name_pinyin
+  before_create  :geneate_name_pinyin
   attr_accessor :order_count
 
   scope :valid_goods,where(:status => 0)
-
-  def set_catena_id
-    self.catena_id = current_catena.id
-  end
 
   def geneate_name_pinyin
     pinyin = PinYin.new

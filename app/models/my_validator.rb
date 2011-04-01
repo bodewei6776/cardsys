@@ -35,7 +35,7 @@ class MyValidator < ActiveModel::Validator
         record.errors[:cert_num] <<"身份证号码无效！"
       end
     elsif record.cert_type == 1
-      if(!record.cert_num.blank? && record.cert_num.to_i(10) =~/^\w{7]<<11}$/)
+      if(!record.cert_num.blank? && record.cert_num.to_i(10) =~/\w{5,10}/)#/^\w{7]<<11}$/)
         record.errors[:cert_num] <<"护照号码未填或护照号码无效！"
       end
     else
