@@ -20,14 +20,25 @@ class MembersController < ApplicationController
     @items.each { |i| @names << i.card_serial_num }
     render :inline => @names.to_json
   end
-
-  def index
-
-  end
-
   # GET /members
   # GET /members.xml
   def index
+    @name = params[:name]#会员名
+    @serial_num = params[:card_serial_num]#会员卡号
+    @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER)
+    @members = @members.where(["name like ?", "%#{@name}%"] ) if !@name.blank?
+    if !@serial_num.blank?
+      @members = @members.where("member_cards.card_serial_num like '#{@serial_num}'").joins(:member_cards)
+    end
+    @members = @members.paginate(:page => params[:page]||1,:per_page => Member_Perpage)
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @members }
+    end
+  end
+
+  def advanced_search 
     @name = params[:name]#会员名
     @serial_num = params[:card_serial_num]#会员卡号
     @reg_date_start = params[:reg_date_start]#注册日期
@@ -97,38 +108,36 @@ class MembersController < ApplicationController
 
 
 
+    # 性别
     @members = @members.where("gender = ?", @member_gender) if !params[:member_gender].blank?
-    if !params[:consume_count_start].blank?
-      @members = @members.delete_if { |mem| mem.use_card_times < @consume_count_start.to_i }
+    #  消费次数
+    if @consume_count_start.present? and @consume_count_end.present?
+      @members = @members.delete_if { |mem| 
+        mem.use_card_times < @consume_count_start.presence.to_i || mem.use_card_times > @consume_count_end.presence.to_i}
+    elsif @consume_count_start.present? or @consume_count_end.present?
+      @members = @members.delete_if { |mem| 
+        mem.use_card_times != (@consume_count_start.presence.to_i ||  @consume_count_end.presence.to_i)}
     end
 
-    if !params[:consume_count_end].blank?
-      @members = @members.delete_if { |mem| mem.use_card_times > @consume_count_end.to_i }
-    end
+    if @left_fees_start.present? and @left_fees_end.present?
+      @members = @members.delete_if { |mem| 
+        mem.member_card_left_fees < @left_fees_start.presence.to_i || mem.member_card_left_fees > @left_fees_end.presence.to_i}
 
-    if !params[:left_fees_start].blank?
-      @members = @members.delete_if { |member| member.member_card_left_fees < @left_fees_start.to_i }
-    end
-
-    if !params[:left_fees_end].blank?
-      @members = @members.delete_if { |member| member.member_card_left_fees > @left_fees_end.to_i }
+    elsif @left_fees_start.present? or @left_fees_end.present?
+      @members = @members.delete_if { |member| member.member_card_left_fees !=( @left_fees_start.presence.to_i || @left_fees_end.presence.to_i )}
     end
 
 
-    if !params[:left_times_start].blank?
-      @members = @members.delete_if { |member| member.member_card_left_times < @left_times_start.to_i }
+    if @left_times_start.present? and @left_times_end.present?
+      @members = @members.delete_if { |member| member.member_card_left_times < @left_times_start.to_i || member.member_card_left_times > @left_times_end.presence.to_i}
+    elsif @left_times_start.present? or @left_times_end.present?
+      @members = @members.delete_if { |member| member.member_card_left_times !=( @left_times_start.presence.to_i ||  @left_times_end.presence.to_i)}
     end
 
-    if !params[:left_times_end].blank?
-      @members = @members.delete_if { |member| member.member_card_left_times > @left_times_end.to_i }
-    end
-
-    if !params[:consume_fees_start].blank?
-      @members = @members.delete_if { |member| member.member_consume_amounts < @consume_fees_start.to_i }
-    end
-
-    if !params[:consume_fees_end].blank?
-      @members = @members.delete_if { |member| member.member_consume_amounts > @consume_fees_end.to_i }
+    if @consume_fees_start.present? and @consume_fees_end.present?
+      @members = @members.delete_if { |member| member.member_consume_amounts < @consume_fees_start.presence.to_i || member.member_consume_amounts > @consume_fees_end.presence.to_i }
+    elsif @consume_fees_start.present? or @consume_fees_end.present?
+      @members = @members.delete_if { |member| member.member_consume_amounts !=( @consume_fees_start.presence.to_i || @consume_fees_end.presence.to_i)}
     end
 
     @members = @members.paginate(:page => params[:page]||1,:per_page => Member_Perpage)
@@ -138,6 +147,8 @@ class MembersController < ApplicationController
       format.xml  { render :xml => @members }
     end
   end
+
+
 
   # GET /members/1
   # GET /members/1.xml

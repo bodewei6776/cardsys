@@ -12,86 +12,86 @@
       <div class="infobox_nr">
         <ul>
           <li>
-            <div class="w1">会员名称：</div>
-            <div class="w2">
-              <%= @member.name %>
-            </div>
-            <div class="w1">注册日期：</div>
-            <div class="w2">
-              <%= DateUtil::timeshort(@member.created_at) %>
-            </div>
+          <div class="w1">会员名称：</div>
+          <div class="w2">
+            <%= @member.name %>
+          </div>
+          <div class="w1">注册日期：</div>
+          <div class="w2">
+            <%= DateUtil::timeshort(@member.created_at) %>
+          </div>
           </li>
         </ul>
         <ul>
           <li>
-            <div class="w1">会员昵称：</div>
-            <div class="w2">
-              <%= @member.nickname %>
-            </div>
-            <div class="w1">会员性别：</div>
-            <div class="w2">
-              <%= gender_desc(@member.gender) %>
-            </div>
+          <div class="w1">会员昵称：</div>
+          <div class="w2">
+            <%= @member.nickname %>
+          </div>
+          <div class="w1">会员性别：</div>
+          <div class="w2">
+            <%= gender_desc(@member.gender) %>
+          </div>
           </li>
         </ul>
         <ul>
           <li>
-            <div class="w1">移动电话：</div>
-            <div class="w2">
-              <%= @member.mobile %>
-            </div>
-            <div class="w1">固定电话：</div>
-            <div class="w2">
-              <%= @member.telephone.blank? ? '无' : @member.telephone%>
-            </div>
+          <div class="w1">移动电话：</div>
+          <div class="w2">
+            <%= @member.mobile %>
+          </div>
+          <div class="w1">固定电话：</div>
+          <div class="w2">
+            <%= @member.telephone.blank? ? '无' : @member.telephone%>
+          </div>
           </li>
 
         </ul>
         <ul>
           <li>
-            <div class="w1">工作：</div>
-            <div class="w2">
-              <%= @member.job.blank? ? '无' : @member.jon %>
-            </div>
-            <div class="w1">邮箱：</div>
-            <div class="w2">
-              <%= @member.email.blank? ? '无' : @member.email%>
-            </div>
+          <div class="w1">工作：</div>
+          <div class="w2">
+            <%= @member.job.blank? ? '无' : @member.jon %>
+          </div>
+          <div class="w1">邮箱：</div>
+          <div class="w2">
+            <%= @member.email.blank? ? '无' : @member.email%>
+          </div>
           </li>
         </ul>
         <ul>
           <li>
-            <div class="w1">证件类型：</div>
-            <div class="w2">
-              <%= generate_cert_type_str(@member.cert_type) %>
-              <%if generate_cert_type_str(@member.cert_type).blank?%>
-                <a class="blank_element"></a>
-              <%end%>
-            </div>
-            <div class="w1">证件号码：</div>
-            <div class="w2">
-              <%if !generate_cert_type_str(@member.cert_type).blank?%>
-                <%= @member.cert_num%>
-              <%end%>
-            </div>
+          <div class="w1">证件类型：</div>
+          <div class="w2">
+            <%= generate_cert_type_str(@member.cert_type) %>
+            <%if generate_cert_type_str(@member.cert_type).blank?%>
+              <a class="blank_element"></a>
+            <%end%>
+          </div>
+          <div class="w1">证件号码：</div>
+          <div class="w2">
+            <%if !generate_cert_type_str(@member.cert_type).blank?%>
+              <%= @member.cert_num%>
+            <%end%>
+          </div>
           </li>
         </ul>
         <ul>
           <li>
-            <div class="w1">联系地址：</div>
-            <div class="w2">
-              <%= @member.address.blank? ? '无' : @member.address %>
-            </div>
-            <div class="w1">介绍人：</div>
-            <div class="w2">
-              <%= @member.mentor.blank? ? '无' : @member.mentor %>
-            </div>
+          <div class="w1">联系地址：</div>
+          <div class="w2">
+            <%= @member.address.blank? ? '无' : @member.address %>
+          </div>
+          <div class="w1">介绍人：</div>
+          <div class="w2">
+            <%= @member.mentor.blank? ? '无' : @member.mentor %>
+          </div>
           </li>
         </ul>
         <ul>
           <li>
-            <div class="w1">备注：</div>
-            <div class="ww2"><%= @member.memo %></div>
+          <div class="w1">备注：</div>
+          <div class="ww2"><%= @member.memo %></div>
           </li>
         </ul>
       </div>
@@ -102,61 +102,65 @@
       <div class="infobox_nr">
         <ul>
           <li>
-            <div class="w1">刷卡次数：</div>
-            <div class="w2">
-              统计中
-            </div>
-            <div class="w1">最近来店：</div>
-            <div class="w2">
-              <%= @member.latest_comer_date.blank? ? '无' : @member.latest_comer_date %>
-            </div>
+          <div class="w1">刷卡次数：</div>
+          <div class="w2">
+            <%= @member.use_card_times%>
+          </div>
+          <div class="w1">最近来店：</div>
+          <div class="w2">
+            <%= @member.latest_comer_date.blank? ? '无' : @member.latest_comer_date %>
+          </div>
           </li>
         </ul>
         <ul>
           <li>
-            <div class="w1">消费总金额：</div>
-            <div class="w2">
-              <%= @member.member_consume_amounts %>
-            </div>
-            <div class="w1">卡内余额：</div>
-            <div class="w2">
-              <%= @member.member_card_left_fees %>
-            </div>
+          <div class="w1">消费总金额：</div>
+          <div class="w2">
+            <%= @member.member_consume_amounts %>
+          </div>
+          <div class="w1">卡内余额：</div>
+          <div class="w2">
+            <%= @member.member_card_left_fees %>
+          </div>
           </li>
         </ul>
         <ul>
           <li>
-            <div class="w1">卡付金额：</div>
-            <div class="w2">
-              <a class="blank_element"></a>
-            </div>
-            <div class="w1">现金支付：</div>
-            <div class="w2">
-            </div>
+          <div class="w1">总充值金额：</div>
+          <div class="w2">
+            <%=@member.recharge_fees%>
+          </div>
+          <div class="w1">总充值次数：</div>
+          <div class="w2">
+            <%=@member.recharge_times%>次
+          </div>
+
           </li>
         </ul>
         <ul>
           <li>
-            <div class="w1">总充值金额：</div>
-            <div class="w2">
-              <%=@member.recharge_fees%>
-            </div>
-            <div class="w1">卡内次数：</div>
-            <div class="w2">
-              <%= @member.member_card_left_times%>
-            </div>
+          <div class="w1">卡付金额：</div>
+          <div class="w2">
+          </div>
+          <div class="w1">卡付次数：</div>
+          <div class="w2">
+            <%=@member.use_card_times%>次
+          </div>
+
           </li>
         </ul>
+
         <ul>
           <li>
-            <div class="w1">卡付次数：</div>
-            <div class="w2">
-              <a class="blank_element"></a>
-            </div>
-            <div class="w1">总充值次数：</div>
-            <div class="w2">
-              <%=@member.recharge_times%>次
-            </div>
+          <div class="w1">现金支付：</div>
+          <div class="w2">
+          </div>
+
+          <div class="w1">卡内次数：</div>
+          <div class="w2">
+            <%= @member.member_card_left_times%>
+          </div>
+
           </li>
         </ul>
       </div>
@@ -185,11 +189,11 @@
             <li class="w10"><%= card.left_times %></li>
             <li class="w10"><%= DateUtil.timeshort(card.expire_date) %></li>
             <li class="w15">
-              <% for granter in generate_granter_options(@member) %>
-                <%if @member.is_granter(granter[1], card.id)%>
-                  <%=granter[0]%>
-                <%end%>
+            <% for granter in generate_granter_options(@member) %>
+              <%if @member.is_granter(granter[1], card.id)%>
+                <%=granter[0]%>
               <%end%>
+            <%end%>
             </li>
           </ul>
         <%end%>

@@ -40,7 +40,7 @@ class Balance < ActiveRecord::Base
     end
     balance.balance_way = default_balance_way_by_order(order)
     balance.goods_balance_type = default_goods_balance_way_by_order(order)
-    balance.catena_id   = order.catena_id
+    #balance.catena_id   = order.catena_id
     balance.member_type = order.member_type
     balance
   end
@@ -59,7 +59,7 @@ class Balance < ActiveRecord::Base
   
   def merge_order(o)
     self.order_id      = o.id
-    self.catena_id     = o.catena_id
+    #self.catena_id     = o.catena_id
     self.member_type   = o.member_type
   end
   

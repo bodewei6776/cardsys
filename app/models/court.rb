@@ -3,21 +3,15 @@ class Court < ActiveRecord::Base
   has_many :court_period_prices
   has_many :book_records
 
-  #default_scope where({:catena_id => current_catena.id})
   scope :search_order, order("id")
   
   validates :name, :presence => {:message => "场地名称不能为空！"}
   validates :name, :uniqueness => {:on => :create, :message => '场地名称已经存在了！', :if => Proc.new { |court| !court.name.nil? && !court.name.blank? }}
   validates :telephone, :numericality => {:only_integer => true, :message => "电话号码必须为数字！", :allow_blank => true}, :length => {:minimum => 8, :maximum => 11, :message => "联系电话必须大于8位小于11位！", :allow_blank => true}
 
-  before_create :set_catena_id
 
   Status_Free = 1
   Status_Disable = 2
-
-  def set_catena_id
-    self.catena_id = current_catena.id
-  end
 
   def generate_court_period_price(period_price)
     self.court_period_prices.find_all_by_period_price_id(period_price.id).first

@@ -2,11 +2,6 @@ class CommonResource < ActiveRecord::Base
 
   has_many :common_resource_details
 
-  before_create :set_catena_id
-
-  def set_catena_id
-    self.catena_id = current_catena.id
-  end
 
   CARD_TYPE = 'card_type'
   PERIOD_TYPE = 'period_type'

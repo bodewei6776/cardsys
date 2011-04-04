@@ -23,7 +23,7 @@ class Catena < ActiveRecord::Base
     end
 
     def default_catena
-      @default_catena ||= find_or_create_by_name('default')
+      @default_catena ||= Catena.first#find_or_create_by_name('default')
     end
 
     def default_catena_id

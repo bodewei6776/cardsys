@@ -316,7 +316,7 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 
 /*<定义左侧样式---开始>*/
 
-.left{ width:200px; height:100%; position:absolute; left:0px; background: #dfff92; }
+.left{ width:200px; height:652px; position:absolute; left:0px; background: #dfff92; }
 .bt_time{ width:200px; height:23px; margin:0 auto; text-align:center;position:relative;}
 #arrow_holder{ position:absolute;right:0px;top:0px;}
 .bt1{ width:178px; height:27px; line-height:27px; margin:0 auto; background:url(/images/new/bt1.jpg)  no-repeat 0 0; text-align:center;}
@@ -329,7 +329,7 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 
 
 /*<定义右侧样式---开始>*/
-.right { margin-left:200px; height:auto; height:auto; background:#fff; background:url(/images/new/r_bg.jpg) repeat-y left top;}
+.right { margin-left:200px; height:652px;  background:#fff; background:url(/images/new/r_bg.jpg) repeat-y left top;} 
 .right_ddd{ width:100%; height:19px; background:url(/images/new/r_ddd_bg.jpg) repeat-x 0 0;}
 .r_bt{ width:100%; height:30px; line-height:30px; margin:0 auto; background:url(/images/new/ty_bt_bg.jpg) repeat-x 0 0;}
 .r_bt_l{ display:block; float:left; height:30px; }

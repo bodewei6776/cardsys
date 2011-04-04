@@ -2,7 +2,7 @@
   <div class=" r_bt" >
     <div class=" r_bt_l" >
       <div class=" r_bt_l_a" ></div>
-      <div class=" r_bt_l_c fb white" >时段价格列表</div>
+      <div class=" r_bt_l_c fb white" >场地列表</div>
     </div>
     <div class=" r_bt_r" >
       <button onclick="window.location.href='/courts/new'" class="submit2 hand" type="button">创建场地</button>
@@ -37,4 +37,10 @@
       </ul>
     <%end%>
   </div>
+  <div class="h10"></div>
+  <div class="pages">
+    <%= will_paginate @courts%>
+  </div>
+  <div class="h10"></div>
+
 </div>

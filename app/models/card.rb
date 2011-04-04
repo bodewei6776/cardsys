@@ -18,12 +18,6 @@ class Card < ActiveRecord::Base
   validates :card_prefix, :presence => {:message => "卡前缀不能为空！"}
   validates :expired, :numericality => true, :presence => {:message => "有效期不能为空！"}
 
-  before_create :set_catena_id
-
-  def set_catena_id
-    self.catena_id = current_catena.id
-  end
-
   def card_type_record
     @card_type_record ||= (CommonResourceDetail.find_by_id(card_type) || '')
     @card_type_record.blank? ? nil : @card_type_record

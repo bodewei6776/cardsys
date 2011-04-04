@@ -87,5 +87,9 @@ class ApplicationController < ActionController::Base
     session[:return_to] = nil
   end
 
+  def default_paginate_options
+    {:page => params[:page] || 1,:per_page => 20,:order => "created_at DESC"}
+  end
+
 end
 

@@ -5,7 +5,7 @@ class CoachesController < ApplicationController
   # GET /coaches
   # GET /coaches.xml
   def index
-    @coaches = Coach.all
+    @coaches = Coach.paginate(default_paginate_options)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @coaches }

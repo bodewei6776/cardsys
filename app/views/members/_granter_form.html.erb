@@ -28,20 +28,6 @@
      </li>
     </ul>
 
-    <ul>
-      <li>
-        <div class="w1">证件类型：</div>
-        <div class="w2">
-          <select name="member[cert_type]" id="cert_type" class="select">
-            <%= generate_cert_type_options(@member)  %>
-          </select>
-        </div>
-        <div class="w1">证件号码：</div>
-        <div class="w2">
-          <input type="text" name="member[cert_num]" value="<%= @member.cert_num %>" id="cert_num" />
-        </div>
-      </li>
-    </ul>
 
     <ul>
       <li>

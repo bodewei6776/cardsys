@@ -1,7 +1,4 @@
 class Order < ActiveRecord::Base
-
-  #default_scope where({:catena_id => current_catena.id})
-
   has_many    :order_items,:dependent => :destroy
   belongs_to  :card
   has_many    :coach_items,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Coache} "
@@ -155,9 +152,6 @@ class Order < ActiveRecord::Base
     order.save!
   end
   
-  def set_catena_id
-    self.catena_id = current_catena.id
-  end
   
   def original_coaches
     new_record? || coach_items.blank? ? [] : coach_items.map(&:related_entry)

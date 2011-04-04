@@ -2,7 +2,7 @@
   #adv_search div{width:750px;padding: 5px;margin-left:-30px }
   #adv_search div label{width: 80px;text-align: right;}
 </style>
-<div id="adv_search" <% if params[:sp].to_i == 0 %>style="display: none;"<%end%> class="w95">
+<div id="adv_search"  class="w95">
   <input type="hidden" name="sp" id ="sp" value="<%=params[:sp]||0%>"/>
   <div>
     <label for="card_id">注册日期：</label>

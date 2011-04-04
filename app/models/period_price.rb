@@ -11,11 +11,6 @@ class PeriodPrice < ActiveRecord::Base
 
   validate :validate_start_time_end_time
 
-  before_create :set_catena_id
-  def set_catena_id
-    self.catena_id = current_catena.id
-  end
-
   PERIOD_START_TIME, PERIOD_END_TIME  = 7, 24
 
   def validate_start_time_end_time

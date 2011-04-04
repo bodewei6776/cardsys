@@ -9,20 +9,19 @@ ActiveRecord::Base.class_eval do
     end
 
     def should_catena?
-      can_catena? && !Catena.currently_default?
+      can_catena? #&& !Catena.currently_default?
     end
 
-    def add_conditions_with_catena!(sql, conditions, scope = :auto)
-      scope = scope(:find) if :auto == scope
-      conditions = [conditions]
-      conditions << scope[:conditions] if scope
-      conditions << type_condition if finder_needs_type_condition?
-      conditions << ["#{catena_id_column} is null or #{catena_id_column} = :catena_id", { :catena_id => Catena.default_id }] if should_catena?
-      merged_conditions = merge_conditions(*conditions)
-      sql << "WHERE #{merged_conditions} " unless merged_conditions.blank?
+    def relation_with_catena
+      @relation = relation_without_catena
+      if should_catena?
+        @relation = @relation.where(["#{catena_id_column} is null or #{catena_id_column} = :catena_id", { :catena_id => Catena.default_id }])
+      end
+
+      @relation
     end
 
-    alias_method_chain :add_conditions!, :catena unless method_defined?(:add_conditions_without_catena!)
+    alias_method_chain :relation, :catena unless method_defined?(:relation_without_catena)
   end
 
   def can_catena?
@@ -32,13 +31,14 @@ ActiveRecord::Base.class_eval do
   def should_catena?
     self.class.should_catena?
   end
-
-  def before_create_with_catena
-    before_create_without_catena
+  def before_with_catena
     if can_catena?
       self.catena_id ||= Catena.default_id
     end
   end
+  before_create :before_with_catena
 
-  alias_method_chain :before_create, :catena unless method_defined?(:before_create_without_catena)
 end
+
+
+

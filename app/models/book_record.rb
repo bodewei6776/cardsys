@@ -20,17 +20,11 @@ class BookRecord < ActiveRecord::Base
   has_one     :order
   belongs_to  :court
   
-  ##default_scope where({:catena_id => current_catena.id})
   scope :daily_book_records, lambda {|date| where(:record_date => date) }
   scope :court_book_records, lambda {|court_id| where(:court_id => court_id) }
   scope :playing, where(:status => Status_Active)
   scope :balanced,where(:status => Status_Settling)
   
-  before_create   :set_catena_id
-
-  def set_catena_id
-    self.catena_id = current_catena.id
-  end
 
   def before_create_init_attributes
     self.status = Status_Default

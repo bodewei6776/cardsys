@@ -7,11 +7,10 @@ class Member < ActiveRecord::Base
 
   has_many     :member_cards
   has_many :orders
-  #has_many     :cards,:through => :member_cards #注释掉了先
+  has_many :balances
 
   before_save :geneate_name_pinyin
 
-  #  default_scope where({:catena_id => current_catena.id})#会员不用区分连锁
 
   validates :name, :presence => {:message => "名称不能为空！"}
   #, :uniqueness => {:on => :create, :message => '名称已经存在！', :if => Proc.new { |member| !member.name.nil? && !member.name.blank? }}
@@ -101,8 +100,9 @@ class Member < ActiveRecord::Base
   end
 
   def member_consume_amounts
-    consume_amounts = Order.where(:member_id => self.id).sum('amount')
-    consume_amounts.nil? ? 0 : consume_amounts
+    #consume_amounts = Order.where(:member_id => self.id).sum('amount')
+    #consume_amounts.nil? ? 0 : consume_amounts
+    self.orders.present? ? self.orders.sum(:amount) : 0
   end
 
   def latest_comer_date
@@ -119,13 +119,14 @@ class Member < ActiveRecord::Base
   end
 
   def use_card_times
-    order_ids = []
-    Order.where(:member_id => self.id).each { |i|
-      order_ids << i.id
-    }
-    ct = 0
-    ct = Balance.where("order_id in (?) and (balance_way = ? or goods_balance_type = ?)", order_ids, Balance::Balance_Way_Use_Card, Balance::Balance_Way_Use_Card).size if order_ids.size > 0
-    return ct
+#    order_ids = []
+#    Order.where(:member_id => self.id).each { |i|
+#      order_ids << i.id
+#    }
+#    ct = 0
+#    ct = Balance.where("order_id in (?) and (balance_way = ? or goods_balance_type = ?)", order_ids, Balance::Balance_Way_Use_Card, Balance::Balance_Way_Use_Card).size if order_ids.size > 0
+#    return ct
+self.balances.count
   end
   
 end

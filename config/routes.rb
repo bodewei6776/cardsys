@@ -73,6 +73,7 @@ Cardsys::Application.routes.draw do |map|
       get :member_card_freeze
       get :member_card_bind_list
       get :getMemberCardNo
+      get :advanced_search
     end
   end
 

@@ -7,7 +7,7 @@ class CourtsController < ApplicationController
   # GET /courts
   # GET /courts.xml
   def index
-    @courts = Court.where(:catena_id =>  session[:catena_id]).search_order
+    @courts = Court.paginate(default_paginate_options)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @courts }
