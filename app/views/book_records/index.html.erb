@@ -46,5 +46,11 @@
       height: 750,
       resizable: true
     });
-  });
-</script>
+
+    $('.content li').mouseover(function(){ 
+      var index = $(this).parent('ul').find('li').index($(this));
+      $('.content li').removeClass('book_records_mousehover');
+      $('.content ul').map(function(){ $(this).find('li:eq(' + index +')').addClass('book_records_mousehover')})
+        }) 
+      });
+    </script>

@@ -1,11 +1,11 @@
 class BalancesController < ApplicationController
   layout 'main'
   def index
-    @book_records = BookRecord.playing.order('record_date,start_hour').paginate(:page => params[:page]||1)
+    @book_records = BookRecord.playing.order('record_date desc,start_hour desc').paginate(default_paginate_options_without_created_at)
   end
 
   def balanced
-    @book_records = BookRecord.balanced.order('record_date desc,start_hour').paginate(:page => params[:page]||1)
+    @book_records = BookRecord.balanced.order('record_date desc').paginate(default_paginate_options_without_created_at)
   end
 
   def new

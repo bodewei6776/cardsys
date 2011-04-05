@@ -129,6 +129,7 @@ Cardsys::Application.routes.draw do |map|
     collection do
       get :user_power_index
       get :user_power_update
+      get :change_password
     end
   end
 

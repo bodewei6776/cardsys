@@ -30,7 +30,7 @@ module ApplicationHelper
   end
 
   def should_display_authorize_menu?
-    controller_name =~ /users|department|catena/
+    controller_name =~ /users|department|catena/ && action_name.to_s != "change_password"
   end
 
   def should_display_balance_menu?
@@ -46,6 +46,10 @@ module ApplicationHelper
     false
   end
 
+  def should_display_system_menu?
+    action_name.to_s == "change_password" || controller_name.to_s == "logs"
+  end
+
   def display_current_menu
     current_menu = case
     when should_display_common_memu? then 'common_memu'
@@ -56,6 +60,7 @@ module ApplicationHelper
     when should_display_balance_menu? then 'balance_menu'
     when should_display_book_record_menu? then 'book_record_menu'
     when should_display_report_menu? then 'report_menu'
+    when should_display_system_menu? then 'system_menu'
     end
     js =<<js
     <script type="text/javascript">

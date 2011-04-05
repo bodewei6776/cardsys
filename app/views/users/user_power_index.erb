@@ -1,3 +1,7 @@
+<%= content_for :head_content do%>
+  <%= javascript_include_tag "jquery.checktree"%>
+<%end%>
+
 <%if @notice%><p class="notice"><%= @notice %></p><%end%>
 
 <%= form_for :user, @user, :url => {:action => "user_power_update"}, :html => {:class => "form-profile"} do |f|%>

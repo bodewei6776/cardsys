@@ -6,6 +6,7 @@ gem 'ruby-mysql'
 gem 'will_paginate', '3.0.pre'
 gem 'rails3-jquery-autocomplete', '>= 0.2.0'
 gem 'mini_magick'
+gem 'acts_as_tree'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

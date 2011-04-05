@@ -95,4 +95,7 @@ class UsersController < ApplicationController
     true
   end
 
+  def change_password
+  end
+
 end

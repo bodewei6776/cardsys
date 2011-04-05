@@ -1,0 +1,50 @@
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >操作记录</div>
+    </div>
+
+    <div class=" r_bt_r" ></div>
+  </div>
+  <div class="soso">
+    <form method="get" action="/logs" class="form-profile" id="search_form">
+      <div class="w95">
+       操作类型：
+        <label>
+          <%= select_tag ""%>
+        </label>
+      </div>
+    </form>
+  </div>
+  <div class="h10"></div>
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >操作记录</div>
+    </div>
+    <div class=" r_bt_r" ></div>
+  </div>
+  <div class=" table">
+    <ul class="bttitle black fb " >
+      <li class="w5">编号</li>
+      <li class="w10">用户</li>
+      <li class="w15">时间</li>
+      <li class="w20">描述</li>
+    </ul>
+    <% @logs.each_with_index do |log,index| -%>
+      <ul class="member_items table_items">
+        <li class="w5"><%= index + 1 %></li>
+        <li class="w10"><%= log.user_name %></li>
+        <li class="w15"> <%= DateUtil::timeshort(log.created_at)%></li>
+        <li class="w20"> <%= log.desc%></li>
+      </ul>
+    <%end -%>
+  </div>
+  <div class="h10"></div>
+  <div class="pages">
+    <%= will_paginate @logs, :sp => 1%>
+  </div>
+  <div class="h10"></div>
+</div>
+</script>

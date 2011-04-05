@@ -102,6 +102,10 @@ class ApplicationController < ActionController::Base
   def default_paginate_options
     {:page => params[:page] || 1,:per_page => 20,:order => "created_at DESC"}
   end
+  def default_paginate_options_without_created_at
+    {:page => params[:page] || 1,:per_page => 20}
+  end
+
 
 end
 
