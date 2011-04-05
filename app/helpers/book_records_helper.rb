@@ -39,10 +39,6 @@ module BookRecordsHelper
                          else
                            "#{book_record.order.member_name}:无卡预定" 
                          end
-        puts '1' * 100
-        puts book_record
-        puts book_record.order
-        puts book_record.order.id
         unless (coaches = book_record.order.coaches).blank?
           display_content << "(教练:#{coaches.map(&:name).join(',')})"
         end

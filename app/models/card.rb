@@ -17,6 +17,9 @@ class Card < ActiveRecord::Base
     
   validates :card_prefix, :presence => {:message => "卡前缀不能为空！"}
   validates :expired, :numericality => true, :presence => {:message => "有效期不能为空！"}
+  validates_numericality_of :min_time ,:only_integer => true,:greater_than => 0,:message => "提醒时间必须为非负整数"
+  validates_numericality_of :min_amount,:only_integer => true,:greater_than => 0,:message => "提醒金额必须为非负整数"
+  validates_numericality_of :min_count,:only_integer => true,:greater_than => 0,:message => "提醒次数必须为非负整数"
 
   def card_type_record
     @card_type_record ||= (CommonResourceDetail.find_by_id(card_type) || '')

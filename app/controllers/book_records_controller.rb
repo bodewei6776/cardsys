@@ -57,7 +57,8 @@ class BookRecordsController < ApplicationController
     respond_to do |format|
       if @order.save
         format.html { 
-          redirect_to("/book_records?date=#{@order.book_record.record_date.to_s(:db)}", :notice => '订场成功.') 
+          render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
+                    " window.opener.location.reload(); } ")
         }
       else
         inite_related_order_objects
@@ -113,7 +114,7 @@ class BookRecordsController < ApplicationController
     redirect_to("/book_records?date=#{book_record.record_date.to_s(:db)}", :notice => '取消代买成功.')
   end
 
-  
+
   # DELETE /book_records/1
   # DELETE /book_records/1.xml
   def destroy
@@ -130,22 +131,22 @@ class BookRecordsController < ApplicationController
       render(:text => {}.to_json) && return
     end
     @members = Member.where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name",
-        {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
+                            {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
     hash_results = @members.collect {|member| {"id" => member.id, "label" => "#{member.name} #{member.mobile}", 
-        "value" => "#{member.name}"} }
+      "value" => "#{member.name}"} }
     render :json  => hash_results
   end
-  
+
   def complete_for_member_card
     if (card_nmuber = params[:term]).blank?
       render(:text => {}.to_json) && return
     end
     @member_cards = MemberCard.where(["LOWER(card_serial_num) like ?", "%#{card_nmuber.downcase}%"]).limit(10)
     hash_results = @member_cards.collect {|member_card| {"id" => member_card.card_serial_num, "label" => member_card.card_serial_num, 
-        "value" => member_card.card_serial_num} }
+      "value" => member_card.card_serial_num} }
     render :json  => hash_results
   end
-  
+
   def complete_member_infos
     entry = Member.find_by_id(params[:id]) || MemberCard.where(:card_serial_num => params[:id]).first
     if entry
@@ -176,11 +177,11 @@ class BookRecordsController < ApplicationController
 
   def recalculate_court_amount
     reply = if [:date,:start_hour,:end_hour,:court_id].any?{|p| params[p].blank?}
-      ''
-    else
-      court = Court.find(params[:court_id])
-      court.calculate_amount_in_time_span(Date.parse(params[:date]),params[:start_hour],params[:end_hour])
-    end
+              ''
+            else
+              court = Court.find(params[:court_id])
+              court.calculate_amount_in_time_span(Date.parse(params[:date]),params[:start_hour],params[:end_hour])
+            end
     render :text => reply
   end
 

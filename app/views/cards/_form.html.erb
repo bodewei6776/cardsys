@@ -46,7 +46,28 @@
                    </li>
 
         </ul>
-
+       <ul>
+          <li>
+            <div class="w1">提醒金额：</div>
+            <div class="w2">
+              <%= f.text_field :min_amount%> 元
+            </div>
+            <div class="w1">提醒次数：</div>
+            <div class="w2">
+              <%= f.text_field :min_count%>次
+            </div>
+          </li>
+        </ul>
+  
+       <ul>
+          <li>
+            <div class="w1">预期提醒：</div>
+            <div class="w2">
+              <%= f.text_field :min_time%>天
+            </div>
+          </li>
+        </ul>
+  
        <ul style="height:80px;">
           <li>
             <div class="w1" >说明：</div>

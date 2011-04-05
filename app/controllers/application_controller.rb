@@ -31,6 +31,10 @@ class ApplicationController < ActionController::Base
 
   self.allow_forgery_protection = false
 
+  def render_js(script)
+    render :js => "<script type='text/javascript'>" + script + "</script>"
+  end
+
   protected
 
   def set_date

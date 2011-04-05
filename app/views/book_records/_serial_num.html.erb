@@ -52,6 +52,9 @@
       <div class="w1">卡状态：</div>
       <div class="w2">
         <%= current_card.status_desc %>
+        <% if current_card.should_notice_remain_amount_due? %>
+          <p style='color:red;display:inline;'><%= current_card.remain_amount_notice%></p>
+        <%end%>
       </div>
       <div class="w1">联系电话：</div>
       <div class="w2">

@@ -144,5 +144,19 @@ class MemberCard < ActiveRecord::Base
     end
     save
   end
-  
+
+  def should_notice_remain_amount_due?
+    (self.left_fee < (self.card.min_amount || 0)) || \
+      (self.left_times < (self.card.min_count || 0)) || \
+      (self.expire_date < (Time.now + (self.card.min_time || 0).days))
+  end
+
+  def remain_amount_notice
+    notices = []
+    notices << "卡内余额不足#{self.card.min_amount}元" if (self.left_fee < (self.card.min_amount || 0))
+    notices << "卡内次数不足#{self.card.min_count}次"  if  (self.left_times < (self.card.min_count || 0)) 
+    notices << "会员卡即将到期#{self.card.min_time}天" if    self.expire_date < (Time.now + (self.card.min_time || 0).days)
+    notices.join(",")
+  end
+
 end
