@@ -157,7 +157,7 @@ class MembersController < ApplicationController
     @member_cards = MemberCard.where(:member_id => params[:id])
     @recharge_records = RechargeRecord.where(:member_id => params[:id])#充值记录
     #@orders = Order.balanced.where(:member_id => params[:id])#消费记录的显示方式
-    @balances = Balance.balanced.where(:member_id => params[:id]).paginate(:page => params[:page]||1)
+    @balances = Balance.where(:member_id => params[:id])
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @member }
@@ -335,6 +335,26 @@ class MembersController < ApplicationController
   end
 
   def member_card_recharge
+
+    user = User.find_by_login(params[:user])
+    result = true
+    unless user
+      notice = {:result => 0,:notice =>"用户名不存在"}
+      result = false
+    end
+
+    unless user.valid_password?(params[:password])
+      notice = {:result => 0,:notice => "密码不正确"}
+      result = false
+    end
+
+    unless result
+      render :json => notice
+      return
+    end
+
+    #TODO 判断是否有权限
+
     fee = (params[:fee].blank? ? 0 : params[:fee])
     times = (params[:times].blank? ? 0 : params[:times])
 
@@ -346,7 +366,9 @@ class MembersController < ApplicationController
         member_card.update_attribute(:left_times, member_card.left_times.to_f + charge_times))
       RechargeRecord.new(:member_id => member_card.member_id,
                          :member_card_id => member_card.id,
-                         :recharge_fee => charge_fee#增加一个记录次数的字段或者换算
+                         :recharge_fee => charge_fee,#增加一个记录次数的字段或者换算
+                         :recharge_times=> charge_times,
+                         :recharge_person => user.id
                         ).save
                         notice = params[:type]=="1" ? "会员卡充值成功！" : "会员卡退款成功！"
     end
@@ -354,7 +376,7 @@ class MembersController < ApplicationController
       member_card.update_attribute(:expire_date, params[:expire_date])
       notice = "有效期修改成功！"
     end
-    render :inline => notice.to_json
+    render :json => {:result => 1,:notice => notice }
   end
 
   def get_members

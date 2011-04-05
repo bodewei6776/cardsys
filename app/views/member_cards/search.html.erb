@@ -81,6 +81,20 @@
             </div>
           </li>
         </ul>
+
+   <ul>
+          <li>
+            <div class="w1">充值人：</div>
+            <div class="w2">
+              <input name="recharge_person" id="recharge_person" value="<%= current_user.login%>" type='textfield'/>
+            </div>
+            <div class="w1">密码：</div>
+            <div class="w2">
+              <input name="recharge_password" id="recharge_password" value="" type='password'/>
+            </div>
+          </li>
+        </ul>
+
       </div>
     </div>
     <div class="h10"></div>
@@ -106,6 +120,8 @@
     }
     var fee = $("#fee")[0].value;
     var times = $("#times")[0].value;
+    var recharge_person = $("#recharge_person").val();
+    var recharge_password= $("#recharge_password").val();
     if(""!=fee && !isNumTemp(fee)){
       alert("充值数必须为有效数字！");
       return;
@@ -114,8 +130,11 @@
       alert("充值数必须为有效数字！");
       return;
     }
+    if("" == recharge_person.trim()) { alert("请输入充值人id"); return;}
+    if("" == recharge_password.trim()) { alert("请输入充值人密码"); return;}
     $.getJSON("/members/member_card_recharge",
-    {'type':'json', 'fee':fee, 'times':times, 'member_card_id':card_id, 'type':type, 'expire_date':expire_date},
+        {'type':'json', 'fee':fee, 'times':times, 'member_card_id':card_id, 'type':type, 
+      'expire_date':expire_date,'user':recharge_person,'password':recharge_password},
     function(data){
       $(".notice").show();
       $(".notice").attr("class", "notice");

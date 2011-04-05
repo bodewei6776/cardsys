@@ -61,6 +61,7 @@ class Balance < ActiveRecord::Base
     self.order_id      = o.id
     #self.catena_id     = o.catena_id
     self.member_type   = o.member_type
+    self.member_id     = o.member_id
   end
   
   def process

@@ -49,14 +49,15 @@
         </ul>
         <ul>
           <li>
-          <div class="w1">工作：</div>
-          <div class="w2">
-            <%= @member.job.blank? ? '无' : @member.jon %>
-          </div>
-          <div class="w1">邮箱：</div>
+         <div class="w1">电子邮箱：</div>
           <div class="w2">
             <%= @member.email.blank? ? '无' : @member.email%>
           </div>
+ <div class="w1">备用电话：</div>
+          <div class="w2">
+            <%= @member.standby_phone.blank? ? '无' : @member.standby_phone%>
+          </div>
+
           </li>
         </ul>
         <ul>
@@ -90,8 +91,11 @@
         </ul>
         <ul>
           <li>
+          <div class="w1">会员生日：</div>
+          <div class="w2"><%= DateUtil.timeshort(@member.birthday) %></div>
+
           <div class="w1">备注：</div>
-          <div class="ww2"><%= @member.memo %></div>
+          <div class="w2"><%= @member.memo %></div>
           </li>
         </ul>
       </div>
@@ -104,7 +108,7 @@
           <li>
           <div class="w1">刷卡次数：</div>
           <div class="w2">
-            <%= @member.use_card_times%>
+            <%= @member.balances.balanced.count%>
           </div>
           <div class="w1">最近来店：</div>
           <div class="w2">
@@ -141,6 +145,7 @@
           <li>
           <div class="w1">卡付金额：</div>
           <div class="w2">
+            <%=@member.use_card_amount%>元
           </div>
           <div class="w1">卡付次数：</div>
           <div class="w2">
@@ -154,6 +159,7 @@
           <li>
           <div class="w1">现金支付：</div>
           <div class="w2">
+            <%= @member.use_cash_amount%> 元 
           </div>
 
           <div class="w1">卡内次数：</div>
@@ -208,6 +214,7 @@
           <li class="w15">卡号</li>
           <li class="w15">充值金额(￥)/次数</li>
           <li class="w15">充值日期</li>
+          <li class="w15">充值人</li>
         </ul>
         <%@recharge_records.each_with_index  do |recharge_record,index|%>
           <ul class="table_items">
@@ -215,6 +222,7 @@
             <li class="w15"><%=recharge_record.member_card.card_serial_num%></li>
             <li class="w15"><%= recharge_record.display_recharge_info %></li>
             <li class="w15"><%= DateUtil::timeshort(recharge_record.created_at) %></li>
+            <li class="w15"><%= recharge_record.recharge_person_name %></li>
           </ul>
         <%end%>
       </div>
