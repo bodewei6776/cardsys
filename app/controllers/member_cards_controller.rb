@@ -36,8 +36,8 @@ class MemberCardsController < ApplicationController
     end
     if "num" == params[:p] && !@serial_num.blank?
       @member_cards = [MemberCard.where(:card_serial_num => @serial_num).first]
-      @member_card = @member_cards.first
     end
+      @member_card = @member_cards.present? ? @member_cards.first : MemberCard.new
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @member_cards }

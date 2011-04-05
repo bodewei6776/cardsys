@@ -17,12 +17,15 @@
 
         <input type="submit" name="search" id="search_member" class="inputsubmit" value="查询"  tabindex="10" />
         <%unless @member_cards.blank? %>
+          <br>
+          <div id='member_cards_list'>
           <label for="card_id">选择充值的会员卡号：</label>
           <% for member_card in @member_cards %>
             <% unless member_card.card_serial_num.blank? %>
               <%= radio_button_tag("card_serial_num", member_card.card_serial_num, (member_card.card_serial_num == @serial_num)? true : false)%><%=member_card.card_serial_num%>
             <%end%>
           <%end%>
+          </div>
         <%end%>
       </div>
     </form>
@@ -37,7 +40,7 @@
           <li>
             <div class="w1">所属会员：</div>
             <div class="w2">
-              <%=  @member_card.nil? ? "" : @member_card.member.name%>
+              <%=   @member_card.member.name rescue ""%>
             </div>
             <div class="w1">卡类型：</div>
             <div class="w2">
@@ -107,6 +110,9 @@
   <div class="h10"></div>
 </div>
 <script type="text/javascript">
+
+
+
   $(".member_card_detail").colorbox({width:"80%", height:"80%", iframe:false});
   $(".member_card_recharge").colorbox({width:"50%", height:"40%", iframe:false});
 

@@ -21,6 +21,14 @@ class ApplicationController < ActionController::Base
     Catena.current=(current_user.catena || Catena.default_catena) if current_user
   end
 
+  def current_catena
+    Thread.current[:catena]
+  end
+
+  def current_catena_id
+    Thread.current[:catena_id]
+  end
+
   self.allow_forgery_protection = false
 
   protected

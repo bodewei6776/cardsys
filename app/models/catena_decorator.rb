@@ -33,7 +33,7 @@ ActiveRecord::Base.class_eval do
   end
   def before_with_catena
     if can_catena?
-      self.catena_id ||= Catena.default_id
+      self.catena_id = Thread.current[:catena_id]
     end
   end
   before_create :before_with_catena

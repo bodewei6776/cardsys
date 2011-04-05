@@ -1,13 +1,14 @@
 <style type="text/css">
   #adv_search div{width:750px;padding: 5px;margin-left:-30px }
   #adv_search div label{width: 80px;text-align: right;}
+  .inputtext{width: 70px;}
 </style>
 <div id="adv_search"  class="w95">
   <input type="hidden" name="sp" id ="sp" value="<%=params[:sp]||0%>"/>
   <div>
     <label for="card_id">注册日期：</label>
-    <input type="text" name="reg_date_start" value="<%=params[:reg_date_start]%>" onblur="return;" id="reg_date_start"/>
-    - <input type="text" name="reg_date_end" value="<%=params[:reg_date_end]%>" onblur="return;" id="reg_date_end" />
+    <input type="text" name="reg_date_start" value="<%=params[:reg_date_start]%>" onblur="return;" id="reg_date_start" class='inputtext'/>
+    - <input type="text" name="reg_date_end" value="<%=params[:reg_date_end]%>" onblur="return;" id="reg_date_end"  class='inputtext'/>
     <label for="card_id">到期时间：</label>
     <input type="text" name="expire_date_start" value="<%=params[:expire_date_start]%>" onblur="return;" id="expire_date_start" class="inputtext" />
     - <input type="text" name="expire_date_end" value="<%=params[:expire_date_end]%>" onblur="return;" id="expire_date_end" class="inputtext" />
@@ -35,8 +36,8 @@
     - <input type="text" name="left_times_end" value="<%=params[:left_times_end]%>" onblur="return;"  class="inputtext" />
 
     <label for="card_id">会员生日：</label>
-    <input type="text" name="member_birthday_start" value="<%=params[:member_birthday_start]%>" onblur="return;"  class="birthday_input" />
-    - <input type="text" name="member_birthday_end" value="<%=params[:member_birthday_end]%>" onblur="return;" class="birthday_input" />
+    <input type="text" name="member_birthday_start" value="<%=params[:member_birthday_start]%>" onblur="return;"  class="birthday_input inputtext" />
+    - <input type="text" name="member_birthday_end" value="<%=params[:member_birthday_end]%>" onblur="return;" class="birthday_input inputtext" />
   </div>
   <div class="clear"></div>
   <div>
