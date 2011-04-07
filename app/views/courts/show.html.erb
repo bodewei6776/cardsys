@@ -56,6 +56,7 @@
           <li class="w20">说明</li>
         </ul>
         <%@period_prices.each_with_index do |period_price,index|%>
+          <% next unless @court.is_useable_in_time_span?(period_price)%>
           <% available_period = @court.generate_court_period_price(period_price)%>
           <ul class="table_items">
             <li class="w5"><%= index + 1%></li>

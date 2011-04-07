@@ -17,7 +17,7 @@
             <div class="w1">开始时间：</div>
             <div class="w2">
               <select name="court[start_time]" id="start_time" class="select" onchange ="check_time();">
-                <%= generate_time_options(@court)  %>
+                <%= generate_time_options(@court.start_time)  %>
               </select>
             </div>
             <div class="w1">结束时间：</div>

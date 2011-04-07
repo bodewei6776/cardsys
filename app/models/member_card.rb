@@ -5,12 +5,18 @@ class MemberCard < ActiveRecord::Base
   belongs_to  :card
   belongs_to  :member
   has_many    :orders
+  has_many :member_card_granters
+  has_many :granters,:class_name => "Member",:through => :member_card_granters
 
   CARD_STATUS_0 = 0 #正常
   CARD_STATUS_1 = 1 #已注销
   
   Free_Count_Limit = 2
   Free_Amount_limit = 500
+
+  def enable?
+    self.status == CARD_STATUS_0
+  end
 
   after_save :left_times_and_left_money_can_not_be_blank
 
@@ -61,13 +67,13 @@ class MemberCard < ActiveRecord::Base
     card.is_counter_card? ? "充次" : "充值"
   end
 
-  def member_card_granters
-    mcgs = []
-    MemberCardGranter.where(:member_card_id => self.id).each { |e|
-      mcgs << Member.find(e.member_id ).first.name
-    }
-    mcgs
-  end
+#  def member_card_granters
+#    mcgs = []
+#    MemberCardGranter.where(:member_card_id => self.id).each { |e|
+#      mcgs << Member.find(e.member_id ).first.name
+#    }
+#    mcgs
+#  end
 
   def left_fee_value
     unless card.is_zige_card?

@@ -4,6 +4,7 @@ class Court < ActiveRecord::Base
   has_many :book_records
 
   scope :search_order, order("id")
+
   
   validates :name, :presence => {:message => "场地名称不能为空！"}
   validates :name, :uniqueness => {:on => :create, :message => '场地名称已经存在了！', :if => Proc.new { |court| !court.name.nil? && !court.name.blank? }}
@@ -13,6 +14,7 @@ class Court < ActiveRecord::Base
   Status_Free = 1
   Status_Disable = 2
 
+  scope :enabled,where(:status => Status_Free)
   def generate_court_period_price(period_price)
     self.court_period_prices.find_all_by_period_price_id(period_price.id).first
   end

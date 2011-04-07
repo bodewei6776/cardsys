@@ -184,16 +184,16 @@ class MembersController < ApplicationController
   def create
     is_member = params[:member][:is_member]
     @member = Member.new(params[:member])
-    @member.catena_id = session[:catena_id]
     respond_to do |format|
       if @member.save
         @members = Member.where(:is_member => is_member)
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
           base_member_id = params[:member_id]
           @member_base = Member.find(params[:member_id])
-          @mg = MemberCardGranter.new(:member_id => base_member_id, :member_card_id => params[:member_card_id], :granter_id => @member.id, :catena_id => session[:catena_id])
+          @mg = MemberCardGranter.new(:member_id => base_member_id, :member_card_id => params[:member_card_id], :granter_id => @member.id)
           @mg.save
-          format.html { redirect_to :action => "member_card_bind_index", :member_id => base_member_id, :member_name => @member_base.name, :notice => '授权人信息添加成功！'}
+          #format.html { redirect_to :action => "member_card_bind_index", :member_id => base_member_id, :member_name => @member_base.name, :notice => '授权人信息添加成功！'}
+          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => @mg.member_card.card_serial_num,:member_name => @mg.member_card.member.name) }
         else
           format.html { redirect_to :action => "index", :notice => '会员信息添加成功！'}
           format.xml  { render :xml => @member, :status => :created, :location => @member }
@@ -201,7 +201,8 @@ class MembersController < ApplicationController
       else
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
           @member_base = Member.find(params[:member_id])
-          format.html { redirect_to :action => "member_card_bind_index", :member_id => base_member_id, :member_name => @member_base.name, :notice_error => '授权人信息添加失败,可能的原因是授权人姓名，身份证号或证件号有非法输入或已经被使用！'}
+          #format.html { redirect_to :action => "member_card_bind_index", :member_id => base_member_id, :member_name => @member_base.name, :notice_error => '授权人信息添加失败,可能的原因是授权人姓名，身份证号或证件号有非法输入或已经被使用！'}
+          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => @mg.member_card.card_serial_num,:member_name => @mg.member_card.member.name,:notice => "授权人信息添加失败,可能的原因是授权人姓名，身份证号或证件号有非法输入或已经被使用！") }
         else
           format.html { render :action => 'new'}
           format.xml { render :xml => @member.errors, :status => :unprocessable_entity }

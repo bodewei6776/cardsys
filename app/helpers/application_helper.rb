@@ -150,12 +150,12 @@ js
 
   def generate_granter_options(member)
     options = []
-    granter_ids = MemberCardGranter.where(:catena_id => member.catena_id).where(:member_id => member.id)
+    granter_ids = MemberCardGranter.where(:member_id => member.id)
     for granter in granter_ids
       options << granter.granter_id
     end
     granters = []
-    Member.where(["id IN(?)", options]).where(:catena_id => member.catena_id).each { |memb| granters << [memb.name, memb.id] }
+    Member.where(["id IN(?)", options]).each { |memb| granters << [memb.name, memb.id] }
     granters
   end
 

@@ -10,7 +10,7 @@ module BookRecordsHelper
       else
         all_spans_per_period.each do |start_hour,end_hour|
           li_height = 24*(end_hour - start_hour)
-          info_htmls << [start_hour,content_tag(:li,"场地不可用",:style => "height:#{li_height}px;")]
+          info_htmls << [start_hour,content_tag(:li,"场地不可用",:style => "height:#{li_height + 6}px;")]
         end
       end
     end

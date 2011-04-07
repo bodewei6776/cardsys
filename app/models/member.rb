@@ -1,6 +1,11 @@
 require 'pinyin/pinyin'
 class Member < ActiveRecord::Base
 
+
+  def can_catena?
+    false
+  end
+
   include MemberOrder
 
   default_scope :order =>  'id desc'
@@ -8,6 +13,7 @@ class Member < ActiveRecord::Base
   has_many     :member_cards
   has_many :orders
   has_many :balances
+  has_one  :member_card_granter,:foreign_key => "granter_id"
 
   before_save :geneate_name_pinyin
 

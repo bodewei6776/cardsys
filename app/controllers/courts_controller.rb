@@ -7,7 +7,7 @@ class CourtsController < ApplicationController
   # GET /courts
   # GET /courts.xml
   def index
-    @courts = Court.paginate(default_paginate_options)
+    @courts = Court.enabled.paginate(default_paginate_options)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @courts }

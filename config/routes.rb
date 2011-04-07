@@ -1,5 +1,13 @@
 Cardsys::Application.routes.draw do |map|
 
+  resources :member_card_granters,:only => :destroy do
+    member do
+      put :switch
+    end
+  end
+
+
+
   resources :catenas do
     member do
       get :change_status
@@ -87,6 +95,14 @@ Cardsys::Application.routes.draw do |map|
   resources :member_cards do
     collection do
       get :search
+      get :granters
+      get :status
+      get :autocomplete_name
+      get :autocomplete_card_serial_num
+      
+    end
+    member do
+      put :switch
     end
   end
   resources :coaches
