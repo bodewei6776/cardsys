@@ -46,7 +46,7 @@
   
 </div>
   <div style='float:rihgt;'>
-    <input  name="print"  type="button" class='button submit1' value="打印收条" onClick=""/>
+    <%= link_to "打印收条",print_balance_path(@balance) ,:class => "button submit1" ,:style => "padding: 5px 10px;"%>
   </div>
 
 

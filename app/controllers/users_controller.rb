@@ -41,20 +41,22 @@ class UsersController < ApplicationController
   
   def show
    @user = @current_user
-    redirect_to members_url#先跳转到这里  lixj
+   #redirect_to members_url#先跳转到这里  lixj
   end
 
   def edit
   @departments = Department.all
+  @catenas= Catena.all
     @user = User.find(params[:id])
   end
   
   def update
     @user = @current_user # makes our views "cleaner" and more consistent
     @user.departments = @user.departments | Department.find(params[:dep])
+    @user.catenas =  Catena.find(params[:catenas])
     if @user.update_attributes(params[:user])
       flash[:notice] = "用户信息修改成功！"
-      redirect_to account_url
+      redirect_to users_path
     else
       @departments = Department.all
       render :action => :edit
@@ -78,17 +80,11 @@ class UsersController < ApplicationController
   end
 
   def user_power_update
-    UserPower.delete_all("user_id = #{params[:user_id]}")
-    for power in Power.all
-      #被选中可用的
-      if params["user_power_#{power.id}"]
-        UserPower.create(:user_id => params[:user_id],
-          :power_id =>  power.id,
-          :catena_id =>  session[:catena_id])
-      end
-    end
+    @user = User.find(params[:id])
+    @user.powers = Power.find(params[:powers]) rescue []
+    @user.save
     respond_to do |format|
-      format.html { redirect_to :action => "user_power_index", :id => params[:user_id], :notice => '用户权限设置成功！'}
+      format.html { redirect_to :action => "user_power_index", :id => @user.id, :notice => '用户权限设置成功！'}
       format.xml  { head :ok }
     end
   end

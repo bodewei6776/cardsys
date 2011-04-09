@@ -1,0 +1,100 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-CN" xml:lang="zh-CH" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>balance print</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta http-equiv="expires" content="-1" />
+    <%#= stylesheet_link_tag "print",:media => "print"%>
+    <%= stylesheet_link_tag "print"%>
+  </head>
+
+  <body>
+    <table border=2 >
+      <caption><h2>博德维球馆消费单</h2></caption>
+      <tr>
+        <td colspan=4>消费时段：<%= balance_time_span_in_word(@balance)%> </td>
+      </tr>
+      <tr>
+        <td colspan=2>会员姓名: <%= @balance.order.member.name%></td>
+        <td colspan=2>会员卡号: <%= @balance.order.member_card.card_serial_num%></td>
+      </tr>
+      <tr class='goods goods_title'>
+        <td class='left'>商品名称</td>
+        <td>数量</td>
+        <td>单价</td>
+        <td class='right'>小计</td>
+      </tr>
+      <tr class='goods'>
+        <td class='left'>场地预定费</td>
+        <td><%= @balance.order.book_record_item.amount%></td>
+        <td>1</td>
+        <td class='right'><%= @balance.order.book_record_item.amount%></td>
+      </tr>
+      <% unless (coach_items = @balance.order.coach_items).blank?  -%>
+        <% coach_items.each do |coach_item|  -%> 
+          <% coach = coach_item.related_entry %>
+      <tr class='goods'>
+          <td class='left'>教练(<%= coach.name%>)</td>
+          <td>
+            <%=  coach.fee %>
+          </td>
+          <td>
+            <%= coach_item.quantity %>
+          </td>
+          <td class='right'><%= coach_item.amount %></td>
+        </tr>
+      <%end  -%>
+    <%end -%> 
+    <% for good_item in @balance.order.product_items%>
+      <% next if (good = good_item.product).blank? %>
+      <tr class='goods'>
+        <td class='left'><%= good.name%> </td>
+        <td><%= good.price %></td>
+        <td> <%= good_item.quantity %> </td>
+        <td class='right'><%= good_item.amount %></td>
+    </tr>
+  <%end%>
+
+
+  <tr class='total'>
+    <td colspan=2></td>
+    <td> 合计金额: </td>
+    <td class='amount'><span> <%= @balance.book_record_realy_amount  + @balance.goods_realy_amount%></span></td>
+  </tr>
+  <tr class='total_remain'>
+    <td colspan=2></td>
+    <td > 剩余金额:</td>
+<td class='amount'><span> <%= @balance.order.member_card.left_fee %></span>元</td>
+  </tr>
+  <tr class='total_remain'>
+    <td colspan=2></td>
+    <td> 剩余次数:</td>
+    <td class='amount'><span> <%= @balance.order.member_card.left_times%></span>次</td>
+  </tr>
+  <tr>
+    <td colspan=4> 备注: 
+      <%= @balance.change_note%>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=4> 操作员编号: 
+      <%= @balance.who_balance.login%>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=4> 支付方式: 
+      <%= @balance.balance_way_desciption(@balance.balance_way)%>
+    </td>
+  </tr>
+
+
+
+
+</table>
+
+  </body>
+</html>
+

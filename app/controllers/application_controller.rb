@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => '8ec6935fe52d16c7a633b948c07815f1'
+  helper_method :current_catena
 
   layout  "index"
 

@@ -29,6 +29,12 @@ Cardsys::Application.routes.draw do |map|
     end
   end
 
+  resources :balances do
+    member do 
+      get :print
+    end
+  end
+
   resources :book_records do
     collection do
       get   :complete_for_members
@@ -204,6 +210,7 @@ Cardsys::Application.routes.draw do |map|
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
+  match 'change_catena' =>"base#change_catena"
   match ':controller(/:action(/:id(.:format)))'
   root :to => "members#index"
 end

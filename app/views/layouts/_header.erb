@@ -3,7 +3,7 @@
   <div class="menu">
     <div class="title">
       <%if current_user %>
-        当前用户：<%= current_user.login %>  |  <%= link_to '修改密码',edit_user_path(current_user) %>  |   <%= link_to "退出",user_session_path(current_user),:method => 'delete' %>
+        当前用户：<%= current_user.login %>  |  <%= link_to '修改密码',edit_user_path(current_user) %>  |   <%= link_to "退出",user_session_path(current_user),:method => 'delete' %> |
       <%else%>
         <%=  link_to "请登录",new_user_session_path%>  |  <%=  link_to "添加用户",new_user_path%>
       <%end%>

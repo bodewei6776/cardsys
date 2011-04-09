@@ -25,17 +25,7 @@
       <%= form_for @user_session, :url => user_session_path,:html => {:id => 'new_user_action'} do |f| -%>
         <%= error_messages_for :user_session %>
         <div class="login_bd">
-          <ul>
-            <li class="w25 tright" >选择分店：</li>
-            <li >
-              <label>
-                <select name="catena_id" id="catena_id">
-                  <%= generate_catena_options%>
-                </select>
-              </label>
-            </li>
-          </ul>
-          <ul>
+         <ul>
             <li class="w25  tright" >用户名：</li>
             <li>
               <label>

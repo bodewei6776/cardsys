@@ -5,4 +5,9 @@ class Power < ActiveRecord::Base
 
   acts_as_tree
 
+  def self.tree_top
+    where(:parent_id => 0)
+  end
+
+
 end

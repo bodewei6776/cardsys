@@ -38,6 +38,7 @@ class BalancesController < ApplicationController
 
     @balance  = Balance.new(params[:balance])
     @balance.order_id = @order.id
+    @balance.user_id = user.id
     @balance.merge_order(@order)
     if @balance.process && @balance.to_balance?
       pre_date_for_new_create
@@ -69,6 +70,13 @@ class BalancesController < ApplicationController
     pre_date_for_new_create
     render :layout => params[:layout].blank?
   end
+
+  def print 
+    @balance  = Balance.find(params[:id])
+    render :layout => false
+  end
+
+
 
   protected
   def pre_date_for_new_create

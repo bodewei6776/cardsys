@@ -57,5 +57,23 @@
       $("#"+$(this).attr('sub_menu')).show();
       return true;
     });
-  });
+
+    var user_menus = [];
+    <% current_user.menus.each do |menu|%>
+      user_menus.push("<%= menu %>");
+    <%end%>
+
+
+    $('#menu li').each(function(index,node){
+      if($.inArray($(node).find('p').text().trim(),user_menus) < 0){ $(node).hide();} 
+      });
+
+    $('div.xdh li').each(function(index,node){
+      console.log($(node).find('a').text().trim());
+      console.log($.inArray($(node).find('a').text().trim(),user_menus));
+      if($(node).is(":visible") && $.inArray($(node).find('a').text().trim(),user_menus) < 0){ $(node).hide();} 
+      });
+
+
+    });
 </script>

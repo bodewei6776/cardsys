@@ -12,6 +12,7 @@ class Balance < ActiveRecord::Base
   Balance_Way_Use_Counter  = 7
 
   
+  belongs_to :who_balance,:class_name => "User",:foreign_key => "user_id"
   belongs_to :order
   attr_accessor :operation
 

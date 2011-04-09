@@ -4,6 +4,7 @@ class Catena < ActiveRecord::Base
 
   validates :name,:presence => true
   validates :contact,:presence => true
+  has_and_belongs_to_many :users
   class << self
     def current=(catena)
       Thread.current[:catena] = catena

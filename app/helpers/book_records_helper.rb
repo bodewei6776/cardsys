@@ -42,6 +42,10 @@ module BookRecordsHelper
         unless (coaches = book_record.order.coaches).blank?
           display_content << "(教练:#{coaches.map(&:name).join(',')})"
         end
+
+        if book_record.order.has_bean_balanced?
+          display_content << "(结算人: #{book_record.order.balance_record.who_balance.login})"
+        end
         #display_content <<  "(#{book_record.status_desc})"
         url = if book_record.is_agented?
           "/book_records/#{book_record.id}/agent"

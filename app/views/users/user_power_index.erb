@@ -1,33 +1,46 @@
 <%= content_for :head_content do%>
-  <%= javascript_include_tag "jquery.checktree"%>
+  <%= stylesheet_link_tag "checktree" %>
+  <style>
+    #holder{
+      margin-left: 20px;
+    }
+    ul.tree{
+      margin-left: 40px;
+    }
+    ul.tree label{
+      margin-left: 5px;
+    }
+
+  </style>
 <%end%>
 
-<%if @notice%><p class="notice"><%= @notice %></p><%end%>
+<script type='text/javascript'>
+  $(document).ready(function(){
+      $("input[type=checkbox]").click(function(){
+          if($(this).is(":checked") && $(this).attr('parent_id') !== undefined){
+            $("input[type=checkbox][value=" + $(this).attr('parent_id') +"]").attr('checked','checked');
+          }
+        });
+ 
+});
+</script> 
+<div id='holder' >
 
-<%= form_for :user, @user, :url => {:action => "user_power_update"}, :html => {:class => "form-profile"} do |f|%>
-  <div>
-    <fieldset class="table" >
-      <legend> 权限列表(<%= @user.login %>) </legend>
-      <ul class="title_ul">
-        <input type="hidden" name="user_id" value="<%=@user.id%>" />
-        <li style="text-align:center;width:460px;">权限名称</li><li>设置权限</li>
-      </ul>
-      <%for power in @powers%>
-        <% available_power = @user.has_power?(power)%>
-        <ul>
-          <li style="text-align:center;width:460px;">
-            <span style="width:250px;right:20px;"><%= power.subject%></span>
-          </li>
-          <li>
-            <input type="checkbox" name="user_power_<%= power.id %>" value="<%= power.id %>" <%if available_power %> checked <%end%> class="inputtext" />
-          </li>
-        </ul>
-      <%end%>
-    </fieldset>
+  <%if @notice%><p class="notice"><%= @notice %></p><%end%>
 
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" > 权限：　(<%= @user.login%>)</div>
+    </div>
   </div>
-  <div class="btn t_center">
-    <a href="javascript:void(0);" onclick="fsubmit();return false;" >提交 </a>|
-  </div>
-<%end%>
 
+
+
+  <%= form_for :user, @user, :url => {:action => "user_power_update"}, :html => {:class => "form-profile"} do |f|%>
+    <%= hidden_field_tag "id",@user.id.to_s%>
+    <%= raw powers_tree(@user.powers || @user.department_powers)%> 
+    <%= f.submit "修改了",:class => "submit1"%>
+  <%end%>
+
+</div>

@@ -88,17 +88,11 @@ class DepartmentsController < ApplicationController
   end
 
   def department_power_update
-    DepartmentPower.delete_all("department_id = #{params[:department_id]}")
-    for power in Power.all
-      #被选中可用的
-      if params["department_power_#{power.id}"]
-        DepartmentPower.create(:department_id => params[:department_id],
-          :power_id =>  power.id,
-          :catena_id =>  session[:catena_id])
-      end
-    end
+    @department =Department.find(params[:id])
+    @department.powers = Power.find(params[:powers])
+    @department.save
     respond_to do |format|
-      format.html { redirect_to :action => "department_power_index", :id => params[:department_id], :notice => '部门权限设置成功！'}
+      format.html { redirect_to :action => "department_power_index", :id =>@department.id, :notice => '部门权限设置成功！'}
       format.xml  { head :ok }
     end
   end

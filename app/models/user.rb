@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
 
   has_many   :user_powers
   has_many :powers,:through => :user_powers
+  has_and_belongs_to_many :catenas
   #  has_and_belongs_to_many :powers   #some error when user.save
 
   #  validates :login, :presence => {:message => "用户名不能为空！"},
@@ -22,6 +23,10 @@ class User < ActiveRecord::Base
     self.user_name_pinyin = pinyin.to_pinyin(self.user_name) if self.user_name
   end
 
+
+  def should_catena?
+    false
+  end
 
 
   after_create :set_powers
@@ -54,8 +59,12 @@ class User < ActiveRecord::Base
     return flag
   end
 
-  def has_power? power
-    self.powers and self.powers.include? power
+
+  def department_powers
+    self.departments.collect(&:powers).flatten.uniq rescue []
+  end
+  def menus
+    self.powers.collect(&:subject)
   end
 
 end
