@@ -60,13 +60,15 @@ class OrderItem < ActiveRecord::Base
   end
 
   def self.order_coaches(order)
-    coaches.where(:order_id => order.id).delete_all
+    return true unless order.updating
+    pending_coaches = coaches.where(:order_id => order.id) || []
     (order.coaches||[]).each_with_index do |coach,index|
+      origin_coach_order_item = pending_coaches.find do |c| c.item_id == coach.id end
       book_record = order.book_record
       coach_item =  new
       coach_item.item_id    = coach.id
       coach_item.item_type  = Item_Type_Coache
-      coach_item.quantity   = (index == 0 ? book_record.hours : 0)
+      coach_item.quantity   = (origin_coach_order_item.present? ?  origin_coach_order_item.quantity  : book_record.hours)
       coach_item.price      = coach.fee
       coach_item.order_id   = order.id
       coach_item.start_hour = book_record.start_hour
@@ -75,6 +77,7 @@ class OrderItem < ActiveRecord::Base
       coach_item.order_date = Date.today
       coach_item.save
     end
+    pending_coaches.collect(&:destroy)
   end
 
   def self.order_book_record(order)

@@ -53,6 +53,23 @@ class BookRecordsController < ApplicationController
   # POST /book_records.xml
   def create
     @order = Order.new(params[:order])
+    if params[:user_name].blank? or params[:password].blank?
+      @order.errors.add(:base,"预定人，密码不能为空")
+      inite_related_order_objects
+      render :action => "new",:layout => 'small_main'
+      return
+    end
+    user = User.find_by_login(params[:user_name])
+
+    if user.blank? or !user.valid_password?(params[:password])
+      @order.errors.add(:base,"用户不存在或者密码不正确")
+      inite_related_order_objects
+      render :action => "new",:layout => 'small_main'
+      return
+    end
+
+    #TODO user has right
+
     @order.parent_id = 0
     respond_to do |format|
       if @order.save

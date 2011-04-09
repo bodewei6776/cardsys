@@ -6,6 +6,14 @@ class UsersController < ApplicationController
   #layout false, :only => [:create, :new]
   skip_before_filter :require_user,:require_very_user
 
+  def autocomplete_user_name
+    @items = User.where(["user_name_pinyin like ? or login like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%"]).limit(10)
+    @names = []
+    @items.each { |i| @names << i.login}
+    render :inline => @names.to_json#{lable:name, value:name}
+  end
+
+
   before_filter :user_can
   
   def index

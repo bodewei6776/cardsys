@@ -12,7 +12,7 @@
       <div class="w95">
         教练：
         <label>
-          <select name="good_type" id="good_type" class="select">
+          <select name="name" id="good_type" class="select">
             <%= generate_coaches_options_for_courts(@caoches,params[:name]) %>
           </select>
         </label>
@@ -34,10 +34,10 @@
             <input type="text" name="member_name" maxlength="30"  value="<%=params[:member_name] %>" autocomplete="/members/autocomplete_name"/>
             <label for="card_id">预定时段：</label>
             <select name="start_hour" id="start_hour" class="select" onchange="check_time();">
-              <%= generate_time_options(0) %>
+              <%= generate_time_options(params[:start_hour] || 0) %>
             </select>-
             <select name="end_hour" id="end_hour" class="select" onchange="check_time();">
-              <%= generate_time_options(24) %>
+              <%= generate_time_options(params[:end_hour] || 24) %>
             </select>
           </div>
         </div>

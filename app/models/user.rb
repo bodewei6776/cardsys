@@ -1,3 +1,4 @@
+require 'pinyin/pinyin'
 class User < ActiveRecord::Base
 
   has_many :department_users
@@ -14,6 +15,14 @@ class User < ActiveRecord::Base
   #  validates :user_name, :presence => {:message => "昵称不能为空！"}
 
   belongs_to :catena
+  before_save :geneate_name_pinyin
+
+  def geneate_name_pinyin
+    pinyin = PinYin.new
+    self.user_name_pinyin = pinyin.to_pinyin(self.user_name) if self.user_name
+  end
+
+
 
   after_create :set_powers
   

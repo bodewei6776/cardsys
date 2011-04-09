@@ -43,10 +43,12 @@
     </div>
     </li>
   </ul>
+  
 </div>
-  <div class="btn t_center">
-    <input  name="print"  type="button"  value="打印收条" onClick=""/>
+  <div style='float:rihgt;'>
+    <input  name="print"  type="button" class='button submit1' value="打印收条" onClick=""/>
   </div>
+
 
 <% unless @good_items.blank? %>
   <%= render :partial => "/orders/order_items_list",:locals => {:good_items => @good_items||[],:order => @order} %>

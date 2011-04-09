@@ -1,5 +1,6 @@
 <%= error_messages_for :balance %>
-<% form_for([@order,@balance],:html => {:class => 'balance-form'}) do |f| -%>
+<%= error_messages_for :order%>
+<%= form_for([@order,@balance],:html => {:class => 'balance-form'}) do |f| -%>
   <div class='fformbox_nr'>
     <ul>
       <li>
@@ -11,7 +12,7 @@
       <% if @order.is_member? %>
         <li >
         <div class="w1">会员卡：</div>
-        <div  class='w2'>
+        <div  class='w2' style='width:500px;'>
           <%= @current_card.card_serial_num %>  类型:<%= @current_card.card.card_type_desc %>
           余额(次):<%= @current_card.left_fee_value %>
         </div>
@@ -23,8 +24,8 @@
       <li >
       <div class="w1">场地：</div>
       <div  class='w2'>
-        <%= @book_record.court.name %><%= @book_record.record_date.to_s(:db)%>
-        <%= @book_record.start_hour %>:00-<%= @book_record.end_hour %>:00
+        <%= @book_record.court.name %>&nbsp;&nbsp;(<%= @book_record.record_date.to_s(:db)%>
+        <%= @book_record.start_hour %>:00-<%= @book_record.end_hour %>:00)
       </div>
       </li>
     </ul>
@@ -90,12 +91,32 @@
       </div>
       </li>
     </ul>
-    <input type="hidden" name="batch_id" value="<%= params[:batch_id] %>" />
-    <div class="btn t_center">
-      <input  class="change-amount" type="button"  value="变更总价"/>
-      <input  class="balance"  	  type="button"  value="支付"/>
-      <input  name="print"   		  type="button"  value="打印收条" onClick=""/>
-    </div>
+
+<ul>
+
+      <li>
+      <div class="w1">结算人：</div>
+      <div  class='w2'>
+        <%= text_field_tag "user_name","#{params[:user_name] || current_user.login}"%>
+      </div>
+      </li>
+<li>
+      <div class="w1">密码：</div>
+        <%= password_field_tag "password",""%>
+      <div  class='w2'>
+      </div>
+      </li>
+
+    </ul>
+    <ul>
+      <li>
+      <input type="hidden" name="batch_id" value="<%= params[:batch_id] %>" />
+      <div style='text-align:center;'>
+        <input  class="change-amount submit1 button" type="button"  value="变更总价"/>
+        <input  class="balance submit1 button"  	  type="button"  value="支付"/>
+      </div>
+      </li>
+    </ul>
   </div>
 <% end -%>
 <% unless @good_items.blank? %>
@@ -140,5 +161,7 @@ $('.balance').click(function(){
     }
     return false;
     });
+
+  history.forward();
   });
 </script>

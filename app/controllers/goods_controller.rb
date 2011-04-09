@@ -20,13 +20,12 @@ class GoodsController < ApplicationController
     @goods = @goods.paginate(:page => params[:page]||1)
     respond_to do |format|
       format.html {
-        if request.xhr?
-          render :partial => "/goods/goods", :locals => { :goods => @goods }
-        else
-          render :template =>  '/goods/index'
-        end
+        render :template =>  '/goods/index'
       }
-      format.xml  { render :xml => @goods }
+      format.json {
+        render :partial => "/goods/goods",:locals => {:goods => @goods}
+      }
+     format.xml  { render :xml => @goods }
     end
   end
 
@@ -129,21 +128,21 @@ class GoodsController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
+
   def goods
     if params[:id].to_i > 0
       @goods = [Good.find(params[:id])]
     else
       @goods = Good.valid_goods.order('sale_count desc').limit(30)
     end
-    render :layout => false
+   render :layout => false
   end
-  
+
   def to_buy
     @goods = Good.valid_goods.order('sale_count desc').limit(30)
     render :action => 'goods'
   end
-  
+
   def add_to_cart
     goods = []
     (params[:goods]||[]).map{|hash_good|

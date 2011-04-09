@@ -79,6 +79,8 @@
         </div>
       </li>
     </ul>
+
+
     <div id="rel_member" <% unless @order.is_member? %> style="display:none;" <%  end %>>
       <%if @member %>
         <%=  render :partial => "/book_records/serial_num",:locals => {:cards => @cards,
@@ -109,7 +111,10 @@
         <% @order.coaches.map(&:id).each do |coach_id|  -%>
           <select name="order[coach_attributes][id][]" class='data-coach-select'>
             <%= generate_coaches_options(@coaches,coach_id) %>
-          </select><input type="button"   value="删除" class="data-remove-coach"/>
+          </select>
+
+
+          <input type="button"   value="删除" class="data-remove-coach"/>
         <%end -%>
         <%if @order.coaches.blank? -%>
           <select name="order[coach_attributes][id][]" class='data-coach-select'>
@@ -119,12 +124,31 @@
         <input type="button"  value="添加" class="data-add-coach"/>
       </div>
     </ul>
+
+
+
+    <ul>
+      <li>
+      <div class="w1" style="">预定人：</div>
+      <div class="w2">
+        <input name="user_name" value='<%= params[:user_name] || current_user.user_name%>'  autocomplete="/users/autocomplete_user_name" id='name'>
+      </div>
+      <li>
+<li>
+      <div class="w1" style="">密码：</div>
+      <div class="w2">
+        <input name="password"  type='password' value=''>
+      </div>
+      <li>
+    </ul>
+
     <ul style="height:60px;">
       <div class="w1" style="">备注：</div>
       <div class="ww2">
         <textarea name="order[memo]" cols="45" rows="2"><%= @order.memo %></textarea>
       </div>
     </ul>
+
   </div>
 </div>
 <script type="text/javascript" charset="utf-8">

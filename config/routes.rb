@@ -128,6 +128,7 @@ Cardsys::Application.routes.draw do |map|
       get :change_status
     end
   end
+
   resources :goods do
     collection do
       get :store_manage_index
@@ -143,6 +144,7 @@ Cardsys::Application.routes.draw do |map|
   resource :account, :controller => "users"
   resources :users do
     collection do
+      get :autocomplete_user_name
       get :user_power_index
       get :user_power_update
       get :change_password

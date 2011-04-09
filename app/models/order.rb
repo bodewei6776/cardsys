@@ -270,6 +270,7 @@ class Order < ActiveRecord::Base
     book_record.balance 
     order_items.each{|order_item| order_item.balance }
     self.paid_stauts = Const::YES
+    self.updating =false
     save
   end 
   

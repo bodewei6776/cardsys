@@ -104,7 +104,6 @@ class CourtsController < ApplicationController
   end
 
   def court_status_search
-    
     court = Court.where(:name => params[:name]).first unless params[:name].blank?
     date = params[:search_date].blank? ? Date.today : Date.parse(params[:search_date])
     member = Member.where(:name => params[:member_name]).first unless params[:member_name].blank?
@@ -127,7 +126,6 @@ class CourtsController < ApplicationController
   end
   
   def coach_status_search
-     
      coach = Coach.where(:name => params[:name]).first  unless params[:name].blank?
      start_date = params[:start_date].blank? ? Date.today : Date.parse(params[:start_date])
      end_date = params[:end_date].blank? ? Date.today : Date.parse(params[:end_date])
