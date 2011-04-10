@@ -33,6 +33,9 @@ Cardsys::Application.routes.draw do |map|
     member do 
       get :print
     end
+    collection do
+      get :balanced
+    end
   end
 
   resources :book_records do

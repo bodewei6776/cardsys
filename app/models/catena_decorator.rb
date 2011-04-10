@@ -15,7 +15,7 @@ ActiveRecord::Base.class_eval do
     def relation_with_catena
       @relation = relation_without_catena
       if should_catena? && self.table_name != "users"
-        @relation = @relation.where(["#{catena_id_column} is null or #{catena_id_column} = :catena_id", { :catena_id => Catena.default_id }])
+        @relation = @relation.where(["#{catena_id_column} is null or #{catena_id_column} = :catena_id", { :catena_id => Thread.current[:catena_id]}])
       end
 
       @relation
