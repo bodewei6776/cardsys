@@ -5,6 +5,7 @@ class BookRecordsController < ApplicationController
   # GET /book_records
   # GET /book_records.xml
   def index
+  
     @courts       = Court.order('id').all
     @date = params[:date].blank? ? Date.today : Date.parse(params[:date])
     @daily_periods   = PeriodPrice.all_periods_in_time_span(@date)

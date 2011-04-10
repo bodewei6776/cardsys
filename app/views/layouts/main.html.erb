@@ -9,36 +9,36 @@
     <%= yield :head_content%>
     <script type="text/javascript">
       $(document).ready(function() {
-        $('#datepicker').datepicker({
-          onSelect: function(dateText, inst) {
-            $("#calendar_con").val(dateText);
-            var domain = document.domain;
-            var port = window.location.port
-            var urls = ["http://",domain];
-            if(port && port != ''){
-              urls.push(":" + port)
-            }
-            urls.push("/book_records?date=" + dateText)
-            window.location.href=urls.join('');
-          },
-          dateFormat: 'yy-mm-dd',
-          changeMonth: true,
-          changeYear: true
-        });
-        $('#datepicker').datepicker('setDate','<%= ftime_date(@date) %>')
+          $('#datepicker').datepicker({
+onSelect: function(dateText, inst) {
+$("#calendar_con").val(dateText);
+var domain = document.domain;
+var port = window.location.port
+var urls = ["http://",domain];
+if(port && port != ''){
+urls.push(":" + port)
+}
+urls.push("/book_records?date=" + dateText)
+window.location.href=urls.join('');
+},
+dateFormat: 'yy-mm-dd',
+changeMonth: true,
+changeYear: true
+});
+          $('#datepicker').datepicker('setDate','<%= ftime_date(@date) %>')
+          });
+
+$(document).ready(function(){
+    $(".table_items").filter(':even').css("background-color", "#EFFFC8");
+    $('.table_items').mouseover(function(){
+      $(this).css('background-color','#E78F08');
       });
- 
-      $(document).ready(function(){
-        $(".table_items").filter(':even').css("background-color", "#EFFFC8");
-        $('.table_items').mouseover(function(){
-          $(this).css('background-color','#E78F08');
-        });
-        $('.table_items').mouseout(function(){
-          $(this).css('background-color','#ffffff');
-          $(".table_items").filter(':even').css("background-color", "#EFFFC8");
-        });
-        $(".balance_detail").colorbox({width:"900", height:"400", iframe:false});
+    $('.table_items').mouseout(function(){
+      $(this).css('background-color','#ffffff');
+      $(".table_items").filter(':even').css("background-color", "#EFFFC8");
       });
+    $(".balance_detail").colorbox({width:"900", height:"400", iframe:false});
+    });
 
 
 $(document).ready(function(){
@@ -53,21 +53,22 @@ $(document).ready(function(){
       });
     });
 
-
-function change_catena(des){
-  $.ajax({url: "/change_catena",
-      type: "get",
-      data: {id:des} ,
-      success: function(){
-        window.location.reload();
-      }});
+if(typeof(String.prototype.trim) === "undefined")
+{
+  String.prototype.trim = function() 
+  {
+    return String(this).replace(/^\s+|\s+$/g, '');
+  };
 }
+
+
+
 
 </script>
 <%= stylesheet_link_tag 'main', 'jquery-ui-1.8.2.custom','colorbox' %>
 <style type="text/css">
-  div .w1{height: 80px;}
-  div .w2{height: 80px;}
+  /* div .w1{height: 80px;}
+  div .w2{height: 80px;} */
 </style>
   </head>
   <body>

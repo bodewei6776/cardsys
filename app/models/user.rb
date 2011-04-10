@@ -71,4 +71,8 @@ class User < ActiveRecord::Base
     self.powers.collect(&:subject)
   end
 
+  def can_book_when_time_due?
+    self.menus.include? ("过期预定")
+  end
+
 end

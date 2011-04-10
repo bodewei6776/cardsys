@@ -43,7 +43,7 @@ module ApplicationHelper
   end
 
   def should_display_report_menu?
-    false
+    controller_name == "reports"
   end
 
   def should_display_system_menu?
@@ -134,6 +134,12 @@ js
     options << ['全部', '']
     options_for_select(options, (good_type.nil? || good_type == "") ? '' : good_type.to_i)
   end
+  def generate_good_type_options_without_all(good_type)
+    options = generate_res_options CommonResource::GOOD_TYPE
+    options_for_select(options, (good_type.nil? || good_type == "") ? '' : good_type.to_i)
+  end
+
+
 
   def generate_good_type_str(type)
     get_res_item(CommonResource::GOOD_TYPE, type)

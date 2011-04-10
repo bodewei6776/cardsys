@@ -106,6 +106,8 @@ CommonResourceDetail.create(:common_resource_id => times_winter.id, :detail_name
   a.children.create(:subject => "数据备份")
   a.children.create(:subject => "关于软件")
 
+  Power.create(:parent_id => 0,:subject => "过期预定")
+
 
 Department.class_eval do
     before_create do |p| p.catena_id = 1 end

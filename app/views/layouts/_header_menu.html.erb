@@ -15,37 +15,37 @@
     </li>
     <li>
       <a title="会员卡管理" id="c" href="/members/member_card_bind_index" class="header_menu" sub_menu="member_card_memu">
-        <p><img src="/images/new/tb_03.gif"  alt=""/> 会员卡管理</p>
+        <p><img src="/images/new/tb_03.gif"  alt=""/><span> 会员卡管理</span></p>
       </a>
     </li>
     <li>
       <a title="场地预定" id="f" href="/book_records" class="header_menu" sub_menu="book_record_menu">
-        <p><img src="/images/new/tb_06.gif"  alt=""/> 场地预定</p>
+        <p><img src="/images/new/tb_06.gif"  alt=""/><span> 场地预定</span></p>
       </a>
     </li>
     <li>
       <a title="商品库存管理" id="b" href="/goods" class="header_menu" sub_menu="goods_memu">
-        <p><img src="/images/new/tb_02.gif"  alt=""/> 商品库存管理</p>
+        <p><img src="/images/new/tb_02.gif"  alt=""/> <span>商品库存管理</span></p>
       </a>
     </li>
     <li>
-      <a title="分析报表" id="e" href="#" class="header_menu" sub_menu="report_menu">
-        <p><img src="/images/new/tb_05.gif"  alt=""/> 分析报表</p>
+      <a title="分析报表" id="e" href="/reports/income" class="header_menu" sub_menu="report_menu">
+        <p><img src="/images/new/tb_05.gif"  alt=""/><span> 分析报表</span></p>
       </a>
     </li>
     <li>
       <a title="消费结算" id="g" href="/balances" class="header_menu" sub_menu="balance_menu">
-        <p><img src="/images/new/tb_07.gif"  alt=""/> 消费结算</p>
+        <p><img src="/images/new/tb_07.gif"  alt=""/> <span>消费结算</span></p>
       </a>
     </li>
     <li>
       <a title="权限管理" id="h" href="/users" class="header_menu" sub_menu="authorize_menu">
-        <p><img src="/images/new/tb_08.gif"  alt=""/> 权限管理</p>
+        <p><img src="/images/new/tb_08.gif"  alt=""/> <span>权限管理</span></p>
       </a>
     </li>
     <li>
       <a title="系统管理" id="i" href="/users/change_password" class="header_menu" sub_menu="system_menu">
-        <p><img src="/images/new/tb_09.gif"  alt=""/> 系统管理</p>
+        <p><img src="/images/new/tb_09.gif"  alt=""/><span> 系统管理</span></p>
       </a>
     </li>
   </ul>
@@ -63,16 +63,14 @@
       user_menus.push("<%= menu %>");
     <%end%>
 
-    /*
 
     $('#menu li').each(function(index,node){
       if($.inArray($(node).find('p').text().trim(),user_menus) < 0){ $(node).hide();} 
       });
 
     $('div.xdh li').each(function(index,node){
-      if($(node).is(":visible") && $.inArray($(node).find('a').text().trim(),user_menus) < 0){ $(node).hide();} 
+      if($(node).is(":visible") && ($.inArray($(node).find('a').text().trim(),user_menus) < 0 )){ $(node).hide();} 
       });
-*/
 
     });
 </script>

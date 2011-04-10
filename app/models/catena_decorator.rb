@@ -21,7 +21,7 @@ ActiveRecord::Base.class_eval do
       @relation
     end
 
-    alias_method_chain :relation, :catena unless method_defined?(:relation_without_catena)
+    alias_method_chain :relation, :catena unless method_defined?(:relation_with_catena)
   end
 
   def can_catena?

@@ -252,7 +252,9 @@
       </div>
     </div>
     <div class="h10"></div>
-    <div class="input_bd"><button class="submit1 hand" tabindex="100" name="loginsubmit" type="submit" value="true">修改</button>&nbsp;&nbsp;&nbsp;&nbsp;<button class="submit3 hand" tabindex="100" name="loginsubmit" type="submit" value="true">返回</button></div>
+    <div class="input_bd">
+      <button class="submit1 hand" onclick='javascript:window.location.href="<%= edit_member_path(@member) %>";' tabindex="100" name="loginsubmit" type="submit" value="true">修改</button>&nbsp;&nbsp;&nbsp;&nbsp;
+      <button class="submit3 hand" onclick='javascript:window.location.href="<%= members_path %>";'tabindex="100" name="loginsubmit" type="submit" value="true">返回</button></div>
     <div class=" clear"></div>
   </div>
   <div class="h10"></div>

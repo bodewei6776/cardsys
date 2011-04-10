@@ -293,8 +293,10 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 .menu {	Z-INDEX: 100; width:100%; HEIGHT: 37px; float:left;}
 #menu {	HEIGHT: 37px; }
 #menu LI {	FLOAT: left;}
-#menu LI A {DISPLAY: block; CLEAR: both; FONT-SIZE: 14px; color:#fff; text-align:center; text-decoration: none; BACKGROUND: url(/images/new/dh1.jpg) no-repeat top right;}
-#menu LI A p {	TEXT-ALIGN: center; height:29px; display:inline-block; OVERFLOW: hidden; cursor:pointer; padding-top:8px;}
+#menu LI A {DISPLAY: block; CLEAR: both; FONT-SIZE: 14px; color:#fff; text-align:center; text-decoration: none; BACKGROUND: url(/images/new/dh1.jpg) no-repeat top right; line-height:34px;  }
+#menu LI A p img { width:20px;	height:20px }
+#menu LI A p {	TEXT-ALIGN: center; height:29px; display:inline-block;  cursor:pointer; padding-top:8px; }
+#menu li a p span{ margin-bottom: 8px;}
 #menu LI A:hover {	BACKGROUND: url(/images/new/dh2.jpg) no-repeat top right; color:#000; font-weight:bold; }
 #menu LI UL {	Z-INDEX: 100; POSITION: absolute; BACKGROUND-COLOR: #013c74; WIDTH: 118px; DISPLAY: none; }
 #menu LI UL LI { FLOAT: none; OVERFLOW: hidden; height:25px; LINE-HEIGHT: 25px; border-bottom:#b5b5b5 1px solid; }

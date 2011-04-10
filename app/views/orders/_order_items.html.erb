@@ -18,7 +18,7 @@
           <ul class="table_items">
             <li class="w5"><%= index + 1 %></li>
             <li class="w10">教练</li>
-            <li class="w10"><%= coach.name%></li>
+            <li class="w10"><%= coach.name rescue "被删除"%></li>
             <li class="w10">
               <input type='hidden' name='order_item[][id]' value='<%= coach_item.id%>' />
               <input type='text'   name='order_item[][price]' value='<%=  coach_item.price %>' />

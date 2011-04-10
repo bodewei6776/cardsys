@@ -64,14 +64,15 @@ module BookRecordsHelper
             :class => li_class.join(' '), :id => "book-record-#{book_record.id}")]
       else
         if date < Date.today || (date == Date.today && realy_time_span[0] < DateTime.now.hour)
-          # info_htmls << [realy_time_span[0],content_tag(:li,
-          #                                               tag("input",{:type => 'button', :disabled => 'disabled',:value => '过 期', :class => "color02",:style => "height:#{li_height}px;"}))]
+          unless current_user.can_book_when_time_due?
+           info_htmls << [realy_time_span[0],content_tag(:li,
+                                                         tag("input",{:type => 'button', :disabled => 'disabled',:value => '过 期', :class => "color02",:style => "height:#{li_height}px;"}))]
 
+          else
           info_htmls << [realy_time_span[0],content_tag(:li,
-          tag("input",{:type => 'button', :disabled => 'disabled',:value => '过 期', 
-         :class => "color02",:style => "height:#{li_height}px;"}) + 
-          tag("input",{:type => 'button',:href=> book_url,:value => '预定', 
+                    tag("input",{:type => 'button',:href=> book_url,:value => '预定', 
               :class => "submit1 hand popup-new-window",:style => "height:#{li_height}px;"}))]
+          end
         else
           info_htmls << [realy_time_span[0],content_tag(:li,content_tag("button",'预定',{:type => 'button', :href => book_url,
                                                                         :value => '预定',:class => "submit1 hand popup-new-window"  }))]

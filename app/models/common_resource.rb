@@ -100,4 +100,8 @@ class CommonResource < ActiveRecord::Base
   def is_card_type?
     name == CommonResource::CARD_TYPE
   end
+
+  def self.good_types
+    CommonResource.find_by_name("good_type").common_resource_details
+  end
 end

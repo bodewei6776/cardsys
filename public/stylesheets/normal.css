@@ -1,0 +1,37 @@
+table{
+  border-collapse: collapse;
+  padding: 0px;
+}
+
+table td{
+  border: 1px solid black;
+  padding :4px;
+}
+
+table tr.goods td{
+  border-left: 0px dotted black;
+  border-right: 0px dotted black;
+  border-bottom: 1px solid black;
+}
+
+table tr.total_remain td{
+  border: 0px;
+}
+table tr.total td{
+  border: 0px;
+  border-bottom: 2px solid black;
+}
+
+table tr.total td{
+  text-align: right;
+  padding-right: 15px;
+}
+
+td span{
+  font-weight:bold;
+}
+
+td.amount{
+  text-align:right;
+}
+

@@ -13,7 +13,7 @@
             <div class="w1">商品类别：</div>
             <div class="w2">
               <select name="good[good_type]" id="good_type" class="select">
-                <%= generate_good_type_options((@good.nil?) ? "0" : @good.good_type)  %>
+                <%= generate_good_type_options_without_all((@good.nil?) ? "0" : @good.good_type)  %>
               </select>
             </div>
           </li>
