@@ -118,6 +118,8 @@ Cardsys::Application.routes.draw do |map|
       get :common_resource_detail_index
       get :update_detail
       get :delete_detail
+      get :power_index
+      put :power_update
     end
     member do
       get :edit_detail      

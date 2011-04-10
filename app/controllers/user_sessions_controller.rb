@@ -13,7 +13,15 @@ class UserSessionsController < ApplicationController
   def create
     @user_session = UserSession.new(params[:user_session])
     if @user_session.save
-      redirect_back_or_default account_url
+      @catena = Catena.find(params[:catena_id])
+      unless @user_session.user.catenas.include? @catena
+        @user_session.destroy
+        render :action => "new" and return
+      else
+        session[:catena_id] = @catena.id
+        Catena.current = @catena
+      end
+      redirect_back_or_default root_path 
     else
       render :action => :new
     end

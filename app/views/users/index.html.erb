@@ -12,16 +12,20 @@
   <div class="table">
     <ul class="bttitle black fb " >
       <li class='w10'>ID</li>
-      <li class='w15'>昵称</li>
-      <li class='w15'>部门</li>
-      <li class='w30'>操作</li>
+      <li class='w10'>昵称</li>
+      <li class='w10'>部门</li>
+      <li class='w10'>所属分店</li>
+      <li class='w10'>可登陆分店</li>
+      <li class='w35'>操作</li>
     </ul>
     <% for user in @users %>
       <ul class="member_items table_items">
         <li class='w10'><%= user.login %></li>
-        <li class='w15'><%= user.user_name %></li>
-        <li class='w15'><%=user.departments.collect(&:name).join(",") if user.departments%></li>
-        <li class='w30'>
+        <li class='w10'><%= user.user_name %></li>
+        <li class='w10'><%=user.departments.collect(&:name).join(",") if user.departments%></li>
+        <li class='w10'><%= user.catena.name if user.catena%></li>
+        <li class='w10'><%= user.catenas.collect(&:name).join(",") if user.catenas%></li>
+        <li class='w35'>
         <%= link_to '查看', user,:class => "hand" %> | <%= link_to '修改', edit_user_path(user),:class => "hand"%>
          |<%= link_to '删除', user, :confirm => '确定删除吗?', :method => :delete ,:class => "hand"%> 
          |<%= link_to '设置权限', '/users/user_power_index?id='+user.id.to_s,:class => "hand"%>

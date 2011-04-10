@@ -25,6 +25,17 @@
       <%= form_for @user_session, :url => user_session_path,:html => {:id => 'new_user_action'} do |f| -%>
         <%= error_messages_for :user_session %>
         <div class="login_bd">
+   <ul>
+            <li class="w25  tright" >分店：</li>
+            <li>
+              <label>
+                <%= select_tag :catena_id,options_for_select(Catena.all.collect{|c| [c.name,c.id]})%>
+              </label>
+            </li>
+          </ul>
+
+
+
          <ul>
             <li class="w25  tright" >用户名：</li>
             <li>

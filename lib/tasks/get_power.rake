@@ -15,10 +15,7 @@ task :get_power_back => :environment do
 end
 
 task :get_power=> :environment do
-  Power.class_eval do
-    before_create do |p| p.catena_id = 1 end
-  end
-  Power.delete_all
+ Power.delete_all
 
   a = Power.create(:parent_id => 0,:subject => "基础信息管理")
   a.children.create(:subject => "时段价格管理")

@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   before_filter :set_catena
 
   def set_catena
-    Catena.current=(current_user.catena || Catena.default_catena) if current_user
+    Catena.current=(Catena.find_by_id(session[:catena_id]) || current_user.catena || Catena.default_catena) if current_user
   end
 
   def current_catena

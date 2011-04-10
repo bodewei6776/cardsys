@@ -5,7 +5,7 @@ ActiveRecord::Base.class_eval do
     end
 
     def can_catena?
-      self.column_names.include?("catena_id")
+      self.column_names.include?("catena_id") 
     end
 
     def should_catena?
@@ -14,7 +14,7 @@ ActiveRecord::Base.class_eval do
 
     def relation_with_catena
       @relation = relation_without_catena
-      if should_catena?
+      if should_catena? && self.table_name != "users"
         @relation = @relation.where(["#{catena_id_column} is null or #{catena_id_column} = :catena_id", { :catena_id => Catena.default_id }])
       end
 

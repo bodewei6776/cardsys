@@ -1,0 +1,45 @@
+<%= content_for :head_content do%>
+  <%= stylesheet_link_tag "checktree" %>
+  <style>
+    #holder{
+      margin-left: 20px;
+    }
+    ul.tree{
+      margin-left: 40px;
+    }
+    ul.tree label{
+      margin-left: 5px;
+    }
+
+  </style>
+<%end%>
+
+<script type='text/javascript'>
+  $(document).ready(function(){
+      $("input[type=checkbox]").click(function(){
+          if($(this).is(":checked") && $(this).attr('parent_id') !== undefined){
+            $("input[type=checkbox][value=" + $(this).attr('parent_id') +"]").attr('checked','checked');
+          }
+        });
+ 
+});
+</script> 
+<div id='holder' >
+
+  <%if @notice%><p class="notice"><%= @notice %></p><%end%>
+
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" > 版本权限</div>
+    </div>
+  </div>
+
+
+
+  <%= form_for(:common_resource,:url => power_update_common_resources_url, :html => {:method =>:put}) do |f|%>
+    <%= raw all_powers_tree(Power.all)%> 
+    <%= submit_tag "修改了",:class => "submit1"%>
+  <%end%>
+
+</div>

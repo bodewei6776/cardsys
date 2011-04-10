@@ -1,6 +1,8 @@
 class CommonResourcesController < ApplicationController
   # GET /common_resources
   # GET /common_resources.xml
+  layout "main"
+
   def index
     @common_resources = CommonResource.all
     
@@ -117,5 +119,18 @@ class CommonResourcesController < ApplicationController
       CommonResourceDetail.find(params[:detail_id]).update_attribute("detail_name", params[:detail_name])
     end
     render :inline => "资源信息更新成功！".to_json
+  end
+
+
+  def power_index
+  end
+
+  def power_update
+    powers = Power.find(params[:powers])
+    if powers.present?
+      powers.collect(&:show!)
+      flash[:notice] = " 更新成功"
+    end
+    redirect_to power_index_common_resources_path
   end
 end

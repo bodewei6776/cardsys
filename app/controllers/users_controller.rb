@@ -22,13 +22,18 @@ class UsersController < ApplicationController
 
   def new
     @departments = Department.all
+    if @departments.blank?
+    redirect_to new_department_path,:notice => "部门还是空的，先创建部门" and return
+    end
     @user = User.new
-    @user.departments << @departments.first
+    @user.departments << @departments.first if @departments
   end
   
   def create    
     @user = User.new(params[:user])
     @user.departments = Department.find(params[:dep])
+    @user.catena =  current_catena
+    @user.catenas << current_catena
     if @user.save
       flash[:notice] = "用户注册成功！"
       redirect_to users_path
@@ -40,8 +45,7 @@ class UsersController < ApplicationController
   end
   
   def show
-   @user = @current_user
-   #redirect_to members_url#先跳转到这里  lixj
+   @user =User.find(params[:id]) 
   end
 
   def edit
@@ -59,6 +63,7 @@ class UsersController < ApplicationController
       redirect_to users_path
     else
       @departments = Department.all
+      @catenas= Catena.all
       render :action => :edit
     end
   end

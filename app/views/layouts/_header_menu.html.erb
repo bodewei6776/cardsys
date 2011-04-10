@@ -69,8 +69,6 @@
       });
 
     $('div.xdh li').each(function(index,node){
-      console.log($(node).find('a').text().trim());
-      console.log($.inArray($(node).find('a').text().trim(),user_menus));
       if($(node).is(":visible") && $.inArray($(node).find('a').text().trim(),user_menus) < 0){ $(node).hide();} 
       });
 

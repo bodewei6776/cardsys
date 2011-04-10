@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   acts_as_authentic
 
   has_many   :user_powers
-  has_many :powers,:through => :user_powers
+  has_many :powers,:through => :user_powers#,:conditions => "will_show = 1"
   has_and_belongs_to_many :catenas
   #  has_and_belongs_to_many :powers   #some error when user.save
 
@@ -25,6 +25,10 @@ class User < ActiveRecord::Base
 
 
   def should_catena?
+    false
+  end
+
+  def can_catena?
     false
   end
 
