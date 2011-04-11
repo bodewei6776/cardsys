@@ -14,6 +14,7 @@ class Balance < ActiveRecord::Base
   
   belongs_to :who_balance,:class_name => "User",:foreign_key => "user_id"
   belongs_to :order
+  belongs_to :member
   attr_accessor :operation
 
   scope :balanced,where(:status => Const::YES)
@@ -178,6 +179,22 @@ class Balance < ActiveRecord::Base
   
   def balance_realy_amount
     book_record_realy_amount.to_i + goods_realy_amount.to_i
+  end
+
+  ####### for reports #########
+
+  def self.balances_on_date_and_ways(date,ways)
+    self.balanced.where(["date(created_at) = ? and balance_way in (?)", date,ways]).includes(:order)
+  end
+
+  def coach_amount
+    self.order.coach_items.present? ?  self.order.coach_items.inject(0){|sum,c| sum + c.amount} : "-"
+  end
+
+  def good_amount_by_type(type)
+   product_items =  self.order.product_items(:include =>:good)
+   product_items = (product_items.present? ? product_items.select{|g| g.good.good_type = type} : [])
+   product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : "-"
   end
   
 end

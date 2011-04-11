@@ -1,6 +1,9 @@
 table{
   border-collapse: collapse;
   padding: 0px;
+  width: 275px;
+  font: 10px;
+
 }
 
 table td{

@@ -451,3 +451,24 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 
   background-color: #dfff92;
 }
+
+
+table.report_table{
+  border: 1px solid black;
+  border-collapse: collapse;
+  
+}
+
+table.report_table tr.head{
+  font-size: 14px;
+  font-weight: bold;
+}
+
+table.report_table td{
+  border: 1px solid black;
+  padding: 3px;
+}
+
+table.report_table td input{
+  border: 0px;
+}

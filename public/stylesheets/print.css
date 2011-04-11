@@ -1,7 +1,10 @@
 table{
   border-collapse: collapse;
   padding: 0px;
+  width: 250px;
+  font: 12px;
 }
+
 
 table td{
   border: 1px solid black;

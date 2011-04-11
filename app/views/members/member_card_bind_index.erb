@@ -21,7 +21,7 @@
               <div class="w2">
                 <input type="text" name="member_name" value="<%=params[:member_name] %>" autocomplete="/members/autocomplete_name" />
                 <%unless @member.blank?%>
-                  <%= link_to '绑定卡类模板', {:action => "member_card_bind_list", :member_id => @member.nil? ? 0 : @member.id}, :class => "member_card_bind_index" %>
+                  <%= link_to '绑定卡类模板', {:action => "member_card_bind_list", :member_id => @member.nil? ? 0 : @member.id}, :class => "member_card_bind_index",:style=>'color:red;' %>
                 <%end%>
               </div>
               <div class="w1">卡名称：</div>
@@ -143,7 +143,7 @@
     var re = /^[1-9]\d*$/;
     return re.test(obj);
   }
-  $(".member_card_bind_index").colorbox({width:"50%", height:"80%", iframe:false});
+  $(".member_card_bind_index").colorbox({width:"50%", height:"90%", iframe:false});
   $(".granter_new").colorbox({width:"90%", height:"90%", iframe:false});
 
 </script>

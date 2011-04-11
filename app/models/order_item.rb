@@ -8,11 +8,14 @@ class OrderItem < ActiveRecord::Base
   scope :book_record,lambda {|book_record_id| where(:item_type => Item_Type_Book_Record,:item_id => book_record_id) }
   scope :coaches,where(:item_type => Item_Type_Coache)
   scope :book_records,where(:item_type => Item_Type_Book_Record)
+  scope :good_records,where(:item_type => Item_Type_Product)
   scope :except_book_records,where("item_type <> #{Item_Type_Book_Record}")
   
   belongs_to    :order
   before_create :set_initialize_attributes
   before_save :update_good_inventory,:only => [:update] 
+
+  belongs_to :good,:foreign_key => "item_id"#,:conditions =>{:item_type => Item_Type_Product}
 
 
 

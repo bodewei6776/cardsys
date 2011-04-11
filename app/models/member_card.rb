@@ -8,17 +8,21 @@ class MemberCard < ActiveRecord::Base
   has_many :member_card_granters
   has_many :granters,:class_name => "Member",:through => :member_card_granters
 
+  #validates :left_fee ,:presence => true
+  #validates :left_times,:presence => true
+
   CARD_STATUS_0 = 0 #正常
   CARD_STATUS_1 = 1 #已注销
   
   Free_Count_Limit = 2
   Free_Amount_limit = 500
 
+
   def enable?
     self.status == CARD_STATUS_0
   end
 
-  after_save :left_times_and_left_money_can_not_be_blank
+  before_create :left_times_and_left_money_can_not_be_blank
 
   def left_times_and_left_money_can_not_be_blank
     self.left_times = 0 if self.left_times.nil?
@@ -27,7 +31,6 @@ class MemberCard < ActiveRecord::Base
 
   validates :card_serial_num,:uniqueness => {:message => "卡号已经存在，请更换卡号"}
 
-  #  #default_scope where({:catena_id => current_catena.id})
 
   def calculate_amount_in_time_span(date,start_hour,end_hour)
     if card.is_counter_card?
