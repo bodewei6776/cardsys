@@ -47,10 +47,21 @@
       resizable: true
     });
 
-    $('.content li').mouseover(function(){ 
-      var index = $(this).parent('ul').find('li').index($(this));
+ //   $('.content li').mouseover(function(){ 
+ //     var index = $(this).parent('ul').find('li').index($(this));
+ //     $('.content li').removeClass('book_records_mousehover');
+ //     $('.content ul').map(function(){ $(this).find('li:eq(' + index +')').addClass('book_records_mousehover')})
+ //       }) 
+ //     });
+
+    $('.content li').mousemove(function(even){
+      var mouse_y = even.pageY;
       $('.content li').removeClass('book_records_mousehover');
-      $('.content ul').map(function(){ $(this).find('li:eq(' + index +')').addClass('book_records_mousehover')})
-        }) 
+      $('.content li').each(function(i,node){
+        var node_top = $(node).offset().top;
+        var node_bottom = $(node).offset().top - 30;
+        if(node_top > mouse_y && mouse_y > node_bottom) { $(node).addClass('book_records_mousehover')}
+        }); 
       });
-    </script>
+});
+</script>
