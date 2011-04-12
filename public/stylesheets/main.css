@@ -453,15 +453,22 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 }
 
 
+
+
 table.report_table{
   border: 1px solid black;
   border-collapse: collapse;
+  width: 98%;
   
 }
 
 table.report_table tr.head{
   font-size: 14px;
   font-weight: bold;
+}
+
+table.report_table tr.sep{
+  height: 15px;
 }
 
 table.report_table td{
@@ -471,4 +478,16 @@ table.report_table td{
 
 table.report_table td input{
   border: 0px;
+}
+
+table.report_table td.mon{
+  text-align:right;
+}
+
+table.report_table tr.report_title td{
+  text-align:center;
+}
+
+.tr_hover{
+ background-color: #9be284; 
 }

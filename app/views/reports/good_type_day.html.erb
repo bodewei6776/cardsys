@@ -1,9 +1,11 @@
 <%= render :partial => "highlight_hover"%>
 
 <div class='w96'>
-  <%= raw display_income_report(@date,@pay_ways) %>
+  <%= raw display_good_type_day_report(@date,@good_type) %>
 </div>
 
+<div class="h10"></div>
+<%= link_to "打印",{:controller => "reports",:action => "print_good_type_day",:date => @date,:id=> @good_type},:class=> "submit1 button" ,:style => "padding:3px 7px;"%>
 <div class="h10"></div>
 
 <script type='text/javascript'>

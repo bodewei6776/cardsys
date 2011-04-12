@@ -1,11 +1,10 @@
 Cardsys::Application.routes.draw do |map|
 
   get "reports/coach"
-
   get "reports/income"
-
+  get "reports/good_type_day"
+  get "reports/print_good_type_day"
   get "reports/member_cosume_detail"
-
   get "reports/court_usage"
 
   resources :member_card_granters,:only => :destroy do
