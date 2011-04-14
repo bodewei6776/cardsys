@@ -387,6 +387,11 @@ class MembersController < ApplicationController
     render :inline => @ids.to_json
   end
 
+  def member_cards_list
+    @card_list = Member.find(params[:id]).member_cards
+    render :json => @card_list
+  end
+
   #没有用到了，后面要用来修改会员卡状态
   def member_card_freeze
     member = Member.find(params[:member_id])

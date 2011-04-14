@@ -76,6 +76,13 @@ class BalancesController < ApplicationController
     render :layout => false
   end
 
+  def new_good_buy
+    @order = Order.new
+  end
+
+  def create_good_buy
+  end
+
 
 
   protected

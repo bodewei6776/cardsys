@@ -42,6 +42,8 @@ Cardsys::Application.routes.draw do |map|
     end
     collection do
       get :balanced
+      get :new_good_buy
+      post :create_good_buy
     end
   end
 
@@ -99,6 +101,10 @@ Cardsys::Application.routes.draw do |map|
       get :getMemberCardNo
       get :advanced_search
     end
+
+    member do
+      get :member_cards_list
+    end
   end
 
   resources :cards do
@@ -153,6 +159,7 @@ Cardsys::Application.routes.draw do |map|
       get :store_manage_update
       get :change_status
       get :autocomplete_name
+      get :autocomplete_good
       get :goods
       get :add_to_cart
     end

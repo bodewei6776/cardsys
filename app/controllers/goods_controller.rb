@@ -8,6 +8,13 @@ class GoodsController < ApplicationController
     render :inline => @names.to_json
   end
 
+
+def autocomplete_good
+    @goods = Good.where(["pinyin_abbr like ? or name like ?", "%#{params[:term]}%", "%#{params[:term]}%"]).where(:status => CommonResource::GOOD_ON).limit(10)
+    render :inline => @goods.to_json
+  end
+
+
   # GET /goods
   # GET /goods.xml
   def index

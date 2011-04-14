@@ -67,7 +67,6 @@
 
 
   function submit_search(){
-    console.log($("#search-goods-form").serialize());
     $.ajax({url:"http://0.0.0.0:3000/goods.json",
         type: "get",
         data:$("#search-goods-form").serialize(),

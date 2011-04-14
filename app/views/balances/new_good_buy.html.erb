@@ -1,0 +1,143 @@
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >购买商品</div>
+    </div>
+    <div class=" r_bt_r" >
+    </div>
+  </div>
+  <div class='fformbox_nr'>
+    <ul>
+      <li>
+      <div class='w1'>
+        商品：
+      </div>
+      <div class='w2'>
+        <input type="text"class="inputtext" good_autocomplete="/goods/autocomplete_good" id="name" name="name" value="<%= params[:name] %>"/>
+      </div>
+
+      <div class='w1'>
+        数量：
+      </div>
+      <div class='w2'>
+        <input type="text"class="inputtext" id="quantity" name="quantity" value="<%= params[:quantity] || 1%>"/>
+        <%= link_to "添加商品","#",:class => "submit2 hand",:style => "padding: 3px 7px;"%>
+      </div>
+      <li>
+    </ul>
+
+    <ul>
+      <li> 
+      <div class='w1'>
+        单价：
+      </div>
+      <div class='w2'>
+        10
+      </div>
+      <div class='w1'>
+        小计：
+      </div>
+      <div class='w2'>
+        10
+      </div>
+      </li>
+    </ul>
+
+    <ul>
+      <li> 
+      <div class='w1'> 是否是会员：</div>
+      <div class='w1'>
+        <%= radio_button_tag "order","is_member","1",:onclick => "show_div('member')"%>是
+        <%= radio_button_tag "order","is_member","0",:onclick => "show_div('sanke')"%>否
+      </div>
+      </li>
+    </ul>
+
+    <div id='member'>
+
+      <ul> 
+        <li>
+        <div class='w1'>
+          会员姓名：
+        </div>
+        <div class='w2'>
+              <input type="text" name="member_name" user_autocomplete='/book_records/complete_for_members' />
+        </div>
+
+        <div class='w1'>
+          会员卡号：
+        </div>
+        <div class='w2'>
+          <p id='cards'><select name='order[member_card_id]'></select></p>
+        </div>
+        </li>
+      </ul>
+
+      <ul>
+        <li>
+        <div class='w1'>支付方式:</div>
+        <div class='w2'>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Card,:class => 'balance_way' %>用卡</label>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Counter,:class => 'balance_way'%>计次</label>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Cash,:class => 'balance_way' %>现金</label>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Bank,:class => 'balance_way' %>银行</label>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Post,:class => 'balance_way' %>post机</label>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Check ,:class => 'balance_way'%>支票</label>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Guazhang,:class => 'balance_way' %>挂账</label>
+
+        </div>
+        </li>
+
+      </ul>
+    </div>
+
+    <div id='sanke'>
+
+      <ul>
+        <li>
+        <div class='w1'>
+          散客姓名：
+        </div>
+        <div class='w2'>
+          <input type="text"class="inputtext"  value='散客姓名'/>
+        </div>
+        </li>
+      </ul>
+      <ul>
+        <li>
+        <div class='w1'>支付方式:</div>
+        <div class='w2'>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Cash,:class => 'balance_way' %>现金</label>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Bank,:class => 'balance_way' %>银行</label>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Post,:class => 'balance_way' %>post机</label>
+          <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Check ,:class => 'balance_way'%>支票</label>
+
+        </div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+  <div class="h10"></div>
+  <%= link_to "付款","#",:class => "submit2 hand",:style => "padding: 3px 7px;"%>
+  <div class="h10"></div>
+
+  <% unless @order.product_items.blank? %>
+    <%= render :partial => "/orders/order_items_list",:locals =>
+    {:good_items => @order.product_items||[],:order => @order} %>
+  <% end %>
+</div>
+
+<script type='text/javascript'>
+  function show_div(id){
+    $('#sanke').hide();$('#member').hide();
+    $('#' + id +'').show(); 
+  } 
+
+$(document).ready(function(){
+    userAutocomplete();
+    goodAutocomplete();
+    });
+</script>
+

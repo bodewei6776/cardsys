@@ -37,3 +37,43 @@ function orderAutocomplete(){
 		});
 	});
 }
+
+
+function userAutocomplete(){
+	$('input[user_autocomplete]').each(function(i){
+		$(this).autocomplete({
+	      source:  $(this).attr('user_autocomplete'),
+	      select:  function(ui,li){
+	        var item = li.item;
+                var reqest_url  = "/members/" + item.id + "/member_cards_list";
+	        $.get(reqest_url,function(returned_data)
+	        {
+                console.log(returned_data);
+                
+                options = '';
+                $(returned_data).each(function(i,node){ options +=("<option value=' " + node.member_card.id +
+                    "'>" + node.member_card.card_serial_num + "</option>") 
+                    });
+
+                $('#cards select').html(options);
+	        });
+	      }			
+		});
+	});
+}
+
+
+
+function goodAutocomplete(){
+	$('input[good_autocomplete]').each(function(i){
+		$(this).autocomplete({
+	      source:  $(this).attr('good_autocomplete'),
+	      select:  function(ui,li){
+	        var item = li.item;
+                $('#price').val(item.price);
+                $('#quantity').val(1);
+                $('#sub_total').val(item.price);
+	        }
+	      }		);	
+	});
+}
