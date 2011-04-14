@@ -73,6 +73,67 @@ module ReportsHelper
 
   end
 
+
+  def display_month_income_report(date,pay_ways)
+    table_width = 5 + CommonResource.good_types.count
+
+    table = ''
+    table << "<table class='report_table' border=1>"
+    table <<("<caption><h1>" + current_catena.name  +  "球馆#{date.strftime("%y-%m")}收入月报表"+ "</h1></caption>")
+    # first tr%
+    table <<("<tr class='head'>")
+    table <<("<td colspan=3>日期 #{ select_year(date,{:start_year => 2010,:end_year => 2016},:onchange => "recalculate();")} 年 " + 
+             "#{select_month(date,{},:onchange => "recalculate();")}</td>")
+    table << "<td>支付方式：　</td>"
+    table << "<td colspan=#{table_width - 5}>#{pay_way_checkboxes(pay_ways)}</td>"
+    table << "<td><p class='money'>合计：　#{Balance.total_balance_on_date_any_ways(date,pay_ways)}<p></td>"
+    table << "</tr>"
+
+    # second tr
+    table << "<tr class='sep'><td colspan=#{table_width}></td></tr>"
+
+    # title
+    table << "<tr class='report_title'>"
+    table << "<td>编号</td><td>日期</td><td>场地费</td><td>教练费</td>"
+    CommonResource.good_types.each do |gt|
+      table << "<td>#{gt.detail_name}</td>"
+    end
+    table << "<td>合计</td>"
+    table << "</tr>"
+
+    # data tr
+    (1..(days_in_month(date.year,date.month))).each_with_index do |day,index|
+      current_date = date + index
+      table << "<tr class='report_item'>"
+      table <<"<td>#{index+1}</td>"
+      table << "<td> #{ current_date}</td>"
+      table << "<td class='mon'>#{Balance.total_book_records_balance_on_date_any_ways(current_date,pay_ways)}</td>"
+      table << "<td class='mon'>#{Balance.total_coach_balance_on_date_any_ways(current_date,pay_ways)}</td>"
+      CommonResource.good_types.each do |gt|
+      table << "<td class='mon'>#{Balance.total_goods_balance_on_date_any_ways(current_date,pay_ways,gt)}</td>"
+      end
+      table << "<td class='mon'>#{Balance.total_balance_on_date_any_ways(current_date,pay_ways)}</td>"
+      table << "</tr>"
+    end
+
+    # last tr
+
+    table << "<tr class='total head'>"
+    table << "<td colspan=2>合计: #{Balance.total_balance_on_date_any_ways(date,pay_ways)}</td>"
+    table << "<td class='mon'> #{Balance.total_book_records_balance_on_date_any_ways(date,pay_ways)}</td>"
+    table << "<td class='mon'> #{Balance.total_coach_balance_on_date_any_ways(date,pay_ways)}</td>"
+  CommonResource.good_types.each do |gt|
+    table << "<td class='mon'> #{Balance.total_goods_balance_on_date_any_ways(date,pay_ways,gt)}</td>"
+      end
+    table << "<td>合计: #{Balance.total_balance_on_date_any_ways(date,pay_ways)}</td>"
+    table << "</tr>"
+    table << "</table>"
+    table
+
+  end
+
+
+
   def display_good_type_day_report(date,good_type)
   table_width = 5
     table = ''

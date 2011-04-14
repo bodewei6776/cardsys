@@ -1,11 +1,13 @@
 class Power < ActiveRecord::Base
-  has_many   :user_powers
-  has_and_belongs_to_many :users
-  has_many   :department_powers
+  has_many   :user_powers,:dependent => :destroy
+  has_many :users,:through => :user_powers
+  has_many   :department_powers,:dependent => :destroy
 
   #default_scope where(:will_show  => true)
   #scope :all,where(:will_show => true)
   #:scope :all_include_hide,all
+
+  after_create do |p| p.update_attribute(:will_show , true) end
 
   def self.all
     where(:will_show => true)

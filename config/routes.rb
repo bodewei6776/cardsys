@@ -2,6 +2,7 @@ Cardsys::Application.routes.draw do |map|
 
   get "reports/coach"
   get "reports/income"
+  get "reports/income_by_month"
   get "reports/good_type_day"
   get "reports/print_good_type_day"
   get "reports/member_cosume_detail"
@@ -42,7 +43,9 @@ Cardsys::Application.routes.draw do |map|
     end
     collection do
       get :balanced
+      post :add_good
       get :new_good_buy
+      get :clear_goods
       post :create_good_buy
     end
   end

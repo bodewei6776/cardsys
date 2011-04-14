@@ -46,10 +46,10 @@ function userAutocomplete(){
 	      select:  function(ui,li){
 	        var item = li.item;
                 var reqest_url  = "/members/" + item.id + "/member_cards_list";
+                $('#member_id').val(item.id);
+                
 	        $.get(reqest_url,function(returned_data)
 	        {
-                console.log(returned_data);
-                
                 options = '';
                 $(returned_data).each(function(i,node){ options +=("<option value=' " + node.member_card.id +
                     "'>" + node.member_card.card_serial_num + "</option>") 
@@ -65,15 +65,19 @@ function userAutocomplete(){
 
 
 function goodAutocomplete(){
-	$('input[good_autocomplete]').each(function(i){
-		$(this).autocomplete({
-	      source:  $(this).attr('good_autocomplete'),
-	      select:  function(ui,li){
-	        var item = li.item;
-                $('#price').val(item.price);
-                $('#quantity').val(1);
-                $('#sub_total').val(item.price);
-	        }
-	      }		);	
-	});
+  $('input[good_autocomplete]').each(function(i){
+    $(this).autocomplete({
+      source:  $(this).attr('good_autocomplete'),
+      select:  function(ui,li){
+               var item = li.item;
+               var sub_total = item.price;
+               $('#price').text(item.price);
+               $('#good_id').val(item.id);
+               if($('#quantity').val() != "1"){
+                sub_total = Number(item.price) * parseInt($('#quantity').val());
+               }
+               $('#sub_total').text(sub_total);
+             }
+    }		);	
+  });
 }

@@ -10,20 +10,24 @@
   <div class='fformbox_nr'>
     <ul>
       <li>
-      <div class='w1'>
-        商品：
-      </div>
-      <div class='w2'>
-        <input type="text"class="inputtext" good_autocomplete="/goods/autocomplete_good" id="name" name="name" value="<%= params[:name] %>"/>
-      </div>
+      <%= form_tag add_good_balances_path do |f|%>
+        <%= hidden_field_tag "id",@order.id%>
+        <div class='w1'>
+          商品：
+        </div>
+        <div class='w2'>
+          <input type="text"class="inputtext" good_autocomplete="/goods/autocomplete_good" id="name" name="name" value="<%= params[:name] %>"/>
+          <input type="hidden"class="inputtext"  id="good_id" name="good_id" value="" />
+        </div>
 
-      <div class='w1'>
-        数量：
-      </div>
-      <div class='w2'>
-        <input type="text"class="inputtext" id="quantity" name="quantity" value="<%= params[:quantity] || 1%>"/>
-        <%= link_to "添加商品","#",:class => "submit2 hand",:style => "padding: 3px 7px;"%>
-      </div>
+        <div class='w1'>
+          数量：
+        </div>
+        <div class='w2'>
+          <input type="text"class="inputtext" id="quantity" name="quantity" value="<%= params[:quantity] || 1%>"/>
+          <%= submit_tag "添加商品",:class => "submit2 hand",:style => "padding: 3px 7px;"%>
+        </div>
+      <%end%>
       <li>
     </ul>
 
@@ -33,13 +37,13 @@
         单价：
       </div>
       <div class='w2'>
-        10
+        <p id='price'> 0</p>
       </div>
       <div class='w1'>
         小计：
       </div>
       <div class='w2'>
-        10
+        <p id='sub_total'> 0</p>
       </div>
       </li>
     </ul>
@@ -48,8 +52,8 @@
       <li> 
       <div class='w1'> 是否是会员：</div>
       <div class='w1'>
-        <%= radio_button_tag "order","is_member","1",:onclick => "show_div('member')"%>是
-        <%= radio_button_tag "order","is_member","0",:onclick => "show_div('sanke')"%>否
+        <%= radio_button_tag "a","",false,:onclick => "show_div($(this),'member')",:id => "radio_yes"%>是
+        <%= radio_button_tag "b","",false,:onclick => "show_div($(this),'sanke')",:id => "radio_no"%>否
       </div>
       </li>
     </ul>
@@ -62,7 +66,8 @@
           会员姓名：
         </div>
         <div class='w2'>
-              <input type="text" name="member_name" user_autocomplete='/book_records/complete_for_members' />
+          <input type="text" name="member_name" user_autocomplete='/book_records/complete_for_members' />
+          <input type="hidden" name="member_id" id='member_id'/>
         </div>
 
         <div class='w1'>
@@ -100,7 +105,7 @@
           散客姓名：
         </div>
         <div class='w2'>
-          <input type="text"class="inputtext"  value='散客姓名'/>
+          <input type="text"class="inputtext"  value='散客'/>
         </div>
         </li>
       </ul>
@@ -121,23 +126,74 @@
   </div>
   <div class="h10"></div>
   <%= link_to "付款","#",:class => "submit2 hand",:style => "padding: 3px 7px;"%>
+  <%= link_to "清空购物车",clear_goods_balances_path,:class => "submit2 hand",:style => "padding: 3px 7px;"%>
   <div class="h10"></div>
 
-  <% unless @order.product_items.blank? %>
-    <%= render :partial => "/orders/order_items_list",:locals =>
-    {:good_items => @order.product_items||[],:order => @order} %>
+  <% unless cart.blank? %>
+
+    <div class="infobox">
+      <div class="infobox_bt"><p>商品消费列表</p></div>
+      <div class="table">
+        <ul class="bttitle black fb ">
+          <li class="w5">序号</li>
+          <li class="w10">商品名称</li>
+          <li class="w10">商品价格</li>
+          <li class="w15">数量</li>
+          <li class="w15">总额</li>
+          <li class="w15">操作</li>
+        </ul>
+
+        <% cart.line_items.each_with_index do |li,index|%>
+          <ul class="table_items">
+            <li class="w5"><%= index + 1 %></li>
+            <li class="w10"><%= li.product.name %></li>
+            <li class="w10"><%= li.product.price %></li>
+            <li class="w15"><%= li.quantity %></li>
+            <li class="w15"><%= li.quantity * li.product.price %></li>
+            <li class="w15">
+            <%= link_to "删除", "",:class => 'destory_order_item' %>
+            </li>
+          </ul>
+        <% end %>
+      </div>
+    </div>
+
+    <div class='h10'></div>
+
+
   <% end %>
 </div>
 
 <script type='text/javascript'>
-  function show_div(id){
+  function show_div(dom, id){
     $('#sanke').hide();$('#member').hide();
+    $('#radio_yes').attr('checked',false);
+    $('#radio_no').attr('checked',false);
+    dom.attr('checked',true);
     $('#' + id +'').show(); 
   } 
+<% if @order.is_member? %>
+  show_div($('#radio_yes'),'member');
+<% else%>
+  show_div($('#radio_no'),'sanke');
+<% end %>
+
 
 $(document).ready(function(){
     userAutocomplete();
     goodAutocomplete();
+    $('#quantity').blur(function(){
+      var quantity = $(this).val();
+      if(isNaN(quantity)){
+      alert('请输入正确数量');
+      $(this).focus();
+      return false;
+      }
+      else{
+      $('#sub_total').text(parseInt(quantity) *$('#price').text());
+      }
+
+      });
     });
-</script>
+  </script>
 

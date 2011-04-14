@@ -15,8 +15,8 @@ task :get_power_back => :environment do
 end
 
 task :get_power=> :environment do
- Power.delete_all
-
+  
+ Power.all.collect(&:destroy)
   a = Power.create(:parent_id => 0,:subject => "基础信息管理")
   a.children.create(:subject => "时段价格管理")
   a.children.create(:subject => "卡模版管理")
@@ -40,6 +40,10 @@ task :get_power=> :environment do
   a.children.create(:subject => "新场地周期性预定")
   a.children.create(:subject => "场地预定情况查询")
   a.children.create(:subject => "教练日程查询")
+  a.children.create(:subject => "定场地",:description => "dingchangdi")
+  a.children.create(:subject => "修改场地",:description => "xiugaichangdi")
+  a.children.create(:subject => "结算场地",:description => "jiesuanchangdi")
+  a.children.create(:subject => "删除场地",:description => "shanchuchangdi")
 
   a=Power.create(:parent_id => 0,:subject => "商品库存管理")
   a.children.create(:subject => "商品基本信息管理")
@@ -48,7 +52,8 @@ task :get_power=> :environment do
 
   a=Power.create(:parent_id => 0,:subject => "分析报表")
   a.children.create(:subject => "教练分账报表")
-  a.children.create(:subject => "时间段内收入报表")
+  a.children.create(:subject => "日收入报表")
+  a.children.create(:subject => "月收入报表")
   a.children.create(:subject => "会员消费明细")
   a.children.create(:subject => "场地使用率")
 
@@ -67,5 +72,9 @@ task :get_power=> :environment do
   a.children.create(:subject => "操作日志")
   a.children.create(:subject => "数据备份")
   a.children.create(:subject => "关于软件")
+
+  admin = User.find_by_login('admin')
+  admin.powers << Power.all
+  admin.save
 
 end

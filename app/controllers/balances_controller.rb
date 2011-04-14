@@ -78,6 +78,18 @@ class BalancesController < ApplicationController
 
   def new_good_buy
     @order = Order.new
+    @order.member_type = Const::YES
+  end
+
+  def clear_goods
+    session[:cart] = Cart.new
+    redirect_to new_good_buy_balances_path
+  end
+
+  def add_good
+    session[:cart]  ||= Cart.new
+    session[:cart].add(params[:good_id],params[:quantity].to_i)
+    redirect_to new_good_buy_balances_path
   end
 
   def create_good_buy

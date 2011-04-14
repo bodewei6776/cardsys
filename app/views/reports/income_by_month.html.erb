@@ -1,0 +1,15 @@
+<%= render :partial => "highlight_hover"%>
+
+<div class='w96'>
+  <%= raw display_month_income_report(@date,@pay_ways) %>
+</div>
+
+<div class="h10"></div>
+
+<script type='text/javascript'>
+ function recalculate(){
+   params = "date=" +$('#date_year').val() + "-" + $('#date_month').val(); 
+   $('.pay_ways:checked').each(function(i,node){ params += ("&" + "pay_ways[]=" + $(this).val())});
+   window.location = (window.location.pathname + "?" + params);
+ }
+</script>
