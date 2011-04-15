@@ -88,6 +88,10 @@ class BalancesController < ApplicationController
 
   def add_good
     session[:cart]  ||= Cart.new
+    if params[:good_id].blank? or params[:quantity].blank?
+      flash[:notice] = "请选择商品，并说明数量"
+      redirect_to new_good_buy_balances_path and return
+    end
     session[:cart].add(params[:good_id],params[:quantity].to_i)
     redirect_to new_good_buy_balances_path
   end
