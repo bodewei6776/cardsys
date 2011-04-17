@@ -349,6 +349,11 @@ class MembersController < ApplicationController
       result = false
     end
 
+    unless user.can?()
+      notice = {:result => 0,:notice => "用户无权限"}
+      result = false
+    end
+
     unless result
       render :json => notice
       return
@@ -371,6 +376,7 @@ class MembersController < ApplicationController
                          :recharge_times=> charge_times,
                          :recharge_person => user.id
                         ).save
+                        Log.log(user,"为卡#{member_card.card_serial_num}充值#{charge_fee}元，#{charge_times}次","recharge")
                         notice = params[:type]=="1" ? "会员卡充值成功！" : "会员卡退款成功！"
     end
     if !params[:expire_date].blank?
@@ -389,7 +395,7 @@ class MembersController < ApplicationController
 
   def member_cards_list
     @card_list = Member.find(params[:id]).member_cards
-    render :json => @card_list
+    render :json => @card_list.to_json(:methods => :remain_amount_notice)
   end
 
   #没有用到了，后面要用来修改会员卡状态

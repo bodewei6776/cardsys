@@ -192,14 +192,19 @@ class Balance < ActiveRecord::Base
     data.present? ? data.inject(0){|sum,b| sum += (b.book_record_realy_amount + b.goods_realy_amount)} : 0
   end
 
+  def self.total_count_on_date_any_ways(date,ways)
+    data = self.balanced.where(["date(created_at) = ? and balance_way in (?)", date,ways])
+    data.present? ? data.inject(0){|sum,b| sum += b.count_amount } : 0
+  end
+
   def coach_amount
     self.order.coach_items.present? ?  self.order.coach_items.inject(0){|sum,c| sum + c.amount} : 0
   end
 
   def good_amount_by_type(type)
-   product_items =  self.order.product_items(:include =>:good)
-   product_items = (product_items.present? ? product_items.select{|g| g.good.good_type == type.id} : [])
-   product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : 0
+    product_items =  self.order.product_items(:include =>:good)
+    product_items = (product_items.present? ? product_items.select{|g| g.good.good_type == type.id} : [])
+    product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : 0
   end
 
   def self.total_book_records_balance_on_date_any_ways(date,ways)
@@ -235,7 +240,7 @@ class Balance < ActiveRecord::Base
       end
     end
     hash
- end
+  end
 
   def self.good_total_per_date_by_type(date,type)
     stat = self.good_stat_per_date_by_type(date,type)

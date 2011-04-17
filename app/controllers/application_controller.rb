@@ -12,6 +12,15 @@ class ApplicationController < ActionController::Base
 
   layout  "index"
 
+  def operation_desc(o)
+    case o
+    when "agent"
+      "申请代卖"
+    when "book"
+      "变更预定"
+    end
+  end
+
   before_filter :configure_charsets ,:set_date
   before_filter :require_user#,:require_very_user #应该过滤掉登陆用户
 

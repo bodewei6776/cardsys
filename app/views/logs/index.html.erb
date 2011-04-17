@@ -36,7 +36,7 @@
       <ul class="member_items table_items">
         <li class="w5"><%= index + 1 %></li>
         <li class="w10"><%= log.user_name %></li>
-        <li class="w15"> <%= DateUtil::timeshort(log.created_at)%></li>
+        <li class="w15"> <%= DateUtil::timelong(log.created_at)%></li>
         <li class="w20"> <%= log.desc%></li>
       </ul>
     <%end -%>

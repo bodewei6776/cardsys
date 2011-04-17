@@ -3,7 +3,10 @@ class User < ActiveRecord::Base
 
   has_many :department_users
   has_many :departments,:through => :department_users
-  acts_as_authentic
+  acts_as_authentic do |c|
+    c.validates_length_of_password_confirmation_field_options = {:minimum => 1 }
+    c.validates_length_of_password_field_options = { :minimum => 1 }
+  end
 
   has_many   :user_powers
   has_many :powers,:through => :user_powers#,:conditions => "will_show = 1"
@@ -33,7 +36,7 @@ class User < ActiveRecord::Base
 
 
   after_create :set_powers
-  
+
   def set_powers
     self.powers = self.departments ? self.departments.collect(&:powers).flatten : []
     self.save
@@ -72,6 +75,10 @@ class User < ActiveRecord::Base
 
   def can_book_when_time_due?
     self.menus.include?("过期预定")
+  end
+
+  def can?(action)
+    self.menus.include?(action)
   end
 
 end

@@ -325,7 +325,7 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 .left_nav{ width:178px; margin:0 auto; background:url(/images/new/xdh_di.jpg) #ccc no-repeat bottom center;}
 .xdh{ width:176px; margin:0 auto}
 .xdh ul{ width:176px;}
-.xdh li a{border-bottom:1px solid #ccc; display:block; padding-left:30px; display:block; height:22px; padding-top:2px; background: url(/images/new/xjt_a.gif) no-repeat 10px 8px #e6e6e6; font-size:12px; }
+.xdh li a{border-bottom:1px solid #ccc; display:block; padding-left:30px; display:block; height:25px; padding-top:2px; background: url(/images/new/xjt_a.gif) no-repeat 10px 8px #e6e6e6; font-size:12px; }
 .xdh li a:hover{ display:block; height:22px; padding-top:2px; background: url(/images/new/xjt_b.gif) no-repeat 10px 8px #fff799; font-weight:bold; color:#FF0000;}
 /*<定义左侧样式---结束>*/
 
@@ -438,14 +438,9 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 }
 
 
-  .notice{
-    border: 4px solid red;
-    width: 80%;
-    padding: 14px;
-    margin-left: 25px;
-    margin-bottom: 10px;
-    background-color: yellow;
-  }
+
+
+
 
   .book_records_mousehover{
 

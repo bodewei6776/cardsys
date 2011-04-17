@@ -40,7 +40,6 @@ task :get_power=> :environment do
   a.children.create(:subject => "新场地周期性预定")
   a.children.create(:subject => "场地预定情况查询")
   a.children.create(:subject => "教练日程查询")
-  a.children.create(:subject => "定场地",:description => "dingchangdi")
   a.children.create(:subject => "修改场地",:description => "xiugaichangdi")
   a.children.create(:subject => "结算场地",:description => "jiesuanchangdi")
   a.children.create(:subject => "删除场地",:description => "shanchuchangdi")

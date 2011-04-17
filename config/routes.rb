@@ -1,5 +1,11 @@
 Cardsys::Application.routes.draw do |map|
 
+  get "welcome/backup"
+  delete "welcome/delete_backup"
+
+  get "welcome/about"
+  get "welcome/backup_db"
+
   get "reports/coach"
   get "reports/income"
   get "reports/income_by_month"
@@ -58,6 +64,7 @@ Cardsys::Application.routes.draw do |map|
       get   :advanced_new
       post  :advanced_create
       get   :complete_for_member_card
+      get   :print
     end
     member do
       get  :agent
@@ -176,6 +183,7 @@ Cardsys::Application.routes.draw do |map|
       get :user_power_index
       get :user_power_update
       get :change_password
+      post :change_pass
     end
   end
 
@@ -232,6 +240,8 @@ Cardsys::Application.routes.draw do |map|
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
+  match 'about' =>"welcome#about"
+  match 'backup' =>"welcome#backup"
   match 'change_catena' =>"base#change_catena"
   match ':controller(/:action(/:id(.:format)))'
   root :to => "members#index"

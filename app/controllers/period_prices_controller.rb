@@ -5,7 +5,7 @@ class PeriodPricesController < ApplicationController
   # GET /card_templates
   # GET /card_templates.xml
   def index
-    @period_prices = PeriodPrice.all
+    @period_prices = PeriodPrice.paginate(default_paginate_options)
     respond_to do |format|
       format.html
       format.xml { render :xml => @period_prices}

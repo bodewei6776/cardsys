@@ -5,12 +5,19 @@ class BookRecordsController < ApplicationController
   # GET /book_records
   # GET /book_records.xml
   def index
-  
     @courts       = Court.order('id').all
     @date = params[:date].blank? ? Date.today : Date.parse(params[:date])
     @daily_periods   = PeriodPrice.all_periods_in_time_span(@date)
     @predate      = @date.yesterday.strftime("%Y-%m-%d")
     @nextdate     = @date.tomorrow.strftime("%Y-%m-%d")    
+  end
+
+  def print
+    @courts       = Court.order('id').all
+    @date = params[:date].blank? ? Date.today : Date.parse(params[:date])
+    @daily_periods   = PeriodPrice.all_periods_in_time_span(@date)
+    render :layout => false
+
   end
 
   # GET /book_records/1
@@ -69,11 +76,18 @@ class BookRecordsController < ApplicationController
       return
     end
 
-    #TODO user has right
+
+    unless user.can?('新场地预定')
+      @order.errors.add(:base,"用户没有权限预定场地")
+      inite_related_order_objects
+      render :action => "new",:layout => 'small_main'
+      return
+    end
 
     @order.parent_id = 0
     respond_to do |format|
       if @order.save
+        Log.log(user,"预定场地#{@order.book_record.court.name}","book_record_new")
         format.html { 
           render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
                     " window.opener.location.reload(); } ")
@@ -89,8 +103,36 @@ class BookRecordsController < ApplicationController
   # PUT /book_records/1.xml
   def update
     @order = BookRecord.find(params[:id]).order
+
+  if params[:user_name].blank? or params[:password].blank?
+      @order.errors.add(:base,"预定人，密码不能为空")
+      inite_related_order_objects
+      render :action => "new",:layout => 'small_main'
+      return
+    end
+    user = User.find_by_login(params[:user_name])
+
+    if user.blank? or !user.valid_password?(params[:password])
+      @order.errors.add(:base,"用户不存在或者密码不正确")
+      inite_related_order_objects
+      render :action => "new",:layout => 'small_main'
+      return
+    end
+
+
+    unless user.can?('修改场地')
+      @order.errors.add(:base,"用户没有权限修改场地")
+      inite_related_order_objects
+      render :action => "new",:layout => 'small_main'
+      return
+    end
+
+
+
     respond_to do |format|
       if @order.update_attributes(params[:order])
+
+        Log.log(current_user,"#{operation_desc(params[:order][:operation])}#{@order.book_record.court.name}","book_record_edit")
         format.html { redirect_to("/book_records?date=#{@order.book_record.record_date.to_s(:db)}", :notice => '修改成功.') }
       else
         inite_related_order_objects
@@ -204,6 +246,7 @@ class BookRecordsController < ApplicationController
   end
 
   protected
+
 
   def inite_related_order_objects
     @non_member  = @order.non_member

@@ -18,6 +18,8 @@ class MemberCard < ActiveRecord::Base
   Free_Amount_limit = 500
 
 
+  attr_accessor :notice
+
   def enable?
     self.status == CARD_STATUS_0
   end

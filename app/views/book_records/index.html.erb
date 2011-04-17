@@ -8,8 +8,9 @@
       <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@predate%>"'><< 前一天</button>&nbsp;&nbsp;
       <button class="submit2 hand"  type='button' onclick="location.href='/book_records'">今天</button>&nbsp;&nbsp;
       <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@nextdate%>"'>后一天>></button>&nbsp;&nbsp;
-      <button class="submit2 hand"  type='button' value="true">刷新</button>&nbsp;&nbsp;
-      <button class="submit2 hand"  type='button' value="true">打印</button></div>
+      <button class="submit2 hand"  type='button' value="true" onclick="location.reload();">刷新</button>&nbsp;&nbsp;
+      <a class="submit2 hand" href='/book_records/print?date=<%= @date%>' target="_blank" style="color:black;padding: 3px;">打印</a>
+    </div>
   </div>
   <div class="content">
     <%(0...([(@courts.length%6 == 0 ? @courts.length/6  : @courts.length/6+1),1].max )).each do |row|  tcs = @courts[6*row,6]%>
@@ -44,15 +45,11 @@
       windowName: "场地预定",
       width: 850,
       height: 750,
-      resizable: true
+      resizable: true,
+      location: 0,
+      status: 0,
+      menubar: 0
     });
-
- //   $('.content li').mouseover(function(){ 
- //     var index = $(this).parent('ul').find('li').index($(this));
- //     $('.content li').removeClass('book_records_mousehover');
- //     $('.content ul').map(function(){ $(this).find('li:eq(' + index +')').addClass('book_records_mousehover')})
- //       }) 
- //     });
 
     $('.content li').mousemove(function(even){
       var mouse_y = even.pageY;

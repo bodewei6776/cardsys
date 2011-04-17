@@ -52,10 +52,11 @@ function userAutocomplete(){
 	        {
                 options = '';
                 $(returned_data).each(function(i,node){ options +=("<option value=' " + node.member_card.id +
-                    "'>" + node.member_card.card_serial_num + "</option>") 
+                    "'notice='"+ node.member_card.remain_amount_notice +"'>" + node.member_card.card_serial_num + "</option>") 
                     });
 
                 $('#cards select').html(options);
+                $('#cards select').bind('onchange',function(){ console.log('ddd');$('#notice').text($(this).find("option:selected").attr('notice')) });
 	        });
 	      }			
 		});

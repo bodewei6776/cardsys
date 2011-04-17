@@ -7,6 +7,17 @@ class Vacation < ActiveRecord::Base
   validates :start_date, :uniqueness => {:on => :create, :message => '开始日期已经存在！'}
   validates :end_date, :uniqueness => {:on => :create, :message => '结束日期已经存在！'}
 
+  validate :start_date_should_be_after_now
+  validate :end_date_should_be_after_now
+
+  def start_date_should_be_after_now
+    self.errors.add(:start_date,"开始时间过了，　别修改啦") if self.start_date < Time.now
+  end
+
+  def end_date_should_be_after_now
+    self.errors.add(:end_date,"结束时间过了，　别修改啦") if self.start_date < Time.now
+  end
+
   def is_holiday?
     status == CommonResource::IS_HOLIDAY
   end

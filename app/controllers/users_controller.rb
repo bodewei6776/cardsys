@@ -107,4 +107,27 @@ class UsersController < ApplicationController
   def change_password
   end
 
+  def change_pass
+    if params[:password].blank? or params[:new_password].blank? or params[:password_confirm].blank?
+      flash[:notice] = "不能为空呀"
+      redirect_to change_password_users_path and return
+    end
+    unless current_user.valid_password?(params[:password])
+      redirect_to change_password_users_path,:notice => "原来的密码错误" and return
+    end
+
+    unless params[:new_password] == params[:password_confirm]
+      redirect_to change_password_users_path,:notice => "两次密码输入需相同" and return
+    end
+
+    current_user.password = params[:new_password]
+    current_user.password_confirmation = params[:new_password]
+    if current_user.save
+      flash[:notice] = "密码修改成功"
+    else
+      flash[:notice] = "密码修改失败"
+    end
+      redirect_to change_password_users_path
+  end
+
 end

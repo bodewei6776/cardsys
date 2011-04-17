@@ -13,14 +13,19 @@
 
   <body>
     <table border=2 >
-      <caption><h2>博德维球馆消费单</h2></caption>
-      <tr>
+      <caption><h2><%= current_catena.name%>球馆消费单</h2></caption>
+      <tr class='goods goods_title'>
         <td colspan=4>消费时段：<%= balance_time_span_in_word(@balance)%> </td>
       </tr>
       <tr>
         <td colspan=2>会员姓名: <%= @balance.order.member.name%></td>
         <td colspan=2>会员卡号: <%= @balance.order.member_card.card_serial_num%></td>
       </tr>
+
+ <tr class=''>
+        <td colspan=4>卡到期时间：<%= @balance.order.member_card.expire_date.strftime("%Y-%m-%d")%> </td>
+      </tr>
+      
       <tr class='goods goods_title'>
         <td class='left'>商品名称</td>
         <td>单价</td>

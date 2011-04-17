@@ -5,7 +5,7 @@ class VacationsController < ApplicationController
   # GET /vacations
   # GET /vacations.xml
   def index
-    @vacations = Vacation.all
+    @vacations = Vacation.paginate(default_paginate_options)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @vacations }
