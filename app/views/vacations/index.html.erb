@@ -25,8 +25,13 @@
         <li class="w10"><%=ftime_date(vacation.end_date)%></li>
         <li class="w10"><%=vacation.status==1?"节假日":"平日"%></li>
         <li class="w10">
-          <%= link_to '修改', edit_vacation_path(vacation) %> |
+
+          <% if vacation.can_edit? %>
+          <%= link_to '修改', edit_vacation_path(vacation) %> 
+        <%end%>
+          <% if vacation.can_edit? %>
           <%= link_to '删除', vacation, :confirm => '确定删除?', :method => :delete %>
+        <%end%>
         </li>
       </ul>
     <%end%>

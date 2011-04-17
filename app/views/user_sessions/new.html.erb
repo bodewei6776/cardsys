@@ -20,11 +20,12 @@
   </head>
   <body>
     <div class="login">
-      <div class="login_bt white fmic30">博德维网球管理系统</div>
+      <div class="login_bt white fmic30"><%= Catena.first.name %><!--博德维-->网球管理系统</div>
       <div class="login_tu"></div>
       <%= form_for @user_session, :url => user_session_path,:html => {:id => 'new_user_action'} do |f| -%>
         <%= error_messages_for :user_session %>
         <div class="login_bd">
+          <!--
    <ul>
             <li class="w25  tright" >分店：</li>
             <li>
@@ -34,6 +35,7 @@
             </li>
           </ul>
 
+          -->
 
 
          <ul>
@@ -53,6 +55,7 @@
               </label>
             </li>
           </ul>
+          <!--
           <ul>
             <li class="w25  tright" ></li>
             <li >
@@ -61,10 +64,12 @@
               </label>
             </li>
           </ul>
+          -->
         </div>
         <div class="login_bb">
           <a title="登录" href="#" onclick="$('#new_user_action').submit();return false;"><img src="/images/new/login_dl.gif" alt="登录" /></a>
-          <a title="新用户注册" href="#"><img src="/images/new/login_zc.gif" alt="新用户注册" /></a>
+          <!--
+          <a title="新用户注册" href="#"><img src="/images/new/login_zc.gif" alt="新用户注册" /></a> -->
         </div>
       <%end -%>
     </div>

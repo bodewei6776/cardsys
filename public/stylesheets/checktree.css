@@ -23,7 +23,7 @@ ul.tree label {
 ul.tree label.hover {
 	color: red;
 }
-p {
+ul.tree p {
 	margin: 5px 15px;
 }
 ul {

@@ -2,8 +2,8 @@
   <div class=" table">
     <ul class="bttitle black fb " >
       <li class="w5">编号</li>
+      <li class="w20">商品名称</li>
       <li class="w10">商品分类</li>
-      <li class="w10">商品名称</li>
       <li class="w10">零售价</li>
       <li class="w10">商品总数</li>
       <li class="w10">库房商品数</li>
@@ -13,7 +13,7 @@
     <%@goods.each_with_index do |good,index|%>
       <ul class="table_items" entry_id="<%= good.id%>">
         <li class="w5"><%= index + 1 %></li>
-        <li class="w10"><%= good.name%></li>
+        <li class="w20"><%= good.name%></li>
         <li class="w10"><%= generate_good_type_str(good.good_type) %></li>
         <li class="w10"><%= good.price %></li>
         <li class="w10"><%= good.count_total_now %></li>

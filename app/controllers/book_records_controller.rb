@@ -107,7 +107,7 @@ class BookRecordsController < ApplicationController
   if params[:user_name].blank? or params[:password].blank?
       @order.errors.add(:base,"预定人，密码不能为空")
       inite_related_order_objects
-      render :action => "new",:layout => 'small_main'
+      render :action => "edit"#,:layout => 'small_main'
       return
     end
     user = User.find_by_login(params[:user_name])
@@ -115,7 +115,7 @@ class BookRecordsController < ApplicationController
     if user.blank? or !user.valid_password?(params[:password])
       @order.errors.add(:base,"用户不存在或者密码不正确")
       inite_related_order_objects
-      render :action => "new",:layout => 'small_main'
+      render :action => "edit"#,:layout => 'small_main'
       return
     end
 
@@ -123,7 +123,7 @@ class BookRecordsController < ApplicationController
     unless user.can?('修改场地')
       @order.errors.add(:base,"用户没有权限修改场地")
       inite_related_order_objects
-      render :action => "new",:layout => 'small_main'
+      render :action => "edit"#,:layout => 'small_main'
       return
     end
 
@@ -209,6 +209,7 @@ class BookRecordsController < ApplicationController
 
   def complete_member_infos
     entry = Member.find_by_id(params[:id]) || MemberCard.where(:card_serial_num => params[:id]).first
+    date = params[:date] || Date.today
     if entry
       if entry.is_a?(Member)
         member = entry
@@ -221,7 +222,7 @@ class BookRecordsController < ApplicationController
         current_card = entry
       end
       render :partial => "/book_records/serial_num",
-        :locals => {:member_cards => member.member_cards,:member => member,:current_card => current_card}
+        :locals => {:member_cards => member.member_cards,:member => member,:current_card => current_card,:date => date}
     else
       render :nothing => true
     end
@@ -251,6 +252,7 @@ class BookRecordsController < ApplicationController
   def inite_related_order_objects
     @non_member  = @order.non_member
     @member      = @order.member
+    @good_items  = @order.product_items
     @member_cards = @member.member_cards if @member
     @book_record = @order.book_record
     @court = @book_record.court || Court.find(@book_record.court_id)

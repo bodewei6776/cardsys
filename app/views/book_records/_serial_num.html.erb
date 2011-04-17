@@ -52,8 +52,8 @@
       <div class="w1">卡状态：</div>
       <div class="w2">
         <%= current_card.status_desc %>
-        <% if current_card.should_notice_remain_amount_due? %>
-          <p style='color:red;display:inline;'><%= current_card.remain_amount_notice%></p>
+        <% if current_card.should_notice_remain_amount_due?(date) %>
+          <p style='color:red;display:inline;'><%= current_card.remain_amount_notice(date)%></p>
         <%end%>
       </div>
       <div class="w1">联系电话：</div>
@@ -78,7 +78,7 @@
   $(document).ready(function(){
     orderAutocomplete();
     $('#member_card_nubers_selec').change(function(){
-      url = "/book_records/complete_member_infos?id=" + $(this).val();
+      url = "/book_records/complete_member_infos?id=" + $(this).val() + "&date=" + $('#book_date').text()  ;
       $.get(url,function(returned_data)
       {
         $('#rel_member').html(returned_data);

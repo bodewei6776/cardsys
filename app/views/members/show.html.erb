@@ -26,7 +26,7 @@
           <li>
           <div class="w1">会员昵称：</div>
           <div class="w2">
-            <%= @member.nickname %>
+            <%= @member.nickname.blank? ?  "未知" : @member.nickname%>
           </div>
           <div class="w1">会员性别：</div>
           <div class="w2">
@@ -92,7 +92,7 @@
         <ul>
           <li>
           <div class="w1">会员生日：</div>
-          <div class="w2"><%= DateUtil.timeshort(@member.birthday) %></div>
+          <div class="w2"><%=@member.birthday.blank? ? "未知" : DateUtil.timeshort(@member.birthday) %></div>
 
           <div class="w1">备注：</div>
           <div class="w2"><%= @member.description%></div>
@@ -147,7 +147,7 @@
           <div class="w2">
             <%=@member.use_card_amount%>元
           </div>
-          <div class="w1">卡付次数：</div>
+          <div class="w1">卡付小时数：</div>
           <div class="w2">
             <%=@member.use_card_times%>次
           </div>
@@ -162,7 +162,7 @@
             <%= @member.use_cash_amount%> 元 
           </div>
 
-          <div class="w1">卡内次数：</div>
+          <div class="w1">卡内小时数：</div>
           <div class="w2">
             <%= @member.member_card_left_times%>
           </div>
@@ -214,7 +214,7 @@
           <li class="w15">卡号</li>
           <li class="w15">充值金额(￥)/次数</li>
           <li class="w15">充值日期</li>
-          <li class="w15">充值人</li>
+          <li class="w15">操作人</li>
         </ul>
         <%@recharge_records.each_with_index  do |recharge_record,index|%>
           <ul class="table_items">

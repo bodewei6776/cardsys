@@ -10,11 +10,14 @@ class Balance < ActiveRecord::Base
   Balance_Way_Use_Check = 5
   Balance_Way_Use_Guazhang = 6
   Balance_Way_Use_Counter  = 7
+  
+  default_scope where(:hide => false)
 
   
   belongs_to :who_balance,:class_name => "User",:foreign_key => "user_id"
   belongs_to :order
   belongs_to :member
+  belongs_to :user
   attr_accessor :operation
 
   scope :balanced,where(:status => Const::YES)
@@ -28,6 +31,8 @@ class Balance < ActiveRecord::Base
       errors[:base] << "卡已经过期，或者状态不正常不能结算"
     end
   end
+
+  before_create do |b| b.hide = false end
   
   def self.new_from_order(order)
     balance = new
@@ -57,6 +62,11 @@ class Balance < ActiveRecord::Base
 
   def self.default_goods_balance_way_by_order(order)
     (order.should_use_card_to_balance_goods? ? Balance_Way_Use_Card : Balance_Way_Use_Cash)
+  end
+
+  def hide!
+    self.hide = true
+    self.save(false)
   end
   
   def merge_order(o)

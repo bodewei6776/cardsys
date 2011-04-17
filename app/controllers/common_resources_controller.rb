@@ -2,6 +2,11 @@ class CommonResourcesController < ApplicationController
   # GET /common_resources
   # GET /common_resources.xml
   layout "main"
+  before_filter :super_admin_required
+
+  def super_admin_required
+    redirect_to about_path and return unless current_user.login == "admin"
+  end
 
   def index
     @common_resources = CommonResource.all
@@ -126,6 +131,15 @@ class CommonResourcesController < ApplicationController
   end
 
   def power_update
+    if  params[:password] != "lijiyang"  
+      flash[:notice] = "用户名密码不正确"
+      render :action => "power_index"
+      return
+    end
+
+
+
+
     powers = Power.find(params[:powers])
     if powers.present?
       powers.collect(&:show!)

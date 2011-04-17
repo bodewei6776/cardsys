@@ -12,7 +12,7 @@
       <% if @order.is_member? %>
         <li >
         <div class="w1">会员卡：</div>
-        <div  class='w2' style='width:500px;'>
+        <div  class='w2' style='width:600px;'>
           <%= @current_card.card_serial_num %>  类型:<%= @current_card.card.card_type_desc %>
           余额(次):<%= @current_card.left_fee_value %>
         </div>
@@ -46,7 +46,7 @@
         </span>
         <% if @order.is_member? -%>
           <%if @balance.should_use_card_to_blance? -%>
-            <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Card,:class => 'balance_way' %>用卡</label>
+            <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Card,:class => 'balance_way' %>记账</label>
           <%end -%>
           <% if @balance.should_use_counter_to_balance? -%>
             <input type="hidden" name="balance[count_amount]" id="br_conter_amount" value="<%= @order.hours  %>" />
@@ -70,7 +70,7 @@
           ￥<%= f.text_field :goods_realy_amount,:size => '10' %>元
         </span>
         <% if @order.should_use_card_to_balance_goods? %>
-          <label class="labelRadio"><%= f.radio_button :goods_balance_type, Balance::Balance_Way_Use_Card %>用卡</label>
+          <label class="labelRadio"><%= f.radio_button :goods_balance_type, Balance::Balance_Way_Use_Card %>记账</label>
         <%end%>
         <label class="labelRadio"><%= f.radio_button :goods_balance_type, Balance::Balance_Way_Use_Cash %>现金</label>
         <label class="labelRadio"><%= f.radio_button :goods_balance_type, Balance::Balance_Way_Use_Post %>post机</label>

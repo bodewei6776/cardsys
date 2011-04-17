@@ -67,6 +67,7 @@ class BalancesController < ApplicationController
   def show
     @order    = Order.find(params[:order_id])
     @balance  = Balance.find(params[:id])
+    @good_items = @order.product_items
     pre_date_for_new_create
     render :layout => params[:layout].blank?
   end
@@ -97,6 +98,47 @@ class BalancesController < ApplicationController
   end
 
   def create_good_buy
+    if cart.blank?
+      redirect_to new_good_buy_balances_path ,:notice => "购物车还是空的啊" and return
+    end
+
+    order = Order.new(:order_time => Time.now,:user_id => current_user.id)
+    if params[:member] == 'member'
+      member_card = MemberCard.find(params[:member_card_id])
+      order.parent_id = 0
+      order.member_type = 1 
+      order.member = member_card.member
+      order.member_card_id = member_card.id
+      order.member_name = member_card.member.name
+      if order.save(false)
+        balance = Balance.new
+        balance.order =order
+        balance.balance_way = params[:balance_way]
+        balance.member_type = order.member_type
+        balance.goods_balance_type = params[:balance_way]
+        balance.goods_amount = cart.total_price
+        balance.goods_realy_amount =cart.total_price
+        balance.goods_member_card_id = order.member_card.id
+        balance.member_id = order.member_id
+        balance.user_id = balance.user_id
+      else
+        redirect_to  new_good_buy_balances_path,:notice => order.errors.full_messages and return
+      end
+      # 会员购买
+    else
+      # 非会员
+    end
+    redirect_to  new_good_buy_balances_path
+  end
+
+  def destroy
+    @balance = Balance.find(params[:id])
+    if @balance.order.destroy
+     flash[:notice] = "删除成功"
+    else
+      flash[:notice] = "删除失败"
+    end
+    redirect_to balanced_balances_path
   end
 
 

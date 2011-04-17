@@ -191,9 +191,17 @@ class MembersController < ApplicationController
           base_member_id = params[:member_id]
           @member_base = Member.find(params[:member_id])
           @mg = MemberCardGranter.new(:member_id => base_member_id, :member_card_id => params[:member_card_id], :granter_id => @member.id)
-          @mg.save
+          card = MemberCard.find(params[:member_card_id])
+          # 会员卡可授权最大人数
+          if card.max_granter_due?
+            notice = "最多能授权给#{card.max_granter}人"
+          else
+          if @mg.save
+            notice = "添加成功"
+          end
+          end
           #format.html { redirect_to :action => "member_card_bind_index", :member_id => base_member_id, :member_name => @member_base.name, :notice => '授权人信息添加成功！'}
-          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => @mg.member_card.card_serial_num,:member_name => @mg.member_card.member.name) }
+          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => @mg.member_card.card_serial_num,:member_name => @mg.member_card.member.name,:notice => notice) }
         else
           format.html { redirect_to :action => "index", :notice => '会员信息添加成功！'}
           format.xml  { render :xml => @member, :status => :created, :location => @member }
@@ -349,7 +357,7 @@ class MembersController < ApplicationController
       result = false
     end
 
-    unless user.can?()
+    unless user.can?("会员卡充值")
       notice = {:result => 0,:notice => "用户无权限"}
       result = false
     end

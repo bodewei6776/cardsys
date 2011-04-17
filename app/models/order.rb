@@ -1,6 +1,7 @@
 class Order < ActiveRecord::Base
   has_many    :order_items,:dependent => :destroy
   belongs_to  :card
+  belongs_to  :user
   has_many    :coach_items,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Coache} "
   has_one     :book_record_item,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Book_Record}"
   has_many    :product_items,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Product}"
@@ -59,6 +60,7 @@ class Order < ActiveRecord::Base
   end
 
   def auto_save_order_associations
+    return unless book_record
     book_record.route_operation(operation) and (self.book_record_id = book_record.id)
     if is_member?
       self.member_id      = member.id
@@ -95,6 +97,8 @@ class Order < ActiveRecord::Base
       []
     end
   end
+
+                   
 
   def auto_destory_order_items
     OrderItem.delete_all(:order_id => id)
@@ -267,7 +271,7 @@ class Order < ActiveRecord::Base
   def balance
     self.operation = :balance
     member_card.balance(self) if is_member?
-    book_record.balance 
+    book_record.balance  if book_record
     order_items.each{|order_item| order_item.balance }
     self.paid_stauts = Const::YES
     self.updating =false

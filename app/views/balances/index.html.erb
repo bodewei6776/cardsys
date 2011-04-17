@@ -30,37 +30,47 @@
   <div class="h10"></div>
   <div class=" table">
     <ul class="bttitle black fb " >
-      <li class='w15'>预定人姓名</li>
-      <li class='w15'>卡号</li>
-      <li class='w15'>场地号</li>
-      <li class='w15'>消费金额</li>
+      <li class='w5'>编号</li>
+      <li class='w10'>预定人姓名</li>
+      <li class='w10'>卡号</li>
+      <li class='w10'>场地号</li>
+      <li class='w10'>消费金额</li>
       <li class='w10'>日期</li>
-      <li class='w15'>时段</li>
+      <li class='w10'>时段</li>
       <li class='w10'>操作</li>
+      <li class='w10'>预定人</li>
     </ul>
 
 
-    <% for record in @book_records %>
+    <% @book_records.each_with_index do |record,index| %>
       <ul class='table_items'>
+          <li class='w5'><%= index + 1 %></li>
         <% if record.order.member %>
-          <li class='w15'><%=h record.order.member.name %></li>
-          <li class='w15'><%=h record.order.member_card.card_serial_num %></li>
+          <li class='w10'><%=h record.order.member.name %></li>
+          <li class='w10'><%=h record.order.member_card.card_serial_num %></li>
         <%else%>
-          <li class='w15'><%=h record.order.non_member.name %></li>
-          <li class='w15'>散客</li>
+          <li class='w10'><%=h record.order.non_member.name %></li>
+          <li class='w10'>散客</li>
         <%end%>
-        <li class='w15'><%=h record.court.name %></li>
-        <li class='w15'><%= record.order.amount %></li>
+        <li class='w10'><%=h record.court.name %></li>
+        <li class='w10'><%= record.order.amount %></li>
         <li class='w10'><%= DateUtil::timeshort(record.record_date) %></li>
-        <li class='w15'><%= record.start_hour %>:00-<%=h record.end_hour %>:00</li>
+        <li class='w10'><%= record.start_hour %>:00-<%=h record.end_hour %>:00</li>
         <li class='w10'>
         <a href="<%= new_order_balance_path(record.order)%>">结算</a>|
         <a href="<%= edit_book_record_path(record)%>" >添加商品</a>
         </li>
+
+        <li class='w10'><%= record.order.user.login rescue "" %></li>
       </ul>
     <% end -%>
 
   </div>
+  <div class="h10"></div>
+  <div class="pages">
+    <%= will_paginate @book_records , :sp => 1%>
+  </div>
+  <div class="h10"></div>
 
 
 </div>

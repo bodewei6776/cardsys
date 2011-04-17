@@ -33,8 +33,7 @@
   <% if @member_card %>
   <div class="fform">
     <div class="fformbox" >
-    <%if @notice%><div id="errorExplanation"><h2>错误</h2><p><%= @notice %></p></div><%end%>
-    <div class="notice"></div>
+    <div id="errorExplanation" style='display:none;'><h2>错误</h2><p><%= @notice %></p></div>
       <div class="fformbox_bt"><p>会员卡充值</p></div>
 
       <div class="fformbox_nr">
@@ -42,7 +41,7 @@
           <li>
             <div class="w1">所属会员：</div>
             <div class="w2">
-              <%=   @member_card.member.name rescue ""%>
+              <%=   @member_card.member.name rescue "未知"%>
             </div>
             <div class="w1">卡类型：</div>
             <div class="w2">
@@ -56,11 +55,14 @@
             <div class="w2">
               <%= @member_card.left_fee%>　元
             </div>
-            <div class="w1">卡内次数：</div>
+
+            <div class="w1">充金额：</div>
             <div class="w2">
-              <%= @member_card.left_times%> 次
+              <input name="fee" id="fee" value="" onchange="javascript:checkNum(this.value)"/>
             </div>
-          </li>
+
+
+                      </li>
         </ul>
         <ul>
           <li>
@@ -77,10 +79,11 @@
         </ul>
         <ul>
           <li>
-            <div class="w1">充金额：</div>
+<div class="w1">卡内次数：</div>
             <div class="w2">
-              <input name="fee" id="fee" value="" onchange="javascript:checkNum(this.value)"/>
+              <%= @member_card.left_times%> 次
             </div>
+
             <div class="w1">充次数：</div>
             <div class="w2">
               <input name="times" id="times" value="" onchange="javascript:checkNum(this.value)"/>
@@ -145,12 +148,13 @@
         {'type':'json', 'fee':fee, 'times':times, 'member_card_id':card_id, 'type':type, 
       'expire_date':expire_date,'user':recharge_person,'password':recharge_password},
     function(data){
-      $(".notice").show();
-      $(".notice").attr("class", "notice");
-      $(".notice").attr("innerHTML", data.notice);
+      $("#errorExplanation").show();
+      $("#errorExplanation p").text(data.notice);
       var form = $("form[0]");
       form.attr("action", "/member_cards/search?p=num");
-     // form.submit();
+      if(data.result == "1"){
+      form.submit();
+      }
     });
   }
 

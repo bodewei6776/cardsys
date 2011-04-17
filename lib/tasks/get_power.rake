@@ -19,7 +19,7 @@ task :get_power=> :environment do
  Power.all.collect(&:destroy)
   a = Power.create(:parent_id => 0,:subject => "基础信息管理")
   a.children.create(:subject => "时段价格管理")
-  a.children.create(:subject => "卡模版管理")
+  a.children.create(:subject => "卡模板管理")
   a.children.create(:subject => "场地管理")
   a.children.create(:subject => "节假日管理")
   a.children.create(:subject => "教练管理")

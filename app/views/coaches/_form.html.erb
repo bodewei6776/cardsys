@@ -19,11 +19,7 @@
         </ul>
         <ul>
           <li>
-            <div class="w1">头像：</div>
-            <div class="w2">
-              <%= f.text_field :portrait %>
-            </div>
-            <div class="w1">类型：</div>
+           <div class="w1">类型：</div>
             <div class="w2">
               <select name="coach[coach_type]" id="coach_type" class="select">
                 <%= generate_coach_type_options(@coach)  %>

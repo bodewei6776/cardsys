@@ -20,6 +20,18 @@ class MemberCard < ActiveRecord::Base
 
   attr_accessor :notice
 
+  def max_granter
+    if self.card.shared_amount.nil? or self.card.shared_amount.zero?
+      1000
+    else
+      self.card.shared_amount
+    end
+  end
+
+  def max_granter_due?
+    self.max_granter <= self.granters.count
+  end
+
   def enable?
     self.status == CARD_STATUS_0
   end
@@ -51,6 +63,7 @@ class MemberCard < ActiveRecord::Base
   end
 
   def is_useable_in_time_span?(book_record)
+    return true unless book_record
     card.is_useable_in_time_span?(book_record.record_date,book_record.start_hour,book_record.end_hour)
   end
   
@@ -156,17 +169,19 @@ class MemberCard < ActiveRecord::Base
     save
   end
 
-  def should_notice_remain_amount_due?
+  def should_notice_remain_amount_due?(due_time = Time.now)
+    puts '1' * 100
+    puts due_time
     (self.left_fee < (self.card.min_amount || 0)) || \
       (self.left_times < (self.card.min_count || 0)) || \
-      (self.expire_date < (Time.now + (self.card.min_time || 0).days))
+      (self.expire_date < (due_time + (self.card.min_time || 0).days))
   end
 
-  def remain_amount_notice
+  def remain_amount_notice(due_time = Time.now)
     notices = []
     notices << "卡内余额不足#{self.card.min_amount}元" if (self.left_fee < (self.card.min_amount || 0))
     notices << "卡内次数不足#{self.card.min_count}次"  if  (self.left_times < (self.card.min_count || 0)) 
-    notices << "会员卡即将到期#{self.card.min_time}天" if    self.expire_date < (Time.now + (self.card.min_time || 0).days)
+    notices << "会员卡即将到期#{self.card.min_time}天" if    self.expire_date < (due_time + (self.card.min_time || 0).days)
     notices.join(",")
   end
 

@@ -2,7 +2,7 @@
   <div class=" r_bt" >
     <div class=" r_bt_l" >
       <div class=" r_bt_l_a" ></div>
-      <div class=" r_bt_l_c fb white" >博德维店<%= DateUtil.format_to_chinese_date(@date) %>的场地预定</div>
+      <div class=" r_bt_l_c fb white" ><%= current_catena.name %> <%= DateUtil.format_to_chinese_date(@date) %>的场地预定</div>
     </div>
     <div class=" r_bt_r" >
       <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@predate%>"'><< 前一天</button>&nbsp;&nbsp;
@@ -21,11 +21,13 @@
             <li><%=i%>:00-<%=i+1%>:00</li>
           <%end%>
         <%end%>
+          <div class='sep'></div>
       </ul>
       <% tcs.each_with_index do |court,index| %>
         <ul class="<%= index == (tcs.size - 1) ? 'date2' : 'date' %>">
           <li class="tit"><%=court.name%></li>
           <%= display_period_per_hour(@daily_periods,court,@date) %>
+          <div class='sep'></div>
         </ul>
       <%end%>
     <%end%>
@@ -53,11 +55,13 @@
 
     $('.content li').mousemove(function(even){
       var mouse_y = even.pageY;
+      var this_top = $(this).offset().top; 
       $('.content li').removeClass('book_records_mousehover');
       $('.content li').each(function(i,node){
         var node_top = $(node).offset().top;
         var node_bottom = $(node).offset().top - 30;
-        if(node_top > mouse_y && mouse_y > node_bottom) { $(node).addClass('book_records_mousehover')}
+        //if(node_top > mouse_y && mouse_y > node_bottom) { $(node).addClass('book_records_mousehover')}
+        if(node_top == this_top) { $(node).addClass('book_records_mousehover')}
         }); 
       });
 });

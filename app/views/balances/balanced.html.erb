@@ -33,29 +33,45 @@
 
   <div class="table">
     <ul class="bttitle black fb " >
-      <li class='w15'>预定人姓名</li>
+      <li class='w5'>编号</li>
+      <li class='w10'>预定人姓名</li>
       <li class='w10'>卡号</li>
-      <li class='w15'>场地号</li>
-      <li class='w15'>日期</li>
+      <li class='w10'>场地号</li>
+      <li class='w10'>日期</li>
       <li class='w15'>时段</li>
       <li class='w10'>场地费</li>
       <li class='w10'>其他费</li>
-      <li class='w5'>操作</li>
+      <li class='w10'>操作</li>
+      <li class='w5'>结算人</li>
     </ul>
-    <% for record in @book_records %>
+    <% @book_records.each_with_index do |record,index| %>
       <ul class='table_items'>
-        <li class='w15'><%=h record.order.order_member.name %></li>
+        <li class='w5'><%= index + 1 %></li>
+        <li class='w10'><%=h record.order.order_member.name %></li>
         <li class='w10'><%=h record.order.member_card_number %></li>
-        <li class='w15'><%=h record.court.name %></li>
-        <li  class='w15'><%= DateUtil::timeshort(record.record_date) %></li>
+        <li class='w10'><%=h record.court.name %></li>
+        <li  class='w10'><%= DateUtil::timeshort(record.record_date) %></li>
         <li  class='w15'><%= record.start_hour %>:00-<%=h record.end_hour %>:00</li>
         <li  class='w10'>
         <%= record.order.balance_record.book_record_amount_desc %>(<%= record.order.balance_record.balance_way_desc %>)
         </li>
         <li  class='w10'> <%= record.order.balance_record.goods_amount_desc %> (<%= record.order.balance_record.goods_balance_type_desc %>)
         </li>
-        <li class='w5'><a href="<%= order_balance_path(record.order,record.order.balance_record) %>">查看</a></li>
+        <li class='w10'><a href="<%= order_balance_path(record.order,record.order.balance_record) %>">查看</a>
+        <% if current_user.can?("删除结算信息")%>
+          | <%= link_to "删除",balance_path(record.order.balance_record),:method => :delete%>
+      <%end%>
+        </li>
+        <li class='w5'><%= record.order.balance_record.user.login rescue ""%></li>
       </ul>
     <% end -%>
   </fieldset>
 </div>
+
+<div class="h10"></div>
+  <div class="pages">
+    <%= will_paginate @book_records , :sp => 1%>
+  </div>
+  <div class="h10"></div>
+
+

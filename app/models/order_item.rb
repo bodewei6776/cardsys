@@ -17,6 +17,9 @@ class OrderItem < ActiveRecord::Base
 
   belongs_to :good,:foreign_key => "item_id"#,:conditions =>{:item_type => Item_Type_Product}
 
+  before_destroy :update_good_inventory_before_destroy
+  
+
 
 
   # 恢复前面库存的数量
@@ -27,6 +30,15 @@ class OrderItem < ActiveRecord::Base
       product.count_front_stock -= (self.quantity - self.quantity_was) 
       product.save
     end
+  end
+
+  def update_good_inventory_before_destroy
+    product = self.product
+    if is_product? && product.is_a?(Good)
+      product.count_front_stock += (self.quantity) 
+      product.save
+    end
+
   end
 
   def set_initialize_attributes
@@ -84,6 +96,7 @@ class OrderItem < ActiveRecord::Base
   end
 
   def self.order_book_record(order)
+    return unless order.book_record
     book_record = order.book_record
     book_record_item = new
     book_record_item.item_id   = book_record.id

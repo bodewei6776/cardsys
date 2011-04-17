@@ -4,79 +4,79 @@
   <div class="fformbox_nr">
     <ul>
       <li>
-        <div class="w1">场地：</div>
-        <div class="w2">
-          <% unless @book_record.new_record? %>
-            <input type="hidden" name="order[book_record_attributes][id]" value="<%= @book_record.id %>"/>
-            <input type="hidden" value="<%= @order.id %>" name="order_id" id="order_id" type="hidden" />
+      <div class="w1">场地：</div>
+      <div class="w2">
+        <% unless @book_record.new_record? %>
+          <input type="hidden" name="order[book_record_attributes][id]" value="<%= @book_record.id %>"/>
+          <input type="hidden" value="<%= @order.id %>" name="order_id" id="order_id" type="hidden" />
+        <%end%>
+        <select name="order[book_record_attributes][court_id]" id="order_court_id">
+          <%= generate_book_record_status_options(@court.id) %>
+        </select>
+      </div>
+      <div class="w1">预定日期：</div>
+      <div class="w2">
+        <input type="hidden" id="book_record_status" name="order[book_record_attributes][status]" value="<%= @book_record.status %>"/>
+        <input type="hidden" id="order_date" name="order[book_record_attributes][record_date]" value="<%= DateUtil::timeshort @book_record.record_date %>"/>
+        <p id='book_date'><%= DateUtil::timeshort @book_record.record_date %></p>
+      </div>
+      </li>
+    </ul>
+    <ul>
+      <li>
+      <div class="w1">是否是会员：</div>
+      <div class="w2">
+        <input type="hidden" name="order[operation]" value="" id="order_operation_type" />
+        <input type="radio" name="order[member_type]"  value="<%= Const::YES %>" class="is_member_jsjq" <%if @order.is_member? %> checked="zzz" <%end%>/>是
+        <input type="radio" name="order[member_type]"  value="<%= Const::NO %>"  class="is_member_jsjq" <%unless @order.is_member?%> checked="checked" <%end%> />否
+      </div>
+      </li>
+    </ul>
+    <ul>
+      <li>
+      <div class="w1">开始时间：</div>
+      <div class="w2">
+        <select name="order[book_record_attributes][start_hour]" tabindex="4" class="select order_hour" id="order_start_hour">
+          <% @court.start_hour(@date).upto(@court.end_hour(@date)) do |i| %>
+            <option value="<%=i%>" <%if i==@book_record.start_hour%>selected<%end%> ><%=i%>:00</option>
           <%end%>
-          <select name="order[book_record_attributes][court_id]" id="order_court_id">
-            <%= generate_book_record_status_options(@court.id) %>
-          </select>
-        </div>
-        <div class="w1">预定日期：</div>
-        <div class="w2">
-          <input type="hidden" id="book_record_status" name="order[book_record_attributes][status]" value="<%= @book_record.status %>"/>
-          <input type="hidden" id="order_date" name="order[book_record_attributes][record_date]" value="<%= DateUtil::timeshort @book_record.record_date %>"/>
-          <%= DateUtil::timeshort @book_record.record_date %>
-        </div>
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <div class="w1">是否是会员：</div>
-        <div class="w2">
-          <input type="hidden" name="order[operation]" value="" id="order_operation_type" />
-          <input type="radio" name="order[member_type]"  value="<%= Const::YES %>" class="is_member_jsjq" <%if @order.is_member? %> checked="zzz" <%end%>/>是
-          <input type="radio" name="order[member_type]"  value="<%= Const::NO %>"  class="is_member_jsjq" <%unless @order.is_member?%> checked="checked" <%end%> />否
-        </div>
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <div class="w1">开始时间：</div>
-        <div class="w2">
-          <select name="order[book_record_attributes][start_hour]" tabindex="4" class="select order_hour" id="order_start_hour">
-            <% @court.start_hour(@date).upto(@court.end_hour(@date)) do |i| %>
-              <option value="<%=i%>" <%if i==@book_record.start_hour%>selected<%end%> ><%=i%>:00</option>
-            <%end%>
-          </select>
-        </div>
-        <div class="w1">结束时间：</div>
-        <div class="w2">
-          <select name="order[book_record_attributes][end_hour]" tabindex="4" class="select order_hour" id="order_end_hour">
-            <% @court.start_hour(@date).upto(@court.end_hour(@date)) do |i| %>
-              <option value="<%=i%>" <%if i==@book_record.end_hour%>selected<%end%> ><%=i%>:00</option>
-            <%end%>
-          </select>
-        </div>
+        </select>
+      </div>
+      <div class="w1">结束时间：</div>
+      <div class="w2">
+        <select name="order[book_record_attributes][end_hour]" tabindex="4" class="select order_hour" id="order_end_hour">
+          <% @court.start_hour(@date).upto(@court.end_hour(@date)) do |i| %>
+            <option value="<%=i%>" <%if i==@book_record.end_hour%>selected<%end%> ><%=i%>:00</option>
+          <%end%>
+        </select>
+      </div>
       </li>
     </ul>
     <ul <% if @order.is_member? %> style="display:none;" <%  end %> class="nonmember">
       <li>
-        <div class="w1">散客姓名：</div>
-        <div class="w2">
-          <%if @non_member && !@non_member.new_record?%>
-            <input type="hidden" name="order[non_member_attributes][id]" value="<%= @non_member.id %>" />
-          <%end%>
-          <input type="text" name="order[non_member_attributes][name]" value="<%= @non_member && @non_member.name %>"  />
-        </div>
-        <div class="w1">标准收费：</div>
-        <div class="w2" id="stand_amount">
+      <div class="w1">散客姓名：</div>
+      <div class="w2">
+        <%if @non_member && !@non_member.new_record?%>
+          <input type="hidden" name="order[non_member_attributes][id]" value="<%= @non_member.id %>" />
+        <%end%>
+        <input type="text" name="order[non_member_attributes][name]" value="<%= @non_member && @non_member.name %>"  />
+      </div>
+      <div class="w1">标准收费：</div>
+      <div class="w2" id="stand_amount">
 
-        </div>
+      </div>
       </li>
     </ul>
     <ul <% if @order.is_member? %> style="display:none;" <%  end %> class="nonmember">
       <li>
-        <div class="w1">手机/座机：</div>
-        <div class="w2">
-          <input type="text" name="order[non_member_attributes][telephone]"  value="<%= @non_member && @non_member.telephone %>"  />
-        </div>
-        <div class="w1">定金：</div>
-        <div class="w2">
-          <input type="text" name="order[non_member_attributes][earnest]" value="<%= @non_member && @non_member.earnest%>"  />
-        </div>
+      <div class="w1">手机/座机：</div>
+      <div class="w2">
+        <input type="text" name="order[non_member_attributes][telephone]"  value="<%= @non_member && @non_member.telephone %>"  />
+      </div>
+      <div class="w1">定金：</div>
+      <div class="w2">
+        <input type="text" name="order[non_member_attributes][earnest]" value="<%= @non_member && @non_member.earnest%>"  />
+      </div>
       </li>
     </ul>
 
@@ -84,10 +84,10 @@
     <div id="rel_member" <% unless @order.is_member? %> style="display:none;" <%  end %>>
       <%if @member %>
         <%=  render :partial => "/book_records/serial_num",:locals => {:cards => @cards,
-          :member => @member,:current_card => @current_card,:member_cards => @member_cards}%>
-      <%else%>
-        <ul style='height:60px;'>
-          <li>
+          :member => @member,:current_card => @current_card,:member_cards => @member_cards,:date => @date}%>
+        <%else%>
+          <ul style='height:60px;'>
+            <li>
             <div class="w1">会员姓名：</div>
             <div class="w2">
               <input type="text" name="member_name" order_autocomplete='/book_records/complete_for_members' />
@@ -98,10 +98,10 @@
             </div>
             <script type="text/javascript">
               $(document).ready(function(){
-                orderAutocomplete();
-              });
-            </script>
-          </li>
+                  orderAutocomplete();
+                  });
+</script>
+</li>
         </ul>
       <%end%>
     </div>
@@ -129,12 +129,12 @@
 
     <ul>
       <li>
-      <div class="w1" style="">预定人：</div>
+      <div class="w1" style="">操作人：</div>
       <div class="w2">
         <input name="user_name" value='<%= params[:user_name] || current_user.login%>'  autocomplete="/users/autocomplete_user_name" id='name'>
       </div>
       <li>
-<li>
+      <li>
       <div class="w1" style="">密码：</div>
       <div class="w2">
         <input name="password"  type='password' value=''>
@@ -153,17 +153,17 @@
 </div>
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function(){
-    $('.data-add-coach').click(function(){
-      var select = $(this).prev();
-      if(select.attr('type') == 'button'){select = select.prev();}
-      select.clone().appendTo('.coach-list').after('<input type="button"   value="删除" class="data-remove-coach">');
-    });
-    $('.data-remove-coach').live('click',function(){
-      $(this).prev('select').remove();
-      $(this).remove();
-    });
-    $('.data-coach-select').change(function(){
+      $('.data-add-coach').click(function(){
+        var select = $(this).prev();
+        if(select.attr('type') == 'button'){select = select.prev();}
+        select.clone().appendTo('.coach-list').after('<input type="button"   value="删除" class="data-remove-coach">');
+        });
+      $('.data-remove-coach').live('click',function(){
+        $(this).prev('select').remove();
+        $(this).remove();
+        });
+      $('.data-coach-select').change(function(){
 
-    });
-  });
-</script>
+        });
+      });
+    </script>

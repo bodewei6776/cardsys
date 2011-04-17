@@ -1,11 +1,9 @@
 class OrderItemsController < ApplicationController
   
   def new
-    
   end
   
   def create
-    
   end
   
   # DELETE /courts/1

@@ -56,7 +56,7 @@ function userAutocomplete(){
                     });
 
                 $('#cards select').html(options);
-                $('#cards select').bind('onchange',function(){ console.log('ddd');$('#notice').text($(this).find("option:selected").attr('notice')) });
+                $('#cards select').change(function(){$('#notice').text($(this).find("option:selected").attr('notice')) });
 	        });
 	      }			
 		});

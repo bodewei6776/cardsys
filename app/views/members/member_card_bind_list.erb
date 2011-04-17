@@ -10,8 +10,8 @@
     <ul class="bttitle black fb " >
       <li class="w5">序号</li>
       <li class="w30">卡名称</li>
-      <li class="w10">卡类型</li>
-      <li class="w10">绑定卡</li>
+      <li class="w20">卡类型</li>
+      <li class="w20">绑定卡</li>
     </ul>
     <%@cards.each_with_index do |card,index|%>
       <ul class="table_items">
@@ -20,8 +20,8 @@
           <input type="hidden" name="member_id" value="<%=@member.id%>" />
           <%= card.name%>
         </li>
-        <li class="w10"><%= card.card_type_desc%></li>
-        <li class="w10">
+        <li class="w20"><%= card.card_type_desc%></li>
+        <li class="w20">
           <input id="card_available_<%= card.id %>" name="card_available" onclick="changeCardType(this);" type="radio" value="<%= card.id %>-<%=card.card_type_opt%>-<%=card.name%>" />
         </li>
       </ul>
