@@ -171,6 +171,7 @@ Cardsys::Application.routes.draw do |map|
       get :autocomplete_name
       get :autocomplete_good
       get :goods
+      get :find_goods
       get :add_to_cart
     end
   end

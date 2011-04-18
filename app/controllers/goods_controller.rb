@@ -31,14 +31,21 @@ def autocomplete_good
       format.html {
         render :template =>  '/goods/index'
       }
-      format.json {
-        render :partial => "/goods/_goods.html.erb",:locals => {:goods => @goods}
-      }
-     format.xml  { render :xml => @goods }
+      format.xml  { render :xml => @goods }
     end
   end
 
-  
+
+  def find_goods
+    @good_type = params[:good_type]
+    @name = params[:name]
+    @goods = Good.order("id desc")
+    @goods = @goods.where(["good_type = ? ", @good_type]) unless params[:good_type].blank?
+    @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
+    @goods = @goods.paginate(:page => params[:page]||1)
+    render :action => "goods",:layout => "small_main" 
+  end
+
 
   # GET /goods/1
   # GET /goods/1.xml
@@ -146,7 +153,7 @@ def autocomplete_good
     else
       @goods = Good.valid_goods.order('sale_count desc').limit(30)
     end
-   render :layout => "small_main" #false
+    render :layout => "small_main" #false
   end
 
   def to_buy

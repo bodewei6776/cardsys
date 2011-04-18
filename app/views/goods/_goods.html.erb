@@ -60,14 +60,15 @@
     $('.submit-goods-button').click(function(){
       var cart_form = $('#add_to_cart_form');
       var input = $(this);
-      var url = cart_form.attr('action') + "?order_id=" + $('#order_id').val();
+      var order_id = $('#order_id',$(window.parent.document)).val();
+      var url = cart_form.attr('action') + "?order_id=" + order_id;
       $.post(url,cart_form.serialize(),function(reply){
         if(reply.match(/class='error'/)){
           input.next('span').remove();
           input.after(reply);
         }else{
-          $('#cboxClose').click();
-          window.location.reload();
+          window.parent.location.reload();
+          window.close();
         }
       });
     });

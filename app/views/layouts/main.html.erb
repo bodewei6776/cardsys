@@ -64,45 +64,48 @@ if(typeof(String.prototype.trim) === "undefined")
 
 
 
-</script>
-<%= stylesheet_link_tag 'main', 'jquery-ui-1.8.2.custom','colorbox' %>
-<style type="text/css">
-  /* div .w1{height: 80px;}
-  div .w2{height: 80px;} */
-</style>
-  </head>
-  <body>
-    <div class="top">
-      <div class="top_logo white fmic30"><%= current_catena.name || "博德维网球" %>管理系统</div>
-      <div class="top_user">
-        <strong>登录用户:</strong> <%= current_user.login || current_user.email%>
-        [ <%= link_to "退出",user_session_path(current_user),:method =>:delete,:class => "cyellow"%> ]
-        [ <a class="cyellow" href="#">修改密码</a> ]
-        <!--   [<%= select_tag "catena",options_for_select(current_user.catenas.collect{|c| [c.name,c.id]}),:onchange => "javascript:change_catena($(this).val());return;"%>] -->
+
+
+
+  </script>
+  <%= stylesheet_link_tag 'main', 'jquery-ui-1.8.2.custom','colorbox' %>
+  <style type="text/css">
+    /* div .w1{height: 80px;}
+    div .w2{height: 80px;} */
+  </style>
+</head>
+<body>
+  <div class="top">
+    <div class="top_logo white fmic30"><%= current_catena.name || "博德维网球" %>管理系统</div>
+    <div class="top_user">
+      <strong>登录用户:</strong> <%= current_user.login || current_user.email%>
+      [ <%= link_to "退出",user_session_path(current_user),:method =>:delete,:class => "cyellow"%> ]
+      [ <a class="cyellow" href="#">修改密码</a> ]
+      <!--   [<%= select_tag "catena",options_for_select(current_user.catenas.collect{|c| [c.name,c.id]}),:onchange => "javascript:change_catena($(this).val());return;"%>] -->
+    </div>
+  </div>
+  <div class="clear"></div>
+  <div class="dh"  >
+    <%= render :partial => "layouts/header_menu" %>
+  </div>
+  <div class="clear"></div>
+  <div class="left">
+    <div class="h10"></div>
+    <div class="bt_time">
+      <div id="linkweb"></div>
+      <div id="arrow_holder">
+        <img src='/images/arrow_left.gif' />
       </div>
     </div>
-    <div class="clear"></div>
-    <div class="dh"  >
-      <%= render :partial => "layouts/header_menu" %>
+    <div class="w178" id="datepicker">
     </div>
-    <div class="clear"></div>
-    <div class="left">
-      <div class="h10"></div>
-      <div class="bt_time">
-        <div id="linkweb"></div>
-        <div id="arrow_holder">
-          <img src='/images/arrow_left.gif' />
-        </div>
-      </div>
-      <div class="w178" id="datepicker">
-      </div>
-      <div class="h10"></div>
-      <%= render :partial => "layouts/menu" %>
-    </div>
-    <div class="right">
-      <div class="right_ddd"><img src="/images/new/r_ddd_yj.jpg" alt="" /></div>
-      <%= yield %>
-      <div class="foot">Showr Tennis Mangement System &copy; 2010 <a href="#">博德维网球管理系统</a> showr.com</div>
-    </div>
-  </body>
+    <div class="h10"></div>
+    <%= render :partial => "layouts/menu" %>
+  </div>
+  <div class="right">
+    <div class="right_ddd"><img src="/images/new/r_ddd_yj.jpg" alt="" /></div>
+    <%= yield %>
+    <div class="foot">Showr Tennis Mangement System &copy; 2010 <a href="#">博德维网球管理系统</a> showr.com</div>
+  </div>
+</body>
 </html>

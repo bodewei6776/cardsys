@@ -7,13 +7,13 @@
     </div>
     <div class=" r_bt_r" >
 
-    <% unless request.referrer =~ /book_record/%>
+    <% unless request.referrer =~ /book_record|goods/%>
       <button onclick="window.location.href='/goods/new'" class="submit2 hand" type="button">添加商品</button>
     <%end%>
     </div>
   </div>
   <div class="soso">
-    <form method="post" action="/goods?p=<%=@p%>" class="form-profile" id="search-goods-form">
+    <%= form_tag "/goods/find_goods",{:remote => true ,:id => "search-goods-form"} do |f|%>
       <%= hidden_field_tag "_method","get"%>
       <div class="w95">
         照商品类别：
@@ -28,7 +28,7 @@
           <input type="text"class="inputtext" autocomplete="/goods/autocomplete_name" id="name" name="name" value="<%= params[:name] %>"/>
         </label>
       </div>
-    </form>
+    <%end%>
   </div>
   <div class="h10"></div>
   <div class=" r_bt" >
@@ -46,39 +46,21 @@
 <script type="text/javascript" charset="utf-8">
 
   $(document).ready(function(){
-    //$('input[autocomplete]').each(function(i){
       $('#name').autocomplete({
-        source: "/goods/autocomplete_name",
-        select: function(ui, li){
-          var item = li.item;
-          $(this).val(item.value);
-          console.log('222');
-
-          console.log($('#search-goods-form').attr('action'));
-          console.log($("#search-goods-form").serialize());
-     var url = "/goods?name=" + $('#name').val() + "&good_type=" + $('#good_type option:selected').val();
-      $.getJSON(url ,function(reply){
-      console.log(reply);
-        $('fieldset.table').remove();
-        $('fieldset.hidden').after(reply);
-        });
-
-
- //         $('#search-goods-form').submit();
-        }
+source: "/goods/autocomplete_name",
+select: function(ui, li){
+var item = li.item;
+$(this).val(item.value);
+$('#search-goods-form').submit();
+}
+});
       });
-    //});
-    $('#1searchs-goods-form').submit(function(){
-        var url = "/goods?name=" + $('#name').val() + "&good_type=" + $('#good_type option:selected').val();
-      $.getJSON(url ,function(reply){
-      console.log(reply);
-        $('fieldset.table').remove();
-        $('fieldset.hidden').after(reply);
-        });
-      return false;
+
+$('#good_type').change(function(){
+    
+      $('#search-goods-form').submit();
     });
-  });
 
 
 
-</script>
+    </script>
