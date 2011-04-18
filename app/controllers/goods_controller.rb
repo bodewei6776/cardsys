@@ -32,11 +32,13 @@ def autocomplete_good
         render :template =>  '/goods/index'
       }
       format.json {
-        render :partial => "/goods/goods",:locals => {:goods => @goods}
+        render :partial => "/goods/_goods.html.erb",:locals => {:goods => @goods}
       }
      format.xml  { render :xml => @goods }
     end
   end
+
+  
 
   # GET /goods/1
   # GET /goods/1.xml
@@ -144,7 +146,7 @@ def autocomplete_good
     else
       @goods = Good.valid_goods.order('sale_count desc').limit(30)
     end
-   render :layout => false
+   render :layout => "small_main" #false
   end
 
   def to_buy

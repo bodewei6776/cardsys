@@ -11,7 +11,7 @@ class Balance < ActiveRecord::Base
   Balance_Way_Use_Guazhang = 6
   Balance_Way_Use_Counter  = 7
   
-  default_scope where(:hide => false)
+ # default_scope where(:hide => false)
 
   
   belongs_to :who_balance,:class_name => "User",:foreign_key => "user_id"
@@ -32,7 +32,7 @@ class Balance < ActiveRecord::Base
     end
   end
 
-  before_create do |b| b.hide = false end
+  #before_create do |b| b.hide = false end
   
   def self.new_from_order(order)
     balance = new

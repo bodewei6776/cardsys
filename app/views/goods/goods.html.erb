@@ -13,7 +13,7 @@
     </div>
   </div>
   <div class="soso">
-    <form method="post" action="/goods/goods?p=<%=@p%>" class="form-profile" id="search_form">
+    <form method="post" action="/goods?p=<%=@p%>" class="form-profile" id="search-goods-form">
       <%= hidden_field_tag "_method","get"%>
       <div class="w95">
         照商品类别：
@@ -46,22 +46,35 @@
 <script type="text/javascript" charset="utf-8">
 
   $(document).ready(function(){
-    $('inputa[autocomplete]').each(function(i){
-      $(this).autocomplete({
-        source: $(this).attr('autocomplete'),
+    //$('input[autocomplete]').each(function(i){
+      $('#name').autocomplete({
+        source: "/goods/autocomplete_name",
         select: function(ui, li){
           var item = li.item;
           $(this).val(item.value);
-          $('#search-goods-form').submit();
+          console.log('222');
+
+          console.log($('#search-goods-form').attr('action'));
+          console.log($("#search-goods-form").serialize());
+     var url = "/goods?name=" + $('#name').val() + "&good_type=" + $('#good_type option:selected').val();
+      $.getJSON(url ,function(reply){
+      console.log(reply);
+        $('fieldset.table').remove();
+        $('fieldset.hidden').after(reply);
+        });
+
+
+ //         $('#search-goods-form').submit();
         }
       });
-    });
-    $('#searchs-goods-form').submit(function(){
-      $.post($("#search-goods-form").attr('action'),$("#search-goods-form").serialize(),
-      function(reply){
-        $('.table').remove();
-        $('.hidden').after(reply);
-      });
+    //});
+    $('#1searchs-goods-form').submit(function(){
+        var url = "/goods?name=" + $('#name').val() + "&good_type=" + $('#good_type option:selected').val();
+      $.getJSON(url ,function(reply){
+      console.log(reply);
+        $('fieldset.table').remove();
+        $('fieldset.hidden').after(reply);
+        });
       return false;
     });
   });

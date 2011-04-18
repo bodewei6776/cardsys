@@ -24,7 +24,7 @@ CommonResourceDetail.create(:common_resource_id => card_type.id, :detail_name =>
 CommonResourceDetail.create(:common_resource_id => card_type.id, :detail_name => "资格卡", :catena_id => catena.id)
 
 CommonResourceDetail.create(:common_resource_id => period_type.id, :detail_name => "夏令时", :catena_id => catena.id)
-CommonResourceDetail.create(:common_resource_id => period_type.id, :detail_name => "冬令时", :catena_id => catena.id)
+#CommonResourceDetail.create(:common_resource_id => period_type.id, :detail_name => "冬令时", :catena_id => catena.id)
 CommonResourceDetail.create(:common_resource_id => period_type.id, :detail_name => "节假日", :catena_id => catena.id)
 
 CommonResourceDetail.create(:common_resource_id => coach_type.id, :detail_name => "全职教练", :catena_id => catena.id)
@@ -48,9 +48,15 @@ CommonResourceDetail.create(:common_resource_id => times_summer.id, :detail_name
 CommonResourceDetail.create(:common_resource_id => times_summer.id, :detail_name => "10", :catena_id => catena.id)
 CommonResourceDetail.create(:common_resource_id => times_summer.id, :detail_name => "11", :catena_id => catena.id)
 
-CommonResourceDetail.create(:common_resource_id => times_winter.id, :detail_name => "12", :catena_id => catena.id)
-CommonResourceDetail.create(:common_resource_id => times_winter.id, :detail_name => "1", :catena_id => catena.id)
-CommonResourceDetail.create(:common_resource_id => times_winter.id, :detail_name => "2", :catena_id => catena.id)
+#CommonResourceDetail.create(:common_resource_id => times_winter.id, :detail_name => "12", :catena_id => catena.id)
+#CommonResourceDetail.create(:common_resource_id => times_winter.id, :detail_name => "1", :catena_id => catena.id)
+#CommonResourceDetail.create(:common_resource_id => times_winter.id, :detail_name => "2", :catena_id => catena.id)
+
+CommonResourceDetail.create(:common_resource_id => times_summer.id, :detail_name => "12", :catena_id => catena.id)
+CommonResourceDetail.create(:common_resource_id => times_summer.id, :detail_name => "1", :catena_id => catena.id)
+CommonResourceDetail.create(:common_resource_id => times_summer.id, :detail_name => "2", :catena_id => catena.id)
+
+
 
 
   Power.delete_all
