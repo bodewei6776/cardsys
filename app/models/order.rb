@@ -105,7 +105,7 @@ class Order < ActiveRecord::Base
   end
 
   def destroy
-    book_record.cancle
+    book_record.cancle if book_record
     auto_destory_order_items
     super
   end

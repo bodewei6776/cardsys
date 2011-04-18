@@ -21,15 +21,16 @@
             <li><%=i%>:00-<%=i+1%>:00</li>
           <%end%>
         <%end%>
-          <div class='sep'></div>
+          <!--  <div class='sep'></div> -->
       </ul>
       <% tcs.each_with_index do |court,index| %>
         <ul class="<%= index == (tcs.size - 1) ? 'date2' : 'date' %>">
           <li class="tit"><%=court.name%></li>
           <%= display_period_per_hour(@daily_periods,court,@date) %>
-          <div class='sep'></div>
+          <!--  <div class='sep'></div> -->
         </ul>
       <%end%>
+      <div style='clear:both;'></div>
     <%end%>
   </div>
   <div class="h10"></div>
@@ -61,7 +62,7 @@
         var node_top = $(node).offset().top;
         var node_bottom = $(node).offset().top - 30;
         //if(node_top > mouse_y && mouse_y > node_bottom) { $(node).addClass('book_records_mousehover')}
-        if(node_top == this_top) { $(node).addClass('book_records_mousehover')}
+        if((node_top <= this_top + 3) &&(node_top >= this_top - 3)) { $(node).addClass('book_records_mousehover')}
         }); 
       });
 });

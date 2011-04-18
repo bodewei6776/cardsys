@@ -48,6 +48,7 @@ Cardsys::Application.routes.draw do |map|
       get :print
     end
     collection do
+      get :destroy_good
       get :balanced
       post :add_good
       get :new_good_buy

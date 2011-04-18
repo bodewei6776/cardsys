@@ -86,8 +86,8 @@
 
         <ul class="bttitle black fb " >
           <li class="w5">序号</li>
-          <li class="w25">时段</li>
-          <li class="w18">标准收费(/小时)</li>
+          <li class="w20">时段</li>
+          <li class="w10">标准收费(/小时)</li>
           <li class="w10">可用</li>
           <li class="w15">折扣收费</li>
           <li class="w27">说明</li>
@@ -95,17 +95,11 @@
         <%@period_prices.each_with_index do |period_price,index|%>
           <% available_period = card.generate_card_period_price(period_price)%>
           <ul class="table_items">
-            <li><%= index + 1%></li>
-            <li class="w25">
-              <%=period_price.name%>：<%=period_price.start_time%>:00-<%=period_price.end_time%>:00
-            </li>
-            <li class="w18"><%=period_price.price%></li>
-            <li class="w10">
-              <input type="checkbox" name="time_available_<%=period_price.id%>"  value="1" <%if available_period %> checked <%end%> />
-            </li>
-            <li class="w15">
-              <input type="text" name="time_discount_<%=period_price.id%>" maxlength="4" size="4"  value="<%= card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price%>" />
-            </li>
+            <li class='w5'><%= index + 1%></li>
+            <li class="w20"> <%=period_price.name%>：<%=period_price.start_time%>:00-<%=period_price.end_time%>:00 </li>
+            <li class="w10"><%=period_price.price%></li>
+            <li class="w10"> <input type="checkbox" name="time_available_<%=period_price.id%>"  value="1" <%if available_period %> checked <%end%> /> </li>
+            <li class="w15"> <input type="text" name="time_discount_<%=period_price.id%>" maxlength="4" size="4"  value="<%= card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price%>" /> </li>
             <li class="w27"><%=period_price.description%></li>
           </ul>
         <%end%>

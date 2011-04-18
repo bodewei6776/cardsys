@@ -8,7 +8,7 @@ module ReportsHelper
     #  Balance_Way_Use_Check = 5
     #  Balance_Way_Use_Guazhang = 6
     #  Balance_Way_Use_Counter  = 7
-    map = [["记账", 7],["计次" , 1 ],["现金" , 2],["POS机" , 3],["支票" , 5],["银行转账" , 4],
+    map = [["记账", 1],["计次", 7 ],["现金" , 2],["POS机" , 3],["支票" , 5],["银行转账" , 4],
       ["挂账" , 6]]
     html = ""
       map.each do |way|
@@ -48,9 +48,9 @@ module ReportsHelper
     Balance.balances_on_date_and_ways(date,pay_ways).each_with_index do |b,index|
       table << "<tr class='report_item'>"
       table <<"<td>#{index+1}</td>"
-      table << "<td>#{b.member.name}</td>"
-      table << "<td>#{b.order.book_record.court.name}（#{b.book_record_span}）</td>"
-      table << "<td>#{b.order.member_card.card_serial_num}</td>"
+      table << "<td>#{b.member.name rescue b.order.member_name }</td>"
+      table << "<td>#{b.order.book_record.court.name rescue "未定场"}（#{b.book_record_span rescue "未知"}）</td>"
+      table << "<td>#{b.order.member_card.card_serial_num rescue ""}</td>"
       table << "<td class='mon'>#{b.book_record_realy_amount}</td>"
       table << "<td class='mon'>#{b.coach_amount}</td>"
       CommonResource.good_types.each do |gt|

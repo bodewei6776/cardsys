@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
     <title><%= current_catena.name || "博德维网球" %>管理系统</title>
-    <%= javascript_include_tag 'jquery-1.4.2','jquery.ui.core','jquery-ui-1.8.2.custom.min','jquery.ui.datepicker','rails','jquery-ui-datepicker-zh-CN'%>
+    <%= javascript_include_tag 'jquery','jquery.ui.core','jquery-ui-1.8.2.custom.min','jquery.ui.datepicker','rails','jquery-ui-datepicker-zh-CN'%>
     <%= javascript_include_tag "jquery.colorbox-min.js"   %>
     <%= javascript_include_tag "autocomplete-rails.js","jquery.popupWindow.js"   %>
     <%= yield :head_content%>
@@ -60,9 +60,6 @@ if(typeof(String.prototype.trim) === "undefined")
     return String(this).replace(/^\s+|\s+$/g, '');
   };
 }
-
-
-
 
 
 

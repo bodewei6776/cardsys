@@ -12,7 +12,7 @@ class LI
   end
 
   def product
-    Good.find(self.product_id)
+    @product ||= Good.find(self.product_id)
   end
 
   # 单价  计算后的价格, 应该考虑到团购后的打折信息 或者赠品
@@ -33,6 +33,7 @@ class Cart
   def to_s
     self.line_items.collect(&:to_s).join(",")
   end
+
   def add(product_id,quantity)
     quantity = quantity.abs
     li = line_items.select {|li| li.product_id == product_id}.first
@@ -42,6 +43,21 @@ class Cart
     end
     self.remove(product_id)
     @line_items << LI.new(product_id,actual_quantity)
+  end
+
+  def destock(product_id,count)
+    g = Good.find(product_id)
+    g.count_front_stock_out +=  count
+    g.count_front_stock -=  count
+    g.save
+  end
+
+  def restock(product_id)
+    li = @line_items.find{|li| li.product_id == product_id}
+    g = Good.find(product_id)
+    g.count_front_stock_out -= li.quantity.to_i
+    g.count_front_stock += li.quantity.to_i
+    g.save
   end
 
   def remove(product_id)
@@ -58,6 +74,20 @@ class Cart
 
   def blank?
     @line_items.blank?
+  end
+
+  def products
+    self.line_items.collect(&:product)
+  end
+
+  def empty!
+    self.line_items = []
+  end
+
+  def touch
+    self.line_items.each do |li|
+      li.product.order_count = li.quantity
+    end
   end
 
 end

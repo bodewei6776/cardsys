@@ -121,8 +121,8 @@ class OrderItem < ActiveRecord::Base
       good_item.quantity    = good.order_count
       good_item.price       = good.price
       good_item.order_id    = order.id
-      good_item.start_hour  = book_record.start_hour
-      good_item.end_hour    = book_record.end_hour
+      good_item.start_hour  = book_record.start_hour if book_record
+      good_item.end_hour    = book_record.end_hour if book_record
       good_item.order_time  = DateTime.now
       good_item.order_date  = Date.today
     else

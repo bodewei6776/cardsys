@@ -30,6 +30,11 @@ class Balance < ActiveRecord::Base
     elsif instance.use_card_to_balance? && !order.member_card.is_avalible?
       errors[:base] << "卡已经过期，或者状态不正常不能结算"
     end
+   
+  end
+
+  def member_card
+    MemberCard.find(self.goods_member_card_id) #rescue nil
   end
 
   #before_create do |b| b.hide = false end
@@ -83,36 +88,36 @@ class Balance < ActiveRecord::Base
   def change
     save
   end
-  
+
   def balance
     self.status = Const::YES
-    save && order.balance
+      save && order.balance
   end
-  
+
   def to_change?
     operation == 'change'
   end
-  
+
   def to_balance?
     operation.blank? || operation == 'balance'
   end
-  
+
   def balance_way_desc
     balance_way_desciption(balance_way)
   end
-  
+
   def goods_balance_type_desc
     balance_way_desciption(goods_balance_type)
   end
-  
+
   def use_card_to_balance_book_record?
     balance_way == Balance_Way_Use_Card || balance_way == Balance_Way_Use_Counter
   end
-  
+
   def use_card_to_balance_goods?
-     goods_balance_type == Balance_Way_Use_Card
+    goods_balance_type == Balance_Way_Use_Card
   end
-  
+
   def use_card_to_balance?
     use_card_to_balance_book_record? || use_card_to_balance_goods?
   end
@@ -133,7 +138,7 @@ class Balance < ActiveRecord::Base
   def should_use_card_to_blance?
     card && !card.is_counter_card?
   end
-  
+
   def balance_way_desciption(way)
     case way
     when Balance_Way_Use_Card then '用卡'
@@ -149,7 +154,7 @@ class Balance < ActiveRecord::Base
   def ensure_use_card_counter?
     use_card_to_balance_book_record? && card && (card.is_counter_card? || (card.is_zige_card? && use_card_counter_to_balance?))
   end
-  
+
   def amount_by_card
     card_amount = 0
     if use_card_to_balance? 
@@ -162,7 +167,7 @@ class Balance < ActiveRecord::Base
     end
     card_amount
   end
-  
+
   def book_record_amount_desc
     if ensure_use_card_counter?
       "#{count_amount}次"
@@ -170,11 +175,11 @@ class Balance < ActiveRecord::Base
       "￥#{book_record_realy_amount}元"
     end
   end
-  
+
   def goods_amount_desc
     "￥#{goods_realy_amount}元"
   end
-  
+
   def balance_amount_desc
     if ensure_use_card_counter?
       "￥#{goods_realy_amount}元;#{book_record_amount_desc}"
@@ -182,11 +187,11 @@ class Balance < ActiveRecord::Base
       "￥#{goods_realy_amount+book_record_realy_amount}元"
     end
   end
-  
+
   def balance_amount
     book_record_amount.to_i + goods_amount.to_i
   end
-  
+
   def balance_realy_amount
     book_record_realy_amount.to_i + goods_realy_amount.to_i
   end
@@ -194,17 +199,20 @@ class Balance < ActiveRecord::Base
   ####### for reports #########
 
   def self.balances_on_date_and_ways(date,ways)
-    self.balanced.where(["date(created_at) = ? and balance_way in (?)", date,ways]).includes(:order)
+    self.balanced.where(["date(created_at) = ? and (balance_way in (?) or goods_balance_type in (?))", date,ways,ways]).includes(:order)
   end
 
   def self.total_balance_on_date_any_ways(date,ways)
-    data = self.balanced.where(["date(created_at) = ? and balance_way in (?)", date,ways])
-    data.present? ? data.inject(0){|sum,b| sum += (b.book_record_realy_amount + b.goods_realy_amount)} : 0
+    data = self.balanced.where(["date(created_at) = ? and balance_way in (?) or goods_balance_type in (?)", date,ways,ways])
+    data.present? ? data.inject(0){|sum,b| 
+      sum += b.book_record_realy_amount if b.balance_way != 7
+      sum += b.goods_realy_amount
+    } : 0
   end
 
   def self.total_count_on_date_any_ways(date,ways)
-    data = self.balanced.where(["date(created_at) = ? and balance_way in (?)", date,ways])
-    data.present? ? data.inject(0){|sum,b| sum += b.count_amount } : 0
+    data = self.balanced.where(["date(created_at) = ? and balance_way in (?) or goods_balance_type in (?)", date,ways,ways])
+    data.present? ? data.inject(0){|sum,b|sum += ((b.balance_way == 7) ? b.count_amount : 0) } : 0
   end
 
   def coach_amount
@@ -218,17 +226,17 @@ class Balance < ActiveRecord::Base
   end
 
   def self.total_book_records_balance_on_date_any_ways(date,ways)
-    data = self.balanced.where(["date(created_at) = ? and balance_way in (?)", date,ways])
+    data = self.balanced.where(["date(created_at) = ? and balance_way in (?) or goods_balance_type in (?)", date,ways,ways])
     data.present? ? data.inject(0){|sum,b| sum += (b.book_record_realy_amount)} : 0
   end
 
   def self.total_coach_balance_on_date_any_ways(date,ways)
-    data = self.balanced.where(["date(created_at) = ? and balance_way in (?)", date,ways])
+    data = self.balanced.where(["date(created_at) = ? and balance_way in (?) or goods_balance_type in (?)", date,ways,ways])
     data.present? ? data.inject(0){|sum,b| sum += b.coach_amount } : 0
   end
 
   def self.total_goods_balance_on_date_any_ways(date,ways,gt)
-    data = self.balanced.where(["date(created_at) = ? and balance_way in (?)", date,ways])
+    data = self.balanced.where(["date(created_at) = ? and balance_way in (?) or goods_balance_type in (?)", date,ways,ways])
     data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt)} : 0
   end
 

@@ -3,7 +3,7 @@ class CardsController < ApplicationController
   # GET /card_templates
   # GET /card_templates.xml
   def index
-    @cards = Card.search_order
+    @cards = Card.paginate(default_paginate_options)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @cards }
