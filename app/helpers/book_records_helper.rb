@@ -32,7 +32,7 @@ module BookRecordsHelper
     for realy_time_span in realy_time_spans
       book_url = "#{base_book_url}&start_hour=#{realy_time_span[0]}&end_hour=#{realy_time_span[1]}"
       hours = realy_time_span[1]-realy_time_span[0]
-      li_height = 30*(hours)# + #(hours - 1)#*1
+      li_height = 30*(hours) + (hours - 1)#*1
       unless (book_record = realy_time_span.last).nil?
         display_content =if book_record.order.member_type == Const::YES
                            "#{book_record.order.member_name}:#{book_record.order.member_card.card_serial_num}" 

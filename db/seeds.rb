@@ -14,8 +14,8 @@ coach_type= CommonResource.create(:name => "coach_type", :description => "教练
 cert_type = CommonResource.create(:name => "cert_type", :description => "证件类型", :detail_str => "身份证 军人证")
 good_type = CommonResource.create(:name => "good_type", :description => "商品类型", :detail_str => "食品 球具")
 good_source = CommonResource.create(:name => "good_source", :description => "商品来源", :detail_str => "代卖")
-times_summer = CommonResource.create(:name => "times_summer", :description => "夏令时", :detail_str => "3 10")
-times_winter = CommonResource.create(:name => "times_winter", :description => "冬令时", :detail_str => "12 1 2")
+times_summer = CommonResource.create(:name => "times_summer", :description => "平日", :detail_str => "1 12")
+#times_winter = CommonResource.create(:name => "times_winter", :description => "冬令时", :detail_str => "12 1 2")
 
 #Type_Member_Name,Type_blance_Name,Type_Connter_Name,Type_Zige_Name = '会员卡', '储值卡', '记次卡','资格卡'#会员卡 储值卡 记次卡
 CommonResourceDetail.create(:common_resource_id => card_type.id, :detail_name => "储值卡", :catena_id => catena.id)
