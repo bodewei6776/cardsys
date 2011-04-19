@@ -52,7 +52,7 @@
     </ul>
     <%if @member%>
       <%=  render :partial => "/book_records/serial_num",:locals => {:cards => @cards,
-        :member => @member,:current_card => @current_card,:member_cards => @member_cards}%>
+        :member => @member,:current_card => @current_card,:member_cards => @member_cards,:date => Time.now }%>
     <%else%>
       <div id="rel_member" >
         <ul>
