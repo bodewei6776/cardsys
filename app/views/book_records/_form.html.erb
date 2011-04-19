@@ -18,7 +18,10 @@
       <div class="w2">
         <input type="hidden" id="book_record_status" name="order[book_record_attributes][status]" value="<%= @book_record.status %>"/>
         <input type="hidden" id="order_date" name="order[book_record_attributes][record_date]" value="<%= DateUtil::timeshort @book_record.record_date %>"/>
-        <p id='book_date'><%= DateUtil::timeshort @book_record.record_date %></p>
+        <p id='book_date'><%= DateUtil::timeshort @book_record.record_date %>
+        <%= "(周期性预定)" if !@book_record.new_record? && !@book_record.order.parent_id.zero? %>
+        
+        </p>
       </div>
       </li>
     </ul>

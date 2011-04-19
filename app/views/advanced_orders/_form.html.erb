@@ -35,7 +35,7 @@
         <div class="w1">开始时间：</div>
         <div class="w2">
           <select name="order[start_hour]" tabindex="4" class="select order_hour" id="order_start_hour">
-            <% 7.upto(22) do |i| %>
+            <% 7.upto(24) do |i| %>
               <option value="<%=i%>" <%if i==@order.start_hour.to_i%>selected<%end%> ><%=i%>:00</option>
             <%end%>
           </select>
@@ -43,7 +43,7 @@
         <div class="w1">结束时间：</div>
         <div class="w2">
           <select name="order[end_hour]" tabindex="4" class="select order_hour" id="order_end_hour">
-            <% 7.upto(22) do |i| %>
+            <% 7.upto(24) do |i| %>
               <option value="<%=i%>" <%if i==@order.end_hour.to_i%>selected<%end%> ><%=i%>:00</option>
             <%end%>
           </select>
@@ -69,7 +69,7 @@
         </ul>
       </div>
     <%end%>
-    <ul>
+    <ul style='height:120px;'>
       <li>
         <div class="w1">教练：</div>
         <div class="w2 coach-list">
@@ -95,3 +95,20 @@
     </ul>
   </div>
 </div>
+
+<script type="text/javascript" charset="utf-8">
+  $(document).ready(function(){
+      $('.data-add-coach').click(function(){
+        var select = $(this).prev();
+        if(select.attr('type') == 'button'){select = select.prev();}
+        select.clone().appendTo('.coach-list').after('<input type="button"   value="删除" class="data-remove-coach">');
+        });
+      $('.data-remove-coach').live('click',function(){
+        $(this).prev('select').remove();
+        $(this).remove();
+        });
+      $('.data-coach-select').change(function(){
+
+        });
+      });
+    </script>

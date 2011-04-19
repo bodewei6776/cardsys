@@ -301,7 +301,12 @@ notice
 
 
 def days_in_month(year, month)
-  Date.new(year, month, -1).day
+  date = Date.new(year, month, -1)
+  if date.beginning_of_month == Date.today.beginning_of_month
+    Date.today.day
+  else
+    date.day
+  end
 end
   
 end

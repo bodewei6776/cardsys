@@ -88,12 +88,14 @@
             <div class="w2">
               一共<%= @order.orders.size %>次
             </div>
+            <!--
             <div class="w1">明细：</div>
             <div class="w2">
               <% @order.orders.each do |o| -%>
                 <%= o.book_record.record_date.to_date.to_s(:db) %>
               <%end -%>
             </div>
+            -->
           </li>
         </ul>
       </div>

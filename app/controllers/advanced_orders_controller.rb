@@ -22,7 +22,7 @@ class AdvancedOrdersController < ApplicationController
     if @order.save
       @order = AdvancedOrder.find(@order)
       pre_data_for_show_edit
-      render :action => 'show'
+      redirect_to @order 
     else
       keep_data_when_save_error
       render :action => "new"

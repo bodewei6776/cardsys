@@ -17,6 +17,11 @@ module ReportsHelper
     html
   end
 
+  
+  def book_record_amount_desc(b)
+    (b.balance_way == 7) ? "#{b.count_amount}次" : "#{b.book_record_realy_amount}"
+  end
+
   def display_income_report(date,pay_ways)
     table_width = 7 + CommonResource.good_types.count
 
@@ -51,12 +56,12 @@ module ReportsHelper
       table << "<td>#{b.member.name rescue b.order.member_name }</td>"
       table << "<td>#{b.order.book_record.court.name rescue "未定场"}（#{b.book_record_span rescue "未知"}）</td>"
       table << "<td>#{b.order.member_card.card_serial_num rescue ""}</td>"
-      table << "<td class='mon'>#{b.book_record_realy_amount}</td>"
+      table << "<td class='mon'>#{ book_record_amount_desc(b)}</td>"
       table << "<td class='mon'>#{b.coach_amount}</td>"
       CommonResource.good_types.each do |gt|
-      table << "<td class='mon'>#{b.good_amount_by_type(gt)}</td>"
+      table << "<td class='mon'>#{b.good_amount_by_type(gt,pay_ways)}</td>"
       end
-      table << "<td class='mon'>#{b.book_record_realy_amount + b.goods_realy_amount}</td>"
+      table << "<td class='mon'>#{b.balance_amount_by_ways(pay_ways)}</td>"
       table << "</tr>"
     end
 
@@ -77,6 +82,11 @@ module ReportsHelper
   end
 
 
+  def choose_month(date)
+    select_tag("",options_for_select((1..Date.today.month).to_a,date.month),:onchange=> "recalculate();",:id => "date_month")
+  end
+
+
   def display_month_income_report(date,pay_ways)
     table_width = 5 + CommonResource.good_types.count
 
@@ -85,11 +95,11 @@ module ReportsHelper
     table <<("<caption><h1>" + current_catena.name  +  "球馆#{date.strftime("%y-%m")}收入月报表"+ "</h1></caption>")
     # first tr%
     table <<("<tr class='head'>")
-    table <<("<td colspan=3>日期 #{ select_year(date,{:start_year => 2010,:end_year => 2016},:onchange => "recalculate();")} 年 " + 
-             "#{select_month(date,{},:onchange => "recalculate();")}</td>")
+    table <<("<td colspan=3>日期 #{ select_year(date,{:start_year => 2008,:end_year => Date.today.year},:onchange => "recalculate();")} 年 " + 
+             "#{choose_month(date)}</td>")
     table << "<td>支付方式：　</td>"
     table << "<td colspan=#{table_width - 5}>#{pay_way_checkboxes(pay_ways)}</td>"
-    table << "<td><p class='money'>合计：　#{Balance.total_balance_on_date_any_ways(date,pay_ways)}<p></td>"
+    table << "<td><p class='money'>合计：　#{Balance.total_balance_on_month_any_ways(date,pay_ways)}<p></td>"
     table << "</tr>"
 
     # second tr
@@ -115,20 +125,20 @@ module ReportsHelper
       CommonResource.good_types.each do |gt|
       table << "<td class='mon'>#{Balance.total_goods_balance_on_date_any_ways(current_date,pay_ways,gt)}</td>"
       end
-      table << "<td class='mon'>#{Balance.total_balance_on_date_any_ways(current_date,pay_ways)}</td>"
+      table << "<td class='mon'>#{Balance.total_balance_on_date_any_ways(current_date,pay_ways)} 元　#{Balance.total_count_on_date_any_ways(current_date,pay_ways)} 次</td>"
       table << "</tr>"
     end
 
     # last tr
 
     table << "<tr class='total head'>"
-    table << "<td colspan=2>合计: #{Balance.total_balance_on_date_any_ways(date,pay_ways)}</td>"
-    table << "<td class='mon'> #{Balance.total_book_records_balance_on_date_any_ways(date,pay_ways)}</td>"
-    table << "<td class='mon'> #{Balance.total_coach_balance_on_date_any_ways(date,pay_ways)}</td>"
+    table << "<td colspan=2>合计: #{Balance.total_balance_on_month_any_ways(date,pay_ways)}</td>"
+    table << "<td class='mon'> #{Balance.total_book_records_balance_on_month_any_ways(date,pay_ways)}</td>"
+    table << "<td class='mon'> #{Balance.total_coach_balance_on_month_any_ways(date,pay_ways)}</td>"
   CommonResource.good_types.each do |gt|
-    table << "<td class='mon'> #{Balance.total_goods_balance_on_date_any_ways(date,pay_ways,gt)}</td>"
+    table << "<td class='mon'> #{Balance.total_goods_balance_on_month_any_ways(date,pay_ways,gt)}</td>"
       end
-    table << "<td>合计: #{Balance.total_balance_on_date_any_ways(date,pay_ways)}</td>"
+    table << "<td>合计: #{Balance.total_balance_on_month_any_ways(date,pay_ways)} 元 #{Balance.total_count_on_month_any_ways(date,pay_ways)}次</td>"
     table << "</tr>"
     table << "</table>"
     table

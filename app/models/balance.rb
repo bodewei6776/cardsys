@@ -203,41 +203,81 @@ class Balance < ActiveRecord::Base
   end
 
   def self.total_balance_on_date_any_ways(date,ways)
-    data = self.balanced.where(["date(created_at) = ? and balance_way in (?) or goods_balance_type in (?)", date,ways,ways])
+    data = self.balanced.where(["date(created_at) = ? and (balance_way in (?) or goods_balance_type in (?))", date,ways,ways])
     data.present? ? data.inject(0){|sum,b| 
-      sum += b.book_record_realy_amount if b.balance_way != 7
-      sum += b.goods_realy_amount
+      sum +=((b.balance_way != 7 && ways.include?(b.balance_way.to_s)) ?  b.book_record_realy_amount : 0) 
+      sum +=(ways.include?(b.goods_balance_type.to_s) ? b.goods_realy_amount : 0) 
+    } : 0
+  end
+
+  def self.total_balance_on_month_any_ways(date,ways)
+    data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?) or goods_balance_type in (?))", date.strftime("%Y-%m"),ways,ways])
+    data.present? ? data.inject(0){|sum,b| 
+      sum +=((b.balance_way != 7 && ways.include?(b.balance_way.to_s)) ?  b.book_record_realy_amount : 0) 
+      sum +=(ways.include?(b.goods_balance_type.to_s) ? b.goods_realy_amount : 0) 
     } : 0
   end
 
   def self.total_count_on_date_any_ways(date,ways)
-    data = self.balanced.where(["date(created_at) = ? and balance_way in (?) or goods_balance_type in (?)", date,ways,ways])
-    data.present? ? data.inject(0){|sum,b|sum += ((b.balance_way == 7) ? b.count_amount : 0) } : 0
+    data = self.balanced.where(["date(created_at) = ? and (balance_way in (?) or goods_balance_type in (?))", date,ways,ways])
+    data.present? ? data.inject(0){|sum,b|
+      sum += ((b.balance_way == 7) ? b.count_amount : 0)
+    } : 0
+  end
+
+  def self.total_count_on_month_any_ways(date,ways)
+    data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?) or goods_balance_type in (?))", date.strftime("%Y-%m"),ways,ways])
+    data.present? ? data.inject(0){|sum,b|
+      sum += ((b.balance_way == 7) ? b.count_amount : 0)
+    } : 0
   end
 
   def coach_amount
     self.order.coach_items.present? ?  self.order.coach_items.inject(0){|sum,c| sum + c.amount} : 0
   end
 
-  def good_amount_by_type(type)
+  def good_amount_by_type(type,ways)
+    return 0 unless ways.include?(self.goods_balance_type.to_s)
     product_items =  self.order.product_items(:include =>:good)
     product_items = (product_items.present? ? product_items.select{|g| g.good.good_type == type.id} : [])
     product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : 0
   end
 
   def self.total_book_records_balance_on_date_any_ways(date,ways)
-    data = self.balanced.where(["date(created_at) = ? and balance_way in (?) or goods_balance_type in (?)", date,ways,ways])
-    data.present? ? data.inject(0){|sum,b| sum += (b.book_record_realy_amount)} : 0
+    data = self.balanced.where(["date(created_at) = ? and (balance_way in (?) or goods_balance_type in (?))", date,ways,ways])
+    data.present? ? data.inject(0){|sum,b| 
+      sum += ((b.balance_way != 7) ? b.book_record_realy_amount : 0)
+    } : 0
   end
 
+  def self.total_book_records_balance_on_month_any_ways(date,ways)
+    data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?) or goods_balance_type in (?))", date.strftime("%Y-%m"),ways,ways])
+    data.present? ? data.inject(0){|sum,b| 
+      sum += ((b.balance_way != 7) ? b.book_record_realy_amount : 0)
+    } : 0
+  end
+
+
   def self.total_coach_balance_on_date_any_ways(date,ways)
-    data = self.balanced.where(["date(created_at) = ? and balance_way in (?) or goods_balance_type in (?)", date,ways,ways])
+    data = self.balanced.where(["date(created_at) = ? and (balance_way in (?) or goods_balance_type in (?))", date,ways,ways])
     data.present? ? data.inject(0){|sum,b| sum += b.coach_amount } : 0
   end
 
+
+  def self.total_coach_balance_on_month_any_ways(date,ways)
+    data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?) or goods_balance_type in (?))", date.strftime("%Y-%m"),ways,ways])
+    data.present? ? data.inject(0){|sum,b| sum += b.coach_amount } : 0
+  end
+
+
   def self.total_goods_balance_on_date_any_ways(date,ways,gt)
-    data = self.balanced.where(["date(created_at) = ? and balance_way in (?) or goods_balance_type in (?)", date,ways,ways])
-    data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt)} : 0
+    data = self.balanced.where(["date(created_at) = ? and (balance_way in (?) or goods_balance_type in (?))", date,ways,ways])
+    data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,ways)} : 0
+  end
+
+  def self.total_goods_balance_on_month_any_ways(date,ways,gt)
+    data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?) or goods_balance_type in (?))", date.strftime("%Y-%m"),ways,ways])
+    data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,ways)} : 0
   end
 
   def book_record_span
@@ -266,6 +306,21 @@ class Balance < ActiveRecord::Base
       stat.inject(0){|sum,record| sum + record[0].price * record[1]} 
     else
       0
+    end
+  end
+
+  def balance_amount_by_ways(ways)
+    money,count = 0,0
+    (money += self.goods_realy_amount) if ways.include?(self.goods_balance_type.to_s)
+    if self.balance_way == 7 #&& ways.include?("7")
+      count += self.count_amount
+    else
+      money += self.book_record_realy_amount
+    end
+    if count > 0
+      return "#{money}元 #{count}次"
+    else
+      return money
     end
   end
 

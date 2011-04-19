@@ -5,13 +5,12 @@ class ReportsController < ApplicationController
 
   def income
     @date = Date.parse(params[:date]) rescue  Date.today
-    @pay_ways = params[:pay_ways] || [] || [1,2,3,4,5,6,7]
+    @pay_ways = params[:pay_ways] || [2,3,4,5].collect(&:to_s)
   end
 
   def income_by_month
-    puts params[:date]
     @date = Date.parse(params[:date] + "-1") rescue  Date.today.beginning_of_month
-    @pay_ways = params[:pay_ways] || [] || [1,2,3,4,5,6,7]
+    @pay_ways = params[:pay_ways] ||  [2,3,4,5].collect(&:to_s)
   end
 
   def good_type_day
