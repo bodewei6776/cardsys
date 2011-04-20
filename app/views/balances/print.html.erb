@@ -18,14 +18,16 @@
         <td colspan=4>消费时段：<%= balance_time_span_in_word(@balance)%> </td>
       </tr>
       <tr>
-        <td colspan=2>会员姓名: <%= @balance.order.member.name%></td>
-        <td colspan=2>会员卡号: <%= @balance.order.member_card.card_serial_num%></td>
+        <td colspan=2>姓名: <%=  @balance.order.member_name %></td>
+        <td colspan=2>卡号: <%=  @balance.order.is_member?  ? @balance.order.member_card.card_serial_num : "无卡 "%></td>
       </tr>
+      <%if @balance.order.is_member? %>
 
- <tr class=''>
-        <td colspan=4>卡到期时间：<%= @balance.order.member_card.expire_date.strftime("%Y-%m-%d")%> </td>
-      </tr>
-      
+        <tr class=''>
+          <td colspan=4>卡到期时间：<%= @balance.order.member_card.expire_date.strftime("%Y-%m-%d")%> </td>
+        </tr>
+      <% end %>
+
       <tr class='goods goods_title'>
         <td class='left'>商品名称</td>
         <td>单价</td>
@@ -35,82 +37,85 @@
       <tr class='goods'>
         <td class='left'>场地预定费</td>
         <% if @balance.balance_way == 7%>
-        <td><%= 1%></td>
-        <td><%= @balance.order.book_record.end_hour - @balance.order.book_record.start_hour%></td>
-        <td class='right'><%= @balance.count_amount%>次</td>
-      <%else%>
-<td><%= @balance.order.book_record_item.amount%></td>
-        <td>1</td>
-        <td class='right'><%= @balance.order.book_record_item.amount%></td>
+          <td><%= 1%></td>
+          <td><%= @balance.order.book_record.end_hour - @balance.order.book_record.start_hour%></td>
+          <td class='right'><%= @balance.count_amount%>次</td>
+        <%else%>
+          <td><%= @balance.order.book_record_item.amount%></td>
+          <td>1</td>
+          <td class='right'><%= @balance.order.book_record_item.amount%></td>
 
-      <%end%>
+        <%end%>
       </tr>
       <% unless (coach_items = @balance.order.coach_items).blank?  -%>
         <% coach_items.each do |coach_item|  -%> 
           <% coach = coach_item.related_entry %>
-      <tr class='goods'>
-          <td class='left'>教练(<%= coach.name%>)</td>
-          <td>
-            <%=  coach.fee %>
-          </td>
-          <td>
-            <%= coach_item.quantity %>
-          </td>
-          <td class='right'><%= coach_item.amount %></td>
+          <tr class='goods'>
+            <td class='left'>教练(<%= coach.name%>)</td>
+            <td>
+              <%=  coach.fee %>
+            </td>
+            <td>
+              <%= coach_item.quantity %>
+            </td>
+            <td class='right'><%= coach_item.amount %></td>
+          </tr>
+        <%end  -%>
+      <%end -%> 
+      <% for good_item in @balance.order.product_items%>
+        <% next if (good = good_item.product).blank? %>
+        <tr class='goods'>
+          <td class='left'><%= good.name%> </td>
+          <td><%= good.price %></td>
+          <td> <%= good_item.quantity %> </td>
+          <td class='right'><%= good_item.amount %></td>
         </tr>
-      <%end  -%>
-    <%end -%> 
-    <% for good_item in @balance.order.product_items%>
-      <% next if (good = good_item.product).blank? %>
-      <tr class='goods'>
-        <td class='left'><%= good.name%> </td>
-        <td><%= good.price %></td>
-        <td> <%= good_item.quantity %> </td>
-        <td class='right'><%= good_item.amount %></td>
-    </tr>
-  <%end%>
+      <%end%>
 
 
-  <tr class='total'>
-    <td colspan=1></td>
-    <td colspan=1>合计:</td>
-    <td class='amount' colspan=2><span> <%= @balance.balance_amount_desc%></span></td>
-  </tr>
-  <tr class='total_remain'>
-    <td colspan=1></td>
-    <td> 剩余金额:</td>
-<td class='amount' colspan=2><span> <%= @balance.order.member_card.left_fee %></span>元</td>
-  </tr>
-  <tr class='total_remain'>
-    <td colspan=1></td>
-    <td> 剩余次数:</td>
-    <td class='amount' colspan=2><span> <%= @balance.order.member_card.left_times%></span>次</td>
-  </tr>
-  <tr>
-    <td colspan=4> 备注: 
-      <%= @balance.change_note%>
-    </td>
-  </tr>
-  <tr>
-    <td colspan=4> 操作员编号: 
-      <%= @balance.who_balance.login%>
-    </td>
-  </tr>
-  <tr>
-    <td colspan=4> 支付方式: 
-      <%= @balance.balance_way_desciption(@balance.balance_way)%>
-    </td>
-  </tr>
+      <tr class='total'>
+        <td colspan=1></td>
+        <td colspan=1>合计:</td>
+        <td class='amount' colspan=2><span> <%= @balance.balance_amount_desc%></span></td>
+      </tr>
+
+      <%if @balance.order.is_member? %>
+        <tr class='total_remain'>
+          <td colspan=1></td>
+          <td> 剩余金额:</td>
+          <td class='amount' colspan=2><span> <%= @balance.order.member_card.left_fee %></span>元</td>
+        </tr>
+        <tr class='total_remain'>
+          <td colspan=1></td>
+          <td> 剩余次数:</td>
+          <td class='amount' colspan=2><span> <%= @balance.order.member_card.left_times%></span>次</td>
+        </tr>
+      <% end %>
+      <tr>
+        <td colspan=4> 备注: 
+          <%= @balance.change_note%>
+        </td>
+      </tr>
+      <tr>
+        <td colspan=4> 操作员编号: 
+          <%= @balance.who_balance.login%>
+        </td>
+      </tr>
+      <tr>
+        <td colspan=4> 支付方式: 
+          <%= @balance.balance_way_desciption(@balance.balance_way)%>
+        </td>
+      </tr>
 
 
 
 
-</table>
-<div class='noprint'>
-  <form>
-    <input type="button" value="打印" class='submit' style='margin-top:20px; margin-left:130px;padding:3px 7px;border:1px solid black;' onClick="window.print()" />
-  </form>
-</div>
+    </table>
+    <div class='noprint'>
+      <form>
+        <input type="button" value="打印" class='submit' style='margin-top:20px; margin-left:130px;padding:3px 7px;border:1px solid black;' onClick="window.print()" />
+      </form>
+    </div>
   </body>
 </html>
 

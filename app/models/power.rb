@@ -32,5 +32,9 @@ class Power < ActiveRecord::Base
     self.update_attribute(:will_show,true)
   end
 
+  def hide!
+    self.update_attribute(:will_show,false)
+  end
+
 
 end

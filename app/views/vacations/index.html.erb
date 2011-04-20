@@ -11,7 +11,7 @@
   <div class=" table">
     <ul class="bttitle black fb " >
       <li class="w5">序号</li>
-      <li class="w10">名称</li>
+      <li class="w30">名称</li>
       <li class="w10">开始日期</li>
       <li class="w10">结束日期</li>
       <li class="w10">节假日类型</li>
@@ -20,7 +20,7 @@
     <%@vacations.each_with_index do |vacation,index|%>
       <ul class="table_items">
         <li class="w5"><%= index + 1 %></li>
-        <li class="w10"><%=vacation.name%></li>
+        <li class="w30 overflow_hidden"><%=vacation.name%></li>
         <li class="w10"><%=ftime_date(vacation.start_date)%></li>
         <li class="w10"><%=ftime_date(vacation.end_date)%></li>
         <li class="w10"><%=vacation.status==1?"节假日":"平日"%></li>

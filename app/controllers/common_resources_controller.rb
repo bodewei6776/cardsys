@@ -137,11 +137,9 @@ class CommonResourcesController < ApplicationController
       return
     end
 
-
-
-
     powers = Power.find(params[:powers])
     if powers.present?
+      Power.all_with_hide.collect(&:hide!)
       powers.collect(&:show!)
       flash[:notice] = " 更新成功"
     end

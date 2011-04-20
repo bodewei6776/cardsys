@@ -169,12 +169,32 @@ class MemberCard < ActiveRecord::Base
     save
   end
 
+  # 能否进行商品购买
+  def can_buy_good
+    (!self.card.is_counter_card? && self.card.is_consume_goods?) ? "yes" : "no"
+  end
+
+  def member_info
+    self.member_name + "( #{self.member_phone })"
+  end
+
+  def card_info
+    self.left_fee_value + " / " + self.expire_date.strftime("%Y-%m-%d")
+  end
+
+  def member_name
+    member.name
+  end
+
+  def member_phone
+    (member.mobile + "/" + member.telephone) rescue "未知"
+  end
+
   def should_notice_remain_amount_due?(due_time = Time.now)
-    puts '1' * 100
-    puts due_time
     (self.left_fee < (self.card.min_amount || 0)) || \
       (self.left_times < (self.card.min_count || 0)) || \
-      (self.expire_date < (due_time + (self.card.min_time || 0).days))
+      (self.expire_date < (due_time + (self.card.min_time || 0).days)) 
+
   end
 
   def remain_amount_notice(due_time = Time.now)

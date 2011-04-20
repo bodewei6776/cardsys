@@ -51,12 +51,23 @@ function userAutocomplete(){
 	        $.get(reqest_url,function(returned_data)
 	        {
                 options = '';
-                $(returned_data).each(function(i,node){ options +=("<option value=' " + node.member_card.id +
-                    "'notice='"+ node.member_card.remain_amount_notice +"'>" + node.member_card.card_serial_num + "</option>") 
+                $(returned_data).each(function(i,node){ options +=("<option value='" + node.member_card.id +
+                    "' order_tip_message='" + node.member_card.order_tip_message+ 
+                    "' can_buy_good='" + node.member_card.can_buy_good+ 
+                    "' member_info='" + node.member_card.member_info+ 
+                    "' card_info='" + node.member_card.card_info+ 
+                    "'>"
+                    + node.member_card.card_serial_num + "</option>") 
                     });
 
                 $('#cards select').html(options);
-                $('#cards select').change(function(){$('#notice').text($(this).find("option:selected").attr('notice')) });
+                $('#cards select').change(function(){
+                  var selected = $(this).find("option:selected");
+                  $('#member_card_info').text(selected.attr('card_info') + selected.attr('order_tip_message'));
+                  $('#member_info').text(selected.attr('member_info'));
+                  if(selected.attr('can_buy_good') == "no"){ $('#member_card_info').append("  [此卡不可消费商品]");}
+                });
+                $('#cards select').trigger("change");
 	        });
 	      }			
 		});

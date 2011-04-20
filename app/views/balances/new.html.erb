@@ -119,9 +119,7 @@
     </ul>
   </div>
 <% end -%>
-<% unless @good_items.blank? %>
-  <%= render :partial => "/orders/order_items",:locals => {:good_items => @good_items||[],:order => @order} %>
-<% end %>
+  <%= render :partial => "/orders/order_items_list",:locals => {:good_items => @order.product_items||[],:order => @order} %>
 </div>
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function(){

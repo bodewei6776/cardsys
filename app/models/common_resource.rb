@@ -104,4 +104,20 @@ class CommonResource < ActiveRecord::Base
   def self.good_types
     CommonResource.find_by_name("good_type").common_resource_details
   end
+
+  def self.agent_to_buy_time
+    CommonResource.find_by_name("agent_to_buy_time").detail_str.to_i rescue 1
+  end
+
+  def self.cancle_time
+    CommonResource.find_by_name("cancle_time").detail_str.to_i rescue 24
+  end
+
+  def self.change_time
+    CommonResource.find_by_name("change_time").detail_str.to_i rescue 0
+  end
+
+  def self.active_time
+    CommonResource.find_by_name("active_time").detail_str.to_i rescue 30
+  end
 end

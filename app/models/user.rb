@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   end
 
   has_many   :user_powers
-  has_many :powers,:through => :user_powers#,:conditions => "will_show = 1"
+  has_many :powers,:through => :user_powers,:conditions => "will_show = 1"
   has_and_belongs_to_many :catenas
 
   #  validates :login, :presence => {:message => "用户名不能为空！"},

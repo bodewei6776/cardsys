@@ -254,7 +254,7 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 /*<定义页面布局结构类>*/
 .table{margin:0px auto; width:99.8%; border:1px dotted #ccc; }
 .table ul{width:100%;height:25px; color:#434343;}
-.table ul li{ height:25px;line-height:25px;text-align: center; float:left; display:block; text-align:center; border-right:1px solid #e3e3e3; }
+.table ul li{ height:25px;line-height:25px;text-align: center; float:left; display:block; text-align:center; border-right:1px solid #e3e3e3; overflow:hidden;}
 
 .table2{margin:0px auto; width:99.8%;  }
 .table2 ul{width:100%;height:25px; color:#434343;}
@@ -488,4 +488,8 @@ table.report_table tr.report_title td{
 
 .tr_hover{
  background-color: #9be284; 
+}
+
+.overflow_hidden{
+  overflow:hidden;
 }

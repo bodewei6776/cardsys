@@ -41,6 +41,7 @@ class BalancesController < ApplicationController
     @balance.user_id = user.id
     @balance.merge_order(@order)
     if @balance.process && @balance.to_balance?
+      @balance.change_note_by(user) if @balance.operation == "change"
       pre_date_for_new_create
       redirect_to order_balance_path(@order,@balance) 
     else
@@ -52,12 +53,33 @@ class BalancesController < ApplicationController
   def update
     @order    = Order.find(params[:order_id])
     @balance  = Balance.find(params[:id])
+
+    if params[:user_name].blank? or params[:password].blank?
+      pre_date_for_new_create
+      @balance = Balance.find_by_order_id(@order.id) || Balance.new_from_order(@order)
+      @balance.errors.add(:base,"用户名或者密码不能为空")
+      render :action =>  "new" 
+      return
+    end
+    user = User.find_by_login(params[:user_name])
+    if user.blank? or !user.valid_password?(params[:password])
+      pre_date_for_new_create
+      @balance = Balance.find_by_order_id(@order.id) || Balance.new_from_order(@order)
+      @balance.errors.add(:base,"用户名或者密码不能为空")
+      render :action =>  "new"
+      return
+    end
+
     @balance.attributes=params[:balance]
     @balance.merge_order(@order)
     if @balance.process
+      @balance.change_note_by(user) if @balance.operation == "change"
       pre_date_for_new_create
-      #render :action => "show"
-      redirect_to order_balance_path(@order,@balance) 
+      if @balance.operation == "change"
+        render :action => "new"
+      else
+        redirect_to order_balance_path(@order,@balance) 
+      end
     else
       pre_date_for_new_create
       render :action => "new"
@@ -110,12 +132,12 @@ class BalancesController < ApplicationController
     order = Order.new(:order_time => Time.now,:user_id => current_user.id)
     if params[:member] == 'member'
       member_card = MemberCard.find(params[:member_card_id])
-      member_id = Member.find(params[:member_id])
+      member= Member.find(params[:member_id])
       order.parent_id = 0
       order.member_type = 1 
-      order.member_id = member_card.member_id
+      order.member_id = member.id 
       order.member_card_id = member_card.id
-      order.member_name = member_card.member.name
+      order.member_name = member.name
       order.save(false)
       cart.touch
       order.order_goods(cart.products)
@@ -128,7 +150,7 @@ class BalancesController < ApplicationController
       balance.goods_amount = cart.total_price
       balance.goods_realy_amount = cart.total_price
       balance.goods_member_card_id = member_card.id
-      balance.member_id = member_card.member_id
+      balance.member_id = member.id
       balance.user_id = current_user.id 
       if  balance.process
         cart.empty!

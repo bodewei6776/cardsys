@@ -87,6 +87,23 @@
         </div>
       </li>
     </ul>
+
+    <ul>
+      <li>
+      <div class="w1" style="">操作人：</div>
+      <div class="w2">
+        <input name="user_name" value='<%= params[:user_name] || current_user.login%>'  autocomplete="/users/autocomplete_user_name" id='name'>
+      </div>
+      <li>
+      <li>
+      <div class="w1" style="">密码：</div>
+      <div class="w2">
+        <input name="password"  type='password' value=''>
+      </div>
+      <li>
+    </ul>
+
+
     <ul style="height:80px;">
       <div class="w1" style="">备注：</div>
       <div class="ww2">
@@ -111,4 +128,4 @@
 
         });
       });
-    </script>
+</script>

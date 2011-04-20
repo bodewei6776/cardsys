@@ -39,20 +39,20 @@ class BookRecord < ActiveRecord::Base
   end
 
   def agent_to_buy_condition
-    1.hours.ago(self.start_date_time) >= DateTime.now
+    CommonResource.agent_to_buy_time.hours.ago(self.start_date_time) >= DateTime.now
   end
 
   def cancle_condition
-    24.hours.ago(self.start_date_time) >= DateTime.now
+    CommonResource.cancle_time.hours.ago(self.start_date_time) >= DateTime.now
   end
 
   def change_conditions
-    0.hours.ago(self.start_date_time) > DateTime.now
+    CommonResource.change_time.hours.ago(self.start_date_time) > DateTime.now
   end
 
   #开场前半小时到结束时段
   def active_conditions
-    30.minutes.ago < start_date_time && start_date_time < end_date_time
+    CommonResource.active_time.minutes.ago < start_date_time && start_date_time < end_date_time
   end
 
   def should_book?

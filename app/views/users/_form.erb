@@ -20,13 +20,13 @@
       <li>
       <div class='w1'>  密&nbsp;&nbsp;&nbsp;码：</div>
       <div class='w2'>
-        <input type="text" name="user[password]" maxlength="20" value="<%= @user.password_salt %>" onblur="return;" id="password" class="inputtext" />
+        <input type="password" name="user[password]" maxlength="20" value="<%= @user.password_salt %>" onblur="return;" id="password" class="inputtext" />
       </div>
       </li>
       <li>
       <div class='w1'> 密码确认：</div>
       <div class='w2'>
-        <input type="text" name="user[password_confirmation]" maxlength="20" value="<%= @user.password_confirmation %>" onblur="return;" id="password_confirmation" class="inputtext" />
+        <input type="password" name="user[password_confirmation]" maxlength="20" value="<%= @user.password_confirmation %>" onblur="return;" id="password_confirmation" class="inputtext" />
       </div>
       </li>
     </ul>

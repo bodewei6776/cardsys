@@ -403,7 +403,7 @@ class MembersController < ApplicationController
 
   def member_cards_list
     @card_list = Member.find(params[:id]).member_cards
-    render :json => @card_list.to_json(:methods => :remain_amount_notice)
+    render :json => @card_list.to_json(:methods =>[ :order_tip_message,:can_buy_good,:member_info,:card_info])
   end
 
   #没有用到了，后面要用来修改会员卡状态

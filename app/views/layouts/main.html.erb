@@ -77,7 +77,6 @@ if(typeof(String.prototype.trim) === "undefined")
     <div class="top_user">
       <strong>登录用户:</strong> <%= current_user.login || current_user.email%>
       [ <%= link_to "退出",user_session_path(current_user),:method =>:delete,:class => "cyellow"%> ]
-      [ <a class="cyellow" href="#">修改密码</a> ]
       <!--   [<%= select_tag "catena",options_for_select(current_user.catenas.collect{|c| [c.name,c.id]}),:onchange => "javascript:change_catena($(this).val());return;"%>] -->
     </div>
   </div>

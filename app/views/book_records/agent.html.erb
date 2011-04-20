@@ -1,8 +1,23 @@
-<div class="tab_content">
-  <h1 class="title">场地代卖</h1>
-  <%= error_messages_for :order %>
-  <%=  form_for(@book_record,:url => "/book_records/#{@original_book_record.id}/do_agent",:html => {:class => "form-profile"}) do |order_form| %>
-    <%= render :partial => "/book_records/form",:f => order_form %>
-  <%end%>
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >场地代卖</div>
+    </div>
+    <div class=" r_bt_r" ></div>
+  </div>
+  <div class="fform">
+    <%= error_messages_for :order %>
+    <%=  form_for(@book_record,:url => "/book_records/#{@original_book_record.id}/do_agent",:html => {:class => "form-profile"}) do |order_form| %>
+      <%= render :partial => "/book_records/form",:f => order_form %>
+      <div class="h10"></div>
+      <div class="input_bd">
+        <%= display_enable_buttons(@book_record) %>
+        <button class="submit1 hand" type="button" onclick="window.history.back();">返回</button>
+      </div>
+      <div class=" clear"></div>
+
+    <%end%>
+  </div>
+  <%= render :partial => '/book_records/share_js' %>
 </div>
-<%= render :partial => '/book_records/share_js' %>

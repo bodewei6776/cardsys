@@ -57,6 +57,7 @@
       <li class="w10">当前状态</li>
       <li class="w10">日期</li>
       <li class="w10">时段</li>
+      <li class="w10">操作人</li>
       <li class="w10">详情</li>
     </ul>
     <%@order_items.each_with_index do |order_item,index|%>
@@ -67,7 +68,8 @@
         <li class="w10"><%= order_item.status_str %></li>
         <li class="w10"><%= DateUtil.timeshort(order_item.product.record_date) %></li>
         <li class="w10"><%= order_item.product.start_hour %> - <%= order_item.product.end_hour %></li>
-        <li class="w10"></li>
+      <li class="w10">操作人</li>
+      <li class="w10"><%= order_item.order.user.login rescue "未知"%></li>
       </ul>
     <%end%>
   </div>

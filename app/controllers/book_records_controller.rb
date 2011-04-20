@@ -85,9 +85,11 @@ class BookRecordsController < ApplicationController
     end
 
     @order.parent_id = 0
+    @order.user_id = user.id
     respond_to do |format|
       if @order.save
         Log.log(user,"预定场地#{@order.book_record.court.name}","book_record_new")
+
         format.html { 
           render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
                     " window.opener.location.reload(); } ")
@@ -180,10 +182,24 @@ class BookRecordsController < ApplicationController
   def destroy
     book_record = BookRecord.find(params[:id])
     @order = book_record.order
-    @order.destroy
-    respond_to do |format|
-      format.html { redirect_to("/book_records?date=#{book_record.record_date.to_s(:db)}", :notice => '删除成功.') }
+
+    if params[:user_name].blank? or params[:password].blank?
+      render :json => {:result => 0} and return
     end
+    user = User.find_by_login(params[:user_name])
+
+    if user.blank? or !user.valid_password?(params[:password])
+      render :json => {:result => 0} and return
+    end
+
+
+    unless user.can?('删除场地预定')
+      render :json => {:result => 0} and return
+    end
+
+
+    @order.destroy
+    render :json => {:result => 1}
   end
 
   def complete_for_members
