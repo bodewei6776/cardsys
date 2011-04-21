@@ -14,6 +14,7 @@
   <body>
     <table border=2 >
       <caption><h2><%= current_catena.name%>球馆消费单</h2></caption>
+      <% if @balance.order.book_record %>
       <tr class='goods goods_title'>
         <td colspan=4>消费时段：<%= balance_time_span_in_word(@balance)%> </td>
       </tr>
@@ -27,6 +28,7 @@
           <td colspan=4>卡到期时间：<%= @balance.order.member_card.expire_date.strftime("%Y-%m-%d")%> </td>
         </tr>
       <% end %>
+      <% end %>
 
       <tr class='goods goods_title'>
         <td class='left'>商品名称</td>
@@ -34,6 +36,8 @@
         <td>数量</td>
         <td class='right'>小计</td>
       </tr>
+
+      <% if @balance.order.book_record %>
       <tr class='goods'>
         <td class='left'>场地预定费</td>
         <% if @balance.balance_way == 7%>
@@ -61,6 +65,7 @@
             <td class='right'><%= coach_item.amount %></td>
           </tr>
         <%end  -%>
+      <%end -%> 
       <%end -%> 
       <% for good_item in @balance.order.product_items%>
         <% next if (good = good_item.product).blank? %>
@@ -96,6 +101,12 @@
           <%= @balance.change_note%>
         </td>
       </tr>
+      <tr>
+        <td colspan=4> 结算时间: 
+          <%= DateUtil.timelong(@balance.created_at)%>
+        </td>
+      </tr>
+ 
       <tr>
         <td colspan=4> 操作员编号: 
           <%= @balance.who_balance.login%>

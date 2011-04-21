@@ -208,6 +208,8 @@ $("#balance_form").submit(function(){
     if($('#sanke input[type=radio]:checked').size() == 0){alert("请选择支付方式");return false;}
     }
 
+    if(!confirm("确认支付？")){ return false;}
+
     });
 
   </script>

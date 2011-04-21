@@ -17,6 +17,10 @@ class Power < ActiveRecord::Base
     where(["will_show = ? or will_show =? or will_show is ?",true,false,nil])
   end
 
+  def children_without_hide
+    self.children.where(:will_show => true)
+  end
+
   acts_as_tree
 
   def self.tree_top

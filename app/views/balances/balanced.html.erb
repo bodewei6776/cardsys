@@ -1,5 +1,7 @@
 
 <div class="w96">
+
+    <%if flash[:notice]%><div id="errorExplanation"><h2>提示</h2><p><%= flash[:notice] %></p></div><%end%>
   <div class='soso'>
 
     <form method="post" action="/balances/balance" class="form-profile">

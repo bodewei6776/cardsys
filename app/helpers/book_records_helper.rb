@@ -70,8 +70,8 @@ module BookRecordsHelper
 
           else
           info_htmls << [realy_time_span[0],content_tag(:li,
-                    tag("input",{:type => 'button',:href=> book_url,:value => '预定', 
-              :class => "submit1 hand popup-new-window",:style => "height:#{li_height}px;"}))]
+                   content_tag("button","预定",{:type => 'button',:href=> book_url,:value => '预定', 
+              :class => "submit1 hand popup-new-window"}))]
           end
         else
           info_htmls << [realy_time_span[0],content_tag(:li,content_tag("button",'预定',{:type => 'button', :href => book_url,

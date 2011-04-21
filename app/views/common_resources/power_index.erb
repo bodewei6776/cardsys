@@ -38,7 +38,7 @@
 
 
   <%= form_for(:common_resource,:url => power_update_common_resources_url, :html => {:method =>:put}) do |f|%>
-    <%= raw all_powers_tree(Power.all)%> 
+    <%= raw all_powers_tree(@user.powers)%> 
 
 
      <div class="w1" style="">预定人：</div>

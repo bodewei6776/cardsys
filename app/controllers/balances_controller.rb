@@ -43,7 +43,7 @@ class BalancesController < ApplicationController
     if @balance.process && @balance.to_balance?
       @balance.change_note_by(user) if @balance.operation == "change"
       pre_date_for_new_create
-      redirect_to order_balance_path(@order,@balance) 
+      redirect_to print_balance_path(@balance) 
     else
       pre_date_for_new_create
       render :action => "new"
@@ -154,7 +154,8 @@ class BalancesController < ApplicationController
       balance.user_id = current_user.id 
       if  balance.process
         cart.empty!
-        redirect_to  new_good_buy_balances_path,:notice => "支付成功" and return
+        #redirect_to  new_good_buy_balances_path,:notice => "支付成功" and return
+        redirect_to  print_balance_path(balance),:notice => "支付成功" and return
       else
         redirect_to  new_good_buy_balances_path,:notice => balance.errors.full_messages and return
       end
@@ -180,14 +181,15 @@ class BalancesController < ApplicationController
       balance.status = 1
       balance.save(false)
       cart.empty!
-      redirect_to  new_good_buy_balances_path,:notice => "支付成功" and return
+      #redirect_to  new_good_buy_balances_path,:notice => "支付成功" and return
+        redirect_to  print_balance_path(balance),:notice => "支付成功" and return
     end
     redirect_to  new_good_buy_balances_path
   end
 
   def destroy
     @balance = Balance.find(params[:id])
-    if @balance.order.destroy
+    if @balance.order.destroy && @balance.destroy
       flash[:notice] = "删除成功"
     else
       flash[:notice] = "删除失败"
