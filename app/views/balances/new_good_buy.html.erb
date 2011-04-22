@@ -83,7 +83,7 @@
             <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Card,false,:class => 'balance_way' %>记账</label>
             <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Cash,false,:class => 'balance_way' %>现金</label>
             <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Bank,false,:class => 'balance_way' %>银行</label>
-            <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Post,false,:class => 'balance_way' %>post机</label>
+            <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Post,false,:class => 'balance_way' %>POS机</label>
             <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Check ,false,:class => 'balance_way'%>支票</label>
             <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Guazhang,false,:class => 'balance_way' %>挂账</label>
 
@@ -112,8 +112,9 @@
           <div class='w2'>
             <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Cash,false,:class => 'balance_way'%>现金</label>
             <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Bank,false,:class => 'balance_way' %>银行</label>
-            <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Post,false,:class => 'balance_way' %>post机</label>
+            <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Post,false,:class => 'balance_way' %>POS机</label>
             <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Check ,false,:class => 'balance_way'%>支票</label>
+            <label class="labelRadio"><%= radio_button_tag :balance_way, Balance::Balance_Way_Use_Guazhang,false,:class => 'balance_way' %>挂账</label>
 
           </div>
           </li>
@@ -129,7 +130,6 @@
   <div class="h10"></div>
 </div>
 
-  <% unless cart.blank? %>
     <div class="infobox_bt"><p>商品消费列表</p></div>
     <div class="table">
       <ul class="bttitle black fb ">
@@ -141,25 +141,16 @@
         <li class="w15">操作</li>
       </ul>
 
-      <% cart.line_items.each_with_index do |li,index|%>
-        <ul class="table_items">
-          <li class="w5"><%= index + 1 %></li>
-          <li class="w10"><%= li.product.name %></li>
-          <li class="w10"><%= li.product.price %></li>
-          <li class="w15"><%= li.quantity %></li>
-          <li class="w15"><%= li.quantity * li.product.price %></li>
-          <li class="w15">
-          <%= link_to "删除", destroy_good_balances_path(:id => li.product_id),
-            :class => 'destory_order_item',:method => :delete %>
-          </li>
-        </ul>
-      <% end %>
+      <div id='cart_goods_list'>
+  <% unless cart.blank? %>
+        <%=render :partial => "cart_goods_list"%>
+  <% end %>
+    </div>
     </div>
 
     <div class='h10'></div>
 
 
-  <% end %>
 
 
 

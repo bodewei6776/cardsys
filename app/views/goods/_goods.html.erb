@@ -56,26 +56,32 @@
       }
       input.next('.goods_id').next('.goods_count').val($(this).val());
     });
-	
+
     $('.submit-goods-button').click(function(){
-      var cart_form = $('#add_to_cart_form');
-      var input = $(this);
-      var order_id = $('#order_id',$(window.parent.document)).val();
-      if(order_id == undefined){
+        var cart_form = $('#add_to_cart_form');
+        var input = $(this);
+        var order_id = $('#order_id',$(window.parent.document)).val();
+        var cart_goods_list;
+        if(order_id == undefined){
         url = "/balances/add_good"
-      }
-      else{
-      var url = cart_form.attr('action') + "?order_id=" + order_id;
-      }
-      $.post(url,cart_form.serialize(),function(reply){
-        if(reply.match(/class='error'/)){
+        cart_goods_list = $('#cart_goods_list',$(window.parent.document));
+        }
+        else{
+        var url = cart_form.attr('action') + "?order_id=" + order_id;
+        }
+        $.post(url,cart_form.serialize(),function(reply){
+          if(reply.match(/class='error'/)){
           input.next('span').remove();
           input.after(reply);
-        }else{
-          window.parent.location.reload();
-          window.close();
-        }
-      });
+          }else{
+          if(order_id != undefined){ window.parent.location.reload();}
+          else{ 
+        cart_goods_list = $('#cart_goods_list',$(window.parent.document));
+        console.log(cart_goods_list);
+cart_goods_list.text(""); cart_goods_list.html(reply); }
+          parent.window.highlight_table();
+          parent.$.colorbox.close();}
+          });
     });
   });	
 </script>	

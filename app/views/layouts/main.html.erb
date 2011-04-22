@@ -28,7 +28,7 @@ changeYear: true
           $('#datepicker').datepicker('setDate','<%= ftime_date(@date) %>')
           });
 
-$(document).ready(function(){
+function highlight_table(){
     $(".table_items").filter(':even').css("background-color", "#EFFFC8");
     $('.table_items').mouseover(function(){
       $(this).css('background-color','#E78F08');
@@ -37,6 +37,10 @@ $(document).ready(function(){
       $(this).css('background-color','#ffffff');
       $(".table_items").filter(':even').css("background-color", "#EFFFC8");
       });
+
+}
+$(document).ready(function(){
+    highlight_table();
     $(".balance_detail").colorbox({width:"900", height:"400", iframe:false});
     });
 

@@ -115,7 +115,8 @@ class BalancesController < ApplicationController
       #session[:cart].destock(g[:id],g[:count].to_i)
       session[:cart].add(g[:id],g[:count].to_i)
     end
-    redirect_to new_good_buy_balances_path
+    #redirect_to new_good_buy_balances_path
+    render :partial => "cart_goods_list"
   end
 
   def destroy_good

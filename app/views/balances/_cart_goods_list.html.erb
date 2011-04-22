@@ -1,0 +1,15 @@
+
+      <% cart.line_items.each_with_index do |li,index|%>
+        <ul class="table_items">
+          <li class="w5"><%= index + 1 %></li>
+          <li class="w10"><%= li.product.name %></li>
+          <li class="w10"><%= li.product.price %></li>
+          <li class="w15"><%= li.quantity %></li>
+          <li class="w15"><%= li.quantity * li.product.price %></li>
+          <li class="w15">
+          <%= link_to "删除", destroy_good_balances_path(:id => li.product_id),
+            :class => 'destory_order_item',:method => :delete %>
+          </li>
+        </ul>
+      <% end %>
+

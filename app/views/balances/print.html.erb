@@ -18,16 +18,15 @@
       <tr class='goods goods_title'>
         <td colspan=4>消费时段：<%= balance_time_span_in_word(@balance)%> </td>
       </tr>
+      <% end %>
+      <%if @balance.order.is_member? %>
       <tr>
         <td colspan=2>姓名: <%=  @balance.order.member_name %></td>
         <td colspan=2>卡号: <%=  @balance.order.is_member?  ? @balance.order.member_card.card_serial_num : "无卡 "%></td>
       </tr>
-      <%if @balance.order.is_member? %>
-
         <tr class=''>
           <td colspan=4>卡到期时间：<%= @balance.order.member_card.expire_date.strftime("%Y-%m-%d")%> </td>
         </tr>
-      <% end %>
       <% end %>
 
       <tr class='goods goods_title'>
@@ -81,7 +80,7 @@
       <tr class='total'>
         <td colspan=1></td>
         <td colspan=1>合计:</td>
-        <td class='amount' colspan=2><span> <%= @balance.balance_amount_desc%></span></td>
+        <td class='amount' colspan=2><span> <%= @balance.balance_realy_amount_desc%></span></td>
       </tr>
 
       <%if @balance.order.is_member? %>
@@ -114,7 +113,12 @@
       </tr>
       <tr>
         <td colspan=4> 支付方式: 
-          <%= @balance.balance_way_desciption(@balance.balance_way)%>
+          <% if @balance.order.book_record %>
+          <%= @balance.balance_way_desciption(@balance.balance_way)%>（场地费）
+          <%end%>
+          <% if @balance.goods_realy_amount > 0%>
+          /<%= @balance.balance_way_desciption(@balance.goods_balance_type)%>（其他消费）
+          <%end%>
         </td>
       </tr>
 

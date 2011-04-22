@@ -151,10 +151,11 @@ class Balance < ActiveRecord::Base
     case way
     when Balance_Way_Use_Card then '用卡'
     when Balance_Way_Use_Cash then '现金'
-    when Balance_Way_Use_Post then 'Post机'
+    when Balance_Way_Use_Post then 'POS机'
     when Balance_Way_Use_Bank then '银行'
     when Balance_Way_Use_Guazhang then '挂账'
     when Balance_Way_Use_Counter  then '计次'
+    when Balance_Way_Use_Check then '支票'
     else '无'
     end
   end
@@ -195,6 +196,15 @@ class Balance < ActiveRecord::Base
       "￥#{goods_realy_amount+book_record_realy_amount}元"
     end
   end
+
+   def balance_realy_amount_desc
+    if ensure_use_card_counter?
+      "￥#{goods_realy_amount}元;#{book_record_realy_amount_desc}"
+    else
+      "￥#{goods_realy_amount+book_record_realy_amount}元"
+    end
+  end
+
 
   def balance_amount
     book_record_amount.to_i + goods_amount.to_i

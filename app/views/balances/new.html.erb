@@ -55,7 +55,7 @@
         <%  end -%>
         <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Cash,:class => 'balance_way' %>现金</label>
         <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Bank,:class => 'balance_way' %>银行</label>
-        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Post,:class => 'balance_way' %>post机</label>
+        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Post,:class => 'balance_way' %>POS机</label>
         <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Check ,:class => 'balance_way'%>支票</label>
         <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Guazhang,:class => 'balance_way' %>挂账</label>
       </div>
@@ -73,7 +73,7 @@
           <label class="labelRadio"><%= f.radio_button :goods_balance_type, Balance::Balance_Way_Use_Card %>记账</label>
         <%end%>
         <label class="labelRadio"><%= f.radio_button :goods_balance_type, Balance::Balance_Way_Use_Cash %>现金</label>
-        <label class="labelRadio"><%= f.radio_button :goods_balance_type, Balance::Balance_Way_Use_Post %>post机</label>
+        <label class="labelRadio"><%= f.radio_button :goods_balance_type, Balance::Balance_Way_Use_Post %>POS机</label>
         <label class="labelRadio"><%= f.radio_button :goods_balance_type, Balance::Balance_Way_Use_Check %>支票</label>
         <label class="labelRadio"><%= f.radio_button :goods_balance_type, Balance::Balance_Way_Use_Guazhang %>挂账</label>
       </div>
