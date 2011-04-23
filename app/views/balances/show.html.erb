@@ -14,6 +14,7 @@
         </li>
       <% end %>
     </ul>
+    <% if @order.book_record %>
     <ul>
       <li >
       <div class="w1">场地：</div>
@@ -30,6 +31,7 @@
       </div>
       </li>
     </ul>
+  <%end%>
     <ul>
       <li >
       <div class="w1">其他消费：</div>
@@ -56,8 +58,8 @@
   </div>
   <div class='h10'></div>
   <div style='float:rihgt;'>
-    <%= link_to "打印收条",print_balance_path(@balance) ,:class => "button submit1" ,:style => "padding: 5px 10px;",:target => "_blank"%>
-    <%= link_to "返回",balanced_balances_path ,:class => "button submit1" ,:style => "padding: 5px 10px;"%>
+    <button href='<%=print_balance_path(@balance) %>' class="button submit1 print" >打印收条</button>
+    <%= link_to "返回",balanced_balances_path ,:class => "button submit1" ,:style => "padding: 2px 5px;color:black;"%>
   </div>
   <div class='h10'></div>
 
@@ -65,5 +67,21 @@
   <%# unless @good_items.blank? %>
   <%= render :partial => "/orders/order_items_list",:locals => {:good_items => @order.product_items||[],:order => @order} %>
   <%# end %>
-
 </div>
+
+<script type='text/javascript'>
+  function PopupCenter(pageURL, title,w,h) {
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+     window.open(pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+  } 
+$(document).ready(function(){
+    $('button.print').click(function(){
+      PopupCenter($(this).attr('href'),"打印",400,600);}); 
+    });
+
+  <% if params[:popup] %>
+      PopupCenter($('button.print').attr('href'),"打印",400,600); 
+  <%end%>
+
+</script>

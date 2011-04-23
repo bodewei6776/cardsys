@@ -84,7 +84,7 @@
       <li >
       <div class="w1">消费合计：</div>
       <div  class='w2'>
-        <span id="amount_fee_str">￥<%= @balance.balance_realy_amount %>元；<%= @balance.count_amount %>次场地</span>
+        <span id="amount_fee_str" style='color:red;'>￥<%= @balance.balance_realy_amount %>元；<%= @balance.count_amount %>次场地</span>
         <%= f.hidden_field 	:book_record_amount %>
         <%= f.hidden_field 	:goods_amount %>
         <%= f.hidden_field	:operation %>

@@ -43,7 +43,8 @@ class BalancesController < ApplicationController
     if @balance.process && @balance.to_balance?
       @balance.change_note_by(user) if @balance.operation == "change"
       pre_date_for_new_create
-      redirect_to print_balance_path(@balance) 
+      #redirect_to print_balance_path(@balance) 
+      redirect_to order_balance_path(@order,@balance,:popup => true) 
     else
       pre_date_for_new_create
       render :action => "new"
@@ -78,7 +79,8 @@ class BalancesController < ApplicationController
       if @balance.operation == "change"
         render :action => "new"
       else
-        redirect_to order_balance_path(@order,@balance) 
+       # redirect_to order_balance_path(@order,@balance) 
+      redirect_to order_balance_path(@order,@balance,:popup => true) 
       end
     else
       pre_date_for_new_create
@@ -125,6 +127,11 @@ class BalancesController < ApplicationController
     redirect_to new_good_buy_balances_path
   end
 
+  def change_li_real_total_price
+    session[:cart].change_li_real_total_price(params[:product_id],params[:real_total_price],params[:discount])
+    render :partial => "cart_goods_list"
+  end
+
   def create_good_buy
     if cart.blank?
       redirect_to new_good_buy_balances_path ,:notice => "购物车还是空的啊" and return
@@ -153,10 +160,13 @@ class BalancesController < ApplicationController
       balance.goods_member_card_id = member_card.id
       balance.member_id = member.id
       balance.user_id = current_user.id 
+      balance.change_note = "折后价格" if cart.discount?
       if  balance.process
         cart.empty!
-        #redirect_to  new_good_buy_balances_path,:notice => "支付成功" and return
-        redirect_to  print_balance_path(balance),:notice => "支付成功" and return
+        redirect_to  new_good_buy_balances_path(:popup => true,:id => balance.id),:notice => "支付成功" and return
+
+        #redirect_to  balance_path(balance,:order_id => balance.order_id),:notice => "支付成功" and return
+        #redirect_to  print_balance_path(balance),:notice => "支付成功" and return
       else
         redirect_to  new_good_buy_balances_path,:notice => balance.errors.full_messages and return
       end
@@ -172,7 +182,7 @@ class BalancesController < ApplicationController
       order.order_goods(cart.products)
       balance = Balance.new
       balance.operation = "balance"
-      balance.order =order
+      balance.order = order
       balance.balance_way = params[:balance_way]
       balance.member_type =  0#order.member_type
       balance.goods_balance_type = params[:balance_way]
@@ -183,7 +193,9 @@ class BalancesController < ApplicationController
       balance.save(false)
       cart.empty!
       #redirect_to  new_good_buy_balances_path,:notice => "支付成功" and return
-        redirect_to  print_balance_path(balance),:notice => "支付成功" and return
+        redirect_to  new_good_buy_balances_path(:popup => true,:id => balance.id),:notice => "支付成功" and return
+      #redirect_to  print_balance_path(balance),:notice => "支付成功" and return
+      #redirect_to  balance_path(balance,:order_id => balance.order_id),:notice => "支付成功" and return
     end
     redirect_to  new_good_buy_balances_path
   end

@@ -12,5 +12,15 @@ module BalancesHelper
       day_names[book_record.record_date.strftime("%w").to_i - 1]
       
   end
+
+  def discount_options(selected)
+    options = ""
+    options << "<option value='1'>无折扣</option>"
+    (1..9).to_a.reverse_each do |i|
+      discount = (i/10.0).to_f;
+    options << "<option value='#{ discount }' #{"selected" if discount == selected.to_f }>#{i}折</option>"
+    end
+    options
+  end
   
 end

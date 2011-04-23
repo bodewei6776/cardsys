@@ -29,7 +29,7 @@
 </form>
 <div class="h10"></div>
 <div class="input_bd">
-  <input type='button' value="确认添加" class='submit-goods-button'/>
+  <input type='button' value="确认添加" class='submit-goods-button submit1 button hand'/>
 </div>
 <div class=" clear"></div>
 <script type="text/javascript" charset="utf-8">
@@ -77,7 +77,6 @@
           if(order_id != undefined){ window.parent.location.reload();}
           else{ 
         cart_goods_list = $('#cart_goods_list',$(window.parent.document));
-        console.log(cart_goods_list);
 cart_goods_list.text(""); cart_goods_list.html(reply); }
           parent.window.highlight_table();
           parent.$.colorbox.close();}

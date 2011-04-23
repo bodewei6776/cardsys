@@ -51,6 +51,7 @@ Cardsys::Application.routes.draw do |map|
       delete :destroy_good
       get :balanced
       post :add_good
+      post :change_li_real_total_price
       get :new_good_buy
       get :clear_goods
       post :create_good_buy

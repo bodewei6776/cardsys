@@ -193,13 +193,13 @@ class Balance < ActiveRecord::Base
     if ensure_use_card_counter?
       "￥#{goods_realy_amount}元;#{book_record_amount_desc}"
     else
-      "￥#{goods_realy_amount+book_record_realy_amount}元"
+      "￥#{goods_realy_amount + book_record_realy_amount}元"
     end
   end
 
    def balance_realy_amount_desc
     if ensure_use_card_counter?
-      "￥#{goods_realy_amount}元;#{book_record_realy_amount_desc}"
+      "￥#{goods_realy_amount}元;#{book_record_amount_desc}"
     else
       "￥#{goods_realy_amount+book_record_realy_amount}元"
     end

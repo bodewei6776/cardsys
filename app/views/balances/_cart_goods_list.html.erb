@@ -1,15 +1,21 @@
 
-      <% cart.line_items.each_with_index do |li,index|%>
-        <ul class="table_items">
-          <li class="w5"><%= index + 1 %></li>
-          <li class="w10"><%= li.product.name %></li>
-          <li class="w10"><%= li.product.price %></li>
-          <li class="w15"><%= li.quantity %></li>
-          <li class="w15"><%= li.quantity * li.product.price %></li>
-          <li class="w15">
-          <%= link_to "删除", destroy_good_balances_path(:id => li.product_id),
-            :class => 'destory_order_item',:method => :delete %>
-          </li>
-        </ul>
-      <% end %>
+<% cart.line_items.each_with_index do |li,index|%>
+  <ul class="table_items">
+    <li class="w5"><%= index + 1 %></li>
+    <li class="w10"><%= li.product.name %></li>
+    <li class="w10"><%= li.product.price %></li>
+    <li class="w15"><%= li.quantity %></li>
+    <li class="w10"><select name='discount' class="discount"><%= raw discount_options(li.discount) %></select></li>
+    <li class="w15"><%= text_field_tag :real_total_price,li.real_total_price ,:class=>"li_real_total_price"%><%= hidden_field_tag "total_price",li.sub_total_price,:class=>"total_price"%><%= hidden_field_tag "good_id",li.product_id,:class=> "good_id"%></li>
+    <li class="w15">
+    <%= link_to "删除", destroy_good_balances_path(:id => li.product_id),
+      :class => 'destory_order_item',:method => :delete %>
+      </li>
+    </ul>
+  <% end %>
+
+  <ul class="table_items">
+    <li class="w5">合计</li>
+    <li class='w70' style='text-align:right;'><%= cart.total_price%> 元</li>
+  </ul>
 
