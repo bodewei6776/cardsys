@@ -97,8 +97,8 @@ module BookRecordsHelper
     db_book_record.should_to_agent_to_buy? and buton_htmls << content_tag("button","代卖",{:type => 'button',
                                                                           :class => "data-do-agent confirm submit1 hand",:conform_msg => "确认要代卖么",:operation => :do_agent})
 
-    #db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","代卖",{:type => 'submit confirm submit1 hand',
-    #                                                              :operation => :do_agent,:conform_msg => ""})
+    db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","变更会员",{:class=> 'submit confirm submit1 hand',
+                                                                  :operation => :do_agent,:conform_msg => ""})
 
     db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","取消代卖",{:type => 'submit',
                                                                   :operation => :cancle_agent,:class => 'data-cancle-agent confirm submit1 hand',:conform_msg => "确认要取消代买么?"})
@@ -125,7 +125,8 @@ module BookRecordsHelper
                                                                      :class => 'update-coaches confirm submit1 hand',:conform_msg => '确定要改变教练么?',:operation => 'change_coaches'})
 
     db_book_record.is_balanced? and  buton_htmls << content_tag("button","打印消费记录",{:type => 'button',:class => 'print-order-list submit1 hand'})
-     (!db_book_record.new_record? ) and buton_htmls << content_tag("button","删除场地预定",{:type => 'button',:class => 'submit1 hand',:id => "delete_button" ,:bid => db_book_record.id})
+
+     (!db_book_record.new_record? and current_user.can?("删除场地预定")) and buton_htmls << content_tag("button","删除场地预定",{:type => 'button',:class => 'submit1 hand',:id => "delete_button" ,:bid => db_book_record.id})
 
     buton_htmls.join(' ').html_safe
 

@@ -90,8 +90,6 @@ class Balance < ActiveRecord::Base
   end
 
   def change_note_by(user)
-    puts '5' * 100
-    puts self.operation
     self.change_note = "订单消费总价变更（#{self.book_record_amount + self.goods_amount}  变为#{ self.book_record_realy_amount + self.goods_realy_amount}）,修改人#{user.login}"
     save
   end

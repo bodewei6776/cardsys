@@ -8,11 +8,13 @@
   </div>
   <div class="fform">
     <%= error_messages_for :order %>
-    <%=  form_for(@book_record,:url => "/book_records/#{@original_book_record.id}/do_agent",:html => {:class => "form-profile"}) do |order_form| %>
+    <%=  form_for(@book_record,:url => "/book_records/#{@original_book_record.id}/do_agent",:html => {:class => "form-profile" ,:id => "do_agent"}) do |order_form| %>
       <%= render :partial => "/book_records/form",:f => order_form %>
       <div class="h10"></div>
       <div class="input_bd">
         <%= display_enable_buttons(@book_record) %>
+
+        <%= content_tag("button","删除场地预定",{:type => 'button',:class => 'submit1 hand',:id => "delete_button" ,:bid => @original_book_record.id}) if (current_user.can?("删除场地预定")) %>
         <button class="submit1 hand" type="button" onclick="window.history.back();">返回</button>
       </div>
       <div class=" clear"></div>

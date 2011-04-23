@@ -150,6 +150,25 @@ class BookRecordsController < ApplicationController
     @court = @original_book_record.court
     @coaches = Coach.all
     @order = Order.new
+
+
+    if request.post?
+    if params[:user_name].blank? or params[:password].blank?
+      @order.errors.add(:base,"预定人，密码不能为空")
+      render :action => "edit"#,:layout => 'small_main'
+      return
+    end
+    user = User.find_by_login(params[:user_name])
+
+    if user.blank? or !user.valid_password?(params[:password])
+      @order.errors.add(:base,"用户不存在或者密码不正确")
+      render :action => "edit"#,:layout => 'small_main'
+      return
+    end
+    end
+
+
+
     @order.operation = :agent
     @order.book_record  = @book_record
     @date = @book_record.record_date
@@ -157,8 +176,27 @@ class BookRecordsController < ApplicationController
   end
 
   def do_agent
+    @original_book_record = BookRecord.find(params[:id])
     original_order = BookRecord.find(params[:id]).order
     @order = Order.new(params[:order])
+
+    if params[:user_name].blank? or params[:password].blank?
+      @order.errors.add(:base,"操作人，密码不能为空")
+      inite_related_order_objects
+      render :action => "agent"#,:layout => 'small_main'
+      return
+    end
+    user = User.find_by_login(params[:user_name])
+
+    if user.blank? or !user.valid_password?(params[:password])
+      @order.errors.add(:base,"用户不存在或者密码不正确")
+      inite_related_order_objects
+      render :action => "agent"#,:layout => 'small_main'
+      return
+    end
+
+
+
     @order.operation = BookRecord.default_operation
     @order.parent_id = 0
     if @order.save

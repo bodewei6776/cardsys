@@ -31,15 +31,20 @@ class BookRecord < ActiveRecord::Base
   end
   
   def start_date_time
-    start_hour.hours.since(self.record_date.to_datetime)
+    # utc local
+    #start_hour.hours.since(self.record_date.to_datetime)
+    day = self.record_date.to_datetime
+    Time.local(day.year,day.month,day.day,start_hour)
   end
 
   def end_date_time
-    end_hour.hours.since(self.record_date.to_datetime)
+    #end_hour.hours.since(self.record_date.to_datetime)
+    day = self.record_date.to_datetime
+    Time.local(day.year,day.month,day.day,end_hour)
   end
 
   def agent_to_buy_condition
-    CommonResource.agent_to_buy_time.hours.ago(self.start_date_time) >= DateTime.now
+    CommonResource.agent_to_buy_time.hours.ago(self.start_date_time) >= DateTime.now 
   end
 
   def cancle_condition
@@ -64,7 +69,7 @@ class BookRecord < ActiveRecord::Base
   end
 
   def should_application_to_agent?
-    is_booked? && agent_to_buy_condition
+    is_booked? && agent_to_buy_condition 
   end
 
   def should_to_cancle?
@@ -85,7 +90,9 @@ class BookRecord < ActiveRecord::Base
   end
 
   def should_blance_as_expired?
-    (is_booked? || is_agented?) && is_expired?
+    # is_agented 包含了时间条件判断
+    #(is_booked? || is_agented?) && is_expired?
+    (is_booked? || status == Status_Agent) && is_expired?
   end
   
   def book
@@ -229,6 +236,7 @@ class BookRecord < ActiveRecord::Base
     when  is_cancled?        then  ""
     when  is_agented?        then  "color04"
     when  is_actived?        then  "color03"
+    when  status == Status_Agent        then  "color04"
     else "color02"
     end
     color
