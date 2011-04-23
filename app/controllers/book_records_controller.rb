@@ -244,7 +244,7 @@ class BookRecordsController < ApplicationController
     if (member_name = params[:term]).blank?
       render(:text => {}.to_json) && return
     end
-    @members = Member.where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name",
+    @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER).where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name",
                             {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
     hash_results = @members.collect {|member| {"id" => member.id, "label" => "#{member.name} #{member.mobile}", 
       "value" => "#{member.name}"} }

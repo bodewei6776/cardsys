@@ -62,6 +62,7 @@ task :get_power=> :environment do
   a.children.create(:subject => "场地已结算列表")
   a.children.create(:subject => "购买商品")
   a.children.create(:subject => "删除结算信息")
+  a.children.create(:subject => "变更总价")
 
   a=Power.create(:parent_id => 0,:subject => "权限管理")
   a.children.create(:subject => "用户管理")

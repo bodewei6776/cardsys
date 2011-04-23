@@ -71,7 +71,7 @@ class OrderItem < ActiveRecord::Base
     return [] if order.coaches.blank?
     exist_coaches = coaches.where("item_id in (#{order.coaches.map(&:id).join(',')})")
     exist_coaches = exist_coaches.where("order_id <> #{order.id}") unless order.new_record?
-    exist_coaches.where(:order_date => order.record_date).where(["start_hour < :end_time AND end_hour > :start_time",
+     exist_coaches.where(:order_date => order.record_date).where(["start_hour < :end_time AND end_hour > :start_time",
                                                                 {:start_time => order.start_hour,:end_time => order.end_hour}]).all
   end
 
@@ -90,7 +90,7 @@ class OrderItem < ActiveRecord::Base
       coach_item.start_hour = book_record.start_hour
       coach_item.end_hour   = book_record.end_hour
       coach_item.order_time = DateTime.now
-      coach_item.order_date = Date.today
+      coach_item.order_date = book_record.record_date#Date.today
       coach_item.save
     end
     pending_coaches.collect(&:destroy)

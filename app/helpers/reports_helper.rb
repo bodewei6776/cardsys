@@ -12,8 +12,9 @@ module ReportsHelper
       ["挂账" , 6]]
     html = ""
       map.each do |way|
-      html << content_tag(:input,raw("<label>#{way[0]}</label>"),:type => "checkbox",:name => "way[]",:value => way[1],:checked => checked.include?(way[1].to_s),:onclick=> "recalculate();" ,:class=>"pay_ways")
+      html << content_tag(:input,raw("<label>#{way[0]}</label>"),:type => "checkbox",:name => "way[]",:value => way[1],:checked => checked.include?(way[1].to_s),:onclick=> "recalculate1();" ,:class=>"pay_ways")
     end
+      html << "<button class='button submit1 hand' onclick='recalculate();'> 查询 </button>"
     html
   end
 
@@ -53,8 +54,8 @@ module ReportsHelper
     Balance.balances_on_date_and_ways(date,pay_ways).each_with_index do |b,index|
       table << "<tr class='report_item'>"
       table <<"<td>#{index+1}</td>"
-      table << "<td>#{b.member.name rescue b.order.member_name }</td>"
-      table << "<td>#{b.order.book_record.court.name rescue "未定场"}（#{b.book_record_span rescue "未知"}）</td>"
+      table << "<td>#{link_to(b.order.member_name,order_balance_path(b.order,b),:target => "_blank")}</td>"
+      table << "<td>#{b.order.book_record.court.name rescue "购买"}（#{b.book_record_span rescue "商品"}）</td>"
       table << "<td>#{b.order.member_card.card_serial_num rescue ""}</td>"
       table << "<td class='mon'>#{ book_record_amount_desc(b)}</td>"
       table << "<td class='mon'>#{b.coach_amount}</td>"

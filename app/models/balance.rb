@@ -147,7 +147,7 @@ class Balance < ActiveRecord::Base
 
   def balance_way_desciption(way)
     case way
-    when Balance_Way_Use_Card then '用卡'
+    when Balance_Way_Use_Card then '记账'
     when Balance_Way_Use_Cash then '现金'
     when Balance_Way_Use_Post then 'POS机'
     when Balance_Way_Use_Bank then '银行'

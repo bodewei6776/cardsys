@@ -4,7 +4,7 @@ class AdvancedOrder < ActiveRecord::Base
   
   belongs_to  :court
   belongs_to  :member
-  has_many    :orders,:foreign_key => "parent_id"
+  has_many    :orders,:foreign_key => "parent_id",:dependent => :destroy
   
   validates :start_hour, :numericality => {:message => "开始时间必须为整数"},:presence => {:message => "请选择开始时间"}
   validates :end_hour, :numericality => {:message => "结束时间必须为整数"},:presence => {:message => "请选择结束时间"}

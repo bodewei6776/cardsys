@@ -40,7 +40,11 @@ class BookRecord < ActiveRecord::Base
   def end_date_time
     #end_hour.hours.since(self.record_date.to_datetime)
     day = self.record_date.to_datetime
-    Time.local(day.year,day.month,day.day,end_hour)
+    if end_hour == 24
+    Time.local(day.year,day.month,day.day,23,59)
+    else
+      Time.local(day.year,day.month,day.day,end_hour)
+    end
   end
 
   def agent_to_buy_condition
@@ -57,7 +61,9 @@ class BookRecord < ActiveRecord::Base
 
   #开场前半小时到结束时段
   def active_conditions
-    CommonResource.active_time.minutes.ago < start_date_time && start_date_time < end_date_time
+    #CommonResource.active_time.minutes.ago < start_date_time && start_date_time < end_date_time
+    #CommonResource.active_time.minutes.from_now > start_date_time && start_date_time < end_date_time
+    self.record_date.beginning_of_day == Time.now.beginning_of_day
   end
 
   def should_book?

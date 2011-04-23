@@ -1,7 +1,7 @@
 class WelcomeController < ApplicationController
   layout 'main'
   def backup
-    @backups = Dir.glob(File.join(Rails.root , "/public/back_dbs/*"))
+    @backups = Dir.glob(File.join(Rails.root , "/public/back_dbs/*")).reverse
   end
 
   def backup_db

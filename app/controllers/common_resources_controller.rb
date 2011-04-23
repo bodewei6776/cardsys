@@ -139,8 +139,10 @@ class CommonResourcesController < ApplicationController
 
     powers = Power.find(params[:powers])
     if powers.present?
-      Power.all_with_hide.collect(&:hide!)
-      powers.collect(&:show!)
+      Power.all_with_hide.each do |p|
+        p.will_show = params[:powers].include?(p.id.to_s)
+        p.save
+      end
       flash[:notice] = " 更新成功"
     end
     redirect_to power_index_common_resources_path

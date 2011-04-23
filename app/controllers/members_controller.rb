@@ -8,7 +8,7 @@ class MembersController < ApplicationController
   Member_Perpage = 15
 
   def autocomplete_name
-    @items = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER).where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term]}%" ]).limit(10)
+    @items = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER).where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%" ]).limit(10)
     @names = []
     @items.each { |i| @names << i.name }
     render :inline => @names.to_json#{lable:name, value:name}
@@ -79,7 +79,7 @@ class MembersController < ApplicationController
     # 到期时间
     if @expire_date_start.present? && @expire_date_end.present?
       @members = @members.where("date_format(member_cards.expire_date,'%Y-%m-%d') >= ? and" +
-                                "date_format(member_cards.expire_date,'%Y-%m-%d') <= ?",
+                                " date_format(member_cards.expire_date,'%Y-%m-%d') <= ?",
                                 @expire_date_start,@expire_date_end).joins(:member_cards)
     elsif @expire_date_start.present? || @expire_date_end.present?
       @members = @members.where("date_format(member_cards.expire_date,'%Y-%m-%d') = ?",
