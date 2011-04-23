@@ -11,7 +11,8 @@ class WelcomeController < ApplicationController
     password = ActiveRecord::Base.connection.instance_variable_get("@config")[:password]
     database = ActiveRecord::Base.connection.instance_variable_get("@config")[:database]
     
-    backup_script = "mysqldump -u#{username} -p#{password} #{database} > #{file_name}"
+    #backup_script = "mysqldump -u#{username} -p#{password} #{database} > #{file_name}"
+    backup_script = "mysqldump -u#{username}  #{database} > #{file_name}"
     system(backup_script)
     redirect_to backup_path
   end
