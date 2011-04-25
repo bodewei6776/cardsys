@@ -90,7 +90,8 @@ class CommonResource < ActiveRecord::Base
   end
 
   def self.summer_time
-    @summer_time ||= CommonResource.where(:name => "times_summer", :description => Summer_Time_Name_CHN).first
+    #@summer_time ||= CommonResource.where(:name => "times_summer", :description => Summer_Time_Name_CHN).first
+    @summer_time ||= CommonResource.where(:name => "times_summer").first
   end
 
   def detail_str_old= str

@@ -14,15 +14,15 @@ coach_type= CommonResource.create(:name => "coach_type", :description => "教练
 cert_type = CommonResource.create(:name => "cert_type", :description => "证件类型", :detail_str => "身份证 军人证")
 good_type = CommonResource.create(:name => "good_type", :description => "商品类型", :detail_str => "食品 球具")
 good_source = CommonResource.create(:name => "good_source", :description => "商品来源", :detail_str => "代卖")
-times_summer = CommonResource.create(:name => "times_summer", :description => "平日", :detail_str => "1 12")
+#times_summer = CommonResource.create(:name => "times_summer", :description => "平日", :detail_str => "1 12")
 agent_to_buy_time = CommonResource.create(:name => "agent_to_buy_time", :description => "申请代卖提前时间(小时)", :detail_str => "1")
 cancle_time = CommonResource.create(:name => "cancle_time", :description => "低于此时间不得取消（小时)", :detail_str => "24")
 change_time = CommonResource.create(:name => "change_time", :description => "少余此时间不得变更(小时)", :detail_str => "0")
 active_time = CommonResource.create(:name => "active_time", :description => "低于此时间不得开场(分钟)", :detail_str => "30")
 
-times_summer = CommonResource.create(:name => "times_summer", :description => "平日", :detail_str => "1 12")
-times_summer = CommonResource.create(:name => "times_summer", :description => "平日", :detail_str => "1 12")
-times_summer = CommonResource.create(:name => "times_summer", :description => "平日", :detail_str => "1 12")
+times_summer = CommonResource.create(:name => "times_summer", :description => "夏令时", :detail_str => "1 12")
+#times_summer = CommonResource.create(:name => "times_summer", :description => "平日", :detail_str => "1 12")
+#times_summer = CommonResource.create(:name => "times_summer", :description => "平日", :detail_str => "1 12")
 #times_winter = CommonResource.create(:name => "times_winter", :description => "冬令时", :detail_str => "12 1 2")
 
 #Type_Member_Name,Type_blance_Name,Type_Connter_Name,Type_Zige_Name = '会员卡', '储值卡', '记次卡','资格卡'#会员卡 储值卡 记次卡
