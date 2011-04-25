@@ -20,7 +20,7 @@ module Authlogic
     # regular expression.
     def self.login
       #/\A\w[\w\.+\-_@ ]+$/
-      /\A[\w\d]+$/
+      /\A[\w|\d]+$/
     end
   end
 end
