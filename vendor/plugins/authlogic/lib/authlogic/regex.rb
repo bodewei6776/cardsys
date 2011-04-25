@@ -19,7 +19,8 @@ module Authlogic
     # A simple regular expression that only allows for letters, numbers, spaces, and .-_@. Just a standard login / username
     # regular expression.
     def self.login
-      /\A\w[\w\.+\-_@ ]+$/
+      #/\A\w[\w\.+\-_@ ]+$/
+      /\A[\w\d]+$/
     end
   end
 end

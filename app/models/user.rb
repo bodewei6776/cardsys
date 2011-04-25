@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   acts_as_authentic do |c|
     c.validates_length_of_password_confirmation_field_options = {:minimum => 1 }
     c.validates_length_of_password_field_options = { :minimum => 1 }
+    c.validates_length_of_login_field_options = {:within => 0..100}
   end
 
   has_many   :user_powers

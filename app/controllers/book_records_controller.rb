@@ -221,23 +221,30 @@ class BookRecordsController < ApplicationController
     book_record = BookRecord.find(params[:id])
     @order = book_record.order
 
+    respond_to do |format|
+
     if params[:user_name].blank? or params[:password].blank?
-      render :json => {:result => 0} and return
+      format.js {render :json => {:result => 0} and return}
+      format.html  { redirect_to book_records_path}
     end
     user = User.find_by_login(params[:user_name])
 
     if user.blank? or !user.valid_password?(params[:password])
-      render :json => {:result => 0} and return
+      format.js {render :json => {:result => 0} and return}
+      format.html  { redirect_to book_records_path}
     end
 
 
     unless user.can?('删除场地预定')
-      render :json => {:result => 0} and return
+      format.js {render :json => {:result => 0} and return}
+      format.html  { redirect_to book_records_path}
     end
 
 
     @order.destroy
-    render :json => {:result => 1}
+    format.js {render :json => {:result => 0} and return}
+      format.html  { redirect_to book_records_path}
+    end
   end
 
   def complete_for_members
