@@ -53,7 +53,7 @@
            <% if member_card.enable? %>
              <%= link_to '注销此卡',switch_member_card_path(member_card,:name => params[:name],:card_serial_num => params[:card_serial_num]), :confirm => "确定要进行此操作？" ,:method =>:put%>
           <% else %>
-            <%= link_to '启用此卡', switch_member_card_path(member_card,:name => params[:name],:card_serial_num => params[:card_serial_num]), :confirm => "确定要进行此操作？",:method =>:piut %>
+            <%= link_to '启用此卡', switch_member_card_path(member_card,:name => params[:name],:card_serial_num => params[:card_serial_num]), :confirm => "确定要进行此操作？",:method =>:put %>
           <% end %>
           </li>
         </ul>
