@@ -27,6 +27,7 @@ class OrderItem < ActiveRecord::Base
     product = self.product
     if is_product? && product.is_a?(Good)
       product.count_front_stock_in += ( self.quantity - self.quantity_was ) 
+      product.count_total_now += (self.quantity - self.quantity_was) 
       product.count_front_stock -= (self.quantity - self.quantity_was) 
       product.save
     end
