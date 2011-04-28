@@ -9,6 +9,8 @@ class NonMember < ActiveRecord::Base
   validates :telephone, :format => {:with =>/^(?:0{0,1}(13[0-9]|15[0-9])[0-9]{8})|(?:[-0-9]+)$/,
     :message => I18n.t('order_msg.non_member.invalid_mobile_format')}
 
+  validates :earnest,:presence => {:message => "定金为必填项"},:numericality => true
+
   before_save :geneate_name_pinyin
 
   def geneate_name_pinyin
