@@ -18,9 +18,13 @@ module ReportsHelper
     html
   end
 
-  
-  def book_record_amount_desc(b)
-    (b.balance_way == 7) ? "#{b.count_amount}次" : "#{b.book_record_realy_amount}"
+
+  def book_record_amount_desc(b,pay_ways)
+    if pay_ways.include?(b.balance_way.to_s)
+      (b.balance_way == 7) ? "#{b.count_amount}次" : "#{b.book_record_realy_amount}"
+    else
+      0
+    end
   end
 
   def display_income_report(date,pay_ways)
@@ -57,8 +61,8 @@ module ReportsHelper
       table << "<td>#{link_to(b.order.member_name,order_balance_path(b.order,b),:target => "_blank")}</td>"
       table << "<td>#{b.order.book_record.court.name rescue "购买"}（#{b.book_record_span rescue "商品"}）</td>"
       table << "<td>#{b.order.member_card.card_serial_num rescue ""}</td>"
-      table << "<td class='mon'>#{ book_record_amount_desc(b)}</td>"
-      table << "<td class='mon'>#{b.coach_amount}</td>"
+      table << "<td class='mon'>#{ book_record_amount_desc(b,pay_ways)}</td>"
+      table << "<td class='mon'>#{b.coach_amount(pay_ways)}</td>"
       CommonResource.good_types.each do |gt|
       table << "<td class='mon'>#{b.good_amount_by_type(gt,pay_ways)}</td>"
       end
@@ -70,7 +74,7 @@ module ReportsHelper
 
     table << "<tr class='total head'>"
     table << "<td colspan=4>合计: #{Balance.total_balance_on_date_any_ways(date,pay_ways)}  元 #{Balance.total_count_on_date_any_ways(date,pay_ways)}次</td>"
-    table << "<td class='mon'> #{Balance.total_book_records_balance_on_date_any_ways(date,pay_ways)}</td>"
+    table << "<td class='mon'> #{Balance.total_book_records_balance_on_date_any_ways(date,pay_ways)} / #{Balance.total_count_on_date_any_ways(date,pay_ways)}</td>"
     table << "<td class='mon'> #{Balance.total_coach_balance_on_date_any_ways(date,pay_ways)}</td>"
   CommonResource.good_types.each do |gt|
     table << "<td class='mon'> #{Balance.total_goods_balance_on_date_any_ways(date,pay_ways,gt)}</td>"
@@ -134,7 +138,7 @@ module ReportsHelper
 
     table << "<tr class='total head'>"
     table << "<td colspan=2>合计: #{Balance.total_balance_on_month_any_ways(date,pay_ways)}</td>"
-    table << "<td class='mon'> #{Balance.total_book_records_balance_on_month_any_ways(date,pay_ways)}</td>"
+    table << "<td class='mon'> #{Balance.total_book_records_balance_on_month_any_ways(date,pay_ways)} / #{Balance.total_count_on_month_any_ways(date,pay_ways)}</td>"
     table << "<td class='mon'> #{Balance.total_coach_balance_on_month_any_ways(date,pay_ways)}</td>"
   CommonResource.good_types.each do |gt|
     table << "<td class='mon'> #{Balance.total_goods_balance_on_month_any_ways(date,pay_ways,gt)}</td>"
