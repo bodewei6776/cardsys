@@ -26,7 +26,7 @@ module ApplicationHelper
   end
 
   def should_display_goods_memu?
-    %{goods}.include?(controller_name.to_s)
+    %{goods}.include?(controller_name.to_s) || controller_name.to_s == "categories"
   end
 
   def should_display_authorize_menu?
@@ -130,9 +130,12 @@ js
   end
 
   def generate_good_type_options(good_type)
-    options = generate_res_options CommonResource::GOOD_TYPE
-    options << ['全部', '']
-    options_for_select(options, (good_type.nil? || good_type == "") ? '' : good_type.to_i)
+    #options = generate_res_options CommonResource::GOOD_TYPE
+    #options << ['全部', '']
+    #options_for_select(options, (good_type.nil? || good_type == "") ? '' : good_type.to_i)
+
+    "<option value='0'>全部</option>" + 
+    option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,good_type)
   end
   def generate_good_type_options_without_all(good_type)
     options = generate_res_options CommonResource::GOOD_TYPE
@@ -142,7 +145,9 @@ js
 
 
   def generate_good_type_str(type)
-    get_res_item(CommonResource::GOOD_TYPE, type)
+    #get_res_item(CommonResource::GOOD_TYPE, type)
+    category = Category.find(type)
+    category.parent.name + " / " + category.name
   end
 
   def generate_good_source_options(model)

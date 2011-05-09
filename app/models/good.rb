@@ -1,5 +1,6 @@
 require 'pinyin/pinyin'
 class Good < ActiveRecord::Base
+  belongs_to :category,:foreign_key => "good_type"
 
 
   validates :name, :presence => {:message => "名称不能为空！"}, :uniqueness => {:on => :create, :message => '名称已经存在！', 
@@ -11,6 +12,8 @@ class Good < ActiveRecord::Base
   validates :count_back_stock_out, :numericality => {:message => "新出大库数必须为数字！", :allow_blank => true}
   validates :count_front_stock_in, :numericality => {:message => "新入小库数必须为数字！", :allow_blank => true}
   validates :count_front_stock_out, :numericality => {:message => "新出小库数必须为数字！", :allow_blank => true}
+
+
   
   before_create  :geneate_name_pinyin
   attr_accessor :order_count

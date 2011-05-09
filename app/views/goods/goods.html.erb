@@ -18,9 +18,7 @@
       <div class="w95">
         照商品类别：
         <label>
-          <select name="good_type" id="good_type" class="select">
-            <%= generate_good_type_options(@good_type)  %>
-          </select>
+           <%= select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"  %>
         </label>
         &nbsp;&nbsp;&nbsp;&nbsp;
         按照商品名称：

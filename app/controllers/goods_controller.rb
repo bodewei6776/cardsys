@@ -23,8 +23,8 @@ def autocomplete_good
     @p = params[:p]
     @good_type = params[:good_type]
     @name = params[:name]
-    @goods = Good.order("id desc")
-    @goods = @goods.where(["good_type = ? ", @good_type]) unless params[:good_type].blank?
+    @category = Category.find_by_id(@good_type)
+    @goods = @category.nil? ? Good.order("id desc") :  @category.goods.order("id desc")
     @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @goods = @goods.paginate(:page => params[:page]||1)
     respond_to do |format|
@@ -37,10 +37,10 @@ def autocomplete_good
 
 
   def find_goods
-    @good_type = params[:good_type]
+    @good_type = params[:good_type]   
     @name = params[:name]
-    @goods = Good.order("id desc")
-    @goods = @goods.where(["good_type = ? ", @good_type]) unless params[:good_type].blank?
+    @category = Category.find_by_id(@good_type)
+    @goods = @category.nil? ? Good.order("id desc") :  @category.goods.order("id desc")
     @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @goods = @goods.paginate(:page => params[:page]||1)
     render :action => "goods",:layout => "small_main" 

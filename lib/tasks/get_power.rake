@@ -45,10 +45,11 @@ task :get_power=> :environment do
   a.children.create(:subject => "删除场地预定",:description => "shanchuchangdi")
   a.children.create(:subject => "过期预定")
 
-  a=Power.create(:parent_id => 0,:subject => "商品库存管理")
-  a.children.create(:subject => "商品基本信息管理")
-  a.children.create(:subject => "商品后台库存管理")
-  a.children.create(:subject => "商品前台出库管理")
+  a=Power.create(:parent_id => 0,:subject => "库存管理")
+  a.children.create(:subject => "基本信息管理")
+  a.children.create(:subject => "后台库存管理")
+  a.children.create(:subject => "前台出库管理")
+  a.children.create(:subject => "分类管理")
 
   a=Power.create(:parent_id => 0,:subject => "分析报表")
   a.children.create(:subject => "教练分账报表")

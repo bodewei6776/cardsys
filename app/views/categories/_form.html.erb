@@ -1,0 +1,34 @@
+<%= form_for(@category) do |f| %>
+  <div class="fform">
+    <div class="fformbox" >
+      <div class="fformbox_bt"><p>基本属性</p></div>
+      <%= error_messages_for :category%>
+      <div class="fformbox_nr">
+        <ul>
+          <li>
+          <div class="w1">分类上级：</div>
+          <div class="w2"> <%=f.select :parent_id,indent_category_options ,:include_blank => true%></div>
+          </li>
+        </ul>
+ 
+        <ul>
+          <li>
+          <div class="w1">分类名称：</div>
+          <div class="w2"> <%= f.text_field :name %></div>
+          </li>
+        </ul>
+       <ul>
+          <li>
+          <div class='w1'><%= f.submit "#{@category.new_record? ? "新建" : "修改"}" ,:class => "submit1 hand button"%></div>
+          </li>
+<li>
+          <div class='w1'><%= link_to "返回",categories_url,:class => "submit1 hand button"%></div>
+          </li>
+        </ul>
+        <div class="clear"></div>
+      </div>
+    </div>
+  </div>
+  <div class="h10"></div>
+
+<% end %>

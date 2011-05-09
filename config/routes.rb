@@ -1,5 +1,7 @@
 Cardsys::Application.routes.draw do |map|
 
+  resources :categories
+
   get "welcome/backup"
   delete "welcome/delete_backup"
 
