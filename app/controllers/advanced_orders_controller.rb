@@ -80,7 +80,7 @@ class AdvancedOrdersController < ApplicationController
     @member       = @order.member
     @member_cards = @member.member_cards if @member
     @current_card = @order.member_card
-    @coaches = Coach.all
+    @coaches  = Coach.default_coaches
   end
 
   def pre_data_for_show_edit
