@@ -31,7 +31,8 @@
           | <% if court.status == CommonResource::COURT_ON  %>
             <%= link_to '停用', {:controller => :courts, :action => :change_status, :status => 0, :id => court.id}, {:confirm => '确定停用吗?'} %>
           <% elsif court.status == CommonResource::COURT_OFF%>
-            <%= link_to '启用', {:controller => :courts, :action => :change_status, :status => 1, :id => court.id}, {:confirm => '确定启用吗?'} %>
+            <%= link_to '启用', {:controller => :courts, :action => :change_status, :status => 1, :id => court.id}, {:confirm => '确定启用吗?'} %> |
+            <%= link_to '删除', court_path(court),:method => :delete ,:confirm => "删除场地将在系统中彻底删除此记录，确定么？"%>
           <%end%>
         </li>
       </ul>

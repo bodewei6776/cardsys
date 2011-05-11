@@ -80,4 +80,14 @@ class CoachesController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+
+  def change_status
+    @coach = Coach.find(params[:id])
+    @coach.update_attribute("status", params[:status])
+    respond_to do |format|
+      format.html { redirect_to(coaches_url) }
+      format.xml  { head :ok }
+    end
+  end
 end

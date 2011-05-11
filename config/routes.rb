@@ -141,7 +141,12 @@ Cardsys::Application.routes.draw do |map|
       put :switch
     end
   end
-  resources :coaches
+  resources :coaches do 
+    member do
+      get :change_status
+    end
+  end
+  
   resources :period_prices
   resources :common_resources do
     collection do

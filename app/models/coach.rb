@@ -13,7 +13,7 @@ class Coach < ActiveRecord::Base
 
   #before_create :set_catena_id
 
-  scope :default_coaches,where(:status => Const::NO)
+  scope :default_coaches,where(:status => Const::YES)
 
   def set_catena_id
     self.catena_id = current_catena.id

@@ -134,8 +134,9 @@ js
     #options << ['全部', '']
     #options_for_select(options, (good_type.nil? || good_type == "") ? '' : good_type.to_i)
 
-    "<option value='0'>全部</option>" + 
-    option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,good_type)
+    #"<option value='0'>全部</option>" + 
+    #option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,good_type)
+    indent_category_options(good_type)
   end
   def generate_good_type_options_without_all(good_type)
     options = generate_res_options CommonResource::GOOD_TYPE

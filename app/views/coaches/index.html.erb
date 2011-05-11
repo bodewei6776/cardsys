@@ -29,9 +29,14 @@
         <li class="w10"><%= coach.fee %></li>
         <li class="w15"><%= coach.coach_status_str %></li>
         <li class="w15">
-          <%= link_to '查看', coach %> |
-          <%= link_to '修改', edit_coach_path(coach) %>
-          | <%= link_to '删除', coach, :confirm => '确定删除？', :method => :delete %>
+        <%= link_to '查看', coach %> |
+        <%= link_to '修改', edit_coach_path(coach) %>
+        | <% if coach.status == CommonResource::COURT_ON  %>
+          <%= link_to '停用', {:controller => :coaches, :action => :change_status, :status => 0, :id => coach.id}, {:confirm => '确定停用吗?'} %>
+        <% elsif coach.status == CommonResource::COURT_OFF%>
+          <%= link_to '启用', {:controller => :coaches, :action => :change_status, :status => 1, :id => coach.id}, {:confirm => '确定启用吗?'} %> 
+        | <%= link_to '删除', coach, :confirm => '确定删除？', :method => :delete %>
+        <%end%>
         </li>
       </ul>
     <%end%>

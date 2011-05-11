@@ -5,7 +5,7 @@ class BookRecordsController < ApplicationController
   # GET /book_records
   # GET /book_records.xml
   def index
-    @courts       = Court.order('id').all
+    @courts       = Court.all(:conditions => {:status => 1}) #Court.order('id').all
     @date = params[:date].blank? ? Date.today : Date.parse(params[:date])
     @daily_periods   = PeriodPrice.all_periods_in_time_span(@date)
     @predate      = @date.yesterday.strftime("%Y-%m-%d")
@@ -30,7 +30,7 @@ class BookRecordsController < ApplicationController
   # GET /book_records/new.xml
   def new    
     @court = Court.find(params[:court_id])
-    @coaches = Coach.all
+    @coaches = Coach.default_coaches
     @book_record = BookRecord.new
     @book_record.court = @court
     @book_record.start_hour = params[:start_hour]
@@ -148,7 +148,7 @@ class BookRecordsController < ApplicationController
     attributes = @original_book_record.attributes.except(:id,:status).merge({:status => BookRecord::Status_Do_Agent})
     @book_record = BookRecord.new(attributes)
     @court = @original_book_record.court
-    @coaches = Coach.all
+    @coaches = Coach.default_coaches
     @order = Order.new
 
 

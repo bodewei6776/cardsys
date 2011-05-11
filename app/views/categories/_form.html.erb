@@ -7,7 +7,7 @@
         <ul>
           <li>
           <div class="w1">分类上级：</div>
-          <div class="w2"> <%=f.select :parent_id,indent_category_options ,:include_blank => true%></div>
+          <div class="w2"> <%=f.select :parent_id,indent_category_options(params[:p]) ,:include_blank => true%></div>
           </li>
         </ul>
  

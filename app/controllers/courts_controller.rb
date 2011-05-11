@@ -7,7 +7,7 @@ class CourtsController < ApplicationController
   # GET /courts
   # GET /courts.xml
   def index
-    @courts = Court.enabled.paginate(default_paginate_options)
+    @courts = Court.all.paginate(default_paginate_options)
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @courts }
@@ -87,7 +87,6 @@ class CourtsController < ApplicationController
   def destroy
     @court = Court.find(params[:id])
     @court.destroy
-
     respond_to do |format|
       format.html { redirect_to(courts_url) }
       format.xml  { head :ok }

@@ -1,25 +1,25 @@
 class AdvancedOrdersController < ApplicationController
 
   layout  'main'
-  
+
   def new
     @order    = AdvancedOrder.new 
-    @coaches  = Coach.all
-    @courts   = Court.all
+    @coaches  = Coach.default_coaches
+    @courts   = Court.all(:conditions => {:status => 1})
     @book_record = BookRecord.new
   end
-  
+
   def show
     pre_data_for_show_edit
   end
-  
+
   def edit
     pre_data_for_show_edit
   end
 
   def create
-    @coaches  = Coach.all
-    @courts   = Court.all
+    @coaches  = Coach.default_coaches
+    @courts   = Court.all(:conditions => {:status => 1})
     @order = AdvancedOrder.new(params[:order])
 
     if params[:user_name].blank? or params[:password].blank?
@@ -85,9 +85,8 @@ class AdvancedOrdersController < ApplicationController
 
   def pre_data_for_show_edit
     @order    ||=  AdvancedOrder.find(params[:id])
-    @coaches  = Coach.all
-    @courts   = Court.all
-    @member       = @order.member
+    @coaches  = Coach.default_coaches
+    @courts   = Court.all(:conditions => {:status => 1})    @member       = @order.member
     @member_cards = @member.member_cards
     @current_card = @order.member_card
   end
