@@ -86,7 +86,8 @@ class AdvancedOrdersController < ApplicationController
   def pre_data_for_show_edit
     @order    ||=  AdvancedOrder.find(params[:id])
     @coaches  = Coach.default_coaches
-    @courts   = Court.all(:conditions => {:status => 1})    @member       = @order.member
+    @courts   = Court.all(:conditions => {:status => 1}) 
+    @member       = @order.member
     @member_cards = @member.member_cards
     @current_card = @order.member_card
   end

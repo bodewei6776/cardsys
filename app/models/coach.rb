@@ -20,7 +20,7 @@ class Coach < ActiveRecord::Base
   end
 
   def coach_status_str
-    "正常"
+    (self.status == 1) : "正常" ? "禁用"
   end
   
   #TODO
