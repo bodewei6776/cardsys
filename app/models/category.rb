@@ -1,15 +1,17 @@
 class Category < ActiveRecord::Base
   has_many :goods,:foreign_key => "good_type"
+  has_many :all_goods,:foreign_key => "good_type",:class_name => "Good",
+    :through => :children,:source => :goods
   acts_as_tree :order => "position"
   validate :category_stack_should_not_too_deep
 
-  def all_goods
-    if self.parent_id
-      self.goods
-    else
-      Good.where(["good_type in (?)",self.children.collect(&:id)])
-    end
-  end
+#  def all_goods_a
+#    if self.parent_id
+#      self.goods
+#    else
+#      Good.where(["good_type in (?)",self.children.collect(&:id)])
+#    end
+#  end
   
 
   def category_stack_should_not_too_deep

@@ -11,6 +11,13 @@ class BookRecord < ActiveRecord::Base
   Status_Do_Agent    = 13
 
   All_Operations = [:book,:agent,:active,:balance,:cancle,:do_agent,:change_coaches]
+  OPERATION_MAP = {:book => "预定",
+                   :agent => "申请代卖",
+                   :do_agent => "代卖",
+                   :balance => "结算",
+                   :active => "开场",
+                   :cancle => "取消预定",
+                   :change_coaches => "变更教练"}
 
   attr_accessor :original_book_reocrd
   

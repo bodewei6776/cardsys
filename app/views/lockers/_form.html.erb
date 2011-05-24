@@ -1,0 +1,33 @@
+<%= form_for(@locker) do |f| %>
+  <div class="fform">
+    <div class="fformbox" >
+      <div class="fformbox_bt"><p>储物柜基本信息</p></div>
+      <%= error_messages_for :locker%>
+      <div class="fformbox_nr">
+        <ul>
+         <li>
+          <div class="w1"><%= f.label :locker_type,"储物柜类型" %> </div>
+          <div class='w2'><%= f.select :locker_type,raw(generate_locker_type_options_without_all(@locker.locker_type)) %></div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+          <div class="w1"><%= f.label :num,"编号" %></div>
+          <div class='w2'><%= f.text_field :num%></div>
+          </li>
+        </ul>
+ 
+        <ul>
+          <li>
+          <div class="w1"><%= f.label :remark,"备注" %></div>
+          <div class='w2'><%= f.text_field :remark %></div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+          <%= f.submit @locker.new_record? ? "创建" : "更新"%>
+        </li>
+      </ul>
+      </div>
+    </div>
+  <% end %>

@@ -29,11 +29,11 @@ changeYear: true
           });
 
 function highlight_table(){
-    $(".table_items").filter(':even').css("background-color", "#EFFFC8");
-    $('.table_items').mouseover(function(){
+  $(".table_items").filter(':even').css("background-color", "#EFFFC8");
+  $('.table_items').mouseover(function(){
       $(this).css('background-color','#E78F08');
       });
-    $('.table_items').mouseout(function(){
+  $('.table_items').mouseout(function(){
       $(this).css('background-color','#ffffff');
       $(".table_items").filter(':even').css("background-color", "#EFFFC8");
       });
@@ -68,12 +68,12 @@ if(typeof(String.prototype.trim) === "undefined")
 
 
 
-  </script>
-  <%= stylesheet_link_tag 'main', 'jquery-ui-1.8.2.custom','colorbox' %>
-  <style type="text/css">
-    /* div .w1{height: 80px;}
-    div .w2{height: 80px;} */
-  </style>
+</script>
+<%= stylesheet_link_tag 'main', 'jquery-ui-1.8.2.custom','colorbox' %>
+<style type="text/css">
+  /* div .w1{height: 80px;}
+  div .w2{height: 80px;} */
+</style>
 </head>
 <body>
   <div class="top">

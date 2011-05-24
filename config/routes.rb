@@ -1,6 +1,16 @@
 Cardsys::Application.routes.draw do |map|
 
+  resources :rents
+
+  resources :lockers do
+    collection do
+      get "list"
+      get "autocomplete_num"
+    end
+  end
+
   resources :categories
+  resources :logs
 
   get "welcome/backup"
   delete "welcome/delete_backup"

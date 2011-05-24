@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  locker_id: 1
+  member_id: 1
+  card_id: 1
+  start_date: 2011-05-21 21:15:15
+  end_date: 2011-05-21 21:15:15
+  total_fee: 9.99
+  pay_way: 1
+  remark: MyString
+
+two:
+  locker_id: 1
+  member_id: 1
+  card_id: 1
+  start_date: 2011-05-21 21:15:15
+  end_date: 2011-05-21 21:15:15
+  total_fee: 9.99
+  pay_way: 1
+  remark: MyString

@@ -23,6 +23,7 @@ task :get_power=> :environment do
   a.children.create(:subject => "场地管理")
   a.children.create(:subject => "节假日管理")
   a.children.create(:subject => "教练管理")
+  a.children.create(:subject => "储物柜管理")
 
  a= Power.create(:parent_id => 0,:subject => "会员管理")
   a.children.create(:subject => "会员列表")
@@ -69,6 +70,11 @@ task :get_power=> :environment do
   a.children.create(:subject => "用户管理")
   a.children.create(:subject => "部门管理")
   a.children.create(:subject => "连锁店管理")
+
+  a=Power.create(:parent_id => 0,:subject => "储物柜管理")
+  a.children.create(:subject => "出租管理")
+  a.children.create(:subject => "储物柜管理")
+
 
   a=Power.create(:parent_id => 0,:subject => "系统管理")
   a.children.create(:subject => "修改密码")

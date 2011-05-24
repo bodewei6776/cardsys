@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Num:</b>
+  <%= @locker.num %>
+</p>
+
+<p>
+  <b>Locker type:</b>
+  <%= @locker.locker_type %>
+</p>
+
+<p>
+  <b>State:</b>
+  <%= @locker.state %>
+</p>
+
+<p>
+  <b>Remark:</b>
+  <%= @locker.remark %>
+</p>
+
+
+<%= link_to 'Edit', edit_locker_path(@locker) %> |
+<%= link_to 'Back', lockers_path %>

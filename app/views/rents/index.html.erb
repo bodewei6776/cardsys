@@ -1,0 +1,37 @@
+<h1>Listing rents</h1>
+
+<table>
+  <tr>
+    <th>Locker</th>
+    <th>Member</th>
+    <th>Card</th>
+    <th>Start date</th>
+    <th>End date</th>
+    <th>Total fee</th>
+    <th>Pay way</th>
+    <th>Remark</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @rents.each do |rent| %>
+  <tr>
+    <td><%= rent.locker_id %></td>
+    <td><%= rent.member_id %></td>
+    <td><%= rent.card_id %></td>
+    <td><%= rent.start_date %></td>
+    <td><%= rent.end_date %></td>
+    <td><%= rent.total_fee %></td>
+    <td><%= rent.pay_way %></td>
+    <td><%= rent.remark %></td>
+    <td><%= link_to 'Show', rent %></td>
+    <td><%= link_to 'Edit', edit_rent_path(rent) %></td>
+    <td><%= link_to 'Destroy', rent, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Rent', new_rent_path %>

@@ -17,6 +17,18 @@
       -->
     </style>
     <%= javascript_include_tag 'jquery-1.4.2'%>
+    <script type='text/javascript'>
+
+      $(document).ready(function(){
+          $('body').keypress(function(event) {
+            if (event.which == '13') {
+            $("#new_user_action").submit();
+            event.preventDefault();
+            }
+       });
+
+          });
+</script>
   </head>
   <body>
     <div class="login">
@@ -26,42 +38,42 @@
         <%= error_messages_for :user_session %>
         <div class="login_bd">
           <!--
-   <ul>
+          <ul>
             <li class="w25  tright" >分店：</li>
             <li>
-              <label>
-                <%= select_tag :catena_id,options_for_select(Catena.all.collect{|c| [c.name,c.id]})%>
-              </label>
+            <label>
+              <%= select_tag :catena_id,options_for_select(Catena.all.collect{|c| [c.name,c.id]})%>
+            </label>
             </li>
           </ul>
 
           -->
 
 
-         <ul>
+          <ul>
             <li class="w25  tright" >用户名：</li>
             <li>
-              <label>
-                <%= f.text_field :login,:style => "height:20px; line-height:20px;" %>
-              </label>
+            <label>
+              <%= f.text_field :login,:style => "height:20px; line-height:20px;" %>
+            </label>
             </li>
           </ul>
 
           <ul>
             <li class="w25  tright" >密码：</li>
             <li >
-              <label>
-                <%= f.password_field :password,:style => "height:20px; line-height:20px;" %>
-              </label>
+            <label>
+              <%= f.password_field :password,:style => "height:20px; line-height:20px;" %>
+            </label>
             </li>
           </ul>
           <!--
           <ul>
             <li class="w25  tright" ></li>
             <li >
-              <label>
-                <%= f.check_box :remember_me,{:size => 20}, 1 , 1%>  记住我的密码
-              </label>
+            <label>
+              <%= f.check_box :remember_me,{:size => 20}, 1 , 1%>  记住我的密码
+            </label>
             </li>
           </ul>
           -->

@@ -116,10 +116,12 @@ class ApplicationController < ActionController::Base
     {:page => params[:page] || 1,:per_page => 20}
   end
 
-
-
   def cart
     session[:cart] || Cart.new
+  end
+
+  def log_action(desc,log_type)
+    Log.log(self,desc,log_type) 
   end
 end
 

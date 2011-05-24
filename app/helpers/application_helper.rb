@@ -14,7 +14,7 @@ module ApplicationHelper
 
   def should_display_common_memu?
     %{period_prices tennis_courts courts coaches cards common_resources vacations}.include?(controller_name.to_s) &&
-      action_name.to_s != 'coach_status_search' && action_name.to_s != 'court_status_search'
+      action_name.to_s != 'coach_status_search' && action_name.to_s != 'court_status_search' || (controller_name.to_s == "lockers" && action_name.to_s == "list")
   end
 
   def should_display_member_memu?
@@ -46,6 +46,11 @@ module ApplicationHelper
     controller_name == "reports"
   end
 
+def should_display_locker_menu?
+    %{lockers rents}.include?(controller_name.to_s) && action_name.to_s != "list"
+  end
+
+
   def should_display_system_menu?
     action_name.to_s == "change_password" || controller_name.to_s == "logs" || controller_name.to_s == "welcome"
   end
@@ -60,6 +65,7 @@ module ApplicationHelper
     when should_display_balance_menu? then 'balance_menu'
     when should_display_book_record_menu? then 'book_record_menu'
     when should_display_report_menu? then 'report_menu'
+    when should_display_locker_menu? then 'locker_menu'
     when should_display_system_menu? then 'system_menu'
     end
     js =<<js
@@ -127,6 +133,19 @@ js
 
   def generate_cert_type_str(type)
     get_res_item(CommonResource::CERT_TYPE, type)
+  end
+
+ def generate_locker_type_options_without_all(locker_type)
+    options = generate_res_options CommonResource::LOCKER_TYPE
+    options_for_select(options, (locker_type.nil? || locker_type == "") ? '' : locker_type.to_i)
+  end
+
+
+
+  def generate_locker_type_options(locker_type)
+    options = generate_res_options CommonResource::LOCKER_TYPE
+    options << ['全部', '']
+    options_for_select(options, (locker_type.nil? || locker_type == "") ? '' : locker_type.to_i)
   end
 
   def generate_good_type_options(good_type)

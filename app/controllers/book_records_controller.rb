@@ -88,7 +88,7 @@ class BookRecordsController < ApplicationController
     @order.user_id = user.id
     respond_to do |format|
       if @order.save
-        Log.log(user,"预定场地#{@order.book_record.court.name}","book_record_new")
+        log_action("预定场地#{@order.book_record.court.name}","dingchang")
 
         format.html { 
           render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
@@ -132,9 +132,9 @@ class BookRecordsController < ApplicationController
 
 
     respond_to do |format|
+      operation = params[:order][:operation].to_sym
       if @order.update_attributes(params[:order])
-
-        Log.log(current_user,"#{operation_desc(params[:order][:operation])}#{@order.book_record.court.name}","book_record_edit")
+        log_action("场地<#{@order.book_record.court.name}>#{BookRecord::OPERATION_MAP[operation]}",operation.to_s) if operation && BookRecord::OPERATION_MAP.keys.include?(operation)
         format.html { redirect_to("/book_records?date=#{@order.book_record.record_date.to_s(:db)}", :notice => '修改成功.') }
       else
         inite_related_order_objects

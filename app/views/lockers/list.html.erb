@@ -1,0 +1,62 @@
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >储物柜查询</div>
+    </div>
+    <div class=" r_bt_r" >
+      <button onclick="window.location.href='/lockers/new'" class="submit2 hand" type="button">添加储物柜</button>
+    </div>
+  </div>
+  <div class="soso">
+    <form method="post" action="/lockers/list?p=<%=@p%>" class="form-profile" id="search_form">
+      <div class="w95">
+        按类别：
+        <label>
+          <%= select_tag "locker_type",raw(generate_locker_type_options(@locker_type)),:id => "locker_type",:class=> "select"  %>
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        按编号：
+        <label>
+          <input type="text"class="inputtext" autocomplete="/lockers/autocomplete_num" id="num" name="num" value="<%= params[:num] %>"/>
+        </label>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="submit" name="search" id="search_member" class="inputsubmit" value="查询"  tabindex="10" />
+      </div>
+    </form>
+  </div>
+
+  <div class="h10"></div>
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" >储物柜列表</div>
+    </div>
+    <div class=" r_bt_r" ></div>
+  </div>
+  <div class=" table">
+    <ul class="bttitle black fb " >
+
+      <li class='w5'>编号</li>
+      <li class='w5'>类型</li>
+      <li class='w10'>储物柜编号</li>
+      <li class='w10'>租用状态</li>
+      <li class='w10'>备注</li>
+      <li class='w10'>操作</li>
+    </ul>
+
+
+
+    <% @lockers.each_with_index do |locker,index| %>
+      <ul class='table_items'>
+        <li class='w5'> <%= index.succ %></li>
+        <li class='w5'> <%= locker_type_in_words(locker.locker_type) %></li>
+        <li class='w10'><%= locker.num%></li>
+        <li class='w10'><%= locker_state_in_words(locker.state) %></li>
+        <li class='w10'><%= locker.remark %></li>
+        <li class='w10'><%= link_to "编辑",edit_locker_path(locker) %> | 
+        <%= link_to "删除",locker_path(locker),:method => :delete ,:confirm => "确认要删除么？" %></li>
+      </ul>
+      <% end%>
+    </div>
+  </div>

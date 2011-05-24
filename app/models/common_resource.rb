@@ -8,6 +8,7 @@ class CommonResource < ActiveRecord::Base
   COACH_TYPE = 'coach_type'
   CERT_TYPE = 'cert_type'
   GOOD_TYPE = 'good_type'
+  LOCKER_TYPE = 'locker_type'
   GOOD_SOURCE = 'good_source'
 
   COACH_STATUS = 'coach_status'
