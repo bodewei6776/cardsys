@@ -3,6 +3,7 @@
     border: 2px solid #84dd69;  
     background-color: #84dd69;
   }
+
 </style>
 <div class="w96">
   <div class=" r_bt" >
@@ -31,17 +32,18 @@
               </ul>
               <ul>
                 <li>
-                开始时间
-                <%= text_field_tag "start",params[:start]%>
-                结束时间
-                <%= text_field_tag "end",params[:end]%>
+                <span> 开始时间</span>
+                <%= text_field_tag "start",params[:start],:id => "start"%>
+                <span>结束时间</span>
+                <%= text_field_tag "end",params[:end],:id => "end"%>
                 </li>
               </ul>
               <ul>
                 <li>
-                  操作人 
-                <%= text_field_tag "user",params[:user]%>
+                <span> &nbsp;&nbsp;&nbsp;操作人 </span>
+                <input type='field' name='user' value='<%= params[:user]%>' autocomplete="/users/autocomplete_user_name">
                 </li>
+                <li><span> <%= submit_tag "查询",:class => "inputsubmit"%> </span></li>
               </ul>
             </div>
 
@@ -76,4 +78,11 @@
       </div>
       <div class="h10"></div>
     </div>
+
+<script type="text/javascript">
+  $(function() {
+    $("#start").datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
+    $("#end").datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
+    });
+ 
   </script>
