@@ -32,8 +32,8 @@ class Member < ActiveRecord::Base
 
   def geneate_name_pinyin
     pinyin = PinYin.new
-    self.name_pinyin = pinyin.to_pinyin(self.name) if self.name_pinyin.blank?
-    self.pinyin_abbr = pinyin.to_pinyin_abbr(self.name) if self.pinyin_abbr.blank?
+    self.name_pinyin = pinyin.to_pinyin(self.name) if self.name#name_pinyin.blank?
+    self.pinyin_abbr = pinyin.to_pinyin_abbr(self.name) if self.name#pinyin_abbr.blank?
   end
 
   def card_serial_nums
