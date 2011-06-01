@@ -1,7 +1,7 @@
 class WelcomeController < ApplicationController
   layout 'main'
   def backup
-    @backups = Dir.glob(File.join(Rails.root , "/public/back_dbs/*")).reverse
+    @backups = Dir.glob(File.join(Rails.root , "/public/back_dbs/*")).sort{|a,b| File.new(a).ctime <=> File.new(b).ctime}.reverse
   end
 
   def backup_db
@@ -10,10 +10,14 @@ class WelcomeController < ApplicationController
     username= ActiveRecord::Base.connection.instance_variable_get("@config")[:username]
     password = ActiveRecord::Base.connection.instance_variable_get("@config")[:password]
     database = ActiveRecord::Base.connection.instance_variable_get("@config")[:database]
-    
-    #backup_script = "mysqldump -u#{username} -p#{password} #{database} > #{file_name}"
+
+    unless password.blank?
+      backup_script = "mysqldump -u#{username} -p#{password} #{database} > #{file_name}"
+    else
+      backup_script = "mysqldump -u#{username}  #{database} > #{file_name}"
+    end
     # Standard Ruby distribution provides the following useful extension
-    backup_script = "mysqldump -u#{username}  #{database} > #{file_name}"
+    #backup_script = "mysqldump -u#{username}  #{database} > #{file_name}"
     `#{backup_script}`
     redirect_to backup_path
   end

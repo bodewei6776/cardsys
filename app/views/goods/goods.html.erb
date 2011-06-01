@@ -7,7 +7,7 @@
     </div>
     <div class=" r_bt_r" >
 
-    <% unless request.referrer =~ /book_record|goods/%>
+    <% unless request.referrer =~ /book_record|goods|new_good_buy/%>
       <button onclick="window.location.href='/goods/new'" class="submit2 hand" type="button">添加商品</button>
     <%end%>
     </div>

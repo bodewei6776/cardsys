@@ -26,7 +26,7 @@ def autocomplete_good
     @category = Category.find_by_id(@good_type)
     @goods = @category.nil? ? Good.order("id desc") :  @category.all_goods.order("id desc")
     @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
-    @goods = @goods.paginate(:page => params[:page]||1)
+    @goods = @goods.paginate(default_paginate_options)
     respond_to do |format|
       format.html {
         render :template =>  '/goods/index'
@@ -152,13 +152,13 @@ def autocomplete_good
     if params[:id].to_i > 0
       @goods = [Good.find(params[:id])]
     else
-      @goods = Good.valid_goods.order('sale_count desc').limit(30)
+      @goods = Good.valid_goods.order('sale_count desc').limit(20)
     end
     render :layout => "small_main" #false
   end
 
   def to_buy
-    @goods = Good.valid_goods.order('sale_count desc').limit(30)
+    @goods = Good.valid_goods.order('sale_count desc').limit(20)
     render :action => 'goods'
   end
 
