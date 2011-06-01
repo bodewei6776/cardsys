@@ -10,7 +10,7 @@ class MembersController < ApplicationController
   def autocomplete_name
     @items = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER).where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%" ]).limit(10)
     @names = []
-    @items.each { |i| @names << i.name }
+    @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}"} }
     render :inline => @names.to_json#{lable:name, value:name}
   end
 
@@ -384,7 +384,7 @@ class MembersController < ApplicationController
                          :recharge_times=> charge_times,
                          :recharge_person => user.id
                         ).save
-                        Log.log(user,"为卡#{member_card.card_serial_num}充值#{charge_fee}元，#{charge_times}次","recharge")
+                        log_action("为卡#{member_card.card_serial_num}充值#{charge_fee}元，#{charge_times}次","recharge")
                         notice = params[:type]=="1" ? "会员卡充值成功！" : "会员卡退款成功！"
     end
     if !params[:expire_date].blank?

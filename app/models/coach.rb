@@ -15,6 +15,11 @@ class Coach < ActiveRecord::Base
 
   scope :default_coaches,where(:status => Const::YES)
 
+  after_create :set_default_status
+  def set_default_status
+    self.update_attribute(:status, 1)
+  end
+
   def set_catena_id
     self.catena_id = current_catena.id
   end

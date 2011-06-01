@@ -267,6 +267,10 @@ class Order < ActiveRecord::Base
     p_amount += coach_items.map(&:amount).sum unless coach_items.blank?
     p_amount
   end
+
+  def total_amount
+    self.product_amount + self.book_record_amount
+  end
     
   def balance
     self.operation = :balance
@@ -296,6 +300,11 @@ class Order < ActiveRecord::Base
   
   def member_card_number
     is_member? ? member_card.card_serial_num : "散客"
+  end
+
+  def extra_fee_for_no_member
+    return 0 if self.is_member? or self.non_member.nil?
+    return self.total_amount - self.non_member.earnest 
   end
   
 end

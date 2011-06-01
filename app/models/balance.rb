@@ -320,11 +320,17 @@ class Balance < ActiveRecord::Base
     } : 0
   end
 
-  def coach_amount(pay_ways)
-    if(pay_ways.include?self.goods_balance_type.to_s)
-      self.order.coach_items.present? ?  self.order.coach_items.inject(0){|sum,c| sum + c.amount} : 0
+  def coach_amount(select,pay_ways)
+    case select
+    when "1","7"
+      ((select == self.goods_balance_type.to_s) && self.order.coach_items.present?) ?\
+      self.order.coach_items.inject(0){|sum,c| sum + c.amount} : 0
     else
-      0
+      if(pay_ways.include?self.goods_balance_type.to_s)
+        self.order.coach_items.present? ?  self.order.coach_items.inject(0){|sum,c| sum + c.amount} : 0
+      else
+        0
+      end
     end
   end
 
@@ -398,8 +404,13 @@ class Balance < ActiveRecord::Base
 
 
   def self.total_coach_balance_on_date_any_ways(date,select,ways)
-    data = self.balanced.where(["date(created_at) = ? and (goods_balance_type in (?))", date,ways])
-    data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(ways) } : 0
+    case select
+    when "1","7"
+      data = self.balanced.where(["date(created_at) = ? and (goods_balance_type=?)", date,select])
+    else
+      data = self.balanced.where(["date(created_at) = ? and (goods_balance_type in(?))", date,ways])
+    end
+    data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(select,ways) } : 0
   end
 
 

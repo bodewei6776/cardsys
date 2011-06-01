@@ -7,6 +7,12 @@
       <div class="w1">会员：</div>
       <div class='w2'><%= @order.member_name %></div>
       </li>
+      <% unless @order.is_member?%>
+        <li>
+        <div class='w2' style='color:red;'>散客消费，客人需要补交费用<%= @order.extra_fee_for_no_member%>元</div>
+        </li>
+
+      <%end%>
     </ul>
     <ul>
       <% if @order.is_member? %>
@@ -92,7 +98,7 @@
       </li>
     </ul>
 
-<ul>
+    <ul>
 
       <li>
       <div class="w1">结算人：</div>
@@ -100,9 +106,9 @@
         <%= text_field_tag "user_name","#{params[:user_name] || current_user.login}"%>
       </div>
       </li>
-<li>
+      <li>
       <div class="w1">密码：</div>
-        <%= password_field_tag "password",""%>
+      <%= password_field_tag "password",""%>
       <div  class='w2'>
       </div>
       </li>
@@ -119,7 +125,7 @@
     </ul>
   </div>
 <% end -%>
-  <%= render :partial => "/orders/order_items_list",:locals => {:good_items => @order.product_items||[],:order => @order} %>
+<%= render :partial => "/orders/order_items_list",:locals => {:good_items => @order.product_items||[],:order => @order} %>
 </div>
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function(){
@@ -160,6 +166,6 @@ $('.balance').click(function(){
     return false;
     });
 
-  history.forward();
+history.forward();
   });
 </script>

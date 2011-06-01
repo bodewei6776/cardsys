@@ -65,12 +65,12 @@ module ReportsHelper
     # data tr
     Balance.balances_on_date_and_ways(date,selected_way,pay_ways).each_with_index do |b,index|
       table << "<tr class='report_item'>"
-      table <<"<td>#{index+1} #{   b.id}</td>"
+      table <<"<td>#{index+1}</td>"
       table << "<td>#{link_to(b.order.member_name,order_balance_path(b.order,b),:target => "_blank")}</td>"
       table << "<td>#{b.order.book_record.court.name rescue "购买"}（#{b.book_record_span rescue "商品"}）</td>"
       table << "<td>#{b.order.member_card.card_serial_num rescue ""}</td>"
       table << "<td class='mon'>#{ book_record_amount_desc(b,selected_way,pay_ways)}</td>"
-      table << "<td class='mon'>#{b.coach_amount(pay_ways)}</td>"
+      table << "<td class='mon'>#{b.coach_amount(selected_way,pay_ways)}</td>"
       Category.roots.each do |gt|
       table << "<td class='mon'>#{b.good_amount_by_type(gt,selected_way,pay_ways)}</td>"
       end

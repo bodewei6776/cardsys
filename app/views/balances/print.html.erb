@@ -1,4 +1,3 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html lang="zh-CN" xml:lang="zh-CH" xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -15,18 +14,23 @@
     <table border=2 >
       <caption><h2><%= current_catena.name%>球馆消费单</h2></caption>
       <% if @balance.order.book_record %>
-      <tr class='goods goods_title'>
-        <td colspan=4>消费时段：<%= balance_time_span_in_word(@balance)%> </td>
-      </tr>
+        <tr class='goods goods_title'>
+          <td colspan=4>消费时段：<%= balance_time_span_in_word(@balance)%> </td>
+        </tr>
       <% end %>
       <%if @balance.order.is_member? %>
-      <tr>
-        <td colspan=2>姓名: <%=  @balance.order.member_name %></td>
-        <td colspan=2>卡号: <%=  @balance.order.is_member?  ? @balance.order.member_card.card_serial_num : "无卡 "%></td>
-      </tr>
+        <tr>
+          <td colspan=2>姓名: <%=  @balance.order.member_name %></td>
+          <td colspan=2>卡号: <%=  @balance.order.is_member?  ? @balance.order.member_card.card_serial_num : "无卡 "%></td>
+        </tr>
         <tr class=''>
           <td colspan=4>卡到期时间：<%= @balance.order.member_card.expire_date.strftime("%Y-%m-%d")%> </td>
         </tr>
+      <%else%>
+        <tr>
+          <td colspan=4>散客姓名: <%=  @balance.order.member_name %></td>
+        </tr>
+
       <% end %>
 
       <tr class='goods goods_title'>
@@ -37,34 +41,34 @@
       </tr>
 
       <% if @balance.order.book_record %>
-      <tr class='goods'>
-        <td class='left'>场地预定费</td>
-        <% if @balance.balance_way == 7%>
-          <td><%= 1%></td>
-          <td><%= @balance.order.book_record.end_hour - @balance.order.book_record.start_hour%></td>
-          <td class='right'><%= @balance.count_amount%>次</td>
-        <%else%>
-          <td><%= @balance.order.book_record_item.amount%></td>
-          <td>1</td>
-          <td class='right'><%= @balance.order.book_record_item.amount%></td>
+        <tr class='goods'>
+          <td class='left'>场地预定费</td>
+          <% if @balance.balance_way == 7%>
+            <td><%= 1%></td>
+            <td><%= @balance.order.book_record.end_hour - @balance.order.book_record.start_hour%></td>
+            <td class='right'><%= @balance.count_amount%>次</td>
+          <%else%>
+            <td><%= @balance.order.book_record_item.amount%></td>
+            <td>1</td>
+            <td class='right'><%= @balance.order.book_record_item.amount%></td>
 
-        <%end%>
-      </tr>
-      <% unless (coach_items = @balance.order.coach_items).blank?  -%>
-        <% coach_items.each do |coach_item|  -%> 
-          <% coach = coach_item.related_entry %>
-          <tr class='goods'>
-            <td class='left'>教练(<%= coach.name%>)</td>
-            <td>
-              <%=  coach.fee %>
-            </td>
-            <td>
-              <%= coach_item.quantity %>
-            </td>
-            <td class='right'><%= coach_item.amount %></td>
-          </tr>
-        <%end  -%>
-      <%end -%> 
+          <%end%>
+        </tr>
+        <% unless (coach_items = @balance.order.coach_items).blank?  -%>
+          <% coach_items.each do |coach_item|  -%> 
+            <% coach = coach_item.related_entry %>
+            <tr class='goods'>
+              <td class='left'>教练(<%= coach.name%>)</td>
+              <td>
+                <%=  coach.fee %>
+              </td>
+              <td>
+                <%= coach_item.quantity %>
+              </td>
+              <td class='right'><%= coach_item.amount %></td>
+            </tr>
+          <%end  -%>
+        <%end -%> 
       <%end -%> 
       <% for good_item in @balance.order.product_items%>
         <% next if (good = good_item.product).blank? %>
@@ -105,7 +109,7 @@
           <%= DateUtil.timelong(@balance.created_at)%>
         </td>
       </tr>
- 
+
       <tr>
         <td colspan=4> 操作员编号: 
           <%= @balance.who_balance.login%>
@@ -114,10 +118,10 @@
       <tr>
         <td colspan=4> 支付方式: 
           <% if @balance.order.book_record %>
-          <%= @balance.balance_way_desciption(@balance.balance_way)%>（场地费）
+            <%= @balance.balance_way_desciption(@balance.balance_way)%>（场地费）
           <%end%>
           <% if @balance.goods_realy_amount > 0%>
-          /<%= @balance.balance_way_desciption(@balance.goods_balance_type)%>（其他消费）
+            /<%= @balance.balance_way_desciption(@balance.goods_balance_type)%>（其他消费）
           <%end%>
         </td>
       </tr>

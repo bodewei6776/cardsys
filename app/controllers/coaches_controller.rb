@@ -41,7 +41,7 @@ class CoachesController < ApplicationController
   # POST /coaches.xml
   def create
     @coach = Coach.new(params[:coach])
-    @coach.catena_id = session[:catena_id]    
+   # @coach.catena_id = session[:catena_id]    
     respond_to do |format|
       if @coach.save
 #        source_pic = @coach.portrait
