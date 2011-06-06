@@ -1,37 +1,63 @@
-<h1>Listing rents</h1>
+<style type='text/css'>
+  .content {
+    overflow: scroll;
+    }
+  #rent_table{
+    min-width: 1020px;
+  }
+  
 
-<table>
-  <tr>
-    <th>Locker</th>
-    <th>Member</th>
-    <th>Card</th>
-    <th>Start date</th>
-    <th>End date</th>
-    <th>Total fee</th>
-    <th>Pay way</th>
-    <th>Remark</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
+  table#rent_table th{
+    background-color: #dfff92;
+  }
 
-<% @rents.each do |rent| %>
-  <tr>
-    <td><%= rent.locker_id %></td>
-    <td><%= rent.member_id %></td>
-    <td><%= rent.card_id %></td>
-    <td><%= rent.start_date %></td>
-    <td><%= rent.end_date %></td>
-    <td><%= rent.total_fee %></td>
-    <td><%= rent.pay_way %></td>
-    <td><%= rent.remark %></td>
-    <td><%= link_to 'Show', rent %></td>
-    <td><%= link_to 'Edit', edit_rent_path(rent) %></td>
-    <td><%= link_to 'Destroy', rent, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
-<% end %>
-</table>
+  table#rent_table td,th{
+    border: 1px solid black;
+    height: 45px;
+    text-align: center;
+    width: 100px;
+  }
 
-<br />
+  .locker_div{
+    height: 100%;
+    width: 100%;
+  }
+</style>
+<div class="w96">
+  <div class=" r_bt" >
+    <div class=" r_bt_l" >
+      <div class=" r_bt_l_a" ></div>
+      <div class=" r_bt_l_c fb white" ><%= current_catena.name %> <%= DateUtil.format_to_chinese_date(@current_date) %>的储物柜出租</div>
+    </div>
+    <div class=" r_bt_r" >
+      <button class="submit2 hand"  type='button' onclick='location.href="/rents?date=<%=@predate%>"'><< 前一天</button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' onclick="location.href='/rents'">今天</button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' onclick='location.href="/rents?date=<%=@nextdate%>"'>后一天>></button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' value="true" onclick="location.reload();">刷新</button>&nbsp;&nbsp;
+    </div>
+  </div>
+  <div class="content">
+    <%= rents_in_table(@lockers,@current_date)%>
+  </div>
+  <div class="h10"></div>
+  <div class="color">
+    <span class="color03">紫色-使用中</span><span class="color05">褐色-即将到期</span>
+    <span class="color04">绿色-空</span>
+  </div>
+  <div class="h10"></div>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+      $('.popup-new-window').popupWindow({
+centerScreen: 1,
+windowName: "场地预定",
+width: 850,
+height: 750,
+resizable: true,
+location: 0,
+status: 0,
+menubar: 0
+});
+      });
 
-<%= link_to 'New Rent', new_rent_path %>
+</script>

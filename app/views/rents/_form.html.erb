@@ -1,49 +1,137 @@
-<%= form_for(@rent) do |f| %>
-  <% if @rent.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@rent.errors.count, "error") %> prohibited this rent from being saved:</h2>
+<div class="fformbox" >
+  <div class="fformbox_bt"><p>请填写预定信息</p></div>
+  <div class="fformbox_nr">
+    <%= form_for(@rent) do |f| %>
+      <%= error_messages_for :rent%>
+      <%= f.hidden_field :locker_id%>
+      <ul>
+        <li>
+        <div class="w1">编号：</div>
+        <div class="w2"><%= @locker.num%></div>
+        </li>
+        <li>
+        <div class="w1"> 储物柜类型：</div>
+        <div class="w2"><%= @locker.locker_type_in_word%></div>
+        </li>
+      </ul>
+
 
       <ul>
-      <% @rent.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
+        <li>
+        <div class="w1">是否是会员：</div>
+        <div class="w2">
+          <%= f.radio_button :is_member,true,:onclick=> "toggle_is_member();",:id => "is_member_radio"%>是
+          <%= f.radio_button :is_member,false,:onclick=> "toggle_is_member();",:id => "is_member_radio"%>否
+        </div>
+        </li>
       </ul>
-    </div>
-  <% end %>
 
-  <div class="field">
-    <%= f.label :locker_id %><br />
-    <%= f.text_field :locker_id %>
+
+      <div id='is_not_member_div'>
+        <ul>
+          <li>
+          <div class="w1">预定人：</div>
+          <div class="w2"><%= f.text_field :member_name ,:order_autocomplete=>'/book_records/complete_for_members'%></div>
+
+          </li>
+        </ul>
+      </div>
+
+      <div id='is_member_div'>
+        <%= render :partial => "card_info",:locals => {:current_card => @rent.member_card,:member => @rent.member,:date => @rent.start_date}%>
+     </div>
+
+      <ul>
+        <li>
+        <div class="w1">起租时间：</div>
+        <div class="w2"><%= f.text_field :start_date,:class => "date_select" ,:id => "begin_date"%></div>
+        </li>
+        <li>
+        <div class="w1"> 退租时间：</div>
+        <div class="w2"><%= f.text_field :end_date,:class => "date_select",:id => "end_date"%></div>
+        </li>
+      </ul>
+
+
+      <ul>
+        <li>
+        <div class="w1">租用费用：</div>
+        <div class="w2"><%= f.text_field :total_fee %></div>
+        </li>
+      </ul>
+
+      <ul>
+        <li>
+        <div class="w1">支付方式：</div>
+        <div class="w2">
+          <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Card,:class => 'pay_way' %>记账
+          <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Cash,:class => 'pay_way' %>现金
+          <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Bank,:class => 'pay_way' %>银行
+          <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Post,:class => 'pay_way' %>POS机
+          <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Check ,:class => 'pay_way'%>支票
+          <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Guazhang,:class => 'pay_way' %>挂账
+        </div>
+        </li>
+      </ul>
+
+
+
+      <ul>
+        <li>
+        <div class="w1">备注：</div>
+        <div class="w2"><%= f.text_field :remark,:id => "remark_area"%></div>
+        </li>
+      </ul>
+
+
+      <ul>
+        <li>
+        <div class="w1">经手人：</div>
+        <div class="w2"><%= f.text_field :user_name,:id => "user_name", :autocomplete=>"/users/autocomplete_user_name"%></div>
+        </li>
+        <li>
+        <div class="w1"> 密码：</div>
+        <div class="w2"><%= f.password_field :password,:id => "password"%></div>
+        </li>
+
+      </ul>
+
+      <ul>
+        <li class='w1'> 
+        <%= f.submit "#{@rent.new_record? ? "出租" : "续租"}" %>
+        </li>
+      </ul>
+    <% end %>
+
   </div>
-  <div class="field">
-    <%= f.label :member_id %><br />
-    <%= f.text_field :member_id %>
-  </div>
-  <div class="field">
-    <%= f.label :card_id %><br />
-    <%= f.text_field :card_id %>
-  </div>
-  <div class="field">
-    <%= f.label :start_date %><br />
-    <%= f.datetime_select :start_date %>
-  </div>
-  <div class="field">
-    <%= f.label :end_date %><br />
-    <%= f.datetime_select :end_date %>
-  </div>
-  <div class="field">
-    <%= f.label :total_fee %><br />
-    <%= f.text_field :total_fee %>
-  </div>
-  <div class="field">
-    <%= f.label :pay_way %><br />
-    <%= f.text_field :pay_way %>
-  </div>
-  <div class="field">
-    <%= f.label :remark %><br />
-    <%= f.text_field :remark %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
-<% end %>
+</div>
+
+<script type='text/javascript'>
+function toggle_is_member(){
+  if($('input:radio:checked').attr('value')  == "false"){
+    $('#is_not_member_div').show();
+    $('#is_member_div').hide();
+
+      }
+  else{
+$('#is_not_member_div').hide();
+    $('#is_member_div').show();
+
+  }
+}
+
+function card_num_change(){
+  var card_num = $('#card_num option:selected').text();
+  var begin_date = $('#begin_date').attr('value');
+  var reqest_url  = "/rents/complete_member_infos?id=" + card_num + "&start_date=" + begin_date;
+  $.get(reqest_url,function(returned_data){});
+}
+
+$(document).ready(function(){
+    rentAutocomplete();
+    toggle_is_member();
+    $("#begin_date").datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
+    $("#end_date").datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
+
+    });
+  </script>

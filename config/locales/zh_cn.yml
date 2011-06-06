@@ -173,6 +173,10 @@ zh_cn:
         business_district_id: "商圈"
         area_level: "区域热度"
         area_type: "区域类型"
+      rent:
+        locker_id: "储物柜ID"
+        member_id: "会员ID"
+        card_id: "会员卡ID"
   helpers:
     label:  
   simple_message:

@@ -18,7 +18,14 @@ var urls = ["http://",domain];
 if(port && port != ''){
 urls.push(":" + port)
 }
-urls.push("/book_records?date=" + dateText)
+if(window.location.pathname.match(/rents/))
+{ 
+  urls.push("/rents?date=" + dateText)
+}
+else{
+  urls.push("/book_records?date=" + dateText)
+}
+
 window.location.href=urls.join('');
 },
 dateFormat: 'yy-mm-dd',

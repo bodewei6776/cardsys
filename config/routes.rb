@@ -1,12 +1,17 @@
 Cardsys::Application.routes.draw do |map|
 
-  resources :rents
+  resources :rents do
+    collection do
+      get :complete_member_infos
+    end
+  end
 
   resources :lockers do
     collection do
       get "list"
       get "autocomplete_num"
     end
+    resources :rents
   end
 
   resources :categories

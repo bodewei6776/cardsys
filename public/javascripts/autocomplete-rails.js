@@ -10,7 +10,7 @@
 */
 
 $(document).ready(function(){
-  $('input[autocomplete]').each(function(i){
+  $('input[autocomplete],input[data-autocomplete]').each(function(i){
     $(this).autocomplete({
       source: $(this).attr('autocomplete'),
       select: function(ui, li){
@@ -92,4 +92,21 @@ function goodAutocomplete(){
              }
     }		);	
   });
+}
+
+function rentAutocomplete(){
+	$('input[rent_autocomplete]').each(function(i){
+		$(this).autocomplete({
+	      source:  $(this).attr('rent_autocomplete'),
+	      select:  function(ui,li){
+                var begin_date = $('#begin_date').attr('value');
+	        var item = li.item;
+	        var reqest_url  = "/rents/complete_member_infos?id=" + item.id + "&start_date=" + begin_date;
+	        $.get(reqest_url,function(returned_data)
+	        {
+	          //$('#is_member_div').html(returned_data);
+	        });
+	      }			
+		});
+	});
 }

@@ -122,4 +122,8 @@ class CommonResource < ActiveRecord::Base
   def self.active_time
     CommonResource.find_by_name("active_time").detail_str.to_i rescue 30
   end
+
+  def self.locker_due_time
+    CommonResource.find_by_name("locker_due_time").detail_str.to_i rescue 7
+  end
 end
