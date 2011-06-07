@@ -4,8 +4,8 @@ class User < ActiveRecord::Base
   has_many :department_users
   has_many :departments,:through => :department_users
   acts_as_authentic do |c|
-    c.validates_length_of_password_confirmation_field_options = {:minimum => 1 }
-    c.validates_length_of_password_field_options = { :minimum => 1 }
+    #c.validates_length_of_password_confirmation_field_options = {:minimum => 1 }# if c.password.present?
+    #c.validates_length_of_password_field_options = { :minimum => 1 }# if c.password_confirmation.present?
     c.validates_length_of_login_field_options = {:within => 0..100}
   end
 

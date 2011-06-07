@@ -9,6 +9,7 @@ gem 'mini_magick'
 gem 'acts_as_tree'
 gem 'state_machine'
 gem 'jquery-rails'
+gem 'highline'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

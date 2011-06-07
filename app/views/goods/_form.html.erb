@@ -6,40 +6,44 @@
       <div class="fformbox_nr">
         <ul>
           <li>
-            <div class="w1">商品名称：</div>
-            <div class="w2">
-              <%= f.text_field :name %>
-            </div>
-            <div class="w1">商品类别：</div>
-            <div class="w2">
-               <%=f.select :good_type, option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,@good.good_type),:id => "good_type",:class=> "select"%>
-            </div>
+          <div class="w1">商品名称：</div>
+          <div class="w2">
+            <%= f.text_field :name %>
+          </div>
+          <div class="w1">商品类别：</div>
+          <div class="w2">
+            <%=f.select :good_type, option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,@good.good_type),:id => "good_type",:class=> "select"%>
+          </div>
           </li>
         </ul>
         <ul>
           <li>
-            <div class="w1">入库价格：</div>
-            <div class="w2">
-              <%= f.text_field :purchasing_price %>
-            </div>
-            <div class="w1">零售价格：</div>
-            <div class="w2">
-              <%= f.text_field :price %>
-            </div>
+          <!--
+          <div class="w1">入库价格：</div>
+          <div class="w2">
+            <%= f.text_field :purchasing_price %>
+          </div>
+
+          -->
+          <div class="w1">入库数量：</div>
+          <div class="w2">
+            <%= f.text_field :count_back_stock %>
+          </div>
+
+          <div class="w1">零售价格：</div>
+          <div class="w2">
+            <%= f.text_field :price %>
+          </div>
           </li>
         </ul>
         <ul>
           <li>
-            <div class="w1">商品来源：</div>
-            <div class="w2">
-              <select name="good[good_source]" id="good_source" class="select">
-                <%= generate_good_source_options(@good)  %>
-              </select>
-            </div>
-            <div class="w1">入库数量：</div>
-            <div class="w2">
-              <%= f.text_field :count_back_stock %>
-            </div>
+          <div class="w1">商品来源：</div>
+          <div class="w2">
+            <select name="good[good_source]" id="good_source" class="select">
+              <%= generate_good_source_options(@good)  %>
+            </select>
+          </div>
           </li>
         </ul>
       </div>

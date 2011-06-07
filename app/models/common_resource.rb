@@ -1,6 +1,6 @@
 class CommonResource < ActiveRecord::Base
 
-  has_many :common_resource_details
+  has_many :common_resource_details,:dependent => :destroy
 
 
   CARD_TYPE = 'card_type'

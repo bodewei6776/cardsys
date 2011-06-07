@@ -385,7 +385,12 @@ class MembersController < ApplicationController
                          :recharge_person => user.id
                         ).save
                         log_action("为卡#{member_card.card_serial_num}充值#{charge_fee}元，#{charge_times}次","recharge")
-                        notice = params[:type]=="1" ? "会员卡充值成功！" : "会员卡退款成功！"
+                        #notice = params[:type]=="1" ? "会员卡充值成功！" : "会员卡退款成功！"
+
+                        notice = ""
+                        notice << "会员卡充值成功" if charge_fee > 0
+                        notice << "，会员卡充次成功" if charge_times > 0
+                        
     end
     if !params[:expire_date].blank?
       member_card.update_attribute(:expire_date, params[:expire_date])

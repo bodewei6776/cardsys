@@ -42,6 +42,7 @@ def autocomplete_good
     @category = Category.find_by_id(@good_type)
     #@goods = @category.nil? ? Good.order("id desc") :  @category.goods.order("id desc")
     @goods = @category.nil? ? Good.order("id desc") :  @category.all_goods.order("id desc")
+    @goods = @goods.valid_goods
     @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @goods = @goods.paginate(:page => params[:page]||1)
     render :action => "goods",:layout => "small_main" 
