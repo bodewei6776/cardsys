@@ -7,12 +7,12 @@ task :summer_or_winter => :environment do
 
     case result
     when /^[Y|y]es$/
-      times_summer = CommonResource.create(:name => "times_summer", :description => "夏令时", :detail_str => "3 11")
-      times_winter = CommonResource.create(:name => "times_winter", :description => "冬令时", :detail_str => "12 1 2")
-      3.upto(11) do |i|
+      times_summer = CommonResource.create(:name => "times_summer", :description => "夏令时", :detail_str => "5 10")
+      times_winter = CommonResource.create(:name => "times_winter", :description => "冬令时", :detail_str => "11 12 1 2 3 4")
+      5.upto(10) do |i|
         CommonResourceDetail.create(:common_resource_id => times_summer.id, :detail_name => i.to_s)
       end
-      [12,1,2].each do |i|
+      [11,12,1,2,3,4].each do |i|
         CommonResourceDetail.create(:common_resource_id => times_winter.id, :detail_name => i.to_s)
       end
       break;
