@@ -39,6 +39,10 @@ module BookRecordsHelper
                          else
                            "#{book_record.order.member_name}:无卡预定" 
                          end
+        display_content = "(授)" + display_content if (book_record.order.member_card_id.present? and \
+                                                       book_record.order.member_type == Const::YES and \
+                                                       book_record.order.member.is_granter_of_card(book_record.order.member_card_id))
+        display_content = "(固)" +  display_content if book_record.order.advanced_order
         unless (coaches = book_record.order.coaches).blank?
           display_content << "(教练:#{coaches.map(&:name).join(',')})"
         end

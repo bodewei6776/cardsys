@@ -73,6 +73,11 @@ class Member < ActiveRecord::Base
   def is_granter(granter_id, card_id)
     !MemberCardGranter.where(:member_id => self.id).where(:member_card_id => card_id).where(:granter_id => granter_id ).first.nil?
   end
+
+  def is_granter_of_card(card_id)
+    !MemberCardGranter.where(:granter_id=> self.id).where(:member_card_id => card_id).blank?
+  end
+ 
   
   def member_cards
     if is_member?

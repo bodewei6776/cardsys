@@ -2,7 +2,7 @@ module RentsHelper
 
   def rents_in_table(lockers,date = Date.today)
     locker_groups = lockers.group_by(&:locker_type)
-    max_td_num = locker_groups.values.sort{|v| v.size}.last.size rescue 0
+    max_td_num = locker_groups.values.sort{|v1,v2| v1.size <=> v2.size}.last.size rescue 0
     table_width =(max_td_num + 1)*100
     content = "<table id='rent_table' cellspacing='0' style='width: #{table_width}px;'>"
     content += "<tr><th>分类</th><th colspan='#{max_td_num}'>储物柜</th></tr>"

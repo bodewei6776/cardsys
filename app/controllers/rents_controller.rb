@@ -56,7 +56,12 @@ class RentsController < ApplicationController
     @rent = Rent.new(params[:rent])
 
     respond_to do |format|
-      if @rent.save
+      puts '1' * 100
+      puts @rent.member_card
+      puts @rent.attributes
+      if @rent.pay && @rent.save 
+        desc = "#{@rent.member.name}支付储物柜金额#{@rent.total_fee}"
+        log_action(desc,"balance")
         format.html { 
           render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
                     " window.opener.location.reload(); } ")
