@@ -56,11 +56,8 @@ class RentsController < ApplicationController
     @rent = Rent.new(params[:rent])
 
     respond_to do |format|
-      puts '1' * 100
-      puts @rent.member_card
-      puts @rent.attributes
       if @rent.pay && @rent.save 
-        desc = "#{@rent.member.name}支付储物柜金额#{@rent.total_fee}"
+        desc = "#{@rent.member_name}支付储物柜金额#{@rent.total_fee}"
         log_action(desc,"balance")
         format.html { 
           render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
@@ -83,7 +80,7 @@ class RentsController < ApplicationController
 
     respond_to do |format|
       if @rent.update_attributes(params[:rent])
-        format.html { redirect_to(@rent, :notice => 'Rent was successfully updated.') }
+        format.html { redirect_to(rents_path, :notice => '续租成功.') }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
@@ -115,6 +112,7 @@ class RentsController < ApplicationController
       @cards = @member.member_cards
     end
     @date = Date.parse(params[:start_date])
+    @rent = Rent.new(:member => @member,:member_card => @current_card,:start_date=> @date)
     respond_to do |format|
       format.js {}
     end

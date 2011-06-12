@@ -1,7 +1,10 @@
+<% current_card = @rent.member_card || MemberCard.new%>
+<% member = @rent.member || Member.new(:name => @rent.member_name)%>
+<% date = @rent.start_date%>
 <ul>
   <li>
   <div class="w1">预定人：</div>
-  <div class="w2"><%= text_field_tag "rent[member_name]" ,member.name,:rent_autocomplete=>'/book_records/complete_for_members'%></div>
+  <div class="w2"><%= text_field_tag "rent[member_name]" ,(member.name rescue ""),:rent_autocomplete=>'/book_records/complete_for_members'%></div>
   </li>
   <li>
   <div class="w1"> 会员卡号：</div>
@@ -38,7 +41,7 @@
     </div>
     <div class="w1">联系电话：</div>
     <div class="w2">
-      <input type="text" name="telephone"  value="<%= member.mobile %>" />
+      <input type="text" name="telephone"  value="<%= member.mobile rescue "" %>" />
       <input type="hidden" name="card_id" value="<%= current_card.id %>" />
     </div>
     </li>

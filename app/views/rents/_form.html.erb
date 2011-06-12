@@ -30,15 +30,15 @@
       <div id='is_not_member_div'>
         <ul>
           <li>
-          <div class="w1">预定人：</div>
-          <div class="w2"><%= f.text_field :member_name ,:order_autocomplete=>'/book_records/complete_for_members'%></div>
-
+          <div class="w1">预定人1：</div>
+          <div class="w2"><%= f.text_field :random_member_name %></div>
           </li>
         </ul>
       </div>
 
       <div id='is_member_div'>
-        <%= render :partial => "card_info",:locals => {:current_card => @rent.member_card,:member => @rent.member,:date => @rent.start_date}%>
+        <%#= render :partial => "card_info",:locals => {:current_card => @rent.member_card || MemberCard.new,:member => @rent.member,:date => @rent.start_date}%>
+        <%= render :partial => "card_info",:locals => {:rent => @rent}%>
      </div>
 
       <ul>
