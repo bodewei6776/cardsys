@@ -69,6 +69,9 @@ zh_cn:
       second: "秒"
   
   number:
+    human:
+      decimal_units:
+        units: "."
     format:
       separator: "."
       delimiter: ","
@@ -100,6 +103,7 @@ zh_cn:
           mb: "MB"
           gb: "GB"
           tb: "TB"
+
   
   support:
     array:

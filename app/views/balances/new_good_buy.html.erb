@@ -50,7 +50,9 @@
             会员卡号：
           </div>
           <div class='w2'>
-            <p id='cards'><select name='member_card_id'></select></p>
+            <p id='cards'><input name='member_card' type='field' id='member_card_name_field' member_card_autocomplete="/member_cards/autocomplete_card_serial_num" ></input>
+            <input name='member_card_id' type='hidden' id='member_card_hidden_id'></input> 
+            </p>
             <p id='notice' style='color:red;display:inline;'></p>
           </div>
           </li>
@@ -213,6 +215,7 @@ function update_discount(pid,price,discount){
 }
 
 $(document).ready(function(){
+    member_card_Autocomplete();
     $('select.discount').live('change',function(){
       var good_id = $(this).parent().parent().find('.good_id'); 
       var total_price = $(this).parent().parent().find('.total_price'); 

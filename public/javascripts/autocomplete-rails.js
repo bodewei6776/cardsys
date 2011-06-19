@@ -60,8 +60,10 @@ function userAutocomplete(){
                     + node.member_card.card_serial_num + "</option>") 
                     });
 
-                $('#cards select').html(options);
-                $('#cards select').change(function(){
+
+
+                $('#cards').html( "<select name='member_card_id'>" + options + "</select>");
+                $('#cards select').live('change',function(){
                   var selected = $(this).find("option:selected");
                   $('#member_card_info').text(selected.attr('card_info') + selected.attr('order_tip_message'));
                   $('#member_info').text(selected.attr('member_info'));
@@ -106,6 +108,25 @@ function rentAutocomplete(){
 	        {
 	          //$('#is_member_div').html(returned_data);
 	        });
+	      }			
+		});
+	});
+}
+
+
+function member_card_Autocomplete(){
+	$('input[member_card_autocomplete]').each(function(i){
+		$(this).autocomplete({
+	      source:  $(this).attr('member_card_autocomplete'),
+	      select:  function(ui,li){
+	        var item = li.item;
+	        var reqest_url  = "/balances/member_by_member_card_serial_num?serial_num=" + item.value;
+	        $.get(reqest_url,function(returned_data)
+	        {
+                $("#member_name").val(returned_data.name);
+                $("#member_id").val(returned_data.id);
+	        });
+
 	      }			
 		});
 	});

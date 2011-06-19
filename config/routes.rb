@@ -72,6 +72,7 @@ Cardsys::Application.routes.draw do |map|
       get :new_good_buy
       get :clear_goods
       post :create_good_buy
+      get :member_by_member_card_serial_num
     end
   end
 

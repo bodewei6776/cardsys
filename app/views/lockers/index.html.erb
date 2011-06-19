@@ -59,12 +59,12 @@
         <li class='w10'> <%= locker_type_in_words(locker.locker_type) %></li>
         <li class='w10'><%= locker.num%></li>
         <li class='w10'><%= locker_state_in_words(locker.state) %></li>
-        <li class='w10'><%= locker.member.name if locker.rented? %></li>
-        <li class='w5'><%= DateUtils::short_date(locker.rent.rent_day) if locker.rented? %></li>
-        <li class='w5'><%= DateUtils::short_date(locker.rent.start_date) if locker.rented? %></li>
-        <li class='w5'><%= DateUtils::short_date(locker.rent.end_date) if locker.rented? %></li>
-        <li class='w5'><%= number_to_money(locker.rent.total_fee) if locker.rented? %></li>
-        <li class='w10'><%= pay_way_in_words(locker.rent.pay_way) if locker.rented? %></li>
+        <li class='w10'><%#= locker.member.name if locker.rented? %></li>
+        <li class='w5'><%#= DateUtils::short_date(locker.rent.rent_day) if locker.rented? %></li>
+        <li class='w5'><%#= DateUtils::short_date(locker.rent.start_date) if locker.rented? %></li>
+        <li class='w5'><%#= DateUtils::short_date(locker.rent.end_date) if locker.rented? %></li>
+        <li class='w5'><%#= number_to_money(locker.rent.total_fee) if locker.rented? %></li>
+        <li class='w10'><%#= pay_way_in_words(locker.rent.pay_way) if locker.rented? %></li>
         <li class='w10'><%= locker.remark %></li>
         <li class='w10'><%= locker.remark %></li>
       </ul>

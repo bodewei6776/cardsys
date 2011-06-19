@@ -32,7 +32,7 @@
   </head>
   <body>
     <div class="login">
-      <div class="login_bt white fmic30"><%= Catena.first.name %><!--博德维-->网球管理系统</div>
+      <div class="login_bt white fmic30"><%= Catena.first.name %><!--博德维-->管理系统</div>
       <div class="login_tu"></div>
       <%= form_for @user_session, :url => user_session_path,:html => {:id => 'new_user_action'} do |f| -%>
         <%= error_messages_for :user_session %>

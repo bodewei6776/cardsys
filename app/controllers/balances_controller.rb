@@ -152,6 +152,12 @@ class BalancesController < ApplicationController
     render :partial => "cart_goods_list"
   end
 
+  def member_by_member_card_serial_num
+    @card = MemberCard.find_by_card_serial_num(params[:serial_num])
+    @member = @card.member
+    render :json => {:name => @member.name,:id => @member.id}
+  end
+
   def create_good_buy
     if cart.blank?
       redirect_to new_good_buy_balances_path ,:notice => "购物车还是空的啊" and return
@@ -159,7 +165,7 @@ class BalancesController < ApplicationController
 
     order = Order.new(:order_time => Time.now,:user_id => current_user.id)
     if params[:member] == 'member'
-      member_card = MemberCard.find(params[:member_card_id])
+      member_card = MemberCard.find(params[:member_card_id]) || MemberCard.find_by_card_serial_num(params[:member_card_id])
       member= Member.find(params[:member_id])
       order.parent_id = 0
       order.member_type = 1 
