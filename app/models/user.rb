@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
     #c.validates_length_of_password_confirmation_field_options = {:minimum => 1 }# if c.password.present?
     #c.validates_length_of_password_field_options = { :minimum => 1 }# if c.password_confirmation.present?
     c.validates_length_of_login_field_options = {:within => 0..100}
+    c.merge_validates_length_of_login_field_options :message => '长度过短'
   end
 
   has_many   :user_powers
