@@ -2,15 +2,29 @@ module RentsHelper
 
   def rents_in_table(lockers,date = Date.today)
     locker_groups = lockers.group_by(&:locker_type)
-    max_td_num = locker_groups.values.sort{|v1,v2| v1.size <=> v2.size}.last.size rescue 0
-    table_width =(max_td_num + 1)*100
-    content = "<table id='rent_table' cellspacing='0' style='width: #{table_width}px;'>"
-    content += "<tr><th>分类</th><th colspan='#{max_td_num}'>储物柜</th></tr>"
+    table_width = 9
+    content = "<table id='rent_table' cellspacing='0'>"
+    content += "<tr><th>分类</th><th colspan='8'>储物柜</th></tr>"
     locker_groups.each do |locker_group,lockers|
+      lockers_count = lockers.count
+      group_height = (lockers_count.to_f / (table_width - 1)).ceil
       content += "<tr>"
-      content += "<td>#{locker_type_from_id(locker_group)}</td>"
-      max_td_num.times do |i|
+      content += "<td rowspan='#{group_height}'>#{locker_type_from_id(locker_group)}</td>"
+      ([table_width - 1,lockers_count].min).times do |i|
         content += "<td>#{locker_widget(lockers[i] ,date) unless lockers[i].blank?}</td>"
+      end
+      remaining_td_count = lockers_count - (table_width - 1)
+      if(remaining_td_count > 0)
+        content += "</tr>"
+        count = table_width - 1
+        ((table_width-1)..lockers_count-1).each_slice(table_width-1) do |slice|
+        content += "<tr>"
+          slice.each do |i|
+            content += "<td>#{locker_widget(lockers[count] ,date) unless lockers[count].blank?}</td>"
+            count += 1
+          end
+        content += "</tr>"
+        end
       end
       content += "</tr>"
     end

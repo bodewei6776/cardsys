@@ -8,6 +8,8 @@ class Locker < ActiveRecord::Base
   #
   #
   validate :num,:state,:locker_type ,:presence => true,:message => "{column}以上字段不能空"
+
+  scope :rented,where({:state => :rented }) 
   
   def current_rent(date = Date.today)
     self.rents.select {|r| r.start_date.to_date <= date && date <= r.end_date.to_date }.first

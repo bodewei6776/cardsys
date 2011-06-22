@@ -32,7 +32,7 @@ class LockersController < ApplicationController
 
 
   def index
-    @lockers = Locker.paginate(default_paginate_options)
+    @lockers = Locker.rented.paginate(default_paginate_options)
 
     respond_to do |format|
       format.html # index.html.erb

@@ -100,6 +100,12 @@
         <li class='w1'> 
         <%= f.submit "#{@rent.new_record? ? "出租" : "续租"}" %>
         </li>
+
+        <li class='w1'> 
+        <% if @rent.locker.rented? %>
+          <%= f.submit "退租" %>
+        <% end %>
+        </li>
       </ul>
     <% end %>
 
@@ -107,18 +113,18 @@
 </div>
 
 <script type='text/javascript'>
-function toggle_is_member(){
-  if($('input:radio:checked').attr('value')  == "false"){
-    $('#is_not_member_div').show();
-    $('#is_member_div').hide();
+  function toggle_is_member(){
+    if($('input:radio:checked').attr('value')  == "false"){
+      $('#is_not_member_div').show();
+      $('#is_member_div').hide();
 
-      }
-  else{
-$('#is_not_member_div').hide();
-    $('#is_member_div').show();
+    }
+    else{
+      $('#is_not_member_div').hide();
+      $('#is_member_div').show();
 
+    }
   }
-}
 
 function card_num_change(){
   var card_num = $('#card_num option:selected').text();
