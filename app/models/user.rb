@@ -4,10 +4,12 @@ class User < ActiveRecord::Base
   has_many :department_users
   has_many :departments,:through => :department_users
   acts_as_authentic do |c|
-    #c.validates_length_of_password_confirmation_field_options = {:minimum => 1 }# if c.password.present?
-    #c.validates_length_of_password_field_options = { :minimum => 1 }# if c.password_confirmation.present?
+    c.validates_length_of_password_confirmation_field_options = {:minimum => 1 }# if c.password.present?
+    c.validates_length_of_password_field_options = { :minimum => 1 }# if c.password_confirmation.present?
+    c.merge_validates_length_of_password_field_options :message => "密码过短"
+    c.merge_validates_length_of_password_confirmation_field_options :message => "密码过短"
     c.validates_length_of_login_field_options = {:within => 0..100}
-    c.merge_validates_length_of_login_field_options :message => '长度过短'
+    c.merge_validates_length_of_login_field_options :message => '登录名长度过短'
   end
 
   has_many   :user_powers

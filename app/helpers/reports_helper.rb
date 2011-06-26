@@ -19,7 +19,7 @@ module ReportsHelper
       html << content_tag(:input,raw("<label>#{way[0]}</label>"),:type => "checkbox",:name => "way[]",:value => way[1],:checked => checked.include?(way[1].to_s),:onclick=> "recalculate();" ,:class=>"pay_ways")
     end
     html << "</span>"
-    html << "<button class='button submit1 hand' onclick='recalculate();' style='float:right;'> 查询 </button>"
+    #html << "<button class='button submit1 hand' onclick='recalculate();' style='float:right;'> 查询 </button>"
     html
   end
 
