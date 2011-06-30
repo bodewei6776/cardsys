@@ -87,12 +87,11 @@ $(document).ready(function(){
       var password = $('#password').val();
       if("" == user_name || "" == password){ alert("用户名密码不能空"); return;}
       $.ajax({url: "/book_records/" + $(this).attr('bid'),
-        type: "delete",data: {user_name: user_name,password: password},
+        type: "delete",
+        data: {user_name: user_name,password: password},
         success: function(reply){
-        if(reply.result == "1") window.location.href="/book_records"; 
-        else{
-          alert('用户名密码不正确，或者权限不足。');
-        }
+        if(reply.result == 0){window.location.href="/book_records"; }
+        else{ alert('用户名密码不正确，或者权限不足。'); }
         }});
       });
     });

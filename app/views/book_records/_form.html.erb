@@ -44,9 +44,7 @@
             <option value="<%=i%>" <%if i==@book_record.start_hour%>selected<%end%> ><%=i%>:00</option>
           <%end%>
         </select>
-      </div>
-      <div class="w1">结束时间：</div>
-      <div class="w2">
+      结束时间：
         <select name="order[book_record_attributes][end_hour]" tabindex="4" class="select order_hour" id="order_end_hour">
           <% @court.start_hour(@date).upto(@court.end_hour(@date)) do |i| %>
             <option value="<%=i%>" <%if i==@book_record.end_hour%>selected<%end%> ><%=i%>:00</option>

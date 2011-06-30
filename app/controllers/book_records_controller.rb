@@ -223,26 +223,22 @@ class BookRecordsController < ApplicationController
 
     respond_to do |format|
 
-    if params[:user_name].blank? or params[:password].blank?
+      user = User.find_by_login(params[:user_name])
+
+      unless user.try(:valid_password?,params[:password])
+        format.js {render :json => {:result => 1} and return}
+        format.html  { redirect_to book_records_path}
+      end
+
+
+      unless user.can?('删除场地预定')
+        format.js {render :json => {:result => 1} and return}
+        format.html  { redirect_to book_records_path}
+      end
+
+
+      @order.destroy
       format.js {render :json => {:result => 0} and return}
-      format.html  { redirect_to book_records_path}
-    end
-    user = User.find_by_login(params[:user_name])
-
-    if user.blank? or !user.valid_password?(params[:password])
-      format.js {render :json => {:result => 0} and return}
-      format.html  { redirect_to book_records_path}
-    end
-
-
-    unless user.can?('删除场地预定')
-      format.js {render :json => {:result => 0} and return}
-      format.html  { redirect_to book_records_path}
-    end
-
-
-    @order.destroy
-    format.js {render :json => {:result => 0} and return}
       format.html  { redirect_to book_records_path}
     end
   end
@@ -252,7 +248,7 @@ class BookRecordsController < ApplicationController
       render(:text => {}.to_json) && return
     end
     @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name",
-                            {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
+                                                                               {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
     hash_results = @members.collect {|member| {"id" => member.id, "label" => "#{member.name} #{member.mobile}", 
       "value" => "#{member.name}"} }
     render :json  => hash_results

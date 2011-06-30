@@ -44,7 +44,7 @@ module ReportsHelper
     # first tr
     table <<("<tr class='head'>")
     table <<("<td colspan=3>日期 #{ select_year(date,{:start_year => 2010,:end_year => 2016},:onchange => "recalculate();")} 年 " + 
-             "#{select_month(date,:use_month_numbers => true,:onchange => "recalculate();")}　#{select_day(date,{},:onchange => "recalculate();")} 日</td>")
+             "#{select_month(date,:use_month_numbers => true,:onchange => "recalculate();")}月　#{select_day(date,{},:onchange => "recalculate();")} 日</td>")
     table << "<td>支付方式：　</td>"
     table << "<td colspan=#{table_width - 5} style='width:450px;'>#{pay_way_checkboxes(selected_way,pay_ways)}</td>"
     table << "<td><p class='money'>合计：　#{Balance.total_balance_on_date_any_ways(date,selected_way,pay_ways)}  <p></td>"
@@ -109,7 +109,7 @@ module ReportsHelper
     # first tr%
     table <<("<tr class='head'>")
     table <<("<td colspan=3>日期 #{ select_year(date,{:start_year => 2008,:end_year => Date.today.year},:onchange => "recalculate();")} 年 " + 
-             "#{choose_month(date)}</td>")
+             "#{choose_month(date)}月</td>")
     table << "<td>支付方式：　</td>"
     table << "<td colspan=#{table_width - 5}>#{pay_way_checkboxes(selected_way,pay_ways)}</td>"
     table << "<td><p class='money'>合计：　#{Balance.total_balance_on_month_any_ways(date,selected_way,pay_ways)}<p></td>"

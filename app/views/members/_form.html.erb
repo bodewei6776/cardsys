@@ -7,7 +7,7 @@
         <div class="w2">
           <input type="hidden" name="member[is_member]" value=1 />
           <input type="hidden" name="member_id" value="" />
-          <%= f.text_field :name %>
+          <%= f.text_field :name %> <span style='color:red;'> * </span>
         </div>
         <div class="w1">注册日期：</div>
         <div class="w2">
@@ -34,7 +34,7 @@
       <li>
         <div class="w1">移动电话：</div>
         <div class="w2">
-          <%= f.text_field :mobile %>
+          <%= f.text_field :mobile %><span style='color:red;'> * </span>
         </div>
         <div class="w1">固定电话：</div>
         <div class="w2">
