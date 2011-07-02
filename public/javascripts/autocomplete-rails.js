@@ -125,6 +125,7 @@ function member_card_Autocomplete(){
 	        {
                 $("#member_name").val(returned_data.name);
                 $("#member_id").val(returned_data.id);
+                $("#member_card_hidden_id").val(returned_data.id);
 	        });
 
 	      }			

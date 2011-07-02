@@ -62,9 +62,15 @@
               <input type="text" name="member_name" id="order_member_name" />
             </div>
             <div class="w1">会员卡号：</div>
-            <div class="w2" id="member_serial_num">
-              <input type="text" id="sn" name="serial_num" id="card_serial_num" size=20   value=""  class="input01"/>
+          <div class="w2" id="member_serial_num">
+              <input type="text" name="serial_num"  order_autocomplete='/book_records/complete_for_member_card'/>
             </div>
+            <script type="text/javascript">
+              $(document).ready(function(){
+                  orderAutocomplete();
+                  });
+</script>
+
           </li>
         </ul>
       </div>

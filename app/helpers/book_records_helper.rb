@@ -110,8 +110,17 @@ module BookRecordsHelper
     db_book_record.should_to_cancle? and buton_htmls << content_tag("button","取消预定",{:type => 'button',
                                                                     :class => "data-cancle-booke confirm submit1 hand",:conform_msg => "确认要取消预定么？",:operation => :cancle})
 
+    db_book_record.should_to_cancle? and db_book_record.consecutive? and buton_htmls << content_tag("button","连续取消",{:type => 'button',
+                                                                    :class => "data-cancle-booke confirm submit1 hand",:conform_msg => "确认要取消预定么？",:operation => :consecutive_cancle})
+
+
+
     db_book_record.should_changed? and buton_htmls << content_tag("button","变更本次预定",{:type => 'button',
                                                                   :class => "data-change-booke confirm submit1 hand",:conform_msg => "确认要变更预定么？",:operation => :book})
+
+    db_book_record.should_changed? and db_book_record.consecutive?  and buton_htmls << content_tag("button","连续变更",{:type => 'button',
+                                                                  :class => "data-change-booke confirm submit1 hand",:conform_msg => "确认要变更预定么？", :operation => :consecutive_book})
+
 
     db_book_record.should_blance_as_expired?  and buton_htmls << content_tag("button","#{db_book_record.is_booked? ? '预定已过期，请结算' : '代买已过期，请结算'}",
                                                                              {:type => 'button',:class => "data-balance-order submit1 hand",:operation => :balance})

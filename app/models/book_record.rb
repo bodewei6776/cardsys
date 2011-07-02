@@ -282,5 +282,9 @@ class BookRecord < ActiveRecord::Base
   def amount_by_card
     order.member_card.calculate_amount_in_time_span(record_date,start_hour,end_hour)
   end
+
+  def consecutive?
+    self.order.is_advanced_order?
+  end
   
 end

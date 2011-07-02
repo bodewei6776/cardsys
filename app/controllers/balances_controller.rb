@@ -165,7 +165,7 @@ class BalancesController < ApplicationController
 
     order = Order.new(:order_time => Time.now,:user_id => current_user.id)
     if params[:member] == 'member'
-      member_card = MemberCard.find(params[:member_card_id]) || MemberCard.find_by_card_serial_num(params[:member_card_id])
+      member_card = MemberCard.find_by_id(params[:member_card_id]) || MemberCard.find_by_card_serial_num(params[:member_card_id])
       member= Member.find(params[:member_id])
       order.parent_id = 0
       order.member_type = 1 

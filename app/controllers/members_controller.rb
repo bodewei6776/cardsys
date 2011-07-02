@@ -131,7 +131,7 @@ class MembersController < ApplicationController
     if @left_times_start.present? and @left_times_end.present?
       @members = @members.delete_if { |member| member.member_card_left_times < @left_times_start.to_i || member.member_card_left_times > @left_times_end.presence.to_i}
     elsif @left_times_start.present? or @left_times_end.present?
-      @members = @members.delete_if { |member| member.member_card_left_times !=( @left_times_start.presence.to_i ||  @left_times_end.presence.to_i)}
+      @members = @members.delete_if { |member| member.member_card_left_times !=( @left_times_start.presence ||  @left_times_end.presence).to_i}
     end
 
     if @consume_fees_start.present? and @consume_fees_end.present?

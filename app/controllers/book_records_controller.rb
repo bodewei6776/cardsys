@@ -133,6 +133,15 @@ class BookRecordsController < ApplicationController
 
     respond_to do |format|
       operation = params[:order][:operation].to_sym
+      if ["consecutive_book","consecutive_cancle"].include?(params[:order][:operation])
+        @orders =  @order.advanced_order.order_and_order_after(@order)
+        params[:order][:operation] = params[:order][:operation].sub("consecutive_","")
+        log_action("场地<#{@order.book_record.court.name}>#{BookRecord::OPERATION_MAP[operation]}",operation.to_s) if operation && BookRecord::OPERATION_MAP.keys.include?(operation)
+        @orders.each { |o| o.update_attributes(params[:order]) }
+        redirect_to("/book_records?date=#{@order.book_record.record_date.to_s(:db)}", :notice => '修改成功.') 
+        return
+      end
+
       if @order.update_attributes(params[:order])
         log_action("场地<#{@order.book_record.court.name}>#{BookRecord::OPERATION_MAP[operation]}",operation.to_s) if operation && BookRecord::OPERATION_MAP.keys.include?(operation)
         format.html { redirect_to("/book_records?date=#{@order.book_record.record_date.to_s(:db)}", :notice => '修改成功.') }

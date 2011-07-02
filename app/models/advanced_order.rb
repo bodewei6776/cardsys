@@ -235,5 +235,10 @@ class AdvancedOrder < ActiveRecord::Base
     end
     @updating = true
   end
+
+  def order_and_order_after(o)
+    self.orders.select{|o| o.book_record.record_date >= o.book_record.record_date}
+  end
+
   
 end
