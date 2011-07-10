@@ -34,7 +34,7 @@ class Balance < ActiveRecord::Base
   end
 
   def member_card
-    MemberCard.find(self.goods_member_card_id) #rescue nil
+    MemberCard.find_by_id(self.goods_member_card_id) || MemberCard.find_by_id(self.book_reocrd_member_card_id)#rescue nil
   end
 
   #before_create do |b| b.hide = false end
@@ -53,7 +53,8 @@ class Balance < ActiveRecord::Base
     balance.balance_way = default_balance_way_by_order(order)
     balance.goods_balance_type = default_goods_balance_way_by_order(order)
     #balance.catena_id   = order.catena_id
-    balance.member_type = order.member_type
+        balance.member_type = order.member_type
+    puts balance.goods_member_card_id
     balance
   end
 
@@ -210,6 +211,10 @@ class Balance < ActiveRecord::Base
 
   def balance_realy_amount
     book_record_realy_amount.to_i + goods_realy_amount.to_i
+  end
+
+  def total_changed?
+    self.book_record_amount != self.book_record_realy_amount || self.goods_amount != self.goods_realy_amount
   end
 
   ####### for reports #########

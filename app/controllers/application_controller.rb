@@ -120,8 +120,8 @@ class ApplicationController < ActionController::Base
     session[:cart] || Cart.new
   end
 
-  def log_action(desc,log_type)
-    Log.log(self,desc,log_type) 
+  def log_action(desc,log_type, user = nil)
+    Log.log(self,desc,log_type, user) 
   end
 end
 

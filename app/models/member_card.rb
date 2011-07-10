@@ -28,6 +28,10 @@ class MemberCard < ActiveRecord::Base
     end
   end
 
+  def balances
+    Balance.find_all_by_book_reocrd_member_card_id(self.id) & Balance.find_all_by_goods_member_card_id(self.id)
+  end
+
   def max_granter_due?
     self.max_granter <= self.granters.count
   end

@@ -88,7 +88,7 @@ class BookRecordsController < ApplicationController
     @order.user_id = user.id
     respond_to do |format|
       if @order.save
-        log_action("预定场地#{@order.book_record.court.name}","book")
+        log_action("预定场地#{@order.book_record.court.name}","book", user)
 
         format.html { 
           render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 

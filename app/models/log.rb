@@ -13,8 +13,8 @@ class Log < ActiveRecord::Base
     :change_coaches => "变更教练"
   }
 
-  def self.log(controller,desc,log_type)
-    user = controller.send :current_user
+  def self.log(controller,desc,log_type,user)
+    user = user || controller.send :current_user
     new(:remote_ip =>controller.request.remote_ip,
         :user_name => user.login,
         :user_id => user.id,

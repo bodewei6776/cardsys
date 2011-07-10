@@ -60,10 +60,10 @@
           <%end -%>
         <%  end -%>
         <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Cash,:class => 'balance_way' %>现金</label>
-        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Bank,:class => 'balance_way' %>银行</label>
         <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Post,:class => 'balance_way' %>POS机</label>
         <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Check ,:class => 'balance_way'%>支票</label>
         <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Guazhang,:class => 'balance_way' %>挂账</label>
+        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Bank,:class => 'balance_way' %>银行</label>
       </div>
       </li>
     </ul>
@@ -94,6 +94,8 @@
         <%= f.hidden_field 	:book_record_amount %>
         <%= f.hidden_field 	:goods_amount %>
         <%= f.hidden_field	:operation %>
+
+        <%= "（ 总价已变更　）" if @balance.total_changed? %>
       </div>
       </li>
     </ul>

@@ -137,7 +137,8 @@ class Member < ActiveRecord::Base
   #  ct = 0
   #  ct = Balance.where("order_id in (?) and (balance_way = ? or goods_balance_type = ?)", order_ids, Balance::Balance_Way_Use_Card, Balance::Balance_Way_Use_Card).size if order_ids.size > 0
   #  return ct
-    self.balances.balanced.where( ["(balance_way = ? or goods_balance_type = ?)",Balance::Balance_Way_Use_Card, Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.count_amount}
+    #self.balances.balanced.where( ["(balance_way = ? or goods_balance_type = ?)",Balance::Balance_Way_Use_Card, Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.count_amount}
+    self.balances.balanced.count
   end
 
   def use_cash_amount

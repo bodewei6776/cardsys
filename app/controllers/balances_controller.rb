@@ -1,7 +1,7 @@
 class BalancesController < ApplicationController
   layout 'main'
   def index
-    @book_records = BookRecord.playing.order('created_at desc,start_hour desc').paginate(default_paginate_options_without_created_at)
+    @book_records = BookRecord.playing.order('created_at desc').paginate(default_paginate_options_without_created_at)
   end
 
   def balanced
@@ -48,6 +48,10 @@ class BalancesController < ApplicationController
 
     @balance.order_id = @order.id
     @balance.user_id = user.id
+        
+    @balance.book_reocrd_member_card_id = @order.member_card_id
+    @balance.goods_member_card_id = @order.member_card_id
+
     @balance.merge_order(@order)
     if @balance.process && @balance.to_balance?
       pre_date_for_new_create

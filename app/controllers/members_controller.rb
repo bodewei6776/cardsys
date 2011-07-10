@@ -8,7 +8,9 @@ class MembersController < ApplicationController
   Member_Perpage = 15
 
   def autocomplete_name
-    @items = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER).where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%" ]).limit(10)
+    #@items = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER).where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%" ]).limit(10)
+    #@items = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%" ]).limit(10)
+    @items= Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name", {:member_name => "#{params[:term].downcase}%"}]).order("name_pinyin asc").limit(10)
     @names = []
     @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}"} }
     render :inline => @names.to_json#{lable:name, value:name}
@@ -157,7 +159,8 @@ class MembersController < ApplicationController
     @member_cards = MemberCard.where(:member_id => params[:id])
     @recharge_records = RechargeRecord.where(:member_id => params[:id])#充值记录
     #@orders = Order.balanced.where(:member_id => params[:id])#消费记录的显示方式
-    @balances = Balance.where(:member_id => params[:id])
+    #@balances = Balance.where(:member_id => params[:id])
+    @balances = @member.member_cards.collect{|mc| mc.balances }.flatten.uniq rescue []
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @member }
@@ -184,12 +187,13 @@ class MembersController < ApplicationController
   def create
     is_member = params[:member][:is_member]
     @member = Member.new(params[:member])
+    @member_base = Member.find(params[:member_id])
+    card = MemberCard.find(params[:member_card_id])
     respond_to do |format|
       if @member.save
         @members = Member.where(:is_member => is_member)
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
           base_member_id = params[:member_id]
-          @member_base = Member.find(params[:member_id])
           @mg = MemberCardGranter.new(:member_id => base_member_id, :member_card_id => params[:member_card_id], :granter_id => @member.id)
           card = MemberCard.find(params[:member_card_id])
           # 会员卡可授权最大人数
@@ -201,7 +205,7 @@ class MembersController < ApplicationController
           end
           end
           #format.html { redirect_to :action => "member_card_bind_index", :member_id => base_member_id, :member_name => @member_base.name, :notice => '授权人信息添加成功！'}
-          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => @mg.member_card.card_serial_num,:member_name => @mg.member_card.member.name,:notice => notice) }
+          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => card.card_serial_num,:member_name => @member_base.name,:notice => notice) }
         else
           format.html { redirect_to :action => "index", :notice => '会员信息添加成功！'}
           format.xml  { render :xml => @member, :status => :created, :location => @member }
@@ -210,7 +214,7 @@ class MembersController < ApplicationController
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
           @member_base = Member.find(params[:member_id])
           #format.html { redirect_to :action => "member_card_bind_index", :member_id => base_member_id, :member_name => @member_base.name, :notice_error => '授权人信息添加失败,可能的原因是授权人姓名，身份证号或证件号有非法输入或已经被使用！'}
-          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => @mg.member_card.card_serial_num,:member_name => @mg.member_card.member.name,:notice => "授权人信息添加失败,可能的原因是授权人姓名，身份证号或证件号有非法输入或已经被使用！") }
+          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => card.card_serial_num,:member_name => @member_base.name,:notice => "授权人信息添加失败,可能的原因是授权人姓名，身份证号或证件号有非法输入或已经被使用！ #{@member.errors.full_messages}") }
         else
           format.html { render :action => 'new'}
           format.xml { render :xml => @member.errors, :status => :unprocessable_entity }
