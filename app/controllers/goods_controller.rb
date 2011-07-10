@@ -97,6 +97,7 @@ def autocomplete_good
   # PUT /goods/1.xml
   def update
     @good = Good.find(params[:id])
+    @good.count_total_now = @good.count_back_stock + @good.count_front_stock
 
     respond_to do |format|
       if @good.update_attributes(params[:good])

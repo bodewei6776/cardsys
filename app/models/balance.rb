@@ -489,4 +489,18 @@ class Balance < ActiveRecord::Base
     end
   end
 
+  def balance_person_desc
+    member = self.member
+    member_card = self.member_card
+
+   result = if member_card.member == member
+      "本人"
+    elsif member_card.granters.include? member
+      "授权人(#{member.name})"
+    else
+      "未知"
+    end
+   return result
+  end
+
 end

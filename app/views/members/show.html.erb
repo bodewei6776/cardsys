@@ -237,6 +237,7 @@
           <li class="w15">消费金额(次)</li>
           <li class="w10">场地支付方式</li>
           <li class="w10">商品支付方式</li>
+          <li class="w10">授权人消费</li>
           <li class="w10">操作</li>
         </ul>
         <%@balances.each_with_index do |balance,index| -%>
@@ -246,6 +247,7 @@
             <li class="w15"><%= balance.balance_amount_desc %></li>
             <li class="w10"><%= balance.balance_way_desc %></li>
             <li class="w10"><%= balance.goods_balance_type_desc %></li>
+            <li class="w10"><%= balance.balance_person_desc%></li>
             <li class="w10"><a href="<%= order_balance_path(balance) %>?layout=false" title="点击展开明细" class="balance_detail">明细</a></li>
           </ul>
         <%end -%>

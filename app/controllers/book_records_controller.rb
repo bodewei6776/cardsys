@@ -229,26 +229,18 @@ class BookRecordsController < ApplicationController
   def destroy
     book_record = BookRecord.find(params[:id])
     @order = book_record.order
+    user = User.find_by_login(params[:user_name])
 
     respond_to do |format|
-
-      user = User.find_by_login(params[:user_name])
-
-      unless user.try(:valid_password?,params[:password])
-        format.js {render :json => {:result => 1} and return}
-        format.html  { redirect_to book_records_path}
+      if user.valid_password?(params[:password]) && user.can?("删除场地预定")
+        @order.destroy
+        format.js { render :json => {"result" => "0"}}
+        format.html { redirect_to book_records_path}
+      else
+        format.js { render :json => {"result" => "1" }}
+        format.html { redirect_to book_records_path}
       end
 
-
-      unless user.can?('删除场地预定')
-        format.js {render :json => {:result => 1} and return}
-        format.html  { redirect_to book_records_path}
-      end
-
-
-      @order.destroy
-      format.js {render :json => {:result => 0} and return}
-      format.html  { redirect_to book_records_path}
     end
   end
 
@@ -307,6 +299,7 @@ class BookRecordsController < ApplicationController
               ''
             else
               court = Court.find(params[:court_id])
+
               court.calculate_amount_in_time_span(Date.parse(params[:date]),params[:start_hour],params[:end_hour])
             end
     render :text => reply

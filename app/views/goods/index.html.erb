@@ -36,7 +36,7 @@
   <div class=" table">
     <ul class="bttitle black fb " >
       <li class="w5">编号</li>
-      <li class="w10">商品名称</li>
+      <li class="w20">商品名称</li>
       <li class="w10">商品分类</li>
       <li class="w10">零售价（￥）</li>
       <li class="w10">商品总数</li>
@@ -47,26 +47,28 @@
     <%@goods.each_with_index do |good,index|%>
       <ul class="table_items">
         <li class="w5"><%= index + 1 %></li>
-        <li class="w10"><%= good.name%></li>
+        <li class="w20"><%= good.name%></li>
         <li class="w10"><%= generate_good_type_str(good.good_type) %></li>
         <li class="w10"><%= good.price %></li>
         <li class="w10"><%= good.count_total_now %></li>
         <li class="w10"><%= good.count_back_stock %></li>
         <li class="w10"><%= good.count_front_stock %></li>
         <li class="w15">
-          <% if @p =='back'%>
-            <%= link_to '库存管理', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index' %>
-          <% elsif @p == 'front'%>
-            <%= link_to '商品出库', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index'%>
-          <% else %>
-            <%= link_to '查看', good %> | <%= link_to '修改', edit_good_path(good) %>
-            | <%= link_to '删除', good, :confirm => '确定删除商品'+good.name+"？", :method => :delete %>
-            <% if good.status == CommonResource::GOOD_ON  %>
-              | <%= link_to '停用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_OFF, :id => good.id}, {:confirm => '确定停用该商品吗?'} %>
-            <%else%>
-              | <%= link_to '启用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_ON, :id => good.id}, {:confirm => '确定重新使用该商品吗?'} %>
-            <%end%>
+        <% if @p =='back'%>
+          <%= link_to '库存管理', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index' %>
+
+          <% if good.status == CommonResource::GOOD_OFF%>
+            | <%= link_to '启用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_ON, :id => good.id}, {:confirm => '确定重新使用该商品吗?', :style => "color:red;"} %>
+          <% end %>
+        <% elsif @p == 'front'%>
+          <%= link_to '商品出库', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index'%>
+        <% else %>
+          <%= link_to '查看', good %> | <%= link_to '修改', edit_good_path(good) %>
+          | <%= link_to '删除', good, :confirm => '确定删除商品'+good.name+"？", :method => :delete %>
+          <% if good.status == CommonResource::GOOD_ON  %>
+            | <%= link_to '停用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_OFF, :id => good.id}, {:confirm => '确定停用该商品吗?'} %>
           <%end%>
+        <%end%>
         </li>
       </ul>
     <%end%>

@@ -139,7 +139,7 @@ module BookRecordsHelper
 
     db_book_record.is_balanced? and  buton_htmls << content_tag("button","打印消费记录",{:type => 'button',:class => 'print-order-list submit1 hand'})
 
-     (!db_book_record.new_record? and current_user.can?("删除场地预定")) and buton_htmls << content_tag("button","删除场地预定",{:type => 'button',:class => 'submit1 hand',:id => "delete_button" ,:bid => db_book_record.id})
+     (!db_book_record.new_record? and current_user.can?("删除场地预定")) and buton_htmls << content_tag("button","删除场地预定",{:type => 'button',:class => 'submit1 hand confirm',:id => "delete_button" ,:bid => db_book_record.id, :conform_msg => "确定要删除此预订？"})
 
     buton_htmls.join(' ').html_safe
 
