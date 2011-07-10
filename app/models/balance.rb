@@ -490,7 +490,10 @@ class Balance < ActiveRecord::Base
     when "7"
       return self.count_amount.to_s + "次"  if self.balance_way == 7
     else
-      return self.goods_realy_amount.to_s + "元" if ways.include?(self.goods_balance_type.to_s)
+      sum = 0
+      sum += self.goods_realy_amount if ways.include?(self.goods_balance_type.to_s)
+      sum += self.book_record_realy_amount if ways.include?(self.balance_way.to_s)
+      return sum.to_s + "元" 
     end
   end
 
