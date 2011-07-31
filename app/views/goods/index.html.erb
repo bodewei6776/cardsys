@@ -58,16 +58,18 @@
           <%= link_to '库存管理', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index' %>
 
           <% if good.status == CommonResource::GOOD_OFF%>
-            | <%= link_to '启用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_ON, :id => good.id}, {:confirm => '确定重新使用该商品吗?', :style => "color:red;"} %>
+            | <%= link_to '启用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_ON, :id => good.id}, {:confirm => '确定重新使用该商品吗?', :style => "color:green;"} %>
           <% end %>
+
+          <% if good.status == CommonResource::GOOD_ON  %>
+            | <%= link_to '停用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_OFF, :id => good.id}, {:confirm => '确定停用该商品吗?', :style => "color:red;"} %>
+          <%end%>
         <% elsif @p == 'front'%>
           <%= link_to '商品出库', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index'%>
         <% else %>
           <%= link_to '查看', good %> | <%= link_to '修改', edit_good_path(good) %>
           | <%= link_to '删除', good, :confirm => '确定删除商品'+good.name+"？", :method => :delete %>
-          <% if good.status == CommonResource::GOOD_ON  %>
-            | <%= link_to '停用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_OFF, :id => good.id}, {:confirm => '确定停用该商品吗?'} %>
-          <%end%>
+
         <%end%>
         </li>
       </ul>

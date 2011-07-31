@@ -7,14 +7,15 @@ class MemberCardsController < ApplicationController
   Member_Perpage = 15
 
   def autocomplete_name
-    @items = Member.where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term]}%" ]).where(:status => CommonResource::MEMBER_STATUS_ON).limit(10)
+    @items = Member.autocomplete_for(params[:term])
     @names = []
     @items.each { |i| @names << i.name }
     render :inline => @names.to_json#{lable:name, value:name}
   end
 
   def autocomplete_card_serial_num
-    @items = MemberCard.where(["card_serial_num like ?", "%#{params[:term].downcase}%"]).limit(10)
+    #@items = MemberCard.where(["card_serial_num like ?", "%#{params[:term].downcase}%"]).limit(10)
+    @items = MemberCard.autocomplete_for(params[:term])
     @names = []
     @items.each { |i| @names << i.card_serial_num }
     render :inline => @names.to_json

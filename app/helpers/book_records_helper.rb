@@ -64,7 +64,7 @@ module BookRecordsHelper
         title = "#{display_content}(#{book_record.status_desc})"
         info_htmls << [realy_time_span[0],content_tag(:li,content_tag("a",display_content,:href => url,
               :class =>book_record.status_color ,:title => title,
-              :style => "height:#{li_height}px;display:block;"),:style => "height:#{li_height}px;",
+              :style => "height:#{li_height}px;display:block;line-height:#{li_height}px;"),:style => "height:#{li_height}px;",
             :class => li_class.join(' '), :id => "book-record-#{book_record.id}")]
       else
         if date < Date.today || (date == Date.today && realy_time_span[0] < DateTime.now.hour)

@@ -1,6 +1,8 @@
 require 'pinyin/pinyin'
 class Member < ActiveRecord::Base
 
+  scope :autocomplete_for, lambda {|name| where("status = '#{CommonResource::MEMBER_STATUS_ON}' and (LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name)", {:member_name => "#{name.downcase}%"}).limit(10).order("pinyin_abbr ASC") }
+
 
   def can_catena?
     false
@@ -20,7 +22,7 @@ class Member < ActiveRecord::Base
 
   validates :name, :presence => {:message => "名称不能为空！"}
   #, :uniqueness => {:on => :create, :message => '名称已经存在！', :if => Proc.new { |member| !member.name.nil? && !member.name.blank? }}
-#  validates :mobile, :presence => {:message => "手机号不能为空！"}, :uniqueness => {:on => :create, :if => Proc.new { |member| !member.mobile.nil? && !member.mobile.blank? }, :message => "手机号已经被使用了！"}#手机号唯一
+  #  validates :mobile, :presence => {:message => "手机号不能为空！"}, :uniqueness => {:on => :create, :if => Proc.new { |member| !member.mobile.nil? && !member.mobile.blank? }, :message => "手机号已经被使用了！"}#手机号唯一
   validates :mobile, :format => {:with =>/^0{0,1}(13[0-9]|15[0-9]|18[0-9])[0-9]{8}$/,:message => '手机号为空或者手机号格式不正确！', :allow_blank => false}
   validates :telephone, :numericality => {:only_integer => true, :message => "电话号码必须为数字！", :allow_blank => true}, :length => {:minimum => 8, :maximum => 11, :message => "电话必须大于8位小于11位！", :allow_blank => true}
   validates :email, :format => {:with =>/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/, :allow_blank => true,:message => '邮箱格式不正确！'}
@@ -65,7 +67,7 @@ class Member < ActiveRecord::Base
     Member.where(["id IN(?)", granter_ids]).where(:catena_id => self.catena_id).each { |member| granter_names << member.name }
     return granter_names
   end
-  
+
   def grantee
     Member.find_by_id(MemberCardGranter.where(:granter_id => id).first.member_id)
   end
@@ -77,8 +79,8 @@ class Member < ActiveRecord::Base
   def is_granter_of_card(card_id)
     !MemberCardGranter.where(:granter_id=> self.id).where(:member_card_id => card_id).blank?
   end
- 
-  
+
+
   def member_cards
     if is_member?
       MemberCard.where(:member_id => id)
@@ -130,13 +132,13 @@ class Member < ActiveRecord::Base
   end
 
   def use_card_times
-  #  order_ids = []
-  #  Order.where(:member_id => self.id).each { |i|
-  #    order_ids << i.id
-  #  }
-  #  ct = 0
-  #  ct = Balance.where("order_id in (?) and (balance_way = ? or goods_balance_type = ?)", order_ids, Balance::Balance_Way_Use_Card, Balance::Balance_Way_Use_Card).size if order_ids.size > 0
-  #  return ct
+    #  order_ids = []
+    #  Order.where(:member_id => self.id).each { |i|
+    #    order_ids << i.id
+    #  }
+    #  ct = 0
+    #  ct = Balance.where("order_id in (?) and (balance_way = ? or goods_balance_type = ?)", order_ids, Balance::Balance_Way_Use_Card, Balance::Balance_Way_Use_Card).size if order_ids.size > 0
+    #  return ct
     #self.balances.balanced.where( ["(balance_way = ? or goods_balance_type = ?)",Balance::Balance_Way_Use_Card, Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.count_amount}
     self.balances.balanced.count
   end

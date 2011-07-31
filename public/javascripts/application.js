@@ -72,3 +72,9 @@ function radio_togle(radio,_id){
     var disabled = (!($(radio).val() == '1' && $(radio).attr('checked') == 'checked') ? 'disalbed' : 'enabled')
     $("#"+_id).attr('disabled',disabled);
 }
+
+
+(function($){ 		  
+    $.fn.popupWindow = function(instanceSettings){
+    }})
+	

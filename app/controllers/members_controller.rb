@@ -10,14 +10,14 @@ class MembersController < ApplicationController
   def autocomplete_name
     #@items = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER).where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%" ]).limit(10)
     #@items = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%" ]).limit(10)
-    @items= Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name", {:member_name => "#{params[:term].downcase}%"}]).order("name_pinyin asc").limit(10)
+    @items = Member.autocomplete_for(params[:term])
     @names = []
     @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}"} }
     render :inline => @names.to_json#{lable:name, value:name}
   end
 
   def autocomplete_card_serial_num
-    @items = MemberCard.where(["card_serial_num like ?", "%#{params[:term].downcase}%"]).limit(10)
+    @items = MemberCard.autocomplete_for(params[:term])
     @names = []
     @items.each { |i| @names << i.card_serial_num }
     render :inline => @names.to_json
@@ -65,7 +65,7 @@ class MembersController < ApplicationController
     @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER)
     @members = @members.where(["name like ?", "%#{@name}%"] ) if !@name.blank?
     if !@serial_num.blank?
-      @members = @members.where("member_cards.card_serial_num like '#{@serial_num}'").joins(:member_cards)
+      @members = @members.where("member_cards.card_serial_num like '%#{@serial_num}%'").joins(:member_cards)
     end
 
     # 来店日期
@@ -254,6 +254,7 @@ class MembersController < ApplicationController
   def destroy
     @member = Member.find(params[:id])
     @member.status = 0#更新状态
+    @member.member_cards.update_all("status=1")
     @member.save
     respond_to do |format|
       format.html { redirect_to(members_url) }

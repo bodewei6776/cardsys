@@ -11,6 +11,8 @@ class MemberCard < ActiveRecord::Base
   #validates :left_fee ,:presence => true
   #validates :left_times,:presence => true
 
+  scope :autocomplete_for, lambda {|num| where("status = 0 and card_serial_num like '#{num.downcase}%'").limit(10) }
+
   CARD_STATUS_0 = 0 #正常
   CARD_STATUS_1 = 1 #已注销
   

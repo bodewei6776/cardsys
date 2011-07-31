@@ -2,14 +2,14 @@ module RentsHelper
 
   def rents_in_table(lockers,date = Date.today)
     locker_groups = lockers.group_by(&:locker_type)
-    table_width = 9
+    table_width = 11
     content = "<table id='rent_table' cellspacing='0'>"
-    content += "<tr><th>分类</th><th colspan='8'>储物柜</th></tr>"
+    content += "<tr><th>分类</th><th colspan='10'>储物柜</th></tr>"
     locker_groups.each do |locker_group,lockers|
       lockers_count = lockers.count
       group_height = (lockers_count.to_f / (table_width - 1)).ceil
       content += "<tr>"
-      content += "<td rowspan='#{group_height}'>#{locker_type_from_id(locker_group)}</td>"
+      content += "<td rowspan='#{group_height}' class='rent_group_name'>#{locker_type_from_id(locker_group)}</td>"
       ([table_width - 1,lockers_count].min).times do |i|
         content += "<td>#{locker_widget(lockers[i] ,date) unless lockers[i].blank?}</td>"
       end

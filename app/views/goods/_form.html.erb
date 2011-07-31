@@ -27,7 +27,11 @@
           -->
           <div class="w1">入库数量：</div>
           <div class="w2">
-            <%= f.text_field :count_back_stock %>
+            <% if f.object.new_record? %>
+              <%= f.text_field :count_back_stock %>
+            <% else %>
+              <%= f.object.count_back_stock %>
+            <%end%>
           </div>
 
           <div class="w1">零售价格：</div>

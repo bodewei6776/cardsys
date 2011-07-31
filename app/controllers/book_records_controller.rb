@@ -1,4 +1,5 @@
 class BookRecordsController < ApplicationController
+  NO_NEED_CHECK_USER_AND_RIGHTS_OPERATION = %w{active}
 
   layout  'main'
 
@@ -61,27 +62,29 @@ class BookRecordsController < ApplicationController
   # POST /book_records.xml
   def create
     @order = Order.new(params[:order])
-    if params[:user_name].blank? or params[:password].blank?
-      @order.errors.add(:base,"预定人，密码不能为空")
-      inite_related_order_objects
-      render :action => "new",:layout => 'small_main'
-      return
-    end
     user = User.find_by_login(params[:user_name])
+    if need_check_user_and_rights(params)
+      if params[:user_name].blank? or params[:password].blank?
+        @order.errors.add(:base,"预定人，密码不能为空")
+        inite_related_order_objects
+        render :action => "new",:layout => 'small_main'
+        return
+      end
 
-    if user.blank? or !user.valid_password?(params[:password])
-      @order.errors.add(:base,"用户不存在或者密码不正确")
-      inite_related_order_objects
-      render :action => "new",:layout => 'small_main'
-      return
-    end
+      if user.blank? or !user.valid_password?(params[:password])
+        @order.errors.add(:base,"用户不存在或者密码不正确")
+        inite_related_order_objects
+        render :action => "new",:layout => 'small_main'
+        return
+      end
 
 
-    unless user.can?('新场地预定')
-      @order.errors.add(:base,"用户没有权限预定场地")
-      inite_related_order_objects
-      render :action => "new",:layout => 'small_main'
-      return
+      unless user.can?('新场地预定')
+        @order.errors.add(:base,"用户没有权限预定场地")
+        inite_related_order_objects
+        render :action => "new",:layout => 'small_main'
+        return
+      end
     end
 
     @order.parent_id = 0
@@ -106,29 +109,31 @@ class BookRecordsController < ApplicationController
   def update
     @order = BookRecord.find(params[:id]).order
 
-  if params[:user_name].blank? or params[:password].blank?
-      @order.errors.add(:base,"预定人，密码不能为空")
-      inite_related_order_objects
-      render :action => "edit"#,:layout => 'small_main'
-      return
-    end
     user = User.find_by_login(params[:user_name])
+    if need_check_user_and_rights(params)
+      if params[:user_name].blank? or params[:password].blank?
+        @order.errors.add(:base,"预定人，密码不能为空")
+        inite_related_order_objects
+        render :action => "edit"#,:layout => 'small_main'
+        return
+      end
 
-    if user.blank? or !user.valid_password?(params[:password])
-      @order.errors.add(:base,"用户不存在或者密码不正确")
-      inite_related_order_objects
-      render :action => "edit"#,:layout => 'small_main'
-      return
+      if user.blank? or !user.valid_password?(params[:password])
+        @order.errors.add(:base,"用户不存在或者密码不正确")
+        inite_related_order_objects
+        render :action => "edit"#,:layout => 'small_main'
+        return
+      end
+
+
+      unless user.can?('修改场地')
+        @order.errors.add(:base,"用户没有权限修改场地")
+        inite_related_order_objects
+        render :action => "edit"#,:layout => 'small_main'
+        return
+      end
+
     end
-
-
-    unless user.can?('修改场地')
-      @order.errors.add(:base,"用户没有权限修改场地")
-      inite_related_order_objects
-      render :action => "edit"#,:layout => 'small_main'
-      return
-    end
-
 
 
     respond_to do |format|
@@ -162,18 +167,18 @@ class BookRecordsController < ApplicationController
 
 
     if request.post?
-    if params[:user_name].blank? or params[:password].blank?
-      @order.errors.add(:base,"预定人，密码不能为空")
-      render :action => "edit"#,:layout => 'small_main'
-      return
-    end
-    user = User.find_by_login(params[:user_name])
+      if params[:user_name].blank? or params[:password].blank?
+        @order.errors.add(:base,"预定人，密码不能为空")
+        render :action => "edit"#,:layout => 'small_main'
+        return
+      end
+      user = User.find_by_login(params[:user_name])
 
-    if user.blank? or !user.valid_password?(params[:password])
-      @order.errors.add(:base,"用户不存在或者密码不正确")
-      render :action => "edit"#,:layout => 'small_main'
-      return
-    end
+      if user.blank? or !user.valid_password?(params[:password])
+        @order.errors.add(:base,"用户不存在或者密码不正确")
+        render :action => "edit"#,:layout => 'small_main'
+        return
+      end
     end
 
 
@@ -248,8 +253,10 @@ class BookRecordsController < ApplicationController
     if (member_name = params[:term]).blank?
       render(:text => {}.to_json) && return
     end
-    @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name",
-                                                                               {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
+#    @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name",
+#                                                                               {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
+  
+    @members = Member.autocomplete_for(member_name)
     hash_results = @members.collect {|member| {"id" => member.id, "label" => "#{member.name} #{member.mobile}", 
       "value" => "#{member.name}"} }
     render :json  => hash_results
@@ -306,6 +313,11 @@ class BookRecordsController < ApplicationController
   end
 
   protected
+
+  def need_check_user_and_rights(params)
+    operation = params[:order][:operation]
+    !NO_NEED_CHECK_USER_AND_RIGHTS_OPERATION.include?(operation)
+  end
 
 
   def inite_related_order_objects

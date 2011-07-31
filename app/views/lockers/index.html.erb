@@ -69,4 +69,11 @@
         <li class='w10'><%= locker.remark %></li>
       </ul>
     <%end%>
+
+  <div class="h10"></div>
+  <div class="pages">
+    <%= will_paginate @goods, :sp => 1%>
+  </div>
+  <div class="h10"></div>
+
   </div>

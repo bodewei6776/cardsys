@@ -12,12 +12,12 @@
       <div class="w95">
         会员名称：
         <label>
-          <input type="text" autocomplete="/members/autocomplete_name" id="name" name="name" value="<%= params[:name] %>"/>
+          <input type="text" autocomplete="/members/autocomplete_name" id="name" name="name" value="<%= params[:name] %>" onclick="$('#card_serial_num').attr('value','');"/>
         </label>
         &nbsp;&nbsp;&nbsp;&nbsp;
         会员卡号：
         <label>
-          <input type="text" name="card_serial_num" tabindex="1" autocomplete="/members/autocomplete_card_serial_num" value="<%= params[:card_serial_num] %>"/>
+          <input type="text" name="card_serial_num" tabindex="1" autocomplete="/members/autocomplete_card_serial_num" value="<%= params[:card_serial_num] %>" id='card_serial_num' onclick='$("#name").attr("value","");'/>
         </label>
                 <input type="submit" name="search" id="search_member" class="inputsubmit" value="查询"  tabindex="10" />
       </div>
