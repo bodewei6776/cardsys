@@ -66,10 +66,10 @@
         <div class="w2">
           <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Card,:class => 'pay_way' %>记账
           <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Cash,:class => 'pay_way' %>现金
-          <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Bank,:class => 'pay_way' %>银行
           <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Post,:class => 'pay_way' %>POS机
           <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Check ,:class => 'pay_way'%>支票
           <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Guazhang,:class => 'pay_way' %>挂账
+          <%= f.radio_button :pay_way, Balance::Balance_Way_Use_Bank,:class => 'pay_way' %>银行
         </div>
         </li>
       </ul>
@@ -136,8 +136,8 @@ function card_num_change(){
 $(document).ready(function(){
     rentAutocomplete();
     toggle_is_member();
-    $("#begin_date").datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
-    $("#end_date").datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
+    $("#begin_date").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
+    $("#end_date").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
 
     });
   </script>

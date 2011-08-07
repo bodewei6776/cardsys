@@ -44,7 +44,11 @@
             <option value="<%=i%>" <%if i==@book_record.start_hour%>selected<%end%> ><%=i%>:00</option>
           <%end%>
         </select>
-      结束时间：
+      </div>
+      </li>
+      <li>
+      <div class="w1"> 结束时间： </div>
+      <div class='w2'>
         <select name="order[book_record_attributes][end_hour]" tabindex="4" class="select order_hour" id="order_end_hour">
           <% @court.start_hour(@date).upto(@court.end_hour(@date)) do |i| %>
             <option value="<%=i%>" <%if i==@book_record.end_hour%>selected<%end%> ><%=i%>:00</option>
@@ -87,7 +91,7 @@
         <%=  render :partial => "/book_records/serial_num",:locals => {:cards => @cards,
           :member => @member,:current_card => @current_card,:member_cards => @member_cards,:date => @date}%>
         <%else%>
-          <ul style='height:60px;'>
+          <ul>
             <li>
             <div class="w1">会员姓名：</div>
             <div class="w2">
@@ -106,7 +110,7 @@
         </ul>
       <%end%>
     </div>
-    <ul style="height:80px;">
+    <ul>
       <div class="w1">教练：</div>
       <div class="w2 coach-list">
         <% @order.coaches.map(&:id).each do |coach_id|  -%>

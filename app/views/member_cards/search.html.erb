@@ -123,7 +123,7 @@
   $(".member_card_recharge").colorbox({width:"50%", height:"40%", iframe:false});
 
   $(function() {
-    $("#expire_date").datepicker({dateFormat: 'yy-mm-dd',changeYear:true});
+    $("#expire_date").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true});
   });
   function recharge_submit(card_id, type){    
     var expire_date = $("#expire_date")[0].value;

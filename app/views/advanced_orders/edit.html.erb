@@ -21,7 +21,7 @@
 </div>
 <script type="text/javascript">
   $(document).ready(function(){
-    $( ".date-type-input" ).datepicker({ dateFormat: 'yy-mm-dd' });
+    $( ".date-type-input" ).new_datepicker({ dateFormat: 'yy-mm-dd' });
     $("#order_member_name" ).autocomplete({
       source:  "/book_records/complete_for_members",
       select:  function(ui,li){
