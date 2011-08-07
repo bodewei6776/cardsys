@@ -78,15 +78,15 @@
 
 <script type="text/javascript">
   $(function() {
-    $("#reg_date_start").datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
-    $("#reg_date_end").datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
-    $("#expire_date_start").datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
-    $("#expire_date_end").datepicker({dateFormat: 'yy-mm-dd',"changeYear":true,"changeMonth":true});
-    $(".birthday_input").datepicker({dateFormat: 'mm-dd',changeMonth:true});
+    $("#reg_date_start").new_datepicker();
+    $("#reg_date_end").new_datepicker();
+    $("#expire_date_start").new_datepicker();
+    $("#expire_date_end").new_datepicker();
+    $(".birthday_input").new_datepicker();
   });
   $(function() {
-    $("#comer_date_start").datepicker({dateFormat: 'yy-mm-dd',"changeYear":true,"changeMonth":true});
-    $("#comer_date_end").datepicker({dateFormat: 'yy-mm-dd',"changeYear":true,"changeMonth":true});
+    $("#comer_date_start").new_datepicker();
+    $("#comer_date_end").new_datepicker();
   });
   $(".member_card_bind_index").colorbox({width:"80%", height:"99%", iframe:false});
   $(".member_card_index").colorbox({width:"80%", height:"99%", iframe:false});
