@@ -139,7 +139,8 @@ class BookRecordsController < ApplicationController
     respond_to do |format|
       operation = params[:order][:operation].to_sym
       if ["consecutive_book","consecutive_cancle"].include?(params[:order][:operation])
-        @orders =  @order.advanced_order.order_and_order_after(@order)
+        break unless @order.is_advanced_order?
+        @orders =  @order.order_and_order_after
         params[:order][:operation] = params[:order][:operation].sub("consecutive_","")
         log_action("场地<#{@order.book_record.court.name}>#{BookRecord::OPERATION_MAP[operation]}",operation.to_s) if operation && BookRecord::OPERATION_MAP.keys.include?(operation)
         @orders.each { |o| o.update_attributes(params[:order]) }
@@ -238,7 +239,11 @@ class BookRecordsController < ApplicationController
 
     respond_to do |format|
       if user.valid_password?(params[:password]) && user.can?("删除场地预定")
-        @order.destroy
+        if @order.is_advanced_order?
+          @order.order_and_order_after.collect(&:destroy)
+        else
+          @order.destroy
+        end
         format.js { render :json => {"result" => "0"}}
         format.html { redirect_to book_records_path}
       else
@@ -253,9 +258,9 @@ class BookRecordsController < ApplicationController
     if (member_name = params[:term]).blank?
       render(:text => {}.to_json) && return
     end
-#    @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name",
-#                                                                               {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
-  
+    #    @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name",
+    #                                                                               {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
+
     @members = Member.autocomplete_for(member_name)
     hash_results = @members.collect {|member| {"id" => member.id, "label" => "#{member.name} #{member.mobile}", 
       "value" => "#{member.name}"} }

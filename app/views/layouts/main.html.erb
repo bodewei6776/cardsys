@@ -31,7 +31,7 @@
         window.location.href=urls.join('');
       }
 $(document).ready(function() {
-    WdatePicker({eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
+    WdatePicker({startDate:'<%= ftime_date(@date)%>',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
     //          $('#datepicker').datepicker({
     //onSelect: function(dateText, inst) {
     //$("#calendar_con").val(dateText);

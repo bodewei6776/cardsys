@@ -306,5 +306,11 @@ class Order < ActiveRecord::Base
     return 0 if self.is_member? or self.non_member.nil?
     return self.total_amount - self.non_member.earnest 
   end
+
+  def order_and_order_after
+    self.advanced_order.orders.select{|o| o.book_record.record_date >= self.book_record.record_date}
+  end
+
+
   
 end
