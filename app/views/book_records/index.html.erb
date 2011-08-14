@@ -18,7 +18,7 @@
         <li class="tit">时段/场地</li>
         <% for period in @daily_periods %>
           <% period.start_time.upto(period.end_time - 1) do |i|  %>
-            <li><%=i%>:00-<%=i+1%>:00</li>
+            <li style='line-height:30px;'><%=i%>:00-<%=i+1%>:00</li>
           <%end%>
         <%end%>
             <div class='sep'></div> 

@@ -62,9 +62,11 @@ module BookRecordsHelper
           li_class << "book-reocrd-droppable"
         end
         title = "#{display_content}(#{book_record.status_desc})"
-        info_htmls << [realy_time_span[0],content_tag(:li,content_tag("a",display_content,:href => url,
+        info_htmls << [realy_time_span[0],content_tag(:li,
+                                                      content_tag("a",
+                                                                  content_tag(:p, display_content,:style =>  "display:inline-block; height:30px; line-height:15px;"),:href => url,
               :class =>book_record.status_color ,:title => title,
-              :style => "height:#{li_height}px;display:block;line-height:#{li_height}px;"),:style => "height:#{li_height}px;",
+              :style => "height:#{li_height}px;display:block;vertical-align:middle;display:table-cell;width: 161px;"),:style => "height:#{li_height}px;line-height:#{li_height}px;",
             :class => li_class.join(' '), :id => "book-record-#{book_record.id}")]
       else
         if date < Date.today || (date == Date.today && realy_time_span[0] < DateTime.now.hour)
@@ -75,11 +77,11 @@ module BookRecordsHelper
           else
           info_htmls << [realy_time_span[0],content_tag(:li,
                    content_tag("button","预定",{:type => 'button',:href=> book_url,:value => '预定', 
-              :class => "submit1 hand popup-new-window"}))]
+              :class => "submit1 hand popup-new-window", :style => "margin-top: 5px;"}) )]
           end
         else
           info_htmls << [realy_time_span[0],content_tag(:li,content_tag("button",'预定',{:type => 'button', :href => book_url,
-                                                                        :value => '预定',:class => "submit1 hand popup-new-window"  }))]
+                                                                        :value => '预定',:class => "submit1 hand popup-new-window"  ,:style => "margin-top: 5px;"}))]
         end
       end
     end

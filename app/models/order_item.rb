@@ -18,7 +18,13 @@ class OrderItem < ActiveRecord::Base
   belongs_to :good,:foreign_key => "item_id"#,:conditions =>{:item_type => Item_Type_Product}
 
   before_destroy :update_good_inventory_before_destroy
-  
+
+
+  has_one :balance_item
+#  before_create :create_balance_item
+#  before_destroy :remove_balance_item
+#  after_save :update_balance_item
+#  
 
 
 
@@ -186,5 +192,15 @@ class OrderItem < ActiveRecord::Base
     when is_product? then "购买商品"
     else ""
     end
+  end
+
+  def create_balance_item
+#    balance = Balance.find_by_order_id(self.order.id)
+#    self.balance_item.create(:balance_id => balance.id, :order_id => self.order_id, 
+ #                            :price => self.quantity * self.price, :discount_rate => 1)
+  end
+
+  def update_balance_item
+ #   self.balance_item.balance.update_amount
   end
 end

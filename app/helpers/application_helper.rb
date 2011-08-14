@@ -302,6 +302,11 @@ notice
     html
   end
 
+  def chinese_week_day(offset)
+   week_days = %w{星期日 星期一 星期二 星期三 星期四 星期五 星期六} 
+   week_days[offset]
+  end
+
   private
 
   def generate_res_options res_type

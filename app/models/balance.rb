@@ -18,6 +18,7 @@ class Balance < ActiveRecord::Base
   belongs_to :order
   belongs_to :member
   belongs_to :user
+  has_many :balance_items, :dependent => :destroy
   attr_accessor :operation
 
   scope :balanced,where(:status => Const::YES)
@@ -509,6 +510,9 @@ class Balance < ActiveRecord::Base
       "未知"
     end
    return result
+  end
+
+  def update_amount
   end
 
 end

@@ -1,5 +1,6 @@
 class Order < ActiveRecord::Base
   has_many    :order_items,:dependent => :destroy
+  has_many :balance_items
   belongs_to  :card
   belongs_to  :user
   has_many    :coach_items,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Coache} "

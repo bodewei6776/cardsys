@@ -364,8 +364,8 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 .tit { clear:left; font-weight:bold; background:#eeeeee;}
 .content ul { float:left; text-align:center; }
 .content ul div.sep{height: 3px; background-color:#58d360;border:0px;}
-.content ul li { height:30px; line-height: 30px;  border-bottom:#c8cdd0 solid 1px;border-left:#c8cdd0 solid 1px; }
-.content ul li a{ font-size:12px; line-height: 28px;}
+.content ul li { height:30px; border-bottom:#c8cdd0 solid 1px;border-left:#c8cdd0 solid 1px; }
+.content ul li a{ font-size:12px; line-height: 28px; }
 .time  { float: left; width:9.6%; }
 .date  { float: left; width:15%; overflow:hidden;}
 .date2 { border-right:#ccc 1px solid; float:left; width:15%;}
@@ -415,20 +415,20 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 }
 
 #errorExplanation {
-  width: 90%;
+  width: 94%;
   border: 2px solid  #FE8848;
-  padding: 7px;
-  padding-bottom: 12px;
+  padding: 3px;
+  padding-bottom: 5px;
   background-color: #f0f0f0;
-  margin: 0 2px 20px 55px;
+  margin: 3px auto;
 }
 
 #errorExplanation h2 {
   text-align: left;
   font-weight: bold;
-  padding: 5px 5px 5px 15px;
+  padding: 3px;
   font-size: 12px;
-  margin: -7px;
+  margin: -3px;
   background-color:  #FE8848;
   color: #fff;
 }
@@ -497,3 +497,4 @@ table.report_table tr.report_title td{
 .overflow_hidden{
   overflow:hidden;
 }
+
