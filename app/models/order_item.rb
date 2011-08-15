@@ -20,11 +20,9 @@ class OrderItem < ActiveRecord::Base
   before_destroy :update_good_inventory_before_destroy
 
 
-  has_one :balance_item
-#  before_create :create_balance_item
-#  before_destroy :remove_balance_item
-#  after_save :update_balance_item
-#  
+  has_one :balance_item, :dependent => :destroy
+  after_save :update_balance_item
+  
 
 
 
@@ -164,7 +162,7 @@ class OrderItem < ActiveRecord::Base
     is_book_record? ? product.amount(self) :  price*(quantity.to_f)
   end
 
-  def balance
+  def do_balance
     self.paid_status = Const::YES
     save
   end
@@ -195,12 +193,13 @@ class OrderItem < ActiveRecord::Base
   end
 
   def create_balance_item
-#    balance = Balance.find_by_order_id(self.order.id)
-#    self.balance_item.create(:balance_id => balance.id, :order_id => self.order_id, 
- #                            :price => self.quantity * self.price, :discount_rate => 1)
+    balance = Balance.find_by_order_id(self.order.id)
+    self.balance_item.create(:balance_id => balance.id, :order_id => self.order_id, 
+                             :price => self.quantity * self.price, :discount_rate => 1)
   end
 
   def update_balance_item
- #   self.balance_item.balance.update_amount
+    return unless self.balance_item
+    balance_item.update_attributes(:price => self.quantity * self.price)
   end
 end

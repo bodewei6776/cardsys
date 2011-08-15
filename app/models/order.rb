@@ -6,6 +6,7 @@ class Order < ActiveRecord::Base
   has_many    :coach_items,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Coache} "
   has_one     :book_record_item,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Book_Record}"
   has_many    :product_items,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Product}"
+  has_one :balance, :dependent => :destroy
 
   validates  :card_id,:member_id,:book_record_id,:presence => {:message => "信息不完整，请补充完所需要的信息"}
   validate do |order|
@@ -273,11 +274,11 @@ class Order < ActiveRecord::Base
     self.product_amount + self.book_record_amount
   end
     
-  def balance
+  def do_balance
     self.operation = :balance
-    member_card.balance(self) if is_member?
-    book_record.balance  if book_record
-    order_items.each{|order_item| order_item.balance }
+    member_card.do_balance(self) if is_member?
+    book_record.do_balance  if book_record
+    order_items.each{|order_item| order_item.do_balance }
     self.paid_stauts = Const::YES
     self.updating =false
     save
@@ -285,10 +286,6 @@ class Order < ActiveRecord::Base
   
   def balance_record
     @balance_record ||= Balance.find_by_order_id(id)
-  end
-  
-  def has_bean_balanced?
-    paid_stauts == Const::YES
   end
   
   def should_use_card_to_balance_goods?

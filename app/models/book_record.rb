@@ -117,9 +117,8 @@ class BookRecord < ActiveRecord::Base
     status == Status_Prearranged
   end
 
-  def balance
-    self.status = Status_Settling
-    save
+  def do_balance
+    self.update_attribute(:status, Status_Settling)
   end
 
   def is_balanced?

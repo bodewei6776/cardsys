@@ -159,7 +159,7 @@ class MemberCard < ActiveRecord::Base
   end
   
   #TODO
-  def balance(order)
+  def do_balance(order)
     balance_record = Balance.find_by_order_id(order.id)
     if card.is_counter_card? || (card.is_zige_card? && balance_record.use_card_counter_to_balance?)
       self.left_times -= balance_record.count_amount

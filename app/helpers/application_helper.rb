@@ -55,12 +55,12 @@ def should_display_locker_menu?
     action_name.to_s == "change_password" || controller_name.to_s == "logs" || controller_name.to_s == "welcome"
   end
 
-  def display_current_menu
-    current_menu = case
-    when should_display_common_memu? then 'common_memu'
-    when should_display_member_memu? then 'member_memu'
-    when should_display_member_card_memu? then 'member_card_memu'
-    when should_display_goods_memu? then 'goods_memu'
+  def current_menu
+    case
+    when should_display_common_memu? then 'common_menu'
+    when should_display_member_memu? then 'member_menu'
+    when should_display_member_card_memu? then 'member_card_menu'
+    when should_display_goods_memu? then 'goods_menu'
     when should_display_authorize_menu? then 'authorize_menu'
     when should_display_balance_menu? then 'balance_menu'
     when should_display_book_record_menu? then 'book_record_menu'
@@ -68,13 +68,6 @@ def should_display_locker_menu?
     when should_display_locker_menu? then 'locker_menu'
     when should_display_system_menu? then 'system_menu'
     end
-    js =<<js
-    <script type="text/javascript">
-    $('.menu_item').hide();
-    $('##{current_menu}').show();
-    </script>
-js
-    js.html_safe
   end
 
   def generate_card_type_options(card)
@@ -338,5 +331,21 @@ def days_in_month(year, month)
     date.day
   end
 end
-  
+
+
+def menus_map
+  {
+    :common_menu => "基础信息管理",
+    :member_menu => "会员管理",
+    :member_card_menu => "会员卡管理",
+    :goods_menu => "商品库存管理",
+    :report_menu => "分析报表",
+    :book_record_menu => "场地预定",
+    :balance_menu => "消费预算",
+    :locker_menu => "储物柜管理",
+    :authorize_menu => "权限管理",
+    :system_menu => "系统管理"
+  }
+end
+
 end
