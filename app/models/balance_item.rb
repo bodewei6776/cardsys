@@ -5,10 +5,9 @@ class BalanceItem < ActiveRecord::Base
 
   after_create :update_balance
   after_destroy :update_balance
-  after_update :update_balance
+  after_save :update_balance
 
   def update_balance
-    hash = {}
-    self.balance.update_attributes(hash)
+    self.balance.update_amount
   end
 end

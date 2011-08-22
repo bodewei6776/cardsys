@@ -1,9 +1,10 @@
 require 'order_ext/member_order'
 class OrderItem < ActiveRecord::Base
 
-  Item_Type_Book_Record  = 1
-  Item_Type_Coache       = 2
-  Item_Type_Product      = 3
+
+  Item_Type_Book_Record = 0
+  Item_Type_Coache = 1
+  Item_Type_Product = 2
 
   scope :book_record,lambda {|book_record_id| where(:item_type => Item_Type_Book_Record,:item_id => book_record_id) }
   scope :coaches,where(:item_type => Item_Type_Coache)
@@ -192,14 +193,14 @@ class OrderItem < ActiveRecord::Base
     end
   end
 
-  def create_balance_item
-    balance = Balance.find_by_order_id(self.order.id)
-    self.balance_item.create(:balance_id => balance.id, :order_id => self.order_id, 
-                             :price => self.quantity * self.price, :discount_rate => 1)
-  end
 
   def update_balance_item
-    return unless self.balance_item
-    balance_item.update_attributes(:price => self.quantity * self.price)
+    balance_item = self.balance_item || BalanceItem.new(:balance_id => self.order.balance.id, 
+                                                        :order_id => self.order_id, 
+                                                       :order_item_id => self.id)
+    balance_item.update_attributes(:price => self.quantity * self.price, 
+                                   :real_price => self.quantity * self.price,
+                                  :count_amount => 0)
+    balance_item.update_attributes(:count_amount => self.order.book_record.hours) if is_book_record?
   end
 end

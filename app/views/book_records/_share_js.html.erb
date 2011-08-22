@@ -75,7 +75,7 @@
    <% end  %>
    <% if @book_record.should_to_balance? || @book_record.should_blance_as_expired? %>
   	addOperation($('.data-balance-order'),function(element){
-     window.location.href='<%= new_order_balance_path(@order) %>';
+     window.location.href='<%= edit_balance_path(@order.balance) %>';
      return false
     });
    <% end -%>

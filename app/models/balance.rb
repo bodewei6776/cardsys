@@ -114,7 +114,7 @@ class Balance < ActiveRecord::Base
   end
 
   def goods_balance_type_desc
-    balance_way_desciption(goods_balance_type)
+    balance_way_desciption(balance_way)
   end
 
   def use_card_to_balance_book_record?
@@ -122,7 +122,7 @@ class Balance < ActiveRecord::Base
   end
 
   def use_card_to_balance_goods?
-    goods_balance_type == Balance_Way_Use_Card
+    balance_way == Balance_Way_Use_Card
   end
 
   def use_card_to_balance?
@@ -214,7 +214,7 @@ class Balance < ActiveRecord::Base
   end
 
   def total_changed?
-    self.book_record_amount != self.book_record_realy_amount || self.goods_amount != self.goods_realy_amount
+    self.amount != self.real_amount 
   end
 
   ####### for reports #########
@@ -512,6 +512,17 @@ class Balance < ActiveRecord::Base
   end
 
   def update_amount
+    self.count_amount = self.amount = self.real_amount = 0
+    self.balance_items.each do |item|
+      self.count_amount += item.count_amount
+      self.amount       += item.price
+      self.real_amount  += item.real_price
+    end
+    save
+  end
+
+  def paid?
+    self.status == Const::YES
   end
 
 end

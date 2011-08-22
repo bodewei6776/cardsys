@@ -1,6 +1,6 @@
 class Order < ActiveRecord::Base
   has_many    :order_items,:dependent => :destroy
-  has_many :balance_items
+  has_many    :balance_items
   belongs_to  :card
   belongs_to  :user
   has_many    :coach_items,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Coache} "
@@ -13,6 +13,8 @@ class Order < ActiveRecord::Base
     order.validates_assocations
   end
 
+  after_create :generate_balance
+  after_save    :update_balance
   before_create :init_attributes
   before_save   :auto_save_order_associations
   after_save    :auto_generate_coaches_items
@@ -287,6 +289,10 @@ class Order < ActiveRecord::Base
   def balance_record
     @balance_record ||= Balance.find_by_order_id(id)
   end
+
+  def has_bean_balanced?
+    self.balance.paid?
+  end
   
   def should_use_card_to_balance_goods?
     is_member? && !member_card.card.is_counter_card? && member_card.card.is_consume_goods?
@@ -309,6 +315,13 @@ class Order < ActiveRecord::Base
     self.advanced_order.orders.select{|o| o.book_record.record_date >= self.book_record.record_date}
   end
 
+  def generate_balance
+    self.balance = Balance.new(:status => Const::NO)
+  end
+
+  def update_balance
+    self.balance.update_amount
+  end
 
   
 end

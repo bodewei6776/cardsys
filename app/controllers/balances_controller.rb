@@ -8,14 +8,11 @@ class BalancesController < ApplicationController
     @book_records = BookRecord.balanced.order('created_at desc').paginate(default_paginate_options_without_created_at)
   end
 
-  def new
-    @order        = Order.find(params[:order_id])
-    if @order.has_bean_balanced?
-      balance = Balance.find_by_order_id(@order.id)
-      redirect_to order_balance_path(@order,balance) and return
-    end
+  def edit 
+    @balance = Balance.find(params[:id])
+    @order = @balance.order
+    @book_record = @order.book_record
     pre_date_for_new_create
-    @balance = Balance.find_by_order_id(@order.id) || Balance.new_from_order(@order)
   end
 
   def create
