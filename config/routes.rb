@@ -60,6 +60,13 @@ Cardsys::Application.routes.draw do |map|
     end
   end
 
+  resources :balance_items do
+    member do
+      post :update_real_price
+      post :update_discount_rate
+    end
+  end
+
   resources :balances do
     member do 
       get :print

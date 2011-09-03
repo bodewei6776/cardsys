@@ -41,12 +41,12 @@
       <div class="w1">支付方式：</div>
       <div  class='w2' style='width:500px;'>
         <% if @order.is_member? -%>
-          <%if @balance.should_use_card_to_blance? -%>
-            <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Card,:class => 'balance_way' %>记账</label>
-          <%end -%>
           <% if @balance.should_use_counter_to_balance? -%>
             <input type="hidden" name="balance[count_amount]" id="br_conter_amount" value="<%= @order.hours  %>" />
-            <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Counter,:class => 'balance_way'%>计次</label>
+            <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Counter,:class => 'balance_way', :checked => true%>计次</label>
+          <%end -%>
+          <%if @balance.should_use_card_to_blance? -%>
+            <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Card, :class => 'balance_way' %>记账</label>
           <%end -%>
         <%  end -%>
         <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Cash,:class => 'balance_way' %>现金</label>
@@ -57,14 +57,12 @@
       </div>
       </li>
     </ul>
-       <ul>
+    <ul>
 
       <li >
       <div class="w1">消费合计：</div>
       <div  class='w2'>
         <span id="amount_fee_str" style='color:red;'>￥<%= @balance.real_amount %>元；<%= @balance.count_amount %>次场地</span>
-        <%= f.hidden_field	:operation %>
-
         <%= "（ 总价已变更　）" if @balance.total_changed? %>
       </div>
       </li>
@@ -90,7 +88,6 @@
       <li>
       <input type="hidden" name="batch_id" value="<%= params[:batch_id] %>" />
       <div style='text-align:center;'>
-        <input  class="change-amount submit1 button" type="button"  value="变更总价"/>
         <input  class="balance submit1 button"  	  type="button"  value="支付"/>
       </div>
       </li>
@@ -123,20 +120,14 @@
           }
           });
 <% end -%>
-  $('.change-amount').click(function(){
-      if(confirm('确定要变总价么？')){
-      $('#balance_operation').val('change');
+
+  $('.balance').click(function(){
+      if(confirm('确定要结算么？？')){
+      $('#balance_operation').val('balance');
       $('.balance-form').submit();
       }
       return false;
       });
-$('.balance').click(function(){
-    if(confirm('确定要结算么？？')){
-    $('#balance_operation').val('balance');
-    $('.balance-form').submit();
-    }
-    return false;
-    });
 
 history.forward();
   });

@@ -139,7 +139,7 @@ class Balance < ActiveRecord::Base
   end
 
   def should_use_counter_to_balance?
-    card && (card.is_counter_card? || card.is_zige_card?)
+    true #card && (card.is_counter_card? || card.is_zige_card?)
   end
 
   def should_use_card_to_blance?
@@ -523,6 +523,10 @@ class Balance < ActiveRecord::Base
 
   def paid?
     self.status == Const::YES
+  end
+
+  def name
+    self.order_item.name
   end
 
 end

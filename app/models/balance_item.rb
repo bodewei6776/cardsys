@@ -10,4 +10,8 @@ class BalanceItem < ActiveRecord::Base
   def update_balance
     self.balance.update_amount
   end
+
+  def name
+    self.order_item.name
+  end
 end

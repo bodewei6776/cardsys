@@ -1,10 +1,75 @@
-<%- balance_items.each do |item| %>
-<ul>
-  <li style="width:10%;"><%= item.id %></li>
-  <li style="width:10%;"><%=  %></li>
-  <li style="width:10%;"><%=  %></li>
-  <li style="width:15%;"></li>
-  <li style="width:15%;"><%=  %></li>
-  <li style="width:15%;"> </li>
-</ul>
-<%end%>
+<div class='table'>
+  <ul class="bttitle black fb ">
+    <li class="w5">编号</li>
+    <li class="w20">名称</li>
+    <li class="w10">数量</li>
+    <li class="w10">单价</li>
+    <li class="w10">总价</li>
+    <li class="w10">实收总价</li>
+    <li class="w10">折扣</li>
+  </ul>
+
+  <%- balance_items.each_with_index do |item, index| %>
+    <ul class='table_items' item_id=<%= item.id %>>
+      <li style="width:5%;"><%= index + 1 %></li>
+      <li style="width:20%;">（<%= item.order_item.order_item_type_str %>）<%= item.name  %></li>
+      <li style="width:10%;"><%= item.order_item.quantity%></li>
+      <li style="width:10%;"><%= item.order_item.price %></li>
+      <li style="width:10%;"><%= item.price %></li>
+      <% if !item.balance.paid? and item.order_item.item_type != 0%>
+        <li style="width:10%;"><%= text_field_tag :price_field, item.real_price, :class => "real_price_field" %></li>
+        <li style="width:10%;"><%= text_field_tag :discount_rate_field, item.discount_rate, :class => "discount_rate_field" %></li>
+      <% else%>
+        <li style="width:10%;"><%= item.real_price %></li>
+        <li style="width:10%;"><%= item.discount_rate %></li>
+      <%end%>
+    </ul>
+  <%end%>
+</div>
+
+<script type='text/javascript'>
+  function update_real_price(id, number){
+    $.ajax({
+        type: "POST",
+        url: "/balance_items/" + id + "/update_real_price",
+        data: {real_price: number},
+        success: function(){ 
+        window.location.reload();
+        }}); 
+  }
+
+function update_discount_rate(id, rate){
+    $.ajax({
+        type: "POST",
+        url: "/balance_items/" + id + "/update_discount_rate",
+        data: {discount_rate: rate},
+        success: function(){ 
+        window.location.reload();
+        }}); 
+  }
+  $(document).ready(function(){
+      $('.real_price_field').change(function(){
+        var price = $(this).val(); 
+        var id = $(this).parent().parent().attr("item_id");
+        if(isNaN(price) || Number(price) <= 0){
+        alert("价格必须为大于零的数字");
+        window.location.reload();
+        return;
+        }
+
+        update_real_price(id, price);
+        }); 
+
+      $('.discount_rate_field').change(function(){
+        var rate = $(this).val(); 
+        var id = $(this).parent().parent().attr("item_id");
+        if(isNaN(rate) || Number(rate) <= 0 || Number(rate) > 1){
+        alert("折扣不能小于零或者大于一");
+        window.location.reload();
+        return;
+        }
+
+        update_discount_rate(id, rate);
+        }); 
+      });
+    </script>
