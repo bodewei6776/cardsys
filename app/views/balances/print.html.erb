@@ -118,10 +118,10 @@
       <tr>
         <td colspan=4> 支付方式: 
           <% if @balance.order.book_record %>
-            <%= @balance.balance_way_desciption(@balance.balance_way)%>（场地费）
+            <%= @balance.balance_way_desciption %>（场地费）
           <%end%>
-          <% if @balance.goods_realy_amount > 0%>
-            /<%= @balance.balance_way_desciption(@balance.goods_balance_type)%>（其他消费）
+          <% if @balance.other_real_amount > 0 %>
+            /<%= @balance.balance_way_desciption %>（其他消费）
           <%end%>
         </td>
       </tr>

@@ -8,7 +8,9 @@ class BalanceItemsController < ApplicationController
   
   def update_discount_rate
     @balance_item.update_attribute(:discount_rate, params[:discount_rate])
+    ap @balance_item.discount_rate
     @balance_item.update_attribute(:real_price, @balance_item.price * @balance_item.discount_rate)
+    ap @balance_item.real_price
     render :nothing => true
   end
 

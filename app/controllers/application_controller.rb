@@ -123,5 +123,9 @@ class ApplicationController < ActionController::Base
   def log_action(desc,log_type, user = nil)
     Log.log(self,desc,log_type, user) 
   end
+
+  def login_and_password_valid?
+    User.find_by_login(params[:user_name]).try(:valid_password?,params[:password])
+  end
 end
 

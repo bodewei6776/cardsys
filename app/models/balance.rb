@@ -75,30 +75,15 @@ class Balance < ActiveRecord::Base
     self.hide = true
     self.save(false)
   end
-  
-  def merge_order(o)
-    self.order_id      = o.id
-    #self.catena_id     = o.catena_id
-    self.member_type   = o.member_type
-    self.member_id     = o.member_id
-  end
-  
-  def process
-    operation == 'change' ? change : balance 
-  end
-  
-  def change
-    save
+
+  def do_balance!
+    self.order.do_balance
+    self.update_attribute(:status, Const::YES)
   end
 
   def change_note_by(user)
     self.change_note = "订单消费总价变更（#{self.book_record_amount + self.goods_amount}  变为#{ self.book_record_realy_amount + self.goods_realy_amount}）,修改人#{user.login}"
     save
-  end
-
-
-  def balance
-    self.update_attribute(:status, Const::YES)
   end
 
   def to_change?
@@ -146,7 +131,8 @@ class Balance < ActiveRecord::Base
     card && !card.is_counter_card?
   end
 
-  def balance_way_desciption(way)
+  def balance_way_desciption(way = nil)
+    way ||= self.balance_way
     case way
     when Balance_Way_Use_Card then '记账'
     when Balance_Way_Use_Cash then '现金'
@@ -176,41 +162,57 @@ class Balance < ActiveRecord::Base
     card_amount
   end
 
+  def book_record_real_amount
+    self.balance_items.select{ |bi| bi.order_item.item_type == OrderItem::Item_Type_Book_Record }.sum(&:real_price)
+  end
+
+  def other_real_amount
+    self.balance_items.select{ |bi| bi.order_item.item_type != OrderItem::Item_Type_Book_Record }.sum(&:real_price)
+  end
+
+  def other_amount
+    self.balance_items.select{ |bi| bi.order_item.item_type != OrderItem::Item_Type_Book_Record }.sum(&:price)
+  end
+
   def book_record_amount_desc
     if ensure_use_card_counter?
       "#{count_amount}次"
     else
-      "￥#{book_record_realy_amount}元"
+      "￥#{book_record_real_amount}元"
     end
   end
 
-  def goods_amount_desc
-    "￥#{goods_realy_amount}元"
+  def other_amount_desc
+    "￥#{other_amount}元"
+  end
+
+   def other_amount_real_desc
+    "￥#{other_amount}元"
   end
 
   def balance_amount_desc
     if ensure_use_card_counter?
-      "￥#{goods_realy_amount}元;#{book_record_amount_desc}"
+      "￥#{other_amount}元;#{book_record_amount_desc}"
     else
-      "￥#{goods_realy_amount + book_record_realy_amount}元"
+      "￥#{other_amount + book_record_real_amount}元"
     end
   end
 
-   def balance_realy_amount_desc
+  def balance_realy_amount_desc
     if ensure_use_card_counter?
-      "￥#{goods_realy_amount}元;#{book_record_amount_desc}"
+      "￥#{other_real_amount}元;#{book_record_amount_desc}"
     else
-      "￥#{goods_realy_amount+book_record_realy_amount}元"
+      "￥#{other_real_amount + book_record_real_amount}元"
     end
   end
 
 
   def balance_amount
-    book_record_amount.to_i + goods_amount.to_i
+    book_record_amount.to_i + other_amount.to_i
   end
 
   def balance_realy_amount
-    book_record_realy_amount.to_i + goods_realy_amount.to_i
+    book_record_realy_amount.to_i + other_real_amount.to_i
   end
 
   def total_changed?
@@ -501,17 +503,18 @@ class Balance < ActiveRecord::Base
     member = self.member
     member_card = self.member_card
 
-   result = if member_card.member == member
-      "本人"
-    elsif member_card.granters.include? member
-      "授权人(#{member.name})"
-    else
-      "未知"
-    end
-   return result
+    result = if member_card.member == member
+               "本人"
+             elsif member_card.granters.include? member
+               "授权人(#{member.name})"
+             else
+               "未知"
+             end
+    return result
   end
 
   def update_amount
+    reload
     self.count_amount = self.amount = self.real_amount = 0
     self.balance_items.each do |item|
       self.count_amount += item.count_amount

@@ -211,4 +211,10 @@ class MemberCard < ActiveRecord::Base
     notices.join(",")
   end
 
+  def can_balance_by_money?
+  end
+
+  def can_balance_by_amount?
+  end
+
 end

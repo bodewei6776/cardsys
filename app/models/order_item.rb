@@ -164,7 +164,6 @@ class OrderItem < ActiveRecord::Base
   end
 
   def do_balance
-    self.paid_status = Const::YES
     save
   end
 

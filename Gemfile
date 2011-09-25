@@ -1,7 +1,6 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.0.3'
-# gem 'mysql', '2.8.1'
 gem 'ruby-mysql'
 gem 'will_paginate', '3.0.pre'
 gem 'rails3-jquery-autocomplete', '>= 0.2.0'
@@ -10,6 +9,7 @@ gem 'acts_as_tree'
 gem 'state_machine'
 gem 'jquery-rails'
 gem 'highline'
+gem 'awesome_print', :require => 'ap'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

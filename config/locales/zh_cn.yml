@@ -1,6 +1,3 @@
-# Chinese (China) translations for Ruby on Rails
-# by tsechingho (http://github.com/tsechingho)
- 
 zh_cn:
   page:
     site_name: "博德维网球管理系统"
@@ -224,3 +221,25 @@ zh_cn:
     update: "更新"
     destroy: "删除"
     cancle: "取消"
+
+  authlogic:
+    error_messages:
+      login_blank: 不能为空 
+      login_not_found: 不正确
+      login_invalid: 不能有特殊字符.
+      consecutive_failed_logins_limit_exceeded: Consecutive failed logins limit exceeded, account is disabled.
+      email_invalid: 邮箱不正确
+      password_blank: 不能为空
+      password_invalid: 不正确
+      not_active: 未激活
+      not_confirmed: 未确认
+      not_approved: 未确认
+      no_authentication_details: You did not provide any details for authentication.
+    models:
+      user_session: UserSession
+    attributes:
+      user_session:
+        login: 登录名
+        email: 邮箱
+        password: 密码
+        remember_me: Remember Me

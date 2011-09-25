@@ -1,6 +1,7 @@
 <%= error_messages_for :balance %>
 <%= error_messages_for :order%>
-<%= form_for([@order,@balance],:html => {:class => 'balance-form'}) do |f| -%>
+
+<%= form_for([@order,@balance],:html => {:id => 'balance-form'}) do |f| -%>
   <div class='fformbox_nr'>
     <ul>
       <li>
@@ -85,10 +86,9 @@
 
     </ul>
     <ul>
-      <li>
-      <input type="hidden" name="batch_id" value="<%= params[:batch_id] %>" />
-      <div style='text-align:center;'>
-        <input  class="balance submit1 button"  	  type="button"  value="支付"/>
+      <li style='display:block;'>
+      <div style='padding-left: 200px;'>
+        <%= submit_tag "支付",:type => "button", :class => "submit1", :id => "submit_form" %>
       </div>
       </li>
     </ul>
@@ -98,6 +98,12 @@
 </div>
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function(){
+
+      $('#submit_form').click(function(){
+        if(confirm("确定支付!")){ $('#balance-form').submit();} 
+        else{return false;}
+        });
+
       <% if @order.is_order_use_zige_card? -%>
         $('.balance_way').click(function(){
           var other_amount = $("#balance_goods_realy_amount").val();
@@ -119,16 +125,6 @@
           $('#amount_fee_str').text(amount_fee+"元;");
           }
           });
-<% end -%>
-
-  $('.balance').click(function(){
-      if(confirm('确定要结算么？？')){
-      $('#balance_operation').val('balance');
-      $('.balance-form').submit();
-      }
-      return false;
-      });
-
-history.forward();
+    <% end -%>
   });
 </script>

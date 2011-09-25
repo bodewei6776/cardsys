@@ -22,11 +22,8 @@ class Order < ActiveRecord::Base
 
   attr_accessor :coach_id,:operation,:updating
   attr_accessor :coach,:non_member,:member,:member_card,:book_record
-  
-  scope :waiting_balance, where(:paid_stauts => Const::NO)
-  scope :balanced,where(:paid_stauts => Const::YES)
 
-  delegate :record_date,:end_hour,:start_hour,:hours,:to => :book_record
+   delegate :record_date,:end_hour,:start_hour,:hours,:to => :book_record
 
   def operation
     @operation.blank? ? BookRecord.default_operation : @operation.to_sym
@@ -275,14 +272,16 @@ class Order < ActiveRecord::Base
   def total_amount
     self.product_amount + self.book_record_amount
   end
+
+  def can_balance?
+    self.is_member? && self.member_card.can_balance?(self)
+  end
     
   def do_balance
     self.operation = :balance
     member_card.do_balance(self) if is_member?
-    book_record.do_balance  if book_record
-    order_items.each{|order_item| order_item.do_balance }
-    self.paid_stauts = Const::YES
-    self.updating =false
+    book_record.balance  if book_record
+    self.updating = false
     save
   end 
   

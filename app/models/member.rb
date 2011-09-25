@@ -144,15 +144,11 @@ class Member < ActiveRecord::Base
   end
 
   def use_cash_amount
-    book_record_amount = self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Cash]).inject(0){|s,b| s + b.book_record_realy_amount}
-    good_amount = self.balances.balanced.where( ["(goods_balance_type = ?)",Balance::Balance_Way_Use_Cash]).inject(0){|s,b| s + b.goods_realy_amount}
-    return book_record_amount + good_amount
+    self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Cash]).inject(0){|s,b| s + b.book_record_realy_amount}
   end
 
   def use_card_amount
-    book_record_amount = self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.book_record_realy_amount}
-    good_amount = self.balances.balanced.where( ["(goods_balance_type = ?)",Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.goods_realy_amount}
-    return book_record_amount + good_amount
+    self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.book_record_realy_amount}
   end
 
 

@@ -1,7 +1,4 @@
 class UserSessionsController < ApplicationController
-  
-  # before_filter :require_no_user, :only => [:new, :create]
-  # before_filter :require_user, :only => :destroy
   layout false
   skip_before_filter :require_user,:require_very_user 
 
@@ -28,7 +25,7 @@ class UserSessionsController < ApplicationController
   
   def destroy
     current_user_session.destroy
-    flash[:notice] = "Logout successful!"
+    flash[:notice] = "退出系统!"
     redirect_back_or_default new_user_session_url
   end
 end

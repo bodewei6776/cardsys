@@ -1,5 +1,6 @@
 class BalancesController < ApplicationController
   layout 'main'
+
   def index
     @book_records = BookRecord.playing.order('created_at desc').paginate(default_paginate_options_without_created_at)
   end
@@ -15,97 +16,25 @@ class BalancesController < ApplicationController
     pre_date_for_new_create
   end
 
-  def create
-    @order    = Order.find(params[:order_id])
-    if params[:user_name].blank? or params[:password].blank?
-      pre_date_for_new_create
-      @balance = Balance.find_by_order_id(@order.id) || Balance.new_from_order(@order)
-      @balance.errors.add(:base,"结算人，密码不能为空")
-      render :action => "new"
-      return
-    end
-    user = User.find_by_login(params[:user_name])
-    if user.blank? or !user.valid_password?(params[:password])
-      pre_date_for_new_create
-      @balance = Balance.find_by_order_id(@order.id) || Balance.new_from_order(@order)
-      @balance.errors.add(:base,"结算人或者密码不正确")
-      render :action => "new"
-      return
-    end
-
-    @balance  = Balance.new(params[:balance])
-    if @balance.to_change? && !user.can?("变更总价")
-      pre_date_for_new_create
-      @balance = Balance.find_by_order_id(@order.id) || Balance.new_from_order(@order)
-      @balance.errors.add(:base,"用户无权限")
-      render :action => "new"
-      return
-    end
-
-
-    @balance.order_id = @order.id
-    @balance.user_id = user.id
-        
-    @balance.book_reocrd_member_card_id = @order.member_card_id
-    @balance.goods_member_card_id = @order.member_card_id
-
-    @balance.merge_order(@order)
-    if @balance.process && @balance.to_balance?
-      pre_date_for_new_create
-      redirect_to order_balance_path(@order,@balance,:popup => true) 
-    elsif @balance.process && @balance.to_change?
-      @balance.change_note_by(user) 
-      pre_date_for_new_create
-      render :action => "new"
-    else
-      pre_date_for_new_create
-      render :action => "new"
-    end
-  end
-
   def update
     @order    = Order.find(params[:order_id])
     @balance  = Balance.find(params[:id])
 
-    if params[:user_name].blank? or params[:password].blank?
+    unless login_and_password_valid? 
       pre_date_for_new_create
       @balance = Balance.find_by_order_id(@order.id) || Balance.new_from_order(@order)
-      @balance.errors.add(:base,"用户名或者密码不能为空")
-      render :action =>  "new" 
-      return
-    end
-    user = User.find_by_login(params[:user_name])
-    if user.blank? or !user.valid_password?(params[:password])
-      pre_date_for_new_create
-      @balance = Balance.find_by_order_id(@order.id) || Balance.new_from_order(@order)
-      @balance.errors.add(:base,"用户名或者密码不能为空")
-      render :action =>  "new"
+      @balance.errors.add(:base,"用户名或者密码不正确")
+      render :action =>  "edit" 
       return
     end
 
-    @balance.attributes=params[:balance]
-    if @balance.to_change? && !user.can?("变更总价")
+    if @balance.do_balance!
+      @balance.update_attribute(:user_id,  current_user.id)
       pre_date_for_new_create
-      @balance.errors.add(:base,"用户无权限")
-      render :action => "new"
-      return
-    end
-
-
-
-    @balance.merge_order(@order)
-    if @balance.process
-      @balance.change_note_by(user) if @balance.operation == "change"
-      pre_date_for_new_create
-      if @balance.operation == "change"
-        render :action => "new"
-      else
-        # redirect_to order_balance_path(@order,@balance) 
-        redirect_to order_balance_path(@order,@balance,:popup => true) 
-      end
+      redirect_to order_balance_path(@order,@balance,:popup => true) 
     else
       pre_date_for_new_create
-      render :action => "new"
+      render :action => "edit"
     end
   end
 

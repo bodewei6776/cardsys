@@ -19,4 +19,4 @@ public/system/**
 public/back_dbs/**
 public/ckeditor_assets/**
 public/javascripts/.DS_Store
-
+.bundle/*

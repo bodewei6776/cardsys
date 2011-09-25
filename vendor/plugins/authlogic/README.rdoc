@@ -1,5 +1,6 @@
 = Authlogic
 
+
 Authlogic is a clean, simple, and unobtrusive ruby authentication solution.
 
 A code example can replace a thousand words...
