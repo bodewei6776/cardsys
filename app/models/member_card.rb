@@ -158,22 +158,7 @@ class MemberCard < ActiveRecord::Base
     msg.join(';')
   end
   
-  #TODO
-  def do_balance(order)
-    balance_record = Balance.find_by_order_id(order.id)
-    if card.is_counter_card? || (card.is_zige_card? && balance_record.use_card_counter_to_balance?)
-      self.left_times -= balance_record.count_amount
-    else
-      if balance_record.use_card_to_balance_book_record?
-        self.left_fee -= balance_record.book_record_realy_amount.to_i
-      end
-      if balance_record.use_card_to_balance_goods? 
-        raise "卡#{card.card_serial_num}不能购买商品" unless order.should_use_card_to_balance_goods?
-        self.left_fee -= balance_record.goods_realy_amount.to_i
-      end
-    end
-    save
-  end
+ 
 
   # 能否进行商品购买
   def can_buy_good

@@ -13,7 +13,7 @@ class Order < ActiveRecord::Base
     order.validates_assocations
   end
 
-  after_create :generate_balance
+  after_create  :generate_balance
   after_save    :update_balance
   before_create :init_attributes
   before_save   :auto_save_order_associations
@@ -315,7 +315,7 @@ class Order < ActiveRecord::Base
   end
 
   def generate_balance
-    self.balance = Balance.new(:status => Const::NO)
+    self.balance = Balance.new(:status => Const::NO, :balance_way => Balance::Balance_Way_Use_Cash)
   end
 
   def update_balance

@@ -76,9 +76,32 @@ class Balance < ActiveRecord::Base
     self.save(false)
   end
 
+   #TODO
   def do_balance!
-    self.order.do_balance
+    self.order.book_record.balance
     self.update_attribute(:status, Const::YES)
+
+    return true unless order.is_member?
+
+    card = order.member_card.card
+    member_card = order.member_card
+    book_record = order.book_record
+
+    ap card.is_counter_card?
+    ap self.use_card_to_balance_book_record?
+
+    if card.is_counter_card? || (card.is_zige_card? && self.use_card_counter_to_balance?)
+      member_card.left_times -= self.count_amount
+    else
+      if self.use_card_to_balance_book_record?
+        member_card.left_fee -= self.book_record_realy_amount.to_i
+      end
+      if self.use_card_to_balance_goods? 
+        raise "卡#{card.card_serial_num}不能购买商品" unless order.should_use_card_to_balance_goods?
+        member_card.left_fee -= self.goods_realy_amount.to_i
+      end
+    end
+    member_card.save
   end
 
   def change_note_by(user)
@@ -124,7 +147,7 @@ class Balance < ActiveRecord::Base
   end
 
   def should_use_counter_to_balance?
-    true #card && (card.is_counter_card? || card.is_zige_card?)
+    card && (card.is_counter_card? || card.is_zige_card?)
   end
 
   def should_use_card_to_blance?
