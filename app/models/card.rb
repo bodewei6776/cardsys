@@ -29,8 +29,7 @@ class Card < ActiveRecord::Base
   end
 
   def card_type_record
-    @card_type_record ||= (CommonResourceDetail.find_by_id(card_type) || '')
-    @card_type_record.blank? ? nil : @card_type_record
+    CommonResourceDetail.find_by_id(card_type)
   end
   
   def is_counter_card?

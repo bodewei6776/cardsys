@@ -28,6 +28,8 @@ class BalancesController < ApplicationController
       return
     end
 
+    @balance.update_attributes(params[:balance])
+
     if @balance.do_balance!
       @balance.update_attribute(:user_id,  current_user.id)
       pre_date_for_new_create

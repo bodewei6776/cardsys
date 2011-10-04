@@ -78,27 +78,27 @@ class Balance < ActiveRecord::Base
 
    #TODO
   def do_balance!
+    return true  unless order.is_member?
+    return true if self.status == Const::YES
+
+    # change status
     self.order.book_record.balance
     self.update_attribute(:status, Const::YES)
-
-    return true unless order.is_member?
 
     card = order.member_card.card
     member_card = order.member_card
     book_record = order.book_record
 
-    ap card.is_counter_card?
-    ap self.use_card_to_balance_book_record?
 
     if card.is_counter_card? || (card.is_zige_card? && self.use_card_counter_to_balance?)
       member_card.left_times -= self.count_amount
     else
       if self.use_card_to_balance_book_record?
-        member_card.left_fee -= self.book_record_realy_amount.to_i
+        member_card.left_fee -= self.book_record_real_amount.to_i
       end
       if self.use_card_to_balance_goods? 
         raise "卡#{card.card_serial_num}不能购买商品" unless order.should_use_card_to_balance_goods?
-        member_card.left_fee -= self.goods_realy_amount.to_i
+        member_card.left_fee -= self.other_real_amount.to_i
       end
     end
     member_card.save
@@ -178,8 +178,8 @@ class Balance < ActiveRecord::Base
       if use_card_counter_to_balance?
         card_amount += count_amount
       else
-        card_amount += book_record_realy_amount.to_i if use_card_to_balance_book_record?
-        card_amount += goods_realy_amount.to_i       if use_card_to_balance_goods?
+        card_amount += book_record_real_amount.to_i if use_card_to_balance_book_record?
+        card_amount += other_real_amount.to_i       if use_card_to_balance_goods?
       end
     end
     card_amount

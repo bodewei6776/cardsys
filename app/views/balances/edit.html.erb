@@ -63,7 +63,10 @@
       <li >
       <div class="w1">消费合计：</div>
       <div  class='w2'>
-        <span id="amount_fee_str" style='color:red;'>￥<%= @balance.real_amount %>元；<%= @balance.count_amount %>次场地</span>
+        <p id='no_amount'><%= @balance.real_amount %>元 </p> 
+        <p id='with_amount'>
+        <%= @balance.other_amount %>元；<%= @balance.count_amount %>次场地
+        </p> 
         <%= "（ 总价已变更　）" if @balance.total_changed? %>
       </div>
       </li>
@@ -96,35 +99,26 @@
 <% end -%>
 <%= render :partial => "/balance_items/balance_item", :locals => {:balance_items => @balance.balance_items } %>
 </div>
-<script type="text/javascript" charset="utf-8">
-  $(document).ready(function(){
 
+<script type="text/javascript" >
+  $(document).ready(function(){
       $('#submit_form').click(function(){
         if(confirm("确定支付!")){ $('#balance-form').submit();} 
         else{return false;}
         });
 
-      <% if @order.is_order_use_zige_card? -%>
-        $('.balance_way').click(function(){
-          var other_amount = $("#balance_goods_realy_amount").val();
-          var amount = $('#balance_book_record_realy_amount').val();
-          var count_amount = $('#br_conter_amount').val();
-          if($('.balance_way:input:checked').val() == 7){
-          var amount_info  = count_amount+'次';
-          if(other_amount){amount_info = ((other_amount+"元;")+amount_info);}
-          $('#book_record_fee').text(count_amount+'次').append(
-            $('<input type="hidden" />').val(amount).attr('id','balance_book_record_realy_amount').
-            attr('name','balance[book_record_realy_amount]'));
-          $('#amount_fee_str').text(amount_info);
-          }else{
-          $('#book_record_fee').html(
-            $('<input type="text" />').val(amount).attr('id','balance_book_record_realy_amount').
-            attr('name','balance[book_record_realy_amount]'));
-          var amount_fee = parseInt(amount);
-          if(other_amount){amount_fee += parseInt(other_amount) }
-          $('#amount_fee_str').text(amount_fee+"元;");
-          }
-          });
-    <% end -%>
-  });
+      $("input.balance_way").change(function(){
+        if($("input.balance_way:checked").val() == "0"){
+        $("#with_amount").show();      
+        $("#no_amount").hide();      
+        }
+        else{
+        $("#with_amount").hide();      
+        $("#no_amount").show();      
+        }
+        });
+      });
+
+
+
 </script>
