@@ -31,6 +31,7 @@ class BalancesController < ApplicationController
     @balance.update_attributes(params[:balance])
 
     if @balance.do_balance!
+      log_action("通过" + @balance.balance_way_desc + "支付了" + @balance.balance_amount_desc, :balance)
       @balance.update_attribute(:user_id,  current_user.id)
       pre_date_for_new_create
       redirect_to order_balance_path(@order,@balance,:popup => true) 

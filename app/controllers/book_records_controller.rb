@@ -91,8 +91,8 @@ class BookRecordsController < ApplicationController
     @order.user_id = user.id
     respond_to do |format|
       if @order.save
-        log_action("预定场地#{@order.book_record.court.name}","book", user)
-
+        operation = :book
+        log_action("#{@order.book_record.court.name}#{BookRecord::OPERATION_MAP[operation]}",operation.to_s,user) if operation && BookRecord::OPERATION_MAP.keys.include?(operation)
         format.html { 
           render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
                     " window.opener.location.reload(); } ")
@@ -142,14 +142,14 @@ class BookRecordsController < ApplicationController
         break unless @order.is_advanced_order?
         @orders =  @order.order_and_order_after
         params[:order][:operation] = params[:order][:operation].sub("consecutive_","")
-        log_action("场地<#{@order.book_record.court.name}>#{BookRecord::OPERATION_MAP[operation]}",operation.to_s) if operation && BookRecord::OPERATION_MAP.keys.include?(operation)
+        log_action("#{@order.book_record.court.name}#{BookRecord::OPERATION_MAP[operation]}",operation.to_s,user) if operation && BookRecord::OPERATION_MAP.keys.include?(operation)
         @orders.each { |o| o.update_attributes(params[:order]) }
         redirect_to("/book_records?date=#{@order.book_record.record_date.to_s(:db)}", :notice => '修改成功.') 
         return
       end
 
       if @order.update_attributes(params[:order])
-        log_action("场地<#{@order.book_record.court.name}>#{BookRecord::OPERATION_MAP[operation]}",operation.to_s) if operation && BookRecord::OPERATION_MAP.keys.include?(operation)
+        log_action("#{@order.book_record.court.name}#{BookRecord::OPERATION_MAP[operation]}",operation.to_s, user) if operation && BookRecord::OPERATION_MAP.keys.include?(operation)
         format.html { redirect_to("/book_records?date=#{@order.book_record.record_date.to_s(:db)}", :notice => '修改成功.') }
       else
         inite_related_order_objects

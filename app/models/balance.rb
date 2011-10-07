@@ -44,15 +44,15 @@ class Balance < ActiveRecord::Base
 #    balance = new
 #    balance.order_id      = order.id
 #    balance.goods_amount  = order.product_amount
-#    balance.goods_realy_amount  = order.product_amount
+#    balance.other_real_amount  = order.product_amount
 #    if order.is_member? && order.member_card.card.is_counter_card?
 #      balance.count_amount  = order.book_record_amount
 #    else
 #      balance.book_record_amount = order.book_record_amount
-#      balance.book_record_realy_amount  = order.book_record_amount
+#      balance.book_record_real_amount  = order.book_record_amount
 #    end
 #    balance.balance_way = default_balance_way_by_order(order)
-#    balance.goods_balance_type = default_goods_balance_way_by_order(order)
+#    balance.balance_way = default_goods_balance_way_by_order(order)
 #    #balance.catena_id   = order.catena_id
 #        balance.member_type = order.member_type
 #    puts balance.goods_member_card_id
@@ -78,12 +78,13 @@ class Balance < ActiveRecord::Base
 
    #TODO
   def do_balance!
-    return true  unless order.is_member?
     return true if self.status == Const::YES
 
     # change status
     self.order.book_record.balance
     self.update_attribute(:status, Const::YES)
+
+    return true  unless order.is_member?
 
     card = order.member_card.card
     member_card = order.member_card
@@ -105,7 +106,7 @@ class Balance < ActiveRecord::Base
   end
 
   def change_note_by(user)
-    self.change_note = "订单消费总价变更（#{self.book_record_amount + self.goods_amount}  变为#{ self.book_record_realy_amount + self.goods_realy_amount}）,修改人#{user.login}"
+    self.change_note = "订单消费总价变更（#{self.book_record_amount + self.goods_amount}  变为#{ self.book_record_real_amount + self.other_real_amount}）,修改人#{user.login}"
     save
   end
 
@@ -121,7 +122,7 @@ class Balance < ActiveRecord::Base
     balance_way_desciption(balance_way)
   end
 
-  def goods_balance_type_desc
+  def balance_way_desc
     balance_way_desciption(balance_way)
   end
 
@@ -235,7 +236,7 @@ class Balance < ActiveRecord::Base
   end
 
   def balance_realy_amount
-    book_record_realy_amount.to_i + other_real_amount.to_i
+    book_record_real_amount.to_i + other_real_amount.to_i
   end
 
   def total_changed?
@@ -247,22 +248,22 @@ class Balance < ActiveRecord::Base
   def self.balances_on_date_and_ways(date,select,ways)
     case select
     when "1" #记账
-      self.balanced.where(["date(created_at) = ? and (balance_way=1 or goods_balance_type=1)", date]).includes(:order)
+      self.balanced.where(["date(created_at) = ? and (balance_way=1 or balance_way=1)", date]).includes(:order)
     when "7"
       self.balanced.where(["date(created_at) = ? and balance_way=7", date]).includes(:order)
     else
-      self.balanced.where(["date(created_at) = ? and (balance_way in (?) or goods_balance_type in (?))", date,ways,ways]).includes(:order)
+      self.balanced.where(["date(created_at) = ? and (balance_way in (?) or balance_way in (?))", date,ways,ways]).includes(:order)
     end
   end
 
   def self.balances_on_month_and_ways(date,select,ways)
     case select
     when "1" #记账
-      self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way=1 or goods_balance_type=1)", date.strftime("%Y-%m")]).includes(:order)
+      self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way=1 or balance_way=1)", date.strftime("%Y-%m")]).includes(:order)
     when "7"
       self.balanced.where(["date_format(created_at,'%Y-%m') = ? and balance_way=7", date.strftime("%Y-%m")]).includes(:order)
     else
-      self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?) or goods_balance_type in (?))", date.strftime("%Y-%m"),ways,ways]).includes(:order)
+      self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?) or balance_way in (?))", date.strftime("%Y-%m"),ways,ways]).includes(:order)
     end
   end
 
@@ -274,9 +275,8 @@ class Balance < ActiveRecord::Base
     when "1"
       sum = 0
       data.each do |b|
-        sum += b.book_record_realy_amount if b.balance_way == 1
-        sum += b.goods_realy_amount if b.goods_balance_type == 1
-
+        sum += b.book_record_real_amount if b.balance_way == 1
+        sum += b.other_real_amount if b.balance_way == 1
       end
       return sum.to_s + "元"
     when "7"
@@ -288,8 +288,8 @@ class Balance < ActiveRecord::Base
     else
       sum = 0
       data.each do |b|
-        sum += b.book_record_realy_amount if ways.include?(b.balance_way.to_s)
-        sum += b.goods_realy_amount if ways.include?(b.goods_balance_type.to_s)
+        sum += b.book_record_real_amount if ways.include?(b.balance_way.to_s)
+        sum += b.other_real_amount if ways.include?(b.balance_way.to_s)
       end
       return sum.to_s + "元"
     end
@@ -301,8 +301,8 @@ class Balance < ActiveRecord::Base
     when "1"
       sum = 0
       data.each do |b|
-        sum += b.book_record_realy_amount if b.balance_way == 1
-        sum += b.goods_realy_amount if b.goods_balance_type == 1
+        sum += b.book_record_real_amount if b.balance_way == 1
+        sum += b.other_real_amount if b.balance_way == 1
       end
       return sum.to_s + "元"
     when "7"
@@ -314,8 +314,8 @@ class Balance < ActiveRecord::Base
     else
       sum = 0
       data.each do |b|
-        sum += b.book_record_realy_amount if ways.include?(b.balance_way.to_s)
-        sum += b.goods_realy_amount if ways.include?(b.goods_balance_type.to_s)
+        sum += b.book_record_real_amount if ways.include?(b.balance_way.to_s)
+        sum += b.other_real_amount if ways.include?(b.balance_way.to_s)
       end
       return sum.to_s + "元"
 
@@ -326,11 +326,11 @@ class Balance < ActiveRecord::Base
     total = 0
     if self.balance_way == 7
     elsif self.balance_way !=7 && ways.include?(self.balance_way.to_s)
-      total += self.book_record_realy_amount
+      total += self.book_record_real_amount
     end
 
-    if ways.include?(self.goods_balance_type.to_s)
-      total += self.goods_realy_amount
+    if ways.include?(self.balance_way.to_s)
+      total += self.other_real_amount
     end
     total
 
@@ -353,10 +353,10 @@ class Balance < ActiveRecord::Base
   def coach_amount(select,pay_ways)
     case select
     when "1","7"
-      ((select == self.goods_balance_type.to_s) && self.order.coach_items.present?) ?\
+      ((select == self.balance_way.to_s) && self.order.coach_items.present?) ?\
       self.order.coach_items.inject(0){|sum,c| sum + c.amount} : 0
     else
-      if(pay_ways.include?self.goods_balance_type.to_s)
+      if(pay_ways.include?self.balance_way.to_s)
         self.order.coach_items.present? ?  self.order.coach_items.inject(0){|sum,c| sum + c.amount} : 0
       else
         0
@@ -369,13 +369,13 @@ class Balance < ActiveRecord::Base
     when "7" 
       return '0'
     when '1'
-      return '0' if self.goods_balance_type != 1
+      return '0' if self.balance_way != 1
       product_items =  self.order.product_items(:include =>{:good =>{:include => :category}})
       product_items = (product_items.present? ? product_items.select{|g| g.good.category.parent_id == type.id} : [])
       product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : 0
 
     else
-      return '0' if ways.include?(self.goods_balance_type)
+      return '0' if ways.include?(self.balance_way)
       product_items =  self.order.product_items(:include =>{:good =>{:include => :category}})
       product_items = (product_items.present? ? product_items.select{|g| g.good.category.parent_id == type.id} : [])
       product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : 0
@@ -395,13 +395,13 @@ class Balance < ActiveRecord::Base
     when "1"
       sum = 0
       data.each do |b|
-        sum += b.book_record_realy_amount if b.balance_way == 1
+        sum += b.book_record_real_amount if b.balance_way == 1
       end
       return sum.to_s + "元"
     else
       sum = 0
       data.each do |b|
-        sum += b.book_record_realy_amount if ways.include?(b.balance_way.to_s)
+        sum += b.book_record_real_amount if ways.include?(b.balance_way.to_s)
       end
       return sum.to_s + "元"
     end
@@ -419,13 +419,13 @@ class Balance < ActiveRecord::Base
     when "1"
       sum = 0
       data.each do |b|
-        sum += b.book_record_realy_amount if b.balance_way == 1
+        sum += b.book_record_real_amount if b.balance_way == 1
       end
       return sum.to_s + "元"
     else
       sum = 0
       data.each do |b|
-        sum += b.book_record_realy_amount if ways.include?(b.balance_way.to_s)
+        sum += b.book_record_real_amount if ways.include?(b.balance_way.to_s)
       end
       return sum.to_s + "元"
     end
@@ -436,16 +436,16 @@ class Balance < ActiveRecord::Base
   def self.total_coach_balance_on_date_any_ways(date,select,ways)
     case select
     when "1","7"
-      data = self.balanced.where(["date(created_at) = ? and (goods_balance_type=?)", date,select])
+      data = self.balanced.where(["date(created_at) = ? and (balance_way=?)", date,select])
     else
-      data = self.balanced.where(["date(created_at) = ? and (goods_balance_type in(?))", date,ways])
+      data = self.balanced.where(["date(created_at) = ? and (balance_way in(?))", date,ways])
     end
     data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(select,ways) } : 0
   end
 
 
   def self.total_coach_balance_on_month_any_ways(date,select,ways)
-    data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (goods_balance_type in (?))", date.strftime("%Y-%m"),ways])
+    data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?))", date.strftime("%Y-%m"),ways])
     data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(ways) } : 0
   end
 
@@ -455,10 +455,10 @@ class Balance < ActiveRecord::Base
     when "7"
       return "0"
     when "1"
-      data = self.balanced.where(["date(created_at) = ? and (goods_balance_type=1)", date])
+      data = self.balanced.where(["date(created_at) = ? and (balance_way=1)", date])
       data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
     else
-      data = self.balanced.where(["date(created_at) = ? and (goods_balance_type in (?))", date,ways])
+      data = self.balanced.where(["date(created_at) = ? and (balance_way in (?))", date,ways])
       data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
     end
   end
@@ -468,10 +468,10 @@ class Balance < ActiveRecord::Base
     when "7"
       return "0"
     when "1"
-      data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (goods_balance_type=1)", date.strftime('%Y-%m')])
+      data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way=1)", date.strftime('%Y-%m')])
       data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
     else
-      data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (goods_balance_type in (?))", date.strftime("%Y-%m"),ways])
+      data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?))", date.strftime("%Y-%m"),ways])
       data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
     end
   end
@@ -509,15 +509,15 @@ class Balance < ActiveRecord::Base
     case select
     when "1"
       sum = 0
-      sum += self.book_record_amount if self.balance_way == 1
-      sum += self.goods_realy_amount if self.goods_balance_type == 1
+      sum += self.book_record_real_amount if self.balance_way == 1
+      sum += self.other_real_amount if self.balance_way == 1
       return sum.to_s + "元"
     when "7"
       return self.count_amount.to_s + "次"  if self.balance_way == 7
     else
       sum = 0
-      sum += self.goods_realy_amount if ways.include?(self.goods_balance_type.to_s)
-      sum += self.book_record_realy_amount if ways.include?(self.balance_way.to_s)
+      sum += self.other_real_amount if ways.include?(self.balance_way.to_s)
+      sum += self.book_record_real_amount if ways.include?(self.balance_way.to_s)
       return sum.to_s + "元" 
     end
   end

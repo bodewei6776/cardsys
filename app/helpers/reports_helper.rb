@@ -29,9 +29,9 @@ module ReportsHelper
     when "7"
       b.balance_way == 7 ? b.count_amount.to_s + "次" : " / "
     when "1"
-      b.balance_way == 1 ? b.book_record_realy_amount.to_s + "元" : " / "
+      b.balance_way == 1 ? b.book_record_real_amount.to_s + "元" : " / "
     else
-      pay_ways.include?(b.balance_way.to_s) ? b.book_record_realy_amount.to_s + "元" : "/"
+      pay_ways.include?(b.balance_way.to_s) ? b.book_record_real_amount.to_s + "元" : "/"
     end
   end
 

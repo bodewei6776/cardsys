@@ -125,7 +125,8 @@ class ApplicationController < ActionController::Base
   end
 
   def login_and_password_valid?
-    User.find_by_login(params[:user_name]).try(:valid_password?,params[:password])
+    @user = User.find_by_login(params[:user_name])
+    @user.try(:valid_password?,params[:password])
   end
 end
 
