@@ -159,7 +159,7 @@ class Order < ActiveRecord::Base
   
   
   def original_coaches
-    new_record? || coach_items.blank? ? [] : coach_items.map(&:related_entry)
+    (new_record? || coach_items.blank? ? [] : coach_items.map(&:related_entry)).compact
   end
 
   def coaches
