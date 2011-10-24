@@ -8,8 +8,6 @@ class MembersController < ApplicationController
   Member_Perpage = 15
 
   def autocomplete_name
-    #@items = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER).where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%" ]).limit(10)
-    #@items = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["pinyin_abbr like ? or name_pinyin like ? or name like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%" ]).limit(10)
     @items = Member.autocomplete_for(params[:term])
     @names = []
     @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}"} }
@@ -36,7 +34,6 @@ class MembersController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @members }
     end
   end
 
@@ -146,7 +143,6 @@ class MembersController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @members }
     end
   end
 
@@ -163,7 +159,6 @@ class MembersController < ApplicationController
     @balances = @member.member_cards.collect{|mc| mc.balances }.flatten.uniq rescue []
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @member }
     end
   end
 
@@ -173,7 +168,6 @@ class MembersController < ApplicationController
     @member = Member.new
     respond_to do |format|
       format.html
-      format.xml  { render :xml => @member }
     end
   end
 
@@ -200,24 +194,17 @@ class MembersController < ApplicationController
           if card.max_granter_due?
             notice = "最多能授权给#{card.max_granter}人"
           else
-          if @mg.save
-            notice = "添加成功"
+            notice = "添加成功" if @mg.save
           end
-          end
-          #format.html { redirect_to :action => "member_card_bind_index", :member_id => base_member_id, :member_name => @member_base.name, :notice => '授权人信息添加成功！'}
           format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => card.card_serial_num,:member_name => @member_base.try(:name),:notice => notice) }
         else
           format.html { redirect_to :action => "index", :notice => '会员信息添加成功！'}
-          format.xml  { render :xml => @member, :status => :created, :location => @member }
         end
       else
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
-          @member_base = Member.find_by_id(params[:member_id])
-          #format.html { redirect_to :action => "member_card_bind_index", :member_id => base_member_id, :member_name => @member_base.name, :notice_error => '授权人信息添加失败,可能的原因是授权人姓名，身份证号或证件号有非法输入或已经被使用！'}
           format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => card.card_serial_num,:member_name => @member_base.try(:name),:notice => "授权人信息添加失败,可能的原因是授权人姓名，身份证号或证件号有非法输入或已经被使用！ #{@member.errors.full_messages}") }
         else
           format.html { render :action => 'new'}
-          format.xml { render :xml => @member.errors, :status => :unprocessable_entity }
         end       
       end
     end
@@ -235,7 +222,6 @@ class MembersController < ApplicationController
           format.html { redirect_to :action => "granter_index", :member_id => params[:member_id], :notice => '授权人信息修改成功！'}
         else
           format.html { redirect_to @member, :notice => '会员信息修改成功！' }
-          format.xml  { head :ok }
         end
       else
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
@@ -243,33 +229,23 @@ class MembersController < ApplicationController
           format.html { render :action => "granter_edit" }
         else
           format.html { render :action => "edit" }
-          format.xml  { render :xml => @member.errors, :status => :unprocessable_entity }
         end
       end
     end
   end
 
-  # DELETE /members/1
-  # DELETE /members/1.xml
   def destroy
     @member = Member.find(params[:id])
     @member.status = 0#更新状态
     @member.member_cards.update_all("status=1")
     @member.save
-    respond_to do |format|
-      format.html { redirect_to(members_url) }
-      format.xml  { head :ok }
-    end
+     redirect_to(members_url) 
   end
 
   def granter_index
     @member = Member.find(params[:member_id])
     @notice = params[:notice]
-    respond_to do |format|
-      format.html
-      format.xml  { render :xml => @member }
-    end
-  end
+      end
 
   def granter_new
     @member = Member.new
@@ -395,7 +371,7 @@ class MembersController < ApplicationController
                         notice = ""
                         notice << "会员卡充值成功" if charge_fee > 0
                         notice << "，会员卡充次成功" if charge_times > 0
-                        
+
     end
     if !params[:expire_date].blank?
       member_card.update_attribute(:expire_date, params[:expire_date])
@@ -414,16 +390,6 @@ class MembersController < ApplicationController
   def member_cards_list
     @card_list = Member.find(params[:id]).member_cards
     render :json => @card_list.to_json(:methods =>[ :order_tip_message,:can_buy_good,:member_info,:card_info])
-  end
-
-  #没有用到了，后面要用来修改会员卡状态
-  def member_card_freeze
-    member = Member.find(params[:member_id])
-    member_card = MemberCard.find(params[:member_card_id])
-    if member_card.update_attribute(:status, params[:type])
-      @notice = (params[:type]=="1" ? "会员卡已注销！" : "会员卡已恢复！")
-    end
-    redirect_to :action => "member_card_bind_index", :member_id => params[:member_id], :member_name => member.name, :notice => '操作成功！'
   end
 
   def getMemberCardNo

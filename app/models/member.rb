@@ -132,23 +132,15 @@ class Member < ActiveRecord::Base
   end
 
   def use_card_times
-    #  order_ids = []
-    #  Order.where(:member_id => self.id).each { |i|
-    #    order_ids << i.id
-    #  }
-    #  ct = 0
-    #  ct = Balance.where("order_id in (?) and (balance_way = ? or goods_balance_type = ?)", order_ids, Balance::Balance_Way_Use_Card, Balance::Balance_Way_Use_Card).size if order_ids.size > 0
-    #  return ct
-    #self.balances.balanced.where( ["(balance_way = ? or goods_balance_type = ?)",Balance::Balance_Way_Use_Card, Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.count_amount}
     self.balances.balanced.count
   end
 
   def use_cash_amount
-    self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Cash]).inject(0){|s,b| s + b.book_record_realy_amount}
+    self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Cash]).inject(0){|s,b| s + b.book_record_real_amount}
   end
 
   def use_card_amount
-    self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.book_record_realy_amount}
+    self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.book_record_real_amount}
   end
 
 
