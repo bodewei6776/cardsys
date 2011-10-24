@@ -127,6 +127,11 @@ if(typeof(String.prototype.trim) === "undefined")
         <img src='/images/arrow_left.gif' />
       </div>
     </div>
+    <div id='date_picker' class='w178'>
+      <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@predate%>"'> 前一天</button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' onclick="location.href='/book_records'">今天</button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@nextdate%>"'>后一天</button>&nbsp;&nbsp;
+    </div>
     <div class="w178" id="datepicker">
     </div>
     <div class="h10"></div>
