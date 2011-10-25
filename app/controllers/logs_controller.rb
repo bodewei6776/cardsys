@@ -1,5 +1,4 @@
 class LogsController < ApplicationController
-  layout 'main'
   def index
     @logs = Log.where("1=1")
     @logs = @logs.where({:log_type => params[:t]}) if params[:t].present?

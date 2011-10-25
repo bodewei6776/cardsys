@@ -1,2 +1,0 @@
-module CatenasHelper
-end

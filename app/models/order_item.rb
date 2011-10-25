@@ -2,26 +2,24 @@ require 'order_ext/member_order'
 class OrderItem < ActiveRecord::Base
 
 
-  Item_Type_Book_Record = 0
-  Item_Type_Coache = 1
-  Item_Type_Product = 2
+  Item_Type_Book_Record = "BookRecord" 
+  Item_Type_Coache = "Coach"
+  Item_Type_Product = "Good"
 
-  scope :book_record,lambda {|book_record_id| where(:item_type => Item_Type_Book_Record,:item_id => book_record_id) }
   scope :coaches,where(:item_type => Item_Type_Coache)
   scope :book_records,where(:item_type => Item_Type_Book_Record)
   scope :good_records,where(:item_type => Item_Type_Product)
   scope :except_book_records,where("item_type <> #{Item_Type_Book_Record}")
   
   belongs_to    :order
+  belongs_to  :book_record, :polymorphic => true
+  belongs_to  :coach, :polymorphic => true
+  belongs_to  :good, :polymorphic => true
+  has_one :balance_item, :dependent => :destroy
+
   before_create :set_initialize_attributes
   before_save :update_good_inventory,:only => [:update] 
-
-  belongs_to :good,:foreign_key => "item_id"#,:conditions =>{:item_type => Item_Type_Product}
-
   before_destroy :update_good_inventory_before_destroy
-
-
-  has_one :balance_item, :dependent => :destroy
   after_save :update_balance_item
   
 
@@ -46,10 +44,6 @@ class OrderItem < ActiveRecord::Base
       product.save
     end
 
-  end
-
-  def set_initialize_attributes
-    self.order_time = DateTime.now
   end
 
   def related_entry

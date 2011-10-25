@@ -1,14 +1,5 @@
 class OrderItemsController < ApplicationController
-  
-  def new
-  end
-  
-  def create
-  end
-  
-  # DELETE /courts/1
-  # DELETE /courts/1.xml
-  def destroy
+   def destroy
     order_item = OrderItem.find(params[:id])
     order_item.destroy
     order = Order.find(params[:order_id])
@@ -30,5 +21,4 @@ class OrderItemsController < ApplicationController
     end
     render :text => (errors ? '修改成功' : errors.join('<br/>'))
  end
-  
 end

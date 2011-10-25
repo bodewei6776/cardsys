@@ -1,33 +1,17 @@
 class RentsController < ApplicationController
   layout 'small_main'
-  # GET /rents
-  # GET /rents.xml
   def index
     @rents = Rent.all
     @lockers = Locker.all
     @current_date = params[:date].present? ? Date.parse(params[:date]) :  Date.today 
     @predate = @current_date - 1
     @nextdate = @current_date + 1
-
-    respond_to do |format|
-      format.html { render :layout => 'main'}# index.html.erb
-      format.xml  { render :xml => @rents }
-    end
   end
 
-  # GET /rents/1
-  # GET /rents/1.xml
   def show
     @rent = Rent.find(params[:id])
-
-    respond_to do |format|
-      format.html {render :layout => 'main'}
-      format.xml  { render :xml => @rent }
-    end
   end
 
-  # GET /rents/new
-  # GET /rents/new.xml
   def new
     @locker = Locker.find(params[:locker_id])
     @rent = @locker.rents.build
@@ -37,27 +21,18 @@ class RentsController < ApplicationController
     @rent.member_card = MemberCard.new
     @rent.start_date = params[:date].present? ? Date.parse(params[:date]) : Date.today
     @rent.pay_way = Balance::Balance_Way_Use_Card
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @rent }
-    end
   end
 
-  # GET /rents/1/edit
   def edit
     @locker = Locker.find(params[:locker_id])
     @rent = Rent.find(params[:id])
   end
 
-  # POST /rents
-  # POST /rents.xml
   def create
     @rent = Rent.new(params[:rent])
 
     respond_to do |format|
       if @rent.pay && @rent.save 
-        desc = "#{@rent.member_name}支付储物柜金额#{@rent.total_fee}"
         log_action(desc,"balance")
         format.html { 
           render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
@@ -73,8 +48,6 @@ class RentsController < ApplicationController
     end
   end
 
-  # PUT /rents/1
-  # PUT /rents/1.xml
   def update
     @rent = Rent.find(params[:id])
 
@@ -89,8 +62,6 @@ class RentsController < ApplicationController
     end
   end
 
-  # DELETE /rents/1
-  # DELETE /rents/1.xml
   def destroy
     @rent = Rent.find(params[:id])
     @rent.destroy

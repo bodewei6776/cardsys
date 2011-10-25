@@ -12,6 +12,7 @@ class Coach < ActiveRecord::Base
   scope :default_coaches,where(:status => Const::YES)
 
   after_create :set_default_status
+
   def set_default_status
     self.update_attribute(:status, 1)
   end
@@ -24,9 +25,7 @@ class Coach < ActiveRecord::Base
     (self.status == 1) ? "正常" : "禁用"
   end
   
-  #TODO
   def amount(order_item)
-    fee*order_item.quantity
+    fee * order_item.quantity
   end
-    
 end

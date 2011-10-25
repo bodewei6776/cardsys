@@ -3,15 +3,12 @@ class MembersController < ApplicationController
   before_filter :get_granters, :only => [:granter_index]
   autocomplete :members, :name
 
-  layout  'main'
 
   Member_Perpage = 15
 
   def autocomplete_name
     @items = Member.autocomplete_for(params[:term])
     @names = []
-    @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}"} }
-    render :inline => @names.to_json#{lable:name, value:name}
   end
 
   def autocomplete_card_serial_num
@@ -20,52 +17,25 @@ class MembersController < ApplicationController
     @items.each { |i| @names << i.card_serial_num }
     render :inline => @names.to_json
   end
-  # GET /members
-  # GET /members.xml
-  def index
-    @name = params[:name]#会员名
-    @serial_num = params[:card_serial_num]#会员卡号
-    @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER)
-    @members = @members.where(["name like ?", "%#{@name}%"] ) if !@name.blank?
-    if !@serial_num.blank?
-      @members = @members.where("member_cards.card_serial_num like '#{@serial_num}'").joins(:member_cards)
-    end
-    @members = @members.paginate(:page => params[:page]||1,:per_page => Member_Perpage)
 
-    respond_to do |format|
-      format.html # index.html.erb
-    end
+  def index
+    @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER)
+    @members = @members.paginate(:page => params[:page]||1,:per_page => Member_Perpage)
   end
 
   def advanced_search 
-    @name = params[:name]#会员名
-    @serial_num = params[:card_serial_num]#会员卡号
-    @reg_date_start = params[:reg_date_start]#注册日期
     @reg_date_end = params[:reg_date_end]
-    @expire_date_start = params[:expire_date_start]#会员卡有效期
     @expire_date_end = params[:expire_date_end]
 
-    @comer_date_start = params[:comer_date_start]#来店日期
     @comer_date_end = params[:comer_date_end]
-    @consume_count_start = params[:consume_count_start]#刷卡次数 ???
     @consume_count_end = params[:consume_count_end]
-    @consume_fees_start = params[:consume_fees_start]#消费金额
     @consume_fees_end = params[:consume_fees_end]
-    @left_fees_start = params[:left_fees_start]#卡内余
     @left_fees_end = params[:left_fees_end]
-    @left_times_start = params[:left_times_start]#现有次数
     @left_times_end = params[:left_times_end]
-    @member_birthday_start = params[:member_birthday_start]#会员生日
     @member_birthday_end = params[:member_birthday_end]
-    @member_gender = params[:member_gender]#会员性别
 
     @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER)
-    @members = @members.where(["name like ?", "%#{@name}%"] ) if !@name.blank?
-    if !@serial_num.blank?
-      @members = @members.where("member_cards.card_serial_num like '%#{@serial_num}%'").joins(:member_cards)
-    end
 
-    # 来店日期
     if @comer_date_start.present? &&  @comer_date_end.present?
       @members = @members.where("date_format(orders.order_time,'%Y-%m-%d') >= ? and " + 
                                 " date_format(orders.order_time,'%Y-%m-%d') <= ?",
@@ -75,7 +45,6 @@ class MembersController < ApplicationController
                                 @comer_date_start.presence || @comer_date_end.presence).joins(:orders)
     end
 
-    # 到期时间
     if @expire_date_start.present? && @expire_date_end.present?
       @members = @members.where("date_format(member_cards.expire_date,'%Y-%m-%d') >= ? and" +
                                 " date_format(member_cards.expire_date,'%Y-%m-%d') <= ?",
@@ -85,7 +54,6 @@ class MembersController < ApplicationController
                                 @expire_date_end.presence || @expire_date_start.presence).joins(:member_cards)
     end
 
-    # 生日
     if @member_birthday_start.present? && @member_birthday_end.present?
       @members = @members.where("date_format(birthday,'%m-%d') >= ? and " +
                                 "date_format(birthday,'%m-%d') <= ?", 
@@ -95,7 +63,6 @@ class MembersController < ApplicationController
                                 @member_birthday_end.presence || @member_birthday_start.presence)
     end
 
-    # 注册时间
     if @reg_date_start.present? && @reg_date_end.present?
       @members = @members.where("date_format(members.created_at,'%Y-%m-%d') >= ? and " +
                                 "date_format(members.created_at,'%Y-%m-%d') <= ?",
@@ -107,9 +74,7 @@ class MembersController < ApplicationController
 
 
 
-    # 性别
     @members = @members.where("gender = ?", @member_gender) if !params[:member_gender].blank?
-    #  消费次数
     if @consume_count_start.present? and @consume_count_end.present?
       @members = @members.delete_if { |mem| 
         mem.use_card_times < @consume_count_start.presence.to_i || mem.use_card_times > @consume_count_end.presence.to_i}
@@ -141,35 +106,24 @@ class MembersController < ApplicationController
 
     @members = @members.paginate(:page => params[:page]||1,:per_page => Member_Perpage)
 
-    respond_to do |format|
-      format.html # index.html.erb
-    end
   end
 
 
 
-  # GET /members/1
-  # GET /members/1.xml
   def show
     @member = Member.find(params[:id])
     @member_cards = MemberCard.where(:member_id => params[:id])
-    @recharge_records = RechargeRecord.where(:member_id => params[:id])#充值记录
     @balances = @member.member_cards.collect{|mc| mc.balances }.flatten.uniq rescue []
-      end
+  end
 
-  # GET /members/new
-  # GET /members/new.xml
   def new
     @member = Member.new
   end
 
-  # GET /members/1/edit
   def edit
     @member = Member.find(params[:id])
   end
 
-  # POST /members
-  # POST /members.xml
   def create
     is_member = params[:member][:is_member]
     @member = Member.new(params[:member])
@@ -182,9 +136,7 @@ class MembersController < ApplicationController
           base_member_id = params[:member_id]
           @mg = MemberCardGranter.new(:member_id => base_member_id, :member_card_id => params[:member_card_id], :granter_id => @member.id)
           card = MemberCard.find(params[:member_card_id])
-          # 会员卡可授权最大人数
           if card.max_granter_due?
-            notice = "最多能授权给#{card.max_granter}人"
           else
             notice = "添加成功" if @mg.save
           end
@@ -194,7 +146,6 @@ class MembersController < ApplicationController
         end
       else
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
-          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => card.card_serial_num,:member_name => @member_base.try(:name),:notice => "授权人信息添加失败,可能的原因是授权人姓名，身份证号或证件号有非法输入或已经被使用！ #{@member.errors.full_messages}") }
         else
           format.html { render :action => 'new'}
         end       
@@ -202,8 +153,6 @@ class MembersController < ApplicationController
     end
   end
 
-  # PUT /members/1
-  # PUT /members/1.xml
   def update
     @member = Member.find(params[:id])
     is_member = params[:member][:is_member]
@@ -228,10 +177,9 @@ class MembersController < ApplicationController
 
   def destroy
     @member = Member.find(params[:id])
-    @member.status = 0#更新状态
     @member.member_cards.update_all("status=1")
     @member.save
-     redirect_to(members_url) 
+    redirect_to(members_url) 
   end
 
   def granter_index
@@ -259,7 +207,7 @@ class MembersController < ApplicationController
     @member = Member.find(params[:granter_id])
     @member.destroy
 
-   redirect_to :action => 'granter_index', :member_id => params[:member_id], :notice => '授权人删除成功！' 
+    redirect_to :action => 'granter_index', :member_id => params[:member_id], :notice => '授权人删除成功！' 
   end
 
   def granter_show
@@ -267,7 +215,6 @@ class MembersController < ApplicationController
     @base_member = Member.find(params[:member_id]) if !params[:member_id].nil?
   end
 
-  #member_card
   def member_card_bind_index
     @member_name = params[:member_name]
     @member = Member.where(:name => params[:member_name]).first if !params[:member_name].nil?
@@ -327,7 +274,6 @@ class MembersController < ApplicationController
       return
     end
 
-    #TODO 判断是否有权限
 
     fee = (params[:fee].blank? ? 0 : params[:fee])
     times = (params[:times].blank? ? 0 : params[:times])
@@ -340,12 +286,9 @@ class MembersController < ApplicationController
         member_card.update_attribute(:left_times, member_card.left_times.to_f + charge_times))
       RechargeRecord.new(:member_id => member_card.member_id,
                          :member_card_id => member_card.id,
-                         :recharge_fee => charge_fee,#增加一个记录次数的字段或者换算
                          :recharge_times=> charge_times,
                          :recharge_person => user.id
                         ).save
-                        log_action("为卡#{member_card.card_serial_num}充值#{charge_fee}元，#{charge_times}次","recharge")
-                        #notice = params[:type]=="1" ? "会员卡充值成功！" : "会员卡退款成功！"
 
                         notice = ""
                         notice << "会员卡充值成功" if charge_fee > 0
@@ -360,7 +303,6 @@ class MembersController < ApplicationController
   end
 
   def get_members
-    @items = Member.where(["name = ?", "#{params[:name].downcase}"]).where(:status => CommonResource::MEMBER_STATUS_ON).limit(1)
     @ids = []
     @items.each { |i| @ids << i.id }
     render :inline => @ids.to_json
@@ -391,8 +333,6 @@ class MembersController < ApplicationController
   end
 
   def member_card_num4(card)
-    last_member_card = MemberCard.where(:card_id => card.id).order("card_serial_num desc").first#return nil if do not find
-
     if last_member_card.nil?
       num = "0001"
       n2 = ((num[-4, num.length].to_s).to_i).to_s

@@ -1,14 +1,19 @@
 class Order < ActiveRecord::Base
-  has_many    :order_items,:dependent => :destroy
   has_many    :balance_items
   belongs_to  :card
   belongs_to  :user
-  has_many    :coach_items,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Coache} "
-  has_one     :book_record_item,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Book_Record}"
-  has_many    :product_items,:class_name => 'OrderItem',:conditions => "item_type=#{OrderItem::Item_Type_Product}"
-  has_one :balance, :dependent => :destroy
+  has_one     :balance, :dependent => :destroy
+  has_many    :order_items
 
-  validates  :card_id,:member_id,:book_record_id,:presence => {:message => "信息不完整，请补充完所需要的信息"}
+  has_many    :coach_items, :class_name => 'OrderItem', 
+              :conditions => {:item_type => "Coach"}
+  has_one     :book_record_item, :class_name => 'OrderItem',
+              :conditions => {:item_type => "BookRecord"}
+  has_many    :product_items, :class_name => 'OrderItem',
+              :conditions => {:item_type => "Good"}
+
+  validates  :card_id, :member_id, :book_record_id, :presence => {:message => "信息不完整，请补充完所需要的信息"}
+
   validate do |order|
     order.validates_assocations
   end
@@ -19,6 +24,8 @@ class Order < ActiveRecord::Base
   before_save   :auto_save_order_associations
   after_save    :auto_generate_coaches_items
   after_create  :auto_generate_book_record_item
+
+  before_destroy :cancel_bookrecord
 
   attr_accessor :coach_id,:operation,:updating
   attr_accessor :coach,:non_member,:member,:member_card,:book_record
@@ -101,14 +108,8 @@ class Order < ActiveRecord::Base
 
                    
 
-  def auto_destory_order_items
-    OrderItem.delete_all(:order_id => id)
-  end
-
-  def destroy
-    book_record.cancle if book_record
-    auto_destory_order_items
-    super
+  def cancel_bookrecord
+    book_record.try(:cancle) 
   end
 
   def do_agent(new_order)
@@ -322,5 +323,4 @@ class Order < ActiveRecord::Base
     self.balance.update_amount
   end
 
-  
 end

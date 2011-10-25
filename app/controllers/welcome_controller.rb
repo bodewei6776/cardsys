@@ -16,7 +16,6 @@ class WelcomeController < ApplicationController
     else
       backup_script = "mysqldump -u#{username}  #{database} > #{file_name}"
     end
-    puts backup_script
     # Standard Ruby distribution provides the following useful extension
     #backup_script = "mysqldump -u#{username}  #{database} > #{file_name}"
     `#{backup_script}`

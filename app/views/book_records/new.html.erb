@@ -9,7 +9,7 @@
   <div class="fform">
     <%= form_for(:order,:url =>"/book_records/create",:html => {:method => :post}) do |order_form| %>
       <%= error_messages_for :order %>
-      <%= render :partial => 'book_records/form',:f => order_form %>
+      <%= render :partial => 'form',:f => order_form %>
       <div class="h10"></div>
       <div class="input_bd">
         <%= display_enable_buttons(@book_record) %>
