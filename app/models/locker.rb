@@ -4,9 +4,6 @@ class Locker < ActiveRecord::Base
   validates :num,:presence => true
 
   has_many :rents,:dependent => :destroy
- # has_one :current_rent,:conditions => ["start_date < ? and end_date > ?",Time.now.to_s(:db),Time.now.to_s(:db)]
-  #
-  #
   validate :num,:state,:locker_type ,:presence => true,:message => "{column}以上字段不能空"
 
   scope :rented,where({:state => :rented }) 
@@ -33,7 +30,6 @@ class Locker < ActiveRecord::Base
   end
 
   def color(date = Date.today)
-    puts self.state_at(date)
     case self.state_at(date)
     when "empty" 
       "green"

@@ -8,8 +8,6 @@ class MemberCard < ActiveRecord::Base
   has_many :member_card_granters
   has_many :granters,:class_name => "Member",:through => :member_card_granters
 
-  #validates :left_fee ,:presence => true
-  #validates :left_times,:presence => true
 
   scope :autocomplete_for, lambda {|num| where("status = 0 and card_serial_num like '#{num.downcase}%'").limit(10) }
 
@@ -91,13 +89,6 @@ class MemberCard < ActiveRecord::Base
     card.is_counter_card? ? "充次" : "充值"
   end
 
-#  def member_card_granters
-#    mcgs = []
-#    MemberCardGranter.where(:member_card_id => self.id).each { |e|
-#      mcgs << Member.find(e.member_id ).first.name
-#    }
-#    mcgs
-#  end
 
   def left_fee_value
     unless card.is_zige_card?

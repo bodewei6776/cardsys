@@ -17,9 +17,6 @@ class Coach < ActiveRecord::Base
     self.update_attribute(:status, 1)
   end
 
-  def set_catena_id
-    self.catena_id = current_catena.id
-  end
 
   def coach_status_str
     (self.status == 1) ? "正常" : "禁用"

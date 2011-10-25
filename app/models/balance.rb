@@ -38,27 +38,6 @@ class Balance < ActiveRecord::Base
     MemberCard.find_by_id(self.goods_member_card_id) || MemberCard.find_by_id(self.book_reocrd_member_card_id)#rescue nil
   end
 
-#  #before_create do |b| b.hide = false end
-#  
-#  def self.new_from_order(order)
-#    balance = new
-#    balance.order_id      = order.id
-#    balance.goods_amount  = order.product_amount
-#    balance.other_real_amount  = order.product_amount
-#    if order.is_member? && order.member_card.card.is_counter_card?
-#      balance.count_amount  = order.book_record_amount
-#    else
-#      balance.book_record_amount = order.book_record_amount
-#      balance.book_record_real_amount  = order.book_record_amount
-#    end
-#    balance.balance_way = default_balance_way_by_order(order)
-#    balance.balance_way = default_goods_balance_way_by_order(order)
-#    #balance.catena_id   = order.catena_id
-#        balance.member_type = order.member_type
-#    puts balance.goods_member_card_id
-#    balance
-#  end
-#
   def self.default_balance_way_by_order(order)
     if order.is_member?
       order.member_card.card.is_counter_card? ? Balance_Way_Use_Counter : Balance_Way_Use_Card

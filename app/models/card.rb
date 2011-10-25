@@ -1,15 +1,15 @@
 class Card < ActiveRecord::Base
 
+  CONSUME_TYPE_1 = 1 #场地消费
+  CONSUME_TYPE_2 = 2 #可买商品
+
+  STATUS = %w( 未使用 使用中 已停用 已注销 )
+  
+  scope :search_order, order("created_at desc")
   has_many :member_cards
   has_many :card_period_prices
 
-  ##default_scope lambda { where({:catena_id => current_catena.id})  }
 
-
-  CONSUME_TYPE_1 = 1 #场地消费
-  CONSUME_TYPE_2 = 2 #可买商品
-  
-  scope :search_order, order("created_at desc")
   
   validates :name, :presence => {:message => "卡名称不能为空！"}
   validates :name, :uniqueness => {:on => :create, :message => '卡名称已经存在！', 
@@ -53,18 +53,8 @@ class Card < ActiveRecord::Base
   end
 
   def status_desc
-    if status == 1
-      return "使用中"
-    elsif status == 0
-      return "未使用"
-    elsif status == 2
-      return "已停用"
-    elsif status == 3
-      return "已注销"
-    else
-      return "已注销"
-    end
-  end
+    STATUS[status] || "已注销"
+   end
 
   def generate_card_period_price(period_price)
     self.card_period_prices.find_all_by_period_price_id(period_price.id).first
@@ -106,21 +96,11 @@ class Card < ActiveRecord::Base
   end
   
   def card_type_desc
-    unless @card_type_desc
-      detail = CommonResourceDetail.find_by_id(card_type)
-      @card_type_desc = (detail ? detail.detail_name : '')
-    end
-    @card_type_desc
+    @card_type_desc ||= CommonResourceDetail.find_by_id(card_type).try(:detail_name, "")
   end
 
   def card_type_opt
-    if is_member_card?
-      "充值："
-    elsif is_balance_card?
-      "充值："
-    else
-      "充次："
-    end
+    (is_member_card? || is_balance_card?) ? "充值" : "充次"
   end
 
   def is_consume_goods?
