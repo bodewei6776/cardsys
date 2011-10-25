@@ -329,6 +329,7 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 .xdh ul{ width:176px;}
 .xdh li a{border-bottom:1px solid #ccc; display:block; padding-left:30px; display:block; height:25px; padding-top:2px; background: url(/images/new/xjt_a.gif) no-repeat 10px 8px #e6e6e6; font-size:12px; }
 .xdh li a:hover{ display:block; height:22px; padding-top:2px; background: url(/images/new/xjt_b.gif) no-repeat 10px 8px #fff799; font-weight:bold; color:#FF0000;}
+#date_picker{ text-align:center; padding-bottom: 10px;}
 /*<定义左侧样式---结束>*/
 
 

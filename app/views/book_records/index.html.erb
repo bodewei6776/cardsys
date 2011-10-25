@@ -5,10 +5,7 @@
       <div class=" r_bt_l_c fb white" ><%= current_catena.name %> <%= DateUtil.format_to_chinese_date(@date) %>的场地预定</div>
     </div>
     <div class=" r_bt_r" >
-      <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@predate%>"'><< 前一天</button>&nbsp;&nbsp;
-      <button class="submit2 hand"  type='button' onclick="location.href='/book_records'">今天</button>&nbsp;&nbsp;
-      <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@nextdate%>"'>后一天>></button>&nbsp;&nbsp;
-      <button class="submit2 hand"  type='button' value="true" onclick="location.reload();">刷新</button>&nbsp;&nbsp;
+            <button class="submit2 hand"  type='button' value="true" onclick="location.reload();">刷新</button>&nbsp;&nbsp;
       <a class="submit2 hand" href='/book_records/print?date=<%= @date%>' target="_blank" style="color:black;padding: 3px;">打印</a>
     </div>
   </div>
