@@ -16,7 +16,7 @@
         $("#calendar_con").val(dateText);
         var domain = document.domain;
         var port = window.location.port;
-          var urls = ["http://",domain];
+        var urls = ["http://",domain];
         if(port && port != ''){
           urls.push(":" + port)
         }
@@ -127,8 +127,18 @@ if(typeof(String.prototype.trim) === "undefined")
         <img src='/images/arrow_left.gif' />
       </div>
     </div>
+
     <div class="w178" id="datepicker">
     </div>
+
+    <div id='date_picker' class='w178'>
+      <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@predate%>"'> 前一天</button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' onclick="location.href='/book_records'">今天</button>&nbsp;&nbsp;
+      <button class="submit2 hand"  type='button' onclick='location.href="/book_records?date=<%=@nextdate%>"'>后一天</button>&nbsp;&nbsp;
+    </div>
+
+
+
     <div class="h10"></div>
     <%= render :partial => "layouts/menu" %>
   </div>
