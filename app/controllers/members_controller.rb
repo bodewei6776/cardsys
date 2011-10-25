@@ -154,21 +154,13 @@ class MembersController < ApplicationController
     @member = Member.find(params[:id])
     @member_cards = MemberCard.where(:member_id => params[:id])
     @recharge_records = RechargeRecord.where(:member_id => params[:id])#充值记录
-    #@orders = Order.balanced.where(:member_id => params[:id])#消费记录的显示方式
-    #@balances = Balance.where(:member_id => params[:id])
     @balances = @member.member_cards.collect{|mc| mc.balances }.flatten.uniq rescue []
-    respond_to do |format|
-      format.html # show.html.erb
-    end
-  end
+      end
 
   # GET /members/new
   # GET /members/new.xml
   def new
     @member = Member.new
-    respond_to do |format|
-      format.html
-    end
   end
 
   # GET /members/1/edit
@@ -245,7 +237,7 @@ class MembersController < ApplicationController
   def granter_index
     @member = Member.find(params[:member_id])
     @notice = params[:notice]
-      end
+  end
 
   def granter_new
     @member = Member.new
@@ -257,10 +249,6 @@ class MembersController < ApplicationController
   def granter_edit
     @member = Member.find(params[:granter_id])
     @member_base = Member.find(params[:member_id])
-    respond_to do |format|
-      format.html
-      format.xml  { head :ok }
-    end
   end
 
   def granter_delete
@@ -271,19 +259,12 @@ class MembersController < ApplicationController
     @member = Member.find(params[:granter_id])
     @member.destroy
 
-    respond_to do |format|
-      format.html { redirect_to :action => 'granter_index', :member_id => params[:member_id], :notice => '授权人删除成功！' }
-      format.xml  { head :ok }
-    end
+   redirect_to :action => 'granter_index', :member_id => params[:member_id], :notice => '授权人删除成功！' 
   end
 
   def granter_show
     @granter = Member.find(params[:id])
     @base_member = Member.find(params[:member_id]) if !params[:member_id].nil?
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @member }
-    end
   end
 
   #member_card
@@ -314,7 +295,6 @@ class MembersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to :action => "member_card_bind_index",
         :member_name => @member.name, :member_id => params[:member_id], :notice => notice}
-      format.xml  { head :ok }
     end
   end
 
@@ -325,7 +305,6 @@ class MembersController < ApplicationController
   end
 
   def member_card_recharge
-
     user = User.find_by_login(params[:user])
     result = true
     unless user

@@ -1,9 +1,5 @@
 class CoachesController < ApplicationController
 
-  layout 'main'
-
-  # GET /coaches
-  # GET /coaches.xml
   def index
     @coaches = Coach.paginate(default_paginate_options)
     respond_to do |format|

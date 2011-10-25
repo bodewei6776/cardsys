@@ -10,16 +10,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery # :secret => '8ec6935fe52d16c7a633b948c07815f1'
   helper_method :current_catena,:cart
 
-  layout  "index"
-
-  def operation_desc(o)
-    case o
-    when "agent"
-      "申请代卖"
-    when "book"
-      "变更预定"
-    end
-  end
+  layout  "application"
 
   before_filter :configure_charsets ,:set_date
   before_filter :require_user#,:require_very_user #应该过滤掉登陆用户
@@ -40,6 +31,17 @@ class ApplicationController < ActionController::Base
   end
 
   self.allow_forgery_protection = false
+
+  def operation_desc(o)
+    case o
+    when "agent"
+      "申请代卖"
+    when "book"
+      "变更预定"
+    end
+  end
+
+
 
   def render_js(script)
     render :js => "<script type='text/javascript'>" + script + "</script>"

@@ -1,12 +1,9 @@
 class BookRecordsController < ApplicationController
   NO_NEED_CHECK_USER_AND_RIGHTS_OPERATION = %w{active}
 
-  layout  'main'
 
-  # GET /book_records
-  # GET /book_records.xml
   def index
-    @courts       = Court.all(:conditions => {:status => 1}) #Court.order('id').all
+    @courts       = Court.where({:status => 1})
     @date = params[:date].blank? ? Date.today : Date.parse(params[:date])
     @daily_periods   = PeriodPrice.all_periods_in_time_span(@date)
     @predate      = @date.yesterday.strftime("%Y-%m-%d")
@@ -18,28 +15,21 @@ class BookRecordsController < ApplicationController
     @date = params[:date].blank? ? Date.today : Date.parse(params[:date])
     @daily_periods   = PeriodPrice.all_periods_in_time_span(@date)
     render :layout => false
-
   end
 
-  # GET /book_records/1
-  # GET /book_records/1.xml
   def show
     @book_record = BookRecord.find(params[:id])
   end
 
-  # GET /book_records/new
-  # GET /book_records/new.xml
   def new    
     @court = Court.find(params[:court_id])
     @coaches = Coach.default_coaches
-    @book_record = BookRecord.new
-    @book_record.court = @court
-    @book_record.start_hour = params[:start_hour]
-    @book_record.end_hour =   params[:end_hour]
-    @book_record.record_date = params[:date]
+    @book_record = BookRecord.new do |br|
+      br.court = @court
+      br.start_hour, br.end_hour, br.record_date = params[:start_hour], params[:end_hour], params[:date]
+    end
     @date = @book_record.record_date
-    @order = Order.new
-    @order.book_record  = @book_record
+    @order = Order.new(:book_record => @book_record)
     render :layout => 'small_main'
   end
 
@@ -258,8 +248,6 @@ class BookRecordsController < ApplicationController
     if (member_name = params[:term]).blank?
       render(:text => {}.to_json) && return
     end
-    #    @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(["LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name",
-    #                                                                               {:member_name => "#{member_name.downcase}%"}]).order("name_pinyin asc").limit(10)
 
     @members = Member.autocomplete_for(member_name)
     hash_results = @members.collect {|member| {"id" => member.id, "label" => "#{member.name} #{member.mobile}", 
