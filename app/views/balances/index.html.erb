@@ -57,7 +57,7 @@
         <li class='w10'><%= DateUtil::timeshort(record.record_date) %></li>
         <li class='w10'><%= record.start_hour %>:00-<%=h record.end_hour %>:00</li>
         <li class='w10'>
-        <a href="<%= edit_balance_path(record.order.balance)%>">结算</a>|
+        <a href="/balances/<%= record.order.balance.id%>/edit">结算</a>|
         <a href="<%= edit_book_record_path(record)%>" >添加商品</a>
         </li>
 
