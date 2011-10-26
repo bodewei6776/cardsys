@@ -1,7 +1,6 @@
 class CommonResourcesController < ApplicationController
   # GET /common_resources
   # GET /common_resources.xml
-  layout "main"
   before_filter :super_admin_required
 
   def super_admin_required

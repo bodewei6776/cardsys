@@ -1,5 +1,4 @@
 class WelcomeController < ApplicationController
-  layout 'main'
   def backup
     @backups = Dir.glob(File.join(Rails.root , "/public/back_dbs/*")).sort{|a,b| File.new(a).ctime <=> File.new(b).ctime}.reverse
   end

@@ -1,6 +1,5 @@
 class CourtsController < ApplicationController
 
-  layout 'main'
 
   before_filter :generate_period_prices, :only => [:show, :new, :edit, :create, :update]
 

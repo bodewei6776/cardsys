@@ -1,6 +1,5 @@
 class PeriodPricesController < ApplicationController
 
-  layout 'main'
   
   # GET /card_templates
   # GET /card_templates.xml

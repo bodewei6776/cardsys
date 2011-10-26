@@ -3,7 +3,6 @@ class MembersController < ApplicationController
   before_filter :get_granters, :only => [:granter_index]
   autocomplete :members, :name
 
-  layout  'main'
 
   Member_Perpage = 15
 

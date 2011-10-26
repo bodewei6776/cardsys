@@ -1,6 +1,5 @@
 class GoodsController < ApplicationController
 
-  layout 'main'
 
   def autocomplete_name
     @goods = Good.where(["pinyin_abbr like ? or name like ?", "%#{params[:term]}%", "%#{params[:term]}%"]).where(:status => CommonResource::GOOD_ON).limit(10)

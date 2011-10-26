@@ -1,7 +1,6 @@
 class DepartmentsController < ApplicationController
   # GET /departments
   # GET /departments.xml
-  layout 'main'
   def index
     @departments = Department.all
     respond_to do |format|
