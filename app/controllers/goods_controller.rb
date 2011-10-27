@@ -36,18 +36,10 @@ class GoodsController < ApplicationController
 
   def show
     @good = Good.find(params[:id])
-
-    respond_to do |format|
-      format.xml  { render :xml => @good }
-    end
   end
 
   def new
     @good = Good.new
-
-    respond_to do |format|
-      format.xml  { render :xml => @good }
-    end
   end
 
   def edit
@@ -58,14 +50,10 @@ class GoodsController < ApplicationController
     @good = Good.new(params[:good])
     @good.count_total_now = @good.count_back_stock
     @good.count_front_stock = 0
-    respond_to do |format|
-      if @good.save
-        format.html { redirect_to(@good, :notice => '商品信息添加成功！') }
-        format.xml  { render :xml => @good, :status => :created, :location => @good }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @good.errors, :status => :unprocessable_entity }
-      end
+    if @good.save
+      redirect_to(@good, :notice => '商品信息添加成功！') 
+    else
+      render :action => "new" 
     end
   end
 
@@ -73,14 +61,10 @@ class GoodsController < ApplicationController
     @good = Good.find(params[:id])
     @good.count_total_now = @good.count_back_stock + @good.count_front_stock
 
-    respond_to do |format|
-      if @good.update_attributes(params[:good])
-        format.html { redirect_to(@good, :notice => '商品信息修改成功！') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @good.errors, :status => :unprocessable_entity }
-      end
+    if @good.update_attributes(params[:good])
+      redirect_to(@good, :notice => '商品信息修改成功！') 
+    else
+      render :action => "edit" 
     end
   end
 
@@ -88,10 +72,7 @@ class GoodsController < ApplicationController
     @good = Good.find(params[:id])
     @good.destroy
 
-    respond_to do |format|
-      format.html { redirect_to(goods_url) }
-      format.xml  { head :ok }
-    end
+    redirect_to goods_url
   end
 
   def store_manage_index
@@ -128,6 +109,7 @@ class GoodsController < ApplicationController
     else
       @goods = Good.valid_goods.order('sale_count desc').limit(20)
     end
+    render :layout => "small_main"
   end
 
   def to_buy

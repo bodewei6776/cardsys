@@ -11,7 +11,6 @@ class Balance < ActiveRecord::Base
   Balance_Way_Use_Guazhang = 6
   Balance_Way_Use_Counter  = 7
   
- # default_scope where(:hide => false)
 
   
   belongs_to :who_balance,:class_name => "User",:foreign_key => "user_id"
@@ -60,14 +59,13 @@ class Balance < ActiveRecord::Base
     return true if self.status == Const::YES
 
     # change status
-    self.order.book_record.balance
+    self.order.book_record.balance if self.order.book_record
     self.update_attribute(:status, Const::YES)
 
     return true  unless order.is_member?
 
     card = order.member_card.card
     member_card = order.member_card
-    book_record = order.book_record
 
 
     if card.is_counter_card? || (card.is_zige_card? && self.use_card_counter_to_balance?)
@@ -166,15 +164,15 @@ class Balance < ActiveRecord::Base
   end
 
   def book_record_real_amount
-    self.balance_items.select{ |bi| bi.order_item.item_type == OrderItem::Item_Type_Book_Record }.sum(&:real_price)
+    self.balance_items.select{ |bi| bi.order_item.item_type == "BookRecord" }.sum(&:real_price)
   end
 
   def other_real_amount
-    self.balance_items.select{ |bi| bi.order_item.item_type != OrderItem::Item_Type_Book_Record }.sum(&:real_price)
+    self.balance_items.select{ |bi| bi.order_item.item_type != "BookRecord" }.sum(&:real_price)
   end
 
   def other_amount
-    self.balance_items.select{ |bi| bi.order_item.item_type != OrderItem::Item_Type_Book_Record }.sum(&:price)
+    self.balance_items.select{ |bi| bi.order_item.item_type != "BookRecord" }.sum(&:price)
   end
 
   def book_record_amount_desc
@@ -350,7 +348,7 @@ class Balance < ActiveRecord::Base
     when '1'
       return '0' if self.balance_way != 1
       product_items =  self.order.product_items(:include =>{:good =>{:include => :category}})
-      product_items = (product_items.present? ? product_items.select{|g| g.good.category.parent_id == type.id} : [])
+      product_items = (product_items.present? ? product_items.select{|g| g.item.category.parent_id == type.id} : [])
       product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : 0
 
     else
@@ -358,7 +356,6 @@ class Balance < ActiveRecord::Base
       product_items =  self.order.product_items(:include =>{:good =>{:include => :category}})
       product_items = (product_items.present? ? product_items.select{|g| g.good.category.parent_id == type.id} : [])
       product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : 0
-
     end
   end
 

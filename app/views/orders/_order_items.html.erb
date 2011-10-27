@@ -14,7 +14,7 @@
 
       <% unless (coach_items = order.coach_items).blank?  -%>
         <% coach_items.each_with_index do |coach_item,index|  -%>
-          <% coach = coach_item.related_entry %>
+          <% coach = coach_item.item %>
           <ul class="table_items">
             <li class="w5"><%= index + 1 %></li>
             <li class="w10">教练</li>

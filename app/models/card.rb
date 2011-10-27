@@ -96,7 +96,7 @@ class Card < ActiveRecord::Base
   end
   
   def card_type_desc
-    @card_type_desc ||= CommonResourceDetail.find_by_id(card_type).try(:detail_name, "")
+    @card_type_desc ||= CommonResourceDetail.find_by_id(card_type).try(:detail_name)
   end
 
   def card_type_opt

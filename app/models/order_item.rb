@@ -2,23 +2,20 @@ require 'order_ext/member_order'
 class OrderItem < ActiveRecord::Base
 
 
-  Item_Type_Book_Record = 1
-  Item_Type_Coache = 2
-  Item_Type_Product = 3
+  Item_Type_Book_Record = "BookRecord"
+  Item_Type_Coache = "Coach"
+  Item_Type_Product = "Good"
 
   scope :coaches,where(:item_type => Item_Type_Coache)
   scope :book_records,where(:item_type => Item_Type_Book_Record)
   scope :good_records,where(:item_type => Item_Type_Product)
   scope :except_book_records,where("item_type <> #{Item_Type_Book_Record}")
   
+  belongs_to :item, :polymorphic => true
   belongs_to    :order
-  belongs_to  :book_record, :polymorphic => true
-  belongs_to  :coach, :polymorphic => true
-  belongs_to  :good, :polymorphic => true
   has_one :balance_item, :dependent => :destroy
 
-  before_create :set_initialize_attributes
-  before_save :update_good_inventory,:only => [:update] 
+  before_save :update_good_inventory, :only => :update  
   before_destroy :update_good_inventory_before_destroy
   after_save :update_balance_item
   
@@ -27,13 +24,12 @@ class OrderItem < ActiveRecord::Base
 
   # 恢复前面库存的数量
   def update_good_inventory
-    product = self.product
-    if is_product? && product.is_a?(Good)
-      product.count_front_stock_in += ( self.quantity - self.quantity_was ) 
-      product.count_front_stock -= (self.quantity - self.quantity_was) 
-      product.count_total_now = product.count_front_stock + product.count_back_stock
-      product.save
-    end
+    return true unless item.is_a?(Good)
+    product = item
+    product.count_front_stock_in += ( self.quantity - self.quantity_was ) 
+    product.count_front_stock -= (self.quantity - self.quantity_was) 
+    product.count_total_now = product.count_front_stock + product.count_back_stock
+    product.save
   end
 
   def update_good_inventory_before_destroy
@@ -46,32 +42,12 @@ class OrderItem < ActiveRecord::Base
 
   end
 
-  def related_entry
-    klass = related_entry_klass and klass.find_by_id(item_id)
-  end
-
-  def is_book_record?
-    item_type == Item_Type_Book_Record
-  end
-
-  def is_coache?
-    item_type == Item_Type_Coache
-  end
-
-  def is_product?
-    item_type == Item_Type_Product
-  end
-
-  def related_entry_klass
-    {Coach => is_coache?,BookRecord => is_book_record?,
-      Good => is_product?}.find{|k,v|v}.first
-  end
 
   def self.coache_items_in_time_span(order)
-    return [] if order.coaches.blank?
+    return [] if order.coaches.blank? || order.book_record.blank?
     exist_coaches = coaches.where("item_id in (#{order.coaches.map(&:id).join(',')})")
     exist_coaches = exist_coaches.where("order_id <> #{order.id}") unless order.new_record?
-     exist_coaches.where(:order_date => order.record_date).where(["start_hour < :end_time AND end_hour > :start_time",
+    exist_coaches.where(:order_date => order.record_date).where(["start_hour < :end_time AND end_hour > :start_time",
                                                                 {:start_time => order.start_hour,:end_time => order.end_hour}]).all
   end
 
@@ -105,27 +81,18 @@ class OrderItem < ActiveRecord::Base
     book_record_item.quantity  = 1
     book_record_item.price     = book_record.amount_by_court
     book_record_item.order_id  = order.id
-    book_record_item.start_hour = book_record.start_hour
-    book_record_item.end_hour  =  book_record.end_hour
-    book_record_item.order_time = DateTime.now
-    book_record_item.order_date = Date.today
     book_record_item.save
   end
 
-  def self.order_goolds(order,good)
+  def self.order_good(order, good)
     book_record  = order.book_record
     orignial_good = where(:order_id => order.id,:item_type => Item_Type_Product,:item_id => good.id).first
     good_item = orignial_good || new
     if good_item.new_record?
-      good_item.item_id     = good.id
-      good_item.item_type   = Item_Type_Product
+      good_item.item = good
       good_item.quantity    = good.order_count
       good_item.price       = good.price
       good_item.order_id    = order.id
-      good_item.start_hour  = book_record.start_hour if book_record
-      good_item.end_hour    = book_record.end_hour if book_record
-      good_item.order_time  = DateTime.now
-      good_item.order_date  = Date.today
     else
       good_item.quantity    = good_item.quantity + good.order_count
     end
@@ -144,17 +111,9 @@ class OrderItem < ActiveRecord::Base
     save
   end
 
-  def product 
-    case item_type
-    when Item_Type_Product then Good.find_by_id(item_id)
-    when Item_Type_Book_Record then BookRecord.find_by_id(item_id)
-    else
-      Coach.find_by_id(item_id)
-    end
-  end
 
   def amount
-    is_book_record? ? product.amount(self) :  price*(quantity.to_f)
+    item_type == "BookRecord" ? item.amount : price * quantity
   end
 
   def do_balance
@@ -162,7 +121,7 @@ class OrderItem < ActiveRecord::Base
   end
 
   def status_str
-    paid_status == Const::YES ? '已结算' : '预定中'
+    self.order.balance.status == Const::YES ? '已结算' : '预定中'
   end
 
   def court_name
@@ -191,12 +150,12 @@ class OrderItem < ActiveRecord::Base
   def update_balance_item
     balance_item = self.balance_item || BalanceItem.new(:balance_id => self.order.balance.id, 
                                                         :order_id => self.order_id, 
-                                                       :order_item_id => self.id,
-                                                       :discount_rate => 1,
-                                                       :count_amount => 0)
+                                                        :order_item_id => self.id,
+                                                        :discount_rate => 1,
+                                                        :count_amount => 0)
     balance_item.update_attributes(:price => self.quantity * self.price, 
                                    :real_price => self.quantity * self.price)
-    balance_item.update_attributes(:count_amount => self.order.book_record.hours) if is_book_record?
+    balance_item.update_attributes(:count_amount => self.order.book_record.hours) if item_type == "BookRecord"
   end
 
   def name

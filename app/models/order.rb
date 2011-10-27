@@ -97,7 +97,7 @@ class Order < ActiveRecord::Base
   def order_goods(goods)
     goods = [goods] unless goods.is_a?(Array)
     if (invalid_goods = goods.select{|good| !good.should_add_to_cart?(self) }).blank?
-      goods.map { |good| OrderItem.order_goolds(self,good)  }
+      goods.map { |good| OrderItem.order_good(self, good)  }
     else
       invalid_goods.each do |good|
         good.errors.each do |attribute, message| errors["Good.#{attribute}"] << message end
@@ -160,7 +160,7 @@ class Order < ActiveRecord::Base
   
   
   def original_coaches
-    (new_record? || coach_items.blank? ? [] : coach_items.map(&:related_entry)).compact
+    (new_record? || coach_items.blank? ? [] : coach_items.map(&:item)).compact
   end
 
   def coaches

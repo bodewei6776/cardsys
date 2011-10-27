@@ -1,5 +1,4 @@
 class RentsController < ApplicationController
-  layout 'small_main'
   def index
     @rents = Rent.all
     @lockers = Locker.all
@@ -15,7 +14,7 @@ class RentsController < ApplicationController
   def new
     @locker = Locker.find(params[:locker_id])
     @rent = @locker.rents.build
-    
+
     @rent.is_member = true 
     @rent.member = Member.new
     @rent.member_card = MemberCard.new
@@ -51,25 +50,17 @@ class RentsController < ApplicationController
   def update
     @rent = Rent.find(params[:id])
 
-    respond_to do |format|
-      if @rent.update_attributes(params[:rent])
-        format.html { redirect_to(rents_path, :notice => '续租成功.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @rent.errors, :status => :unprocessable_entity }
-      end
+    if @rent.update_attributes(params[:rent])
+      redirect_to(rents_path, :notice => '续租成功.') 
+    else
+      render :action => "edit" 
     end
   end
 
   def destroy
     @rent = Rent.find(params[:id])
     @rent.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(rents_url) }
-      format.xml  { head :ok }
-    end
+    redirect_to rents_url
   end
 
   def complete_member_infos

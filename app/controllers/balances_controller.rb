@@ -95,67 +95,29 @@ class BalancesController < ApplicationController
       redirect_to new_good_buy_balances_path ,:notice => "购物车还是空的啊" and return
     end
 
-    order = Order.new(:order_time => Time.now,:user_id => current_user.id)
-    if params[:member] == 'member'
-      member_card = MemberCard.find_by_id(params[:member_card_id]) || MemberCard.find_by_card_serial_num(params[:member_card_id])
-      member= Member.find(params[:member_id])
-      order.parent_id = 0
-      order.member_type = 1 
-      order.member_id = member.id 
-      order.member_card_id = member_card.id
-      order.member_name = member.name
-      order.save(false)
-      cart.touch
-      order.order_goods(cart.products)
-      balance = Balance.new
-      balance.operation = "balance"
-      balance.order =order
-      balance.balance_way = params[:balance_way]
-      balance.member_type =  1#order.member_type
-      balance.goods_balance_type = params[:balance_way]
-      balance.goods_amount = cart.total_price
-      balance.goods_realy_amount = cart.total_price
-      balance.goods_member_card_id = member_card.id
-      balance.member_id = member.id
-      balance.user_id = current_user.id 
-      balance.change_note = "折后价格" if cart.discount?
-      if  balance.process
-        cart.empty!
-        redirect_to  new_good_buy_balances_path(:popup => true,:id => balance.id),:notice => "支付成功" and return
+    is_member = params[:member] == 'member'
 
-        #redirect_to  balance_path(balance,:order_id => balance.order_id),:notice => "支付成功" and return
-        #redirect_to  print_balance_path(balance),:notice => "支付成功" and return
-      else
-        redirect_to  new_good_buy_balances_path,:notice => balance.errors.full_messages and return
-      end
-      # 会员购买
-    else
-      # 非会员
-      order.parent_id = 0
-      order.member_card_id = -1
-      order.member_type = 0 
-      order.member_name = params[:sanke_name]
-      order.save(false)
-      cart.touch
-      order.order_goods(cart.products)
-      balance = Balance.new
-      balance.operation = "balance"
-      balance.order = order
-      balance.balance_way = params[:balance_way]
-      balance.member_type =  0#order.member_type
-      balance.goods_balance_type = params[:balance_way]
-      balance.goods_amount = cart.total_price
-      balance.goods_realy_amount = cart.total_price
-      balance.user_id = current_user.id
-      balance.status = 1
-      balance.save(false)
-      cart.empty!
-      #redirect_to  new_good_buy_balances_path,:notice => "支付成功" and return
-      redirect_to  new_good_buy_balances_path(:popup => true,:id => balance.id),:notice => "支付成功" and return
-      #redirect_to  print_balance_path(balance),:notice => "支付成功" and return
-      #redirect_to  balance_path(balance,:order_id => balance.order_id),:notice => "支付成功" and return
-    end
-    redirect_to  new_good_buy_balances_path
+    @order = Order.new(:order_time => Time.now,:user_id => current_user.id)
+    member_card = MemberCard.find_by_id(params[:member_card_id]) || MemberCard.find_by_card_serial_num(params[:member_card_id])
+    member= Member.find_by_id(params[:member_id])
+    @order.parent_id = 0
+    @order.member_type = is_member ? 1 : 0 
+    @order.member_name = is_member ? member.name : params[:sanke_name]
+    @order.member_id = is_member ? member.id : -1
+    @order.member_card_id = is_member ? member_card.id : -1
+    @order.book_record_id = -1
+    @order.save(false)
+    cart.touch
+    @order.order_goods(cart.products)
+    balance = @order.balance
+    balance.operation = "balance"
+    balance.balance_way = params[:balance_way]
+    balance.change_note = "折后价格" if cart.discount?
+    balance.do_balance!
+    cart.empty!
+    redirect_to new_good_buy_balances_path(:popup => true, :id => balance.id), :notice => "支付成功"
+    rescue Exception => e
+      redirect_to new_good_buy_balances_path, :notice => e.message
   end
 
   def destroy

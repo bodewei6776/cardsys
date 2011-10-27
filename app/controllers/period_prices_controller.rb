@@ -2,7 +2,7 @@ class PeriodPricesController < ApplicationController
   before_filter :load_period_price, :only => [ :show, :edit, :update, :destroy]
 
   def index
-    mperiod_prices = PeriodPrice.paginate(default_paginate_options)
+    @period_prices = PeriodPrice.paginate(default_paginate_options)
   end
 
   def show

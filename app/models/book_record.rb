@@ -256,7 +256,7 @@ class BookRecord < ActiveRecord::Base
     :book
   end
   
-  def amount(order_item = nil)
+  def amount
     order.is_member? ? amount_by_card : amount_by_court
   end
   

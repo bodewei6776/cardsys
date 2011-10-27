@@ -1,6 +1,5 @@
 class AdvancedOrdersController < ApplicationController
 
-  layout  'main'
 
   def new
     @order    = AdvancedOrder.new 
