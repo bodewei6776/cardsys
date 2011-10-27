@@ -2,9 +2,9 @@ require 'order_ext/member_order'
 class OrderItem < ActiveRecord::Base
 
 
-  Item_Type_Book_Record = "BookRecord" 
-  Item_Type_Coache = "Coach"
-  Item_Type_Product = "Good"
+  Item_Type_Book_Record = 1
+  Item_Type_Coache = 2
+  Item_Type_Product = 3
 
   scope :coaches,where(:item_type => Item_Type_Coache)
   scope :book_records,where(:item_type => Item_Type_Book_Record)

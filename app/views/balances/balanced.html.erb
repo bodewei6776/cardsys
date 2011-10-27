@@ -57,7 +57,7 @@
         <li  class='w10'>
         <%= record.order.balance_record.book_record_amount_desc %>(<%= record.order.balance_record.balance_way_desc %>)
         </li>
-        <li  class='w10'> <%= record.order.balance_record.goods_amount_desc %> (<%= record.order.balance_record.goods_balance_type_desc %>)
+        <li  class='w10'> <%= record.order.balance_record.other_amount_desc%> (<%= record.order.balance_record.balance_way_desc%>)
         </li>
         <li class='w10'><a href="<%= order_balance_path(record.order,record.order.balance_record) %>">查看</a>
         <% if current_user.can?("删除结算信息")%>
