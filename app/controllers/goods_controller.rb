@@ -1,5 +1,4 @@
 class GoodsController < ApplicationController
-
   def autocomplete_name
     @names = @goods.collect(&:name) rescue []
     render :inline => @names.to_json

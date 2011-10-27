@@ -1,6 +1,5 @@
 class VacationsController < ApplicationController
 
-  layout 'main'
 
   def index
     @vacations = Vacation.paginate(default_paginate_options)

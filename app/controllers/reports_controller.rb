@@ -1,5 +1,4 @@
 class ReportsController < ApplicationController
-  layout "main"
   def coach
   end
 

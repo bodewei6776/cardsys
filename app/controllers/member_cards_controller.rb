@@ -1,6 +1,5 @@
 class MemberCardsController < ApplicationController
 
-  layout 'main'
 
   autocomplete :members, :name
 

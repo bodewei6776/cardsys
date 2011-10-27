@@ -1,5 +1,4 @@
 class BalancesController < ApplicationController
-  layout 'main'
 
   def index
     @book_records = BookRecord.playing.order('created_at desc').paginate(default_paginate_options_without_created_at)

@@ -1,5 +1,4 @@
 class LockersController < ApplicationController
-  layout 'main'
   # GET /lockers
   # GET /lockers.xml
   #
