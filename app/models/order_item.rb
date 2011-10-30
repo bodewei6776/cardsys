@@ -82,7 +82,7 @@ class OrderItem < ActiveRecord::Base
     book_record_item = new
     book_record_item.item_id   = book_record.id
     book_record_item.item_type = Item_Type_Book_Record
-    book_record_item.quantity  = 1
+    book_record_item.quantity  = book_record.hours
     book_record_item.price     = book_record.amount_by_court
     book_record_item.order_id  = order.id
     book_record_item.start_hour = book_record.start_hour

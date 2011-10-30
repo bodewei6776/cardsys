@@ -20,6 +20,8 @@ class RentsController < ApplicationController
     @rent.member_card = MemberCard.new
     @rent.start_date = params[:date].present? ? Date.parse(params[:date]) : Date.today
     @rent.pay_way = Balance::Balance_Way_Use_Card
+
+    render :layout => "small_main"
   end
 
   def edit
@@ -31,19 +33,16 @@ class RentsController < ApplicationController
     @rent = Rent.new(params[:rent])
 
     respond_to do |format|
-      if @rent.pay && @rent.save 
-        log_action(desc,"balance")
-        format.html { 
-          render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
-                    " window.opener.location.reload(); } ")
-        }      
-      else
-        @locker = @rent.locker
-        @rent.member = Member.find_by_name(params[:rent][:member_name]) || Member.new
-        @rent.member_card = MemberCard.find_by_id(params[:rent][:card_num]) || MemberCard.new
-        @rent.pay_way ||= Balance::Balance_Way_Use_Card
-        format.html { render :action => "new" }
-      end
+    if @rent.save && @rent.pay
+       format.html 
+        render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
+                  " window.opener.location.reload(); } ")
+    else
+      @locker = @rent.locker
+      @rent.member = Member.find_by_name(params[:rent][:member_name]) || Member.new
+      @rent.member_card = MemberCard.find_by_id(params[:rent][:card_num]) || MemberCard.new
+      @rent.pay_way ||= Balance::Balance_Way_Use_Card
+      render :action => "new" , :layout => "small_main"
     end
   end
 

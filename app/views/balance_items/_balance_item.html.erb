@@ -16,7 +16,7 @@
       <li style="width:10%;"><%= item.order_item.quantity%></li>
       <li style="width:10%;"><%= item.order_item.price %></li>
       <li style="width:10%;"><%= item.price %></li>
-      <% if !item.balance.paid? and item.order_item.item_type != 0%>
+      <% if !item.balance.paid? and item.order_item.item_type != "BookRecord"%>
         <li style="width:10%;"><%= text_field_tag :price_field, item.real_price, :class => "real_price_field" %></li>
         <li style="width:10%;"><%= text_field_tag :discount_rate_field, item.discount_rate, :class => "discount_rate_field" %></li>
       <% else%>

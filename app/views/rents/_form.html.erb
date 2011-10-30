@@ -87,8 +87,7 @@
       <ul>
         <li>
         <div class="w1">经手人：</div>
-        <div class="w2"><%= f.text_field :user_name,:id => "user_name", :autocomplete=>"/users/autocomplete_user_name"%></div>
-        </li>
+        <div class="w2"><%= f.text_field :user_name,:id => "user_name", :user_autocomplete=>"/users/autocomplete_user_name"%></div>
         <li>
         <div class="w1"> 密码：</div>
         <div class="w2"><%= f.password_field :password,:id => "password"%></div>
