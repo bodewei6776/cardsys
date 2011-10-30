@@ -22,16 +22,16 @@ class Balance < ActiveRecord::Base
 
   scope :balanced,where(:status => Const::YES)
   
-  validate do |instance|
-    return true unless order.is_member?
-    if instance.use_card_to_balance_goods? && !order.should_use_card_to_balance_goods?
-      errors[:base] << "卡不支持购买商品，只能订场"
-    elsif instance.use_card_to_balance? && !order.member_card.has_enough_money_to_balance?(self)
-      errors[:base] << "卡余额不足，不能结算"
-    elsif instance.use_card_to_balance? && !order.member_card.is_avalible?
-      errors[:base] << "卡已经过期，或者状态不正常不能结算"
-    end
-  end
+ # validate do |instance|
+ #   return true unless order.is_member?
+ #   if instance.use_card_to_balance_goods? && !order.should_use_card_to_balance_goods?
+ #     errors[:base] << "卡不支持购买商品，只能订场"
+ #   elsif instance.use_card_to_balance? && !order.member_card.has_enough_money_to_balance?(self)
+ #     errors[:base] << "卡余额不足，不能结算"
+ #   elsif instance.use_card_to_balance? && !order.member_card.is_avalible?
+ #     errors[:base] << "卡已经过期，或者状态不正常不能结算"
+ #   end
+ # end
 
   def member_card
     MemberCard.find_by_id(self.goods_member_card_id) || MemberCard.find_by_id(self.book_reocrd_member_card_id)#rescue nil
