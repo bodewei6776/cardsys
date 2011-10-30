@@ -11,7 +11,7 @@ class MembersController < ApplicationController
     @names = []
     @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}"} }
     render :inline => @names.to_json
-    
+
   end
 
   def autocomplete_card_serial_num
@@ -29,8 +29,7 @@ class MembersController < ApplicationController
   end
 
   def advanced_search 
-
-@name = params[:name]#会员名
+    @name = params[:name]#会员名
     @serial_num = params[:card_serial_num]#会员卡号
     @reg_date_start = params[:reg_date_start]#注册日期
     @reg_date_end = params[:reg_date_end]
@@ -57,7 +56,7 @@ class MembersController < ApplicationController
       @members = @members.where("member_cards.card_serial_num like '%#{@serial_num}%'").joins(:member_cards)
     end
 
-    
+
 
     if @comer_date_start.present? &&  @comer_date_end.present?
       @members = @members.where("date_format(orders.order_time,'%Y-%m-%d') >= ? and " + 
@@ -171,7 +170,9 @@ class MembersController < ApplicationController
         end
       else
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
-          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => card.card_serial_num,:member_name => @member.name)
+          format.html { redirect_to granters_member_cards_path(:p => "num",
+                                                               :card_serial_num => card.card_serial_num,
+                                                               :member_name => @member.name)}
         else
           format.html { render :action => 'new'}
         end       
