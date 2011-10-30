@@ -48,7 +48,7 @@ module BookRecordsHelper
         end
 
         if book_record.is_balanced?
-          display_content << "(结算人: #{book_record.order.balance_record.who_balance.login})"
+          display_content << "(结算人: #{book_record.order.balance.who_balance.try(:login) || ""})"
         end
         #display_content <<  "(#{book_record.status_desc})"
         url = if book_record.is_agented?

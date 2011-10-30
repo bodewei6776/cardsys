@@ -1,5 +1,5 @@
 <%= (good_items||[]).each do |good_item|  %>
-<% next if (good = good_item.product).blank?  %>
+<% next if (good = good_item.item).blank?  %>
 <ul>
   <li style="width:10%;"><%= good.name%></li>
   <li style="width:10%;"><%= generate_good_type_str(good.good_type) %></li>

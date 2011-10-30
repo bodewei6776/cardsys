@@ -257,7 +257,7 @@ class Order < ActiveRecord::Base
   end
   
   def amount
-    OrderItem.except_book_records.where(:order_id => id).map(&:amount).sum
+    balance.real_amount
   end
   
   def book_record_amount

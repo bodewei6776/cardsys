@@ -34,7 +34,7 @@
         <%end  -%>
       <%end%>
       <% good_items.each_with_index do |good_item,index| %>
-        <% next if (good = good_item.product).blank?  %>
+        <% next if (good = good_item.item).blank?  %>
         <ul class="table_items">
           <li class="w5"><%= index + 1 %></li>
           <li class="w10"><%= generate_good_type_str(good.good_type) %></li>

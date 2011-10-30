@@ -26,6 +26,8 @@ class BookRecord < ActiveRecord::Base
 
   has_one     :order
   belongs_to  :court
+
+  delegate :name, :to => :court
   
   scope :daily_book_records, lambda {|date| where(:record_date => date) }
   scope :court_book_records, lambda {|court_id| where(:court_id => court_id) }
@@ -113,6 +115,10 @@ class BookRecord < ActiveRecord::Base
 
   def balance
     self.update_attribute(:status, Status_Settling)
+  end
+
+  def balance_record
+    order.balance
   end
 
   def is_balanced?
@@ -275,5 +281,6 @@ class BookRecord < ActiveRecord::Base
   def consecutive?
     self.order.is_advanced_order?
   end
+
   
 end

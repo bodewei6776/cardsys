@@ -75,15 +75,15 @@ class Member < ActiveRecord::Base
   end
 
   def member_card_left_times
-    self.member_cards.sum{|mc| mc.left_times }
+    self.member_cards.present? ? self.member_cards.inject(0){|s, mc| s += mc.left_times} : 0
   end
 
   def member_card_left_fees
-    self.member_cards.sum{|mc| mc.left_fees.to_f }
+    self.member_cards.present? ? self.member_cards.inject(0){|s, mc| s += mc.left_fee} : 0
   end
 
   def member_consume_amounts
-    self.orders.present? ? self.orders.inject(0){|s,o| s + o.amount} : 0
+    self.orders.inject(0){|s,o| s + (o.amount || 0)} 
   end
 
   def latest_comer_date

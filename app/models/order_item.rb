@@ -1,6 +1,11 @@
 require 'order_ext/member_order'
 class OrderItem < ActiveRecord::Base
 
+  TYEP_STRING_MAP = {
+    "BookRecord"  => "场地预定",
+    "Coach"       => "教练预定", 
+    "Good"        => "购买商品"
+  }
 
   Item_Type_Book_Record = "BookRecord"
   Item_Type_Coache = "Coach"
@@ -65,7 +70,6 @@ class OrderItem < ActiveRecord::Base
       coach_item.order_id   = order.id
       coach_item.start_hour = book_record.start_hour
       coach_item.end_hour   = book_record.end_hour
-      coach_item.order_time = DateTime.now
       coach_item.order_date = book_record.record_date#Date.today
       coach_item.save
     end
@@ -81,6 +85,9 @@ class OrderItem < ActiveRecord::Base
     book_record_item.quantity  = 1
     book_record_item.price     = book_record.amount_by_court
     book_record_item.order_id  = order.id
+    book_record_item.start_hour = book_record.start_hour
+    book_record_item.end_hour   = book_record.end_hour
+    book_record_item.order_date = book_record.record_date#Date.today
     book_record_item.save
   end
 
@@ -138,12 +145,16 @@ class OrderItem < ActiveRecord::Base
   end
 
   def order_item_type_str
-    case
-    when is_book_record? then "场地预定"
-    when is_coache? then "教练预定"
-    when is_product? then "购买商品"
-    else ""
-    end
+    TYEP_STRING_MAP[item_type]
+  end
+
+
+  def is_book_record?
+    item_type == "BookRecord"
+  end
+
+  def is_coach?
+    item_type == "Coach"
   end
 
 
@@ -159,15 +170,6 @@ class OrderItem < ActiveRecord::Base
   end
 
   def name
-    case self.item_type
-    when  Item_Type_Book_Record 
-      self.court_name
-    when Item_Type_Coache 
-      self.coach_name
-    when Item_Type_Product
-      self.product.name
-    else
-      "no"
-    end
+    item.try(:name) || ""
   end
 end

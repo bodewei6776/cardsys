@@ -16,7 +16,7 @@
   </ul>
   <% unless (coach_items = order.coach_items).blank?  -%>
    <% coach_items.each do |coach_item|  -%> 
-   <% coach = coach_item.related_entry %>
+   <% coach = coach_item.item%>
   <ul class='member_items table_items'>
 	<li class='w10'>教练</li>
         <li class='w10'><%= coach.name %></li>
@@ -31,7 +31,7 @@
   <%end  -%>
  <%end -%> 
   <% for good_item in good_items %>
-    <% next if (good = good_item.product).blank? %>
+    <% next if (good = good_item.item).blank? %>
     <ul class='member_items table_items'>
 	  <li class='w10'><%= generate_good_type_str(good.good_type) %></li>
       <li class='w10'><%= good.name%></li>
