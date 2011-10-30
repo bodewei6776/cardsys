@@ -33,16 +33,18 @@ class RentsController < ApplicationController
     @rent = Rent.new(params[:rent])
 
     respond_to do |format|
-    if @rent.save && @rent.pay
-       format.html 
-        render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
-                  " window.opener.location.reload(); } ")
-    else
-      @locker = @rent.locker
-      @rent.member = Member.find_by_name(params[:rent][:member_name]) || Member.new
-      @rent.member_card = MemberCard.find_by_id(params[:rent][:card_num]) || MemberCard.new
-      @rent.pay_way ||= Balance::Balance_Way_Use_Card
-      render :action => "new" , :layout => "small_main"
+      if @rent.save && @rent.pay
+        format.html do
+          render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
+                    " window.opener.location.reload(); } ")
+        end
+      else
+        @locker = @rent.locker
+        @rent.member = Member.find_by_name(params[:rent][:member_name]) || Member.new
+        @rent.member_card = MemberCard.find_by_id(params[:rent][:card_num]) || MemberCard.new
+        @rent.pay_way ||= Balance::Balance_Way_Use_Card
+        render :action => "new" , :layout => "small_main"
+      end
     end
   end
 
@@ -74,8 +76,5 @@ class RentsController < ApplicationController
     end
     @date = Date.parse(params[:start_date])
     @rent = Rent.new(:member => @member,:member_card => @current_card,:start_date=> @date)
-    respond_to do |format|
-      format.js {}
-    end
   end
 end
