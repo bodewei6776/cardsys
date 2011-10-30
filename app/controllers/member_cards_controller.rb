@@ -9,6 +9,7 @@ class MemberCardsController < ApplicationController
     @items = Member.autocomplete_for(params[:term])
     @names = []
     @items.each { |i| @names << i.name }
+    render :inline => @names.to_json
   end
 
   def autocomplete_card_serial_num
@@ -62,6 +63,7 @@ class MemberCardsController < ApplicationController
 
 
   def status
+    conditions = {}
     if params[:name].present? and Member.find_by_name(params[:name]).present?
       conditions.merge!(:member_id => Member.find_by_name(params[:name]).id)
     end

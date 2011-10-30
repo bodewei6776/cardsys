@@ -11,6 +11,7 @@ class MembersController < ApplicationController
     @names = []
     @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}"} }
     render :inline => @names.to_json
+    
   end
 
   def autocomplete_card_serial_num
@@ -28,17 +29,35 @@ class MembersController < ApplicationController
   end
 
   def advanced_search 
+
+@name = params[:name]#会员名
+    @serial_num = params[:card_serial_num]#会员卡号
+    @reg_date_start = params[:reg_date_start]#注册日期
     @reg_date_end = params[:reg_date_end]
+    @expire_date_start = params[:expire_date_start]#会员卡有效期
     @expire_date_end = params[:expire_date_end]
 
+    @comer_date_start = params[:comer_date_start]#来店日期
     @comer_date_end = params[:comer_date_end]
+    @consume_count_start = params[:consume_count_start]#刷卡次数 ???
     @consume_count_end = params[:consume_count_end]
+    @consume_fees_start = params[:consume_fees_start]#消费金额
     @consume_fees_end = params[:consume_fees_end]
+    @left_fees_start = params[:left_fees_start]#卡内余
     @left_fees_end = params[:left_fees_end]
+    @left_times_start = params[:left_times_start]#现有次数
     @left_times_end = params[:left_times_end]
+    @member_birthday_start = params[:member_birthday_start]#会员生日
     @member_birthday_end = params[:member_birthday_end]
+    @member_gender = params[:member_gender]#会员性别
 
     @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER)
+    @members = @members.where(["name like ?", "%#{@name}%"] ) if !@name.blank?
+    if !@serial_num.blank?
+      @members = @members.where("member_cards.card_serial_num like '%#{@serial_num}%'").joins(:member_cards)
+    end
+
+    
 
     if @comer_date_start.present? &&  @comer_date_end.present?
       @members = @members.where("date_format(orders.order_time,'%Y-%m-%d') >= ? and " + 
@@ -117,6 +136,7 @@ class MembersController < ApplicationController
   def show
     @member = Member.find(params[:id])
     @member_cards = MemberCard.where(:member_id => params[:id])
+    @recharge_records = RechargeRecord.where(:member_id => params[:id])
     @balances = @member.member_cards.collect{|mc| mc.balances }.flatten.uniq rescue []
   end
 
@@ -141,6 +161,7 @@ class MembersController < ApplicationController
           @mg = MemberCardGranter.new(:member_id => base_member_id, :member_card_id => params[:member_card_id], :granter_id => @member.id)
           card = MemberCard.find(params[:member_card_id])
           if card.max_granter_due?
+            notice = "最多能授权给#{card.max_granter}人"
           else
             notice = "添加成功" if @mg.save
           end
@@ -150,6 +171,7 @@ class MembersController < ApplicationController
         end
       else
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
+          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => card.card_serial_num,:member_name => @member.name)
         else
           format.html { render :action => 'new'}
         end       
@@ -291,8 +313,12 @@ class MembersController < ApplicationController
       RechargeRecord.new(:member_id => member_card.member_id,
                          :member_card_id => member_card.id,
                          :recharge_times=> charge_times,
+                         :recharge_fee => charge_fee,
                          :recharge_person => user.id
                         ).save
+
+                        log_action("为卡#{member_card.card_serial_num}充值#{charge_fee}元，#{charge_times}次","recharge")
+
 
                         notice = ""
                         notice << "会员卡充值成功" if charge_fee > 0
@@ -307,6 +333,7 @@ class MembersController < ApplicationController
   end
 
   def get_members
+    @items = Member.where(["name = ?", "#{params[:name].downcase}"]).where(:status => CommonResource::MEMBER_STATUS_ON).limit(1)
     @ids = []
     @items.each { |i| @ids << i.id }
     render :inline => @ids.to_json
@@ -337,6 +364,7 @@ class MembersController < ApplicationController
   end
 
   def member_card_num4(card)
+    last_member_card = MemberCard.where(:card_id => card.id).order("card_serial_num desc").first
     if last_member_card.nil?
       num = "0001"
       n2 = ((num[-4, num.length].to_s).to_i).to_s

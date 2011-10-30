@@ -1,5 +1,6 @@
 class GoodsController < ApplicationController
   def autocomplete_name
+    @goods = Good.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @names = @goods.collect(&:name) rescue []
     render :inline => @names.to_json
   end
@@ -7,6 +8,7 @@ class GoodsController < ApplicationController
 
   def autocomplete_good
     goods = []
+    @goods = Good.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @goods.each do |g| goods << {:label => g.name,:value => g.name,:id => g.id,:price => g.price} end
     render :inline => goods.to_json
   end
@@ -18,6 +20,7 @@ class GoodsController < ApplicationController
     @name = params[:name]
     @category = Category.find_by_id(@good_type)
     @goods = @category.nil? ? Good.order("id desc") :  @category.all_goods.order("id desc")
+    @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @goods = @goods.paginate(default_paginate_options)
     render :template =>  '/goods/index'
   end
@@ -29,6 +32,7 @@ class GoodsController < ApplicationController
     @category = Category.find_by_id(@good_type)
     @goods = @category.nil? ? Good.order("id desc") :  @category.all_goods.order("id desc")
     @goods = @goods.valid_goods
+    @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @goods = @goods.paginate(:page => params[:page]||1)
     render :action => "goods",:layout => "small_main" 
   end
@@ -129,6 +133,7 @@ class GoodsController < ApplicationController
     unless (good_items = order.order_goods(goods)).blank?
       render :partial => "/orders/order_item", :locals => {:good_items => good_items,:order => order}
     else
+      render :text => "<span class='error' style='color:red'>#{order.errors.full_messages.join('<br/>')}</span>"
     end
   end
 

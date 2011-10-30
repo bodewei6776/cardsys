@@ -34,6 +34,9 @@ class RentsController < ApplicationController
 
     respond_to do |format|
       if @rent.save && @rent.pay
+        desc = "#{@rent.member_name}支付储物柜金额#{@rent.total_fee}"
+         log_action(desc,"balance")
+
         format.html do
           render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
                     " window.opener.location.reload(); } ")
