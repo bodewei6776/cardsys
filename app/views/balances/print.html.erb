@@ -56,7 +56,7 @@
         </tr>
         <% unless (coach_items = @balance.order.coach_items).blank?  -%>
           <% coach_items.each do |coach_item|  -%> 
-            <% coach = coach_item.related_entry %>
+            <% coach = coach_item.item %>
             <tr class='goods'>
               <td class='left'>教练(<%= coach.name%>)</td>
               <td>
@@ -71,7 +71,7 @@
         <%end -%> 
       <%end -%> 
       <% for good_item in @balance.order.product_items%>
-        <% next if (good = good_item.product).blank? %>
+        <% next if (good = good_item.item).blank? %>
         <tr class='goods'>
           <td class='left'><%= good.name%> </td>
           <td><%= good.price %></td>

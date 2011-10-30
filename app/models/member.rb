@@ -6,7 +6,7 @@ class Member < ActiveRecord::Base
     where("status = '#{CommonResource::MEMBER_STATUS_ON}' and (LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name)", {:member_name => "#{name.downcase}%"}).limit(10).order("pinyin_abbr ASC") }
 
 
-  has_many  :member_cards
+  has_many  :associated_member_cards, :class_name => "MemberCard"
   has_many :orders
   has_many :balances
   has_one  :member_card_granter,:foreign_key => "granter_id"

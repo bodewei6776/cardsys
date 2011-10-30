@@ -38,7 +38,7 @@ class OrderItem < ActiveRecord::Base
   end
 
   def update_good_inventory_before_destroy
-    product = self.product
+    product = self.item
     if is_product? && product.is_a?(Good)
       product.count_front_stock += (self.quantity) 
       product.count_total_now += (self.quantity)
@@ -83,7 +83,7 @@ class OrderItem < ActiveRecord::Base
     book_record_item.item_id   = book_record.id
     book_record_item.item_type = Item_Type_Book_Record
     book_record_item.quantity  = book_record.hours
-    book_record_item.price     = book_record.amount_by_court
+    book_record_item.price     = book_record.amount
     book_record_item.order_id  = order.id
     book_record_item.start_hour = book_record.start_hour
     book_record_item.end_hour   = book_record.end_hour
@@ -157,6 +157,10 @@ class OrderItem < ActiveRecord::Base
     item_type == "Coach"
   end
 
+  def is_product?
+    item_type == "Good"
+  end
+
 
   def update_balance_item
     balance_item = self.balance_item || BalanceItem.new(:balance_id => self.order.balance.id, 
@@ -164,8 +168,9 @@ class OrderItem < ActiveRecord::Base
                                                         :order_item_id => self.id,
                                                         :discount_rate => 1,
                                                         :count_amount => 0)
-    balance_item.update_attributes(:price => self.quantity * self.price, 
-                                   :real_price => self.quantity * self.price)
+    cal_price = (item_type == "BookRecord" ? quantity * item.amount : quantity * price)
+    balance_item.update_attributes(:price => cal_price,
+                                   :real_price => cal_price)
     balance_item.update_attributes(:count_amount => self.order.book_record.hours) if item_type == "BookRecord"
   end
 

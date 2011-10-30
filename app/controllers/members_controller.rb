@@ -9,6 +9,8 @@ class MembersController < ApplicationController
   def autocomplete_name
     @items = Member.autocomplete_for(params[:term])
     @names = []
+    @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}"} }
+    render :inline => @names.to_json
   end
 
   def autocomplete_card_serial_num
@@ -20,7 +22,9 @@ class MembersController < ApplicationController
 
   def index
     @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER)
-    @members = @members.paginate(:page => params[:page]||1,:per_page => Member_Perpage)
+    @members = @members.where(:name => params[:name]) if params[:name].present?
+    @members = @members.where("member_cards.card_serial_num = '#{params[:card_serial_num]}'").joins(:associated_member_cards) if params[:card_serial_num].present?
+    @members = @members.paginate(:page => params[:page] || 1,:per_page => Member_Perpage)
   end
 
   def advanced_search 

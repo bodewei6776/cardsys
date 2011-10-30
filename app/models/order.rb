@@ -316,7 +316,7 @@ class Order < ActiveRecord::Base
   end
 
   def generate_balance
-    self.balance = Balance.new(:status => Const::NO, :balance_way => Balance::Balance_Way_Use_Cash)
+    self.balance = Balance.new(:status => Const::NO, :balance_way => Balance::Balance_Way_Use_Card)
   end
 
   def update_balance
