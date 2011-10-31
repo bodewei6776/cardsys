@@ -133,7 +133,7 @@ module BookRecordsHelper
     db_book_record.should_to_balance? and buton_htmls << content_tag("button","结算",
                                                                      {:type => 'button',:class => "data-balance-order submit1 hand",:operation => :balance})
 
-    db_book_record.should_to_balance? and buton_htmls << content_tag("button","添加消费",{:type => 'button',
+    db_book_record.should_to_balance? and  buton_htmls << content_tag("button","添加消费",{:type => 'button',
                                                                      :class => 'goods-list submit1 hand',:title => "商品列表",:rel => "goodslist",:href => '/goods/goods'})
 
     db_book_record.should_to_balance? and buton_htmls << content_tag("button","变更教练",{:type => 'button',

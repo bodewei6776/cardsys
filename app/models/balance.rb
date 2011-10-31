@@ -68,17 +68,16 @@ class Balance < ActiveRecord::Base
     member_card = order.member_card
 
 
-    if card.is_counter_card? || (card.is_zige_card? && self.use_card_counter_to_balance?)
+    if use_card_counter_to_balance?
       member_card.left_times -= self.count_amount
-    else
-      if self.use_card_to_balance_book_record?
-        member_card.left_fee -= self.book_record_real_amount.to_i
-      end
-      if self.use_card_to_balance_goods? 
-        raise "卡#{card.card_serial_num}不能购买商品" unless order.should_use_card_to_balance_goods?
-        member_card.left_fee -= self.other_real_amount.to_i
-      end
+    elsif use_card_to_balance?
+      member_card.left_fee -= self.book_record_real_amount.to_i
     end
+
+    if use_card_to_balance and order.should_use_card_to_balance_goods?
+      member_card.left_fee -= self.other_real_amount.to_i
+    end
+
     member_card.save
   end
 
@@ -112,7 +111,7 @@ class Balance < ActiveRecord::Base
   end
 
   def use_card_to_balance?
-    use_card_to_balance_book_record? || use_card_to_balance_goods?
+    balance_way == Balance_Way_Use_Card
   end
 
   def use_card_counter_to_balance?

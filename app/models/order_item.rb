@@ -83,7 +83,7 @@ class OrderItem < ActiveRecord::Base
     book_record_item.item_id   = book_record.id
     book_record_item.item_type = Item_Type_Book_Record
     book_record_item.quantity  = book_record.hours
-    book_record_item.price     = book_record.amount
+    book_record_item.price     = (book_record.amount == book_record.hours) ? book_record.amount_by_court : book_record.amount_by_card
     book_record_item.order_id  = order.id
     book_record_item.start_hour = book_record.start_hour
     book_record_item.end_hour   = book_record.end_hour
@@ -168,7 +168,7 @@ class OrderItem < ActiveRecord::Base
                                                         :order_item_id => self.id,
                                                         :discount_rate => 1,
                                                         :count_amount => 0)
-    cal_price = (item_type == "BookRecord" ? quantity * item.amount : quantity * price)
+    cal_price = quantity * price 
     balance_item.update_attributes(:price => cal_price,
                                    :real_price => cal_price)
     balance_item.update_attributes(:count_amount => self.order.book_record.hours) if item_type == "BookRecord"
