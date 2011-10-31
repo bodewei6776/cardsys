@@ -74,7 +74,7 @@ class Balance < ActiveRecord::Base
       member_card.left_fee -= self.book_record_real_amount.to_i
     end
 
-    if use_card_to_balance and order.should_use_card_to_balance_goods?
+    if use_card_to_balance? and order.should_use_card_to_balance_goods?
       member_card.left_fee -= self.other_real_amount.to_i
     end
 
