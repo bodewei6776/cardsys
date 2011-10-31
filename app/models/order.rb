@@ -168,7 +168,6 @@ class Order < ActiveRecord::Base
   end
 
   def coaches=(cs)
-    @coaches = cs
     @updating = true
   end
 
@@ -188,6 +187,11 @@ class Order < ActiveRecord::Base
     return @member_card if new_record?
     @member_card ||= (is_member? && member_card_id > 0 ? MemberCard.find(member_card_id) : nil) ||''
     @member_card.blank? ? nil : @member_card
+  end
+
+  def is_counter_card?
+    return false unless is_member?
+    member_card.card.is_counter_card?
   end
 
   def book_record

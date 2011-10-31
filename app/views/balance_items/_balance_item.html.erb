@@ -3,7 +3,6 @@
     <li class="w5">编号</li>
     <li class="w20">名称</li>
     <li class="w10">数量</li>
-    <li class="w10">单价</li>
     <li class="w10">总价</li>
     <li class="w10">实收总价</li>
     <li class="w10">折扣</li>
@@ -15,7 +14,6 @@
       <li style="width:20%;">（<%= item.order_item.order_item_type_str %>）<%= item.name  %></li>
       <li style="width:10%;"><%= item.order_item.quantity%></li>
       <li style="width:10%;"><%= item.order_item.price %></li>
-      <li style="width:10%;"><%= item.price %></li>
       <% if !item.balance.paid? and item.order_item.item_type != "BookRecord"%>
         <li style="width:10%;"><%= text_field_tag :price_field, item.real_price, :class => "real_price_field" %></li>
         <li style="width:10%;"><%= text_field_tag :discount_rate_field, item.discount_rate, :class => "discount_rate_field" %></li>
