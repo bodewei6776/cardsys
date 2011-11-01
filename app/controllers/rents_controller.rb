@@ -27,6 +27,7 @@ class RentsController < ApplicationController
   def edit
     @locker = Locker.find(params[:locker_id])
     @rent = Rent.find(params[:id])
+    render :layout => "small_main"
   end
 
   def create
@@ -35,8 +36,7 @@ class RentsController < ApplicationController
     respond_to do |format|
       if @rent.save && @rent.pay
         desc = "#{@rent.member_name}支付储物柜金额#{@rent.total_fee}"
-         log_action(desc,"balance")
-
+        log_action(desc,"balance")
         format.html do
           render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
                     " window.opener.location.reload(); } ")
@@ -46,18 +46,26 @@ class RentsController < ApplicationController
         @rent.member = Member.find_by_name(params[:rent][:member_name]) || Member.new
         @rent.member_card = MemberCard.find_by_id(params[:rent][:card_num]) || MemberCard.new
         @rent.pay_way ||= Balance::Balance_Way_Use_Card
-        render :action => "new" , :layout => "small_main"
+        format.html do 
+          render :action => "new" , :layout => "small_main"
+        end
       end
     end
   end
 
   def update
     @rent = Rent.find(params[:id])
+    @locker = @rent.locker
 
-    if @rent.update_attributes(params[:rent])
-      redirect_to(rents_path, :notice => '续租成功.') 
-    else
-      render :action => "edit" 
+    respond_to do |format|
+      if @rent.update_attributes(params[:rent])
+        format.html do
+          render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
+                    " window.opener.location.reload(); } ")
+        end
+      else
+        render :action => "edit", :layout => "small_main"
+      end
     end
   end
 

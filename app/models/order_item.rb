@@ -174,8 +174,6 @@ class OrderItem < ActiveRecord::Base
       count_amount = self.order.book_record.hours
       balance_item.update_attributes(:price => price, :real_price => real_price, :count_amount => count_amount)
     else
-      ap self.quantity
-      ap self.price
       cal_price = self.quantity * self.price 
       balance_item.update_attributes(:price => cal_price,
                                      :real_price => cal_price)

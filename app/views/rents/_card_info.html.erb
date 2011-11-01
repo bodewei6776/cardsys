@@ -42,7 +42,7 @@
     <div class="w1">联系电话：</div>
     <div class="w2">
       <input type="text" name="telephone"  value="<%= member.mobile rescue "" %>" />
-      <input type="hidden" name="card_id" value="<%= current_card.id %>" />
+      <input type="hidden" name="rent[card_id]" value="<%= current_card.id %>" />
     </div>
     </li>
   </ul>

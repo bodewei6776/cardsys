@@ -1,6 +1,6 @@
 class Rent < ActiveRecord::Base
   belongs_to :locker
-  belongs_to :member_card,:foreign_key => :card_id
+  belongs_to :member_card, :foreign_key => :card_id
   belongs_to :member
 
   HUMAN_NAME = {
@@ -17,11 +17,12 @@ class Rent < ActiveRecord::Base
     validates_presence_of c, :message => "#{HUMAN_NAME[c.to_s]}不能为空" 
   end
 
-  [:member_name,:card_num].each do |c|
+  [:member_name, :card_num].each do |c|
     #validates_presence_of c, :message => "#{c.to_s}不能为空" if Proc.new {|o| o.is_member?  }
   end
 
-  validates_numericality_of :total_fee, :only_integer => true, :greater_than_or_equal_to => 0, :allow_nil => true
+  validates_numericality_of :total_fee, :greater_than_or_equal_to => 0, :allow_nil => true,
+    :message => "费用需要大于０"
 
   validate do |rent|
     self.errors.add(:base,"开始时间应该小于结束时间") if rent.start_date && rent.end_date && \
@@ -30,7 +31,7 @@ class Rent < ActiveRecord::Base
 
 
   before_validation do |rent|
-    rent.card_id = self.card_num
+    #rent.card_id = self.card_num
     rent.member_id = Member.find_by_name(self.member_name).id rescue nil
   end
 
@@ -38,12 +39,9 @@ class Rent < ActiveRecord::Base
     self.locker.update_attribute(:state,"rented")
   end
 
-
-
   def almost_due?(date = Date.today)
     CommonResource.locker_due_time.days.from_now > self.end_date && date < self.end_date
   end
-
 
   def pay
     self.card_id = self.card_num
@@ -62,7 +60,6 @@ class Rent < ActiveRecord::Base
     end
     true
   end
-
 
   def expire?(date = Date.today)
     date > self.end_date
