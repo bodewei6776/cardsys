@@ -55,6 +55,21 @@ class CourtsController < ApplicationController
     redirect_to courts_url
   end
 
+  def court_status_search
+    court = Court.where(:name => params[:name]).first unless params[:name].blank?
+    date = params[:search_date].blank? ? Date.today : Date.parse(params[:search_date])
+    member = Member.where(:name => params[:member_name]).first unless params[:member_name].blank?
+    start_hour,end_hour = params[:start_hour],params[:end_hour]
+    @order_items = OrderItem.book_records.order("item_id, start_hour").select('order_items.*')
+    if court || date
+      book_record_inner_join = "INNER JOIN book_records ON order_items.item_id=book_records.id"
+      @order_items = @order_items.joins(book_record_inner_join)
+    end
+    @order_items = @order_items.where(["order_items.start_hour >= ?", start_hour]) unless start_hour.blank?
+    @order_items = @order_items.where(["order_items.end_hour <= ?", end_hour]) unless end_hour.blank?
+    @order_items = @order_items.paginate(:page => params[:page]||1,:per_page => 15)
+  end
+  
 
   def coach_status_search
     coach = Coach.where(:name => params[:name]).first  unless params[:name].blank?

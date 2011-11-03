@@ -27,6 +27,14 @@ class BalancesController < ApplicationController
       return
     end
 
+    if @balance.order.member_card.card.is_counter_card?
+      if params[:balance][:balance_way] == "7" and @balance.balance_items.count > 1
+        pre_date_for_new_create
+        @balance.errors.add(:base, "计次卡只能结算场地")
+        render :action => "edit" and return
+      end
+    end
+
     @balance.update_attributes(params[:balance])
 
     if @balance.do_balance!
@@ -43,7 +51,7 @@ class BalancesController < ApplicationController
   def show
     @order    = Order.find(params[:order_id])
     @balance  = Balance.find(params[:id])
-    @good_items = @order.product_items
+    @good_items = @order.order_items
     pre_date_for_new_create
     render :layout => params[:layout].blank?
   end
@@ -116,8 +124,8 @@ class BalancesController < ApplicationController
     balance.do_balance!
     cart.empty!
     redirect_to new_good_buy_balances_path(:popup => true, :id => balance.id), :notice => "支付成功"
-    rescue Exception => e
-      redirect_to new_good_buy_balances_path, :notice => e.message
+  rescue Exception => e
+    redirect_to new_good_buy_balances_path, :notice => e.message
   end
 
   def destroy

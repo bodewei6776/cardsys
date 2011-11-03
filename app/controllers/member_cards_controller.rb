@@ -56,9 +56,6 @@ class MemberCardsController < ApplicationController
       @member_cards = [MemberCard.where(:card_serial_num => @serial_num).first]
       @member_card = @member_cards.present? ? @member_cards.first : MemberCard.new
     end
-    respond_to do |format|
-      format.xml  { render :xml => @member_cards }
-    end
   end
 
 

@@ -48,10 +48,9 @@
             <td><%= @balance.order.book_record.end_hour - @balance.order.book_record.start_hour%></td>
             <td class='right'><%= @balance.count_amount%>次</td>
           <%else%>
-            <td><%= @balance.order.book_record_item.amount%></td>
+            <td><%= @balance.order.book_record_item.balance_item.price %></td>
             <td>1</td>
-            <td class='right'><%= @balance.order.book_record_item.amount%></td>
-
+            <td class='right'><%= @balance.order.book_record_item.balance_item.real_price %></td>
           <%end%>
         </tr>
         <% unless (coach_items = @balance.order.coach_items).blank?  -%>
@@ -59,12 +58,8 @@
             <% coach = coach_item.item %>
             <tr class='goods'>
               <td class='left'>教练(<%= coach.name%>)</td>
-              <td>
-                <%=  coach.fee %>
-              </td>
-              <td>
-                <%= coach_item.quantity %>
-              </td>
+              <td> <%=  coach.fee %> </td>
+              <td> <%= coach_item.quantity %> </td>
               <td class='right'><%= coach_item.amount %></td>
             </tr>
           <%end  -%>
@@ -117,12 +112,7 @@
       </tr>
       <tr>
         <td colspan=4> 支付方式: 
-          <% if @balance.order.book_record %>
-            <%= @balance.balance_way_desciption %>（场地费）
-          <%end%>
-          <% if @balance.other_real_amount > 0 %>
-            /<%= @balance.balance_way_desciption %>（其他消费）
-          <%end%>
+          <%= @balance.balance_way_desciption %>
         </td>
       </tr>
 

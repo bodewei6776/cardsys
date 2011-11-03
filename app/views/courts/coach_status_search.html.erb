@@ -67,7 +67,7 @@
         <li class="w5"><%= index + 1 %></li>
         <li class="w10"><%= order_item.coach_name %></li>
         <li class="w10"><%= order_item.member_name %></li>
-        <li class="w15"><%= DateUtil.timeshort(order_item.order_time) %></li>
+        <li class="w15"><%= DateUtil.timeshort(order_item.order.order_time) %></li>
         <li class="w10"><%= order_item.order.book_record.court.name %></li>
         <li class="w10"><%= order_item.start_hour %>点 - <%= order_item.end_hour %>点</li>
         <li class="w10"><%= order_item.status_str %></li>

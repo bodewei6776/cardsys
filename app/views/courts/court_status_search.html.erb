@@ -63,11 +63,11 @@
     <%@order_items.each_with_index do |order_item,index|%>
       <ul class="table_items">
         <li class="w5"><%= index + 1 %></li>
-        <li class="w10"><%= order_item.product.court.name %></li>
+        <li class="w10"><%= order_item.item.court.name %></li>
         <li class="w10"><%= order_item.member_name %></li>
         <li class="w10"><%= order_item.status_str %></li>
-        <li class="w10"><%= DateUtil.timeshort(order_item.product.record_date) %></li>
-        <li class="w10"><%= order_item.product.start_hour %> - <%= order_item.product.end_hour %></li>
+        <li class="w10"><%= DateUtil.timeshort(order_item.item.record_date) %></li>
+        <li class="w10"><%= order_item.item.start_hour %> - <%= order_item.item.end_hour %></li>
       <li class="w10"><%= order_item.order.user.login rescue "未知"%></li>
       <li class="w10"> <%= order_item.status_str%> </li>
       </ul>

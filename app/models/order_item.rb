@@ -183,4 +183,16 @@ class OrderItem < ActiveRecord::Base
   def name
     item.try(:name) || ""
   end
+
+
+
+  def category
+    if is_book_record?
+      "场地预定"
+    elsif is_coach?
+      "教练"
+    else
+      self.item.category 
+    end
+  end
 end

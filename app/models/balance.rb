@@ -353,7 +353,7 @@ class Balance < ActiveRecord::Base
     else
       return '0' if ways.include?(self.balance_way)
       product_items =  self.order.product_items(:include =>{:good =>{:include => :category}})
-      product_items = (product_items.present? ? product_items.select{|g| g.good.category.parent_id == type.id} : [])
+      product_items = (product_items.present? ? product_items.select{|g| g.item.category.parent_id == type.id} : [])
       product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : 0
     end
   end
@@ -421,7 +421,7 @@ class Balance < ActiveRecord::Base
 
   def self.total_coach_balance_on_month_any_ways(date,select,ways)
     data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?))", date.strftime("%Y-%m"),ways])
-    data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(ways) } : 0
+    data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(select, ways) } : 0
   end
 
 
@@ -529,5 +529,6 @@ class Balance < ActiveRecord::Base
   def name
     self.order_item.name
   end
+
 
 end

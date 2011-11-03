@@ -13,4 +13,5 @@ class BalanceItem < ActiveRecord::Base
   def name
     self.order_item.name
   end
+
 end

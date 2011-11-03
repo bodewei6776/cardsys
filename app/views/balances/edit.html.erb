@@ -50,11 +50,11 @@
             <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Card, :class => 'balance_way' %>记账</label>
           <%end -%>
         <%  end -%>
-        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Cash,:class => 'balance_way' %>现金</label>
-        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Post,:class => 'balance_way' %>POS机</label>
-        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Check ,:class => 'balance_way'%>支票</label>
-        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Guazhang,:class => 'balance_way' %>挂账</label>
-        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Bank,:class => 'balance_way' %>银行</label>
+        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Cash, :class => 'balance_way' %>现金</label>
+        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Post, :class => 'balance_way' %>POS机</label>
+        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Check , :class => 'balance_way'%>支票</label>
+        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Guazhang, :class => 'balance_way' %>挂账</label>
+        <label class="labelRadio"><%= f.radio_button :balance_way, Balance::Balance_Way_Use_Bank, :class => 'balance_way' %>银行</label>
       </div>
       </li>
     </ul>
@@ -92,6 +92,11 @@
       <li style='display:block;'>
       <div style='padding-left: 200px;'>
         <%= submit_tag "支付",:type => "button", :class => "submit1", :id => "submit_form" %>
+        <% if @balance.order.book_record -%>
+        <%= link_to "返回", edit_book_record_path(@balance.order.book_record), :class => "submit1" %>
+      <% else -%>
+        <%= link_to "返回", book_records_path, :class => "submit1" %>
+      <% end -%>
       </div>
       </li>
     </ul>
@@ -103,7 +108,9 @@
 <script type="text/javascript" >
   $(document).ready(function(){
       $('#submit_form').click(function(){
-        if(confirm("确定支付!")){ $('#balance-form').submit();} 
+        if(confirm("确定支付!")){ 
+        $('#balance-form').submit();
+        } 
         else{return false;}
         });
 
@@ -121,4 +128,4 @@
 
 
 
-</script>
+    </script>

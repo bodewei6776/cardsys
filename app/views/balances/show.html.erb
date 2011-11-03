@@ -64,9 +64,7 @@
   <div class='h10'></div>
 
 
-  <%# unless @good_items.blank? %>
   <%= render :partial => "/orders/order_items_list",:locals => {:good_items => @order.product_items||[],:order => @order} %>
-  <%# end %>
 </div>
 
 <script type='text/javascript'>
