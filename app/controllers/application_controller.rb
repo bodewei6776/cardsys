@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
   layout  "application"
 
   before_filter :configure_charsets ,:set_date
-  before_filter :require_user#,:require_very_user #应该过滤掉登陆用户
+#  before_filter :require_user#,:require_very_user #应该过滤掉登陆用户
 
   helper_method :current_user_session, :current_user
   before_filter :set_catena
