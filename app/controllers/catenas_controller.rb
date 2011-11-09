@@ -1,10 +1,6 @@
 class CatenasController < ApplicationController
   def index
     @catenas = Catena.all
-
-    respond_to do |format|
-      format.xml  { render :xml => @catenas }
-    end
   end
 
   def show

@@ -13,7 +13,6 @@ module Cardsys
     # -- all .rb files in that directory are automatically loaded.
 
     # Add additional load paths for your own custom dirs
-    config.autoload_paths += %W( #{config.root}/lib/order_ext )
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named
@@ -46,6 +45,12 @@ module Cardsys
     config.filter_parameters += [:password]
 
     config.after_initialize do
+    end
+
+    config.generators do |g|
+      g.test_framework :rspec, :views => false, :fixture => true
+      g.fixture_replacement :factory_girl, :dir => 'spec/factories'
+      g.template_engine :haml
     end
 
   end

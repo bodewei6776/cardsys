@@ -15,6 +15,7 @@ class Court < ActiveRecord::Base
   Status_Disable = 2
 
   scope :enabled,where(:status => Status_Free)
+
   def generate_court_period_price(period_price)
     self.court_period_prices.find_all_by_period_price_id(period_price.id).first
   end
@@ -27,11 +28,11 @@ class Court < ActiveRecord::Base
     !court_period_prices.where("period_price_id=#{period_price.id}").first.nil?
   end
 
-  def daily_period_prices(date=Date.today,start_hour = nil,end_hour = nil)
+  def daily_period_prices(date=Date.today, start_hour = nil, end_hour = nil)
     court_available_period_prices = []
     period_prices = PeriodPrice.all_periods_in_time_span(date, start_hour, end_hour)
     period_prices.each do |period_price |
-      court_available_period_prices << period_price  if(is_useable_in_time_span?(period_price))
+      court_available_period_prices << period_price  if is_useable_in_time_span?(period_price)
     end
     court_available_period_prices.sort{|fst,scd| fst.start_time <=> scd.start_time }
   end

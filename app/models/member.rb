@@ -1,6 +1,5 @@
 require 'pinyin/pinyin'
 class Member < ActiveRecord::Base
-  include MemberOrder
 
   scope :autocomplete_for, lambda {|name| 
     where("status = '#{CommonResource::MEMBER_STATUS_ON}' and (LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name)", {:member_name => "#{name.downcase}%"}).limit(10).order("pinyin_abbr ASC") }
@@ -112,4 +111,19 @@ class Member < ActiveRecord::Base
   end
 
 
+
+  def order_errors
+    @order_errors ||= []
+  end
+
+  def clear_order_errors
+    order_errors.clear
+  end
+  
+  def is_ready_to_order?(order)
+    clear_order_errors
+    unless has_card?
+      order_errors << I18n.t('order_msg.member.non_card')
+    end
+  end
 end

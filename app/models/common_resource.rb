@@ -15,8 +15,8 @@ class CommonResource < ActiveRecord::Base
   MEMBER_STATUS_ON = 1
   IS_MEMBER = 1
   IS_GRANTER = 0
-  Type_Member,Type_blance,Type_Connter = 1, 2, 3#会员卡 储值卡 记次卡
-  Type_Member_Name,Type_blance_Name,Type_Connter_Name,Type_Zige_Name = '会员卡', '储值卡', '记次卡','资格卡'#会员卡 储值卡 记次卡
+  Type_Member,Type_Balance,Type_Counter= 1, 2, 3#会员卡 储值卡 记次卡
+  Type_Member_Name,Type_Balance_Name,Type_Counter_Name,Type_Zige_Name = '会员卡', '储值卡', '记次卡','资格卡'#会员卡 储值卡 记次卡
   Catena_id_default = 1
   Gender_Man,Gender_Woman = 1,2 #1：男 2：女
   CARD_INIT, CARD_ON, CARD_OFF = 0, 1, 2
@@ -87,16 +87,11 @@ class CommonResource < ActiveRecord::Base
   end
 
   def self.winter_time
-    @winter_time ||= CommonResource.where(:name => "times_winter", :description => Winner_Tiem_Name_CHN).first
+    @winter_time ||= CommonResource.where(:name => "times_winter").first
   end
 
   def self.summer_time
-    #@summer_time ||= CommonResource.where(:name => "times_summer", :description => Summer_Time_Name_CHN).first
     @summer_time ||= CommonResource.where(:name => "times_summer").first
-  end
-
-  def detail_str_old= str
-    str
   end
 
   def is_card_type?

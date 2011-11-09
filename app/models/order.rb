@@ -3,29 +3,16 @@ class Order < ActiveRecord::Base
   belongs_to  :card
   belongs_to  :user
   has_one     :balance, :dependent => :destroy
+  has_one     :book_record, :dependent => :destroy
   has_many    :order_items
 
-  has_many    :coach_items, :class_name => 'OrderItem', 
-              :conditions => {:item_type => "Coach"}
-  has_one     :book_record_item, :class_name => 'OrderItem',
-              :conditions => {:item_type => "BookRecord"}
-  has_many    :product_items, :class_name => 'OrderItem',
-              :conditions => {:item_type => "Good"}
+  validates  :card_id, :member_id, :presence => {:message => "信息不完整，请补充完所需要的信息"}
 
-  validates  :card_id, :member_id, :book_record_id, :presence => {:message => "信息不完整，请补充完所需要的信息"}
-
-  validate do |order|
-    order.validates_assocations
-  end
 
   after_create  :generate_balance
   after_save    :update_balance
   before_create :init_attributes
-  before_save   :auto_save_order_associations
-  after_save    :auto_generate_coaches_items
-  after_create  :auto_generate_book_record_item
 
-  before_destroy :cancel_bookrecord
 
   attr_accessor :coach_id,:operation,:updating
   attr_accessor :coach,:non_member,:member,:member_card,:book_record
@@ -323,4 +310,12 @@ class Order < ActiveRecord::Base
     self.balance.update_amount
   end
 
+  def order_errors
+    @order_errors ||= []
+  end
+
+  def clear_order_errors
+    order_errors.clear
+  end
+  
 end

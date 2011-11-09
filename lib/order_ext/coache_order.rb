@@ -1,5 +1,6 @@
 module CoacheOrder
 
+    
   def order_errors
     @order_errors ||= []
   end
@@ -20,5 +21,4 @@ module CoacheOrder
   def coache_items_in_time_span(order)
     OrderItem.coache_items_in_time_span(order)
   end
-    
 end
