@@ -1,0 +1,52 @@
+= form_for(@good,:html  => {:id => 'member_form'}) do |f|
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 填写商品信息
+      = error_messages_for :good
+      .fformbox_nr
+        %ul
+          %li
+            .w1 商品名称：
+            .w2
+              = f.text_field :name
+            .w1 商品类别：
+            .w2
+              = f.select :good_type, option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,@good.good_type),:id => "good_type",:class=> "select"
+        %ul
+          %li
+            /
+              <div class="w1">入库价格：</div>
+              <div class="w2">
+              <haml:loud> f.text_field :purchasing_price </haml:loud>
+              </div>
+            .w1 入库数量：
+            .w2
+              - if f.object.new_record?
+                = f.text_field :count_back_stock
+              - else
+                = f.object.count_back_stock
+            .w1 零售价格：
+            .w2
+              = f.text_field :price
+        %ul
+          %li
+            .w1 商品来源：
+            .w2
+              %select#good_source.select{:name => "good[good_source]"}
+                = generate_good_source_options(@good)
+    .h10
+    .input_bd
+      %button.submit1.hand{:type => "submit"}> 提交
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit2.hand{:onclick => "window.location.href='/goods'", :type => "button"} 返回
+    .clear
+:javascript
+  function fsubmit(){
+    var form = $("form[0]");
+    if($("#good_type")[0].value == ""){
+      alert("请选择商品类型！");
+    }else{
+      form.submit();
+    }
+  }

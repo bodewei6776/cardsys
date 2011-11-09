@@ -1,0 +1,29 @@
+%h1 资源信息选项
+.item
+  %fieldset.hidden
+    %p
+      %label{:for => "name"}
+        资源信息：#{@common_resource.description}
+      %input#common_resource_id{:type => "hidden", :value => @common_resource.id}/
+      %input#common_resource_detail_id{:type => "hidden", :value => @common_resource_detail.nil? ? '' :@common_resource_detail.id}/
+    %p
+      %label{:for => "name"} 选项：
+      %input#detail_name.inputtext{:name => "detail_name", :type => "text", :value => (@common_resource_detail.nil? ? '' : @common_resource_detail.detail_name)}/
+  %p{:align => "center"}
+    %a{:href => "javascript:void(0);", :onclick => "r_submit();return false;"} 确认操作
+:javascript
+  function r_submit(){
+  var type = 1;//edit
+  var detail_id = $("#common_resource_detail_id")[0].value;
+  var common_resource_id = $("#common_resource_id")[0].value;
+  if(detail_id == ""){
+    type = 0;//new
+  }
+  var detail_name = $("#detail_name")[0].value
+   $.getJSON("/common_resources/update_detail",
+      {'type':'json', 'common_resource_id':common_resource_id, 'detail_id':detail_id, 'detail_name':detail_name, 'type':type},
+      function(data){
+        alert(data);
+        location.reload();
+      });
+     }

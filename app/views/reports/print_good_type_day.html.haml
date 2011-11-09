@@ -1,0 +1,23 @@
+!!!
+%html{:lang => "zh-CN", "xml:lang" => "zh-CH", :xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %title balance print
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %meta{:content => "no-cache", "http-equiv" => "pragma"}/
+    %meta{:content => "no-cache", "http-equiv" => "cache-control"}/
+    %meta{:content => "-1", "http-equiv" => "expires"}/
+    = stylesheet_link_tag "print",:media => "print"
+    = stylesheet_link_tag "normal"
+  %body
+    = raw display_good_type_day_report(@date,@good_type)
+    .noprint
+      %form
+        %input.submit{:onclick => "window.print()", :style => "margin-top:20px; margin-left:130px;padding:3px 7px;border:1px solid black;", :type => "button", :value => "\346\211\223\345\215\260"}/
+.w96
+.h10
+:javascript
+  function recalculate(){
+    params = "date=" +$('#date_year').val() + "-" + $('#date_month').val() + "-" + $("#date_day").val(); 
+    $('.pay_ways:checked').each(function(i,node){ params += ("&" + "pay_ways[]=" + $(this).val())});
+    window.location = (window.location.pathname + "?" + params);
+  }

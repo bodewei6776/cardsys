@@ -1,0 +1,31 @@
+%label{:align => "right"}
+  = link_to '添加授权人',{:controller => :members, :action => :granter_new, :member_id => @member.id}
+  %br/
+%br/
+- if @notice
+  %p.notice= @notice
+%h1
+  = @member.name
+  的授权人列表
+%fieldset.table
+  %ul.title_ul
+    %li{:style => "width:10%;"} 授权人名称
+    %li 性别
+    %li{:style => "width:15%;"} 移动电话
+    %li{:style => "width:15%;"} 注册日期
+    %li{:style => "width:25%;"} 操作
+  - if @granters
+    - for granter in @granters
+      %ul
+        %li{:style => "width:10%;"}= granter.name
+        %li= gender_desc(granter.gender)
+        %li{:style => "width:15%;"}= granter.mobile
+        %li{:style => "width:15%;"}= granter.created_at.nil? ? "" : DateUtil::timeshort(granter.created_at)
+        %li{:style => "width:25%;"}
+          = link_to '查看', {:controller => :members, :action => :granter_show, :id => granter.id, :member_id => @member.id}
+          | #{link_to '修改',{:controller => :members, :action => :granter_edit, :granter_id => granter.id, :member_id => @member.id}}
+          | #{link_to '删除',{:controller => :members, :action => :granter_delete, :granter_id => granter.id, :member_id => @member.id}, {:confirm => '确定删除吗?'}}
+  - else
+    %p.notice 您尚未添加授权人！
+.btn.t_center
+  %a{:href => "/members"} 返回会员列表

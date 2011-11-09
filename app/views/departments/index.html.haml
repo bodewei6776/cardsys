@@ -1,0 +1,18 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 部门列表
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/departments/new'", :type => "button"} 添加部门
+  .table
+    %ul.bttitle.black.fb
+      %li.w15 部门名称
+      %li.w30 操作
+    - @departments.each do |department|
+      %ul.table_items
+        %li.w15= department.name
+        %li.w30
+          = link_to '修改', edit_department_path(department)
+          | #{link_to '删除', department, :confirm => '确定删除?', :method => :delete}
+          | #{link_to '设置权限', '/departments/department_power_index?id='+department.id.to_s}

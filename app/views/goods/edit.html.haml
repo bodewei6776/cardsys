@@ -1,0 +1,9 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 修改商品
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/goods/new'", :type => "button"} 添加商品
+  = render 'form',:good => @good
+  .h10

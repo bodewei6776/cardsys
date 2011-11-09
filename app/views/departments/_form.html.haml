@@ -1,0 +1,13 @@
+= form_for(@department,:html => {:id => "department_form"}) do |f|
+  = error_messages_for :department
+  .fformbox_nr
+    %ul
+      %li
+        .w1 部门名称：
+        .w2
+          %input#name.inputtext{:name => "department[name]", :onblur => "return;", :type => "text", :value => @department.name}/
+:javascript
+  function fsubmit(){
+    var form = $("form[0]");
+    form.submit();
+  }

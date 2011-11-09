@@ -1,0 +1,64 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 商品查询
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/goods/new'", :type => "button"} 添加商品
+  .soso
+    %form#search_form.form-profile{:action => "/goods/index?p=#{@p}", :method => "post"}
+      .w95
+        照商品类别：
+        %label
+          = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
+        \&nbsp;&nbsp;&nbsp;&nbsp;
+        按照商品名称：
+        %label
+          %input#name.inputtext{:autocomplete => "/goods/autocomplete_name", :name => "name", :type => "text", :value => params[:name]}/
+        \&nbsp;&nbsp;&nbsp;&nbsp;
+        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+  .h10
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 商品列表
+    .r_bt_r
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 编号
+      %li.w20 商品名称
+      %li.w10 商品分类
+      %li.w10 零售价（￥）
+      %li.w10 商品总数
+      %li.w10 库房商品数
+      %li.w10 前台商品数
+      %li.w15 操作
+    - @goods.each_with_index do |good,index|
+      %ul.table_items
+        %li.w5= index + 1
+        %li.w20= good.name
+        %li.w10= generate_good_type_str(good.good_type)
+        %li.w10= good.price
+        %li.w10= good.count_total_now
+        %li.w10= good.count_back_stock
+        %li.w10= good.count_front_stock
+        %li.w15
+          - if @p =='back'
+            = link_to '库存管理', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index'
+            - if good.status == CommonResource::GOOD_OFF
+              | #{link_to '启用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_ON, :id => good.id}, {:confirm => '确定重新使用该商品吗?', :style => "color:green;"}}
+            - if good.status == CommonResource::GOOD_ON
+              | #{link_to '停用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_OFF, :id => good.id}, {:confirm => '确定停用该商品吗?', :style => "color:red;"}}
+          - elsif @p == 'front'
+            = link_to '商品出库', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index'
+          - else
+            = link_to '查看', good
+            | #{link_to '修改', edit_good_path(good)}
+            | #{link_to '删除', good, :confirm => '确定删除商品'+good.name+"？", :method => :delete}
+  .h10
+  .pages
+    = will_paginate @goods, :sp => 1
+  .h10
+:javascript
+  $(".store_manage_index").colorbox({width:"80%", height:"70%", iframe:false});
+  $('#good_type').change(function(){ $('#search_form').submit(); });

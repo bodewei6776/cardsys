@@ -1,0 +1,134 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 会员查询
+    .r_bt_r
+  .soso
+    %form#search_form.form-profile{:action => "/member_cards/search", :method => "post"}
+      .w95
+        会员名称：
+        = succeed "&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;" do
+          %label{:for => "name"}
+            %input.inputtext{:autocomplete => "/members/autocomplete_name", :maxlength => "24", :name => "member_name", :tabindex => "1", :type => "text", :value => params[:member_name]}/
+        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+        - unless @member_cards.blank?
+          %br/
+          #member_cards_list
+            %label{:for => "card_id"} 选择充值的会员卡号：
+            - for member_card in @member_cards
+              - unless member_card.card_serial_num.blank?
+                = radio_button_tag("card_serial_num", member_card.card_serial_num, (member_card.card_serial_num == @serial_num)? true : false)
+                = member_card.card_serial_num
+  - if @member_card
+    .fform
+      .fformbox
+        #errorExplanation{:style => "display:none;"}
+          %h2 错误
+          %p= @notice
+        .fformbox_bt
+          %p 会员卡充值
+        .fformbox_nr
+          %ul
+            %li
+              .w1 所属会员：
+              .w2
+                = @member_card.member.name rescue "未知"
+              .w1 卡类型：
+              .w2
+                = display_card_type_desc(@member_card.nil? ? nil : @member_card.card)
+          %ul
+            %li
+              .w1 卡内金额：
+              .w2
+                = @member_card.left_fee
+                　元
+              .w1 充金额：
+              .w2
+                %input#fee{:name => "fee", :onchange => "javascript:checkNum(this.value)", :value => ""}/
+          %ul
+            %li
+              .w1 有效期：
+              .w2
+                - time = @member_card.expire_date
+                = time.blank? ? "未知" : time.strftime("%Y-%m-%d")
+              .w1 修改有效期：
+              .w2
+                %input#expire_date{:name => "expire_date", :value => ""}/
+          %ul
+            %li
+              .w1 卡内次数：
+              .w2
+                = @member_card.left_times
+                次
+              .w1 充次数：
+              .w2
+                %input#times{:name => "times", :onchange => "javascript:checkNum(this.value)", :value => ""}/
+          %ul
+            %li
+              .w1 充值人：
+              .w2
+                %input#recharge_person{:name => "recharge_person", :type => "textfield", :value => current_user.login}/
+              .w1 密码：
+              .w2
+                %input#recharge_password{:name => "recharge_password", :type => "password", :value => ""}/
+      .h10
+      .input_bd
+        %button.submit1.hand{:onclick => "recharge_submit(#{@member_card.id}, 1);", :type => "button"} 修改
+      .clear
+  .h10
+:javascript
+  $(".member_card_detail").colorbox({width:"80%", height:"80%", iframe:false});
+  $(".member_card_recharge").colorbox({width:"50%", height:"40%", iframe:false});
+
+  $(function() {
+    $("#expire_date").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true});
+  });
+  function recharge_submit(card_id, type){    
+    var expire_date = $("#expire_date")[0].value;
+    if(type == '1'){
+      if(!confirm("确定要做此操作？")) return;
+    }
+    var fee = $("#fee")[0].value;
+    var times = $("#times")[0].value;
+    var recharge_person = $("#recharge_person").val();
+    var recharge_password= $("#recharge_password").val();
+    if(""!=fee && !isNumTemp(fee)){
+      alert("充值数必须为有效数字！");
+      return;
+    }
+    if(""!=times && !isNumTemp(times)){
+      alert("充值数必须为有效数字！");
+      return;
+    }
+    if("" == recharge_person.trim()) { alert("请输入充值人id"); return;}
+    if("" == recharge_password.trim()) { alert("请输入充值人密码"); return;}
+    $.getJSON("/members/member_card_recharge",
+        {'type':'json', 'fee':fee, 'times':times, 'member_card_id':card_id, 'type':type, 
+      'expire_date':expire_date,'user':recharge_person,'password':recharge_password},
+    function(data){
+      $("#errorExplanation").show();
+      $("#errorExplanation p").text(data.notice);
+      var form = $("form[0]");
+      form.attr("action", "/member_cards/search?p=num");
+      if(data.result == "1"){
+      form.submit();
+      }
+    });
+  }
+
+  $(":radio").click(function(){
+    var form = $("form[0]");
+    form.attr("action", "/member_cards/search?p=num");
+    form.submit();
+  });
+  function checkNum(k){        
+    if(""!=k && !isNumTemp(k)){
+      alert("充值数必须为有效数字！");
+      $(this)[0].focus();
+      return false;
+    }
+  }
+  function isNumTemp(obj){
+    return /^[+-]?\d+$/.test(obj);
+  }

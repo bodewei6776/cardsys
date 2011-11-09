@@ -1,0 +1,8 @@
+:javascript
+  $(document).ready(function(){
+      $('table.report_table tr.report_item').mouseover(function(){
+        $(this).addClass('tr_hover');
+        }).mouseout(function(){
+          $(this).removeClass('tr_hover');
+          });
+      });

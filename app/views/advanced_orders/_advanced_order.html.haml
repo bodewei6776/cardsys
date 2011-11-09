@@ -1,0 +1,35 @@
+.listcontent_w.clearfix.cleft
+  %ul
+    %li.cleft
+      .w1 会员:
+      .w2
+        = advanced_order.member.name
+      .w1 卡号:
+      .w2{:style => "width:100px;"}
+        = advanced_order.member_card.card_serial_num
+    %li.cleft
+      .w1 啊开始日期:：
+      .w2
+        = advanced_order.start_date.to_s(:db)
+      .w1 结束日期:
+      .w2{:style => "width:100px;"}
+        = advanced_order.end_date.to_s(:db)
+    %li.cleft
+      .w1 场地：
+      .w2
+        = advanced_order.court.name
+      .w1 星期
+      .w2{:style => "width:100px;"}
+        = advanced_order.wday
+    %li.cleft
+      .w1 统计：
+      .w2
+        = advanced_order.orders.size
+      .w1 明细
+      .w2{:style => "width:100px;"}
+        - advanced_order.orders.each do |o|
+          = o.book_record.record_date.to_date.to_s(:db)
+.btn.t_center
+  %input{:onclick => "window.location.href='/advanced_orders/#{advanced_order.id}/edit';return false", :type => "button", :value => "\345\217\230\346\233\264\345\221\250\346\234\237\346\200\247\351\242\204\345\256\232"}/
+  %input{:onclick => "if(confirm('确认要取消么?')){window.location.href='/advanced_orders/#{@order.id}/cancle';}", :type => "button", :value => "\345\217\226\346\266\210\345\221\250\346\234\237\345\217\226\351\242\204\345\256\232"}/
+  %input{:onclick => "window.history.back();", :type => "button", :value => "\350\277\224\345\233\236"}/

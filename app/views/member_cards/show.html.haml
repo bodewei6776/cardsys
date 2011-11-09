@@ -1,0 +1,28 @@
+%h1 会员卡信息
+.listcontent_w.clearfix.cleft
+  %ul.clearfix
+  %fieldset.hidden
+    %legend 属性信息
+    %li.cleft
+      .w1 会员名称：
+      .w2
+        = @member_card.member.name
+        - if @member_card.member.name.blank?
+          %a.blank_element
+      .w1 会员卡号：
+      .w2
+        = @member_card.card_serial_num
+    %li.cleft
+      .w1 注册日期：
+      .w2
+        = DateUtil::timeshort(@member_card.created_at)
+      .w1 授权人：
+      .w2
+        = @member_card.member_card_granters
+    %li.cleft
+      .w1 卡余额/卡余次：
+      .w2
+        = @member_card.left_fee_value
+      .w1 会员卡状态：
+      .w2
+        = @member_card.status_desc

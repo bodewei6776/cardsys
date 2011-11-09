@@ -1,0 +1,73 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 周期预定结果
+    .r_bt_r
+  .info
+    .infobox
+      .infobox_bt
+        %p
+          会员 #{@member.name} 周期预定结果
+      .infobox_nr
+        %ul
+          %li
+            .w1 会员名称：
+            .w2
+              = @member.name
+            .w1 联系电话：
+            .w2
+              = @member.mobile
+        %ul
+          %li
+            .w1 会员卡号：
+            .w2
+              = @current_card.card_serial_num
+            .w1 卡内余额：
+            .w2
+              = @current_card.left_fee
+              元
+        %ul
+          %li
+            .w1 卡类型：
+            .w2
+              = @current_card.card.card_type_desc
+            .w1 卡状态：
+            .w2
+        %ul
+          %li
+            .w1 场地：
+            .w2
+              = @order.court.name
+            .w1 每周：
+            .w2
+              = @order.wday
+        %ul
+          %li
+            .w1 开始日期：
+            .w2
+              = @order.start_date.to_s
+            .w1 结束日期：
+            .w2
+              = @order.end_date.to_s
+        %ul
+          %li
+            .w1 开始时间：
+            .w2
+              = @order.start_hour
+              \:00
+            .w1 结束时间：
+            .w2
+              = @order.end_hour
+              \:00
+        %ul
+          %li
+            .w1 统计：
+            .w2
+              一共#{@order.orders.size}次
+            /
+              <div class="w1">明细：</div>
+              <div class="w2">
+              <haml:silent>               @order.orders.each do |o|
+              </haml:silent><haml:block>                <haml:loud> o.book_record.record_date.to_date.to_s(:db) </haml:loud>
+              </haml:block>            </div>

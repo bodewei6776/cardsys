@@ -1,0 +1,30 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 用户列表
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/users/new'", :type => "button"} 添加用户
+  .table
+    %ul.bttitle.black.fb
+      %li.w10 用户名
+      %li.w10 昵称
+      %li.w10 部门
+      %li.w10 所属分店
+      %li.w10 可登陆分店
+      %li.w35 操作
+    - for user in @users
+      %ul.member_items.table_items
+        %li.w10= user.login
+        %li.w10= user.user_name
+        %li.w10= user.departments.collect(&:name).join(",") if user.departments
+        %li.w10= user.catena.name if user.catena
+        %li.w10= user.catenas.collect(&:name).join(",") if user.catenas
+        %li.w35
+          = link_to '查看', edit_user_path(user),:class => "hand"
+          |#{link_to '删除', user, :confirm => '确定删除吗?', :method => :delete ,:class => "hand"}
+          |#{link_to '设置权限', '/users/user_power_index?id='+user.id.to_s,:class => "hand"}
+  .h10
+  .pages
+    = will_paginate @users, :sp => 1
+  .h10

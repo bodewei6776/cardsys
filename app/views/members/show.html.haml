@@ -1,0 +1,196 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 会员详细资料
+    .r_bt_r
+  .info
+    .infobox
+      .infobox_bt
+        %p
+          会员 #{@member.name} 的基本资料
+      .infobox_nr
+        %ul
+          %li
+            .w1 会员名称：
+            .w2
+              = @member.name
+            .w1 注册日期：
+            .w2
+              = DateUtil::timeshort(@member.created_at)
+        %ul
+          %li
+            .w1 会员昵称：
+            .w2
+              = @member.nickname.blank? ?  "未知" : @member.nickname
+            .w1 会员性别：
+            .w2
+              = gender_desc(@member.gender)
+        %ul
+          %li
+            .w1 移动电话：
+            .w2
+              = @member.mobile
+            .w1 固定电话：
+            .w2
+              = @member.telephone.blank? ? '无' : @member.telephone
+        %ul
+          %li
+            .w1 电子邮箱：
+            .w2
+              = @member.email.blank? ? '无' : @member.email
+            .w1 备用电话：
+            .w2
+              = @member.standby_phone.blank? ? '无' : @member.standby_phone
+        %ul
+          %li
+            .w1 证件类型：
+            .w2
+              = generate_cert_type_str(@member.cert_type)
+              - if generate_cert_type_str(@member.cert_type).blank?
+                %a.blank_element
+            .w1 证件号码：
+            .w2
+              - if !generate_cert_type_str(@member.cert_type).blank?
+                = @member.cert_num
+        %ul
+          %li
+            .w1 联系地址：
+            .w2
+              = @member.address.blank? ? '无' : @member.address
+            .w1 介绍人：
+            .w2
+              = @member.mentor.blank? ? '无' : @member.mentor
+        %ul
+          %li
+            .w1 会员生日：
+            .w2= @member.birthday.blank? ? "未知" : DateUtil.timeshort(@member.birthday)
+            .w1 备注：
+            .w2= @member.description
+    .h10
+    .infobox
+      .infobox_bt
+        %p
+          会员 #{@member.name}信息统计
+      .infobox_nr
+        %ul
+          %li
+            .w1 刷卡次数：
+            .w2
+              = @member.balances.balanced.count
+            .w1 最近来店：
+            .w2
+              = @member.latest_comer_date.blank? ? '无' : @member.latest_comer_date
+        %ul
+          %li
+            .w1 消费总金额：
+            .w2
+              = @member.member_consume_amounts
+            .w1 卡内余额：
+            .w2
+              = @member.member_card_left_fees
+        %ul
+          %li
+            .w1 总充值金额：
+            .w2
+              = @member.recharge_fees
+            .w1 总充值次数：
+            .w2
+              = @member.recharge_times
+              次
+        %ul
+          %li
+            .w1 卡付金额：
+            .w2
+              = @member.use_card_amount
+              元
+            .w1 卡付小时数：
+            .w2
+              = @member.use_card_times
+              次
+        %ul
+          %li
+            .w1 现金支付：
+            .w2
+              = @member.use_cash_amount
+              元
+            .w1 卡内小时数：
+            .w2
+              = @member.member_card_left_times
+    .h10
+    .infobox
+      .infobox_bt
+        %p
+          会员 #{@member.name} 的卡列表
+      .table2
+        %ul.bttitle.black.fb
+          %li.w5 序号
+          %li.w10 卡号
+          %li.w10 卡状态
+          %li.w15 卡内余额
+          %li.w10 卡内次数
+          %li.w10 卡有效期
+          %li.w15 授权人
+        - @member_cards.each_with_index do |card,index|
+          %ul.table_items
+          %input#member_id{:type => "hidden", :value => @member.id}/
+          %li.w5= index + 1
+          %li.w10= card.card_serial_num
+          %li.w10= member_card_status_str(card.status)
+          %li.w15= card.left_fee
+          %li.w10= card.left_times
+          %li.w10= DateUtil.timeshort(card.expire_date)
+          %li.w15
+            - for granter in generate_granter_options(@member)
+              - if @member.is_granter(granter[1], card.id)
+                = granter[0]
+    .h10
+    .infobox
+      .infobox_bt
+        %p
+          会员 #{@member.name} 的充值记录列表
+      .table2
+        %ul.bttitle.black.fb
+          %li.w5 序号
+          %li.w15 卡号
+          %li.w15 充值金额(￥)/次数
+          %li.w15 充值日期
+          %li.w15 操作人
+        - @recharge_records.each_with_index  do |recharge_record,index|
+          %ul.table_items
+            %li.w5= index + 1
+            %li.w15= recharge_record.member_card.card_serial_num
+            %li.w15= recharge_record.display_recharge_info
+            %li.w15= DateUtil::timeshort(recharge_record.created_at)
+            %li.w15= recharge_record.recharge_person_name
+    .h10
+    .infobox
+      .infobox_bt
+        %p
+          会员 #{@member.name} 的消费记录列表
+      .table2
+        %ul.bttitle.black.fb
+          %li.w5 序号
+          %li.w15 时间
+          %li.w15 消费金额(次)
+          %li.w10 场地支付方式
+          %li.w10 商品支付方式
+          %li.w10 授权人消费
+          %li.w10 操作
+        - @balances.each_with_index do |balance,index|
+          %ul.table_items
+            %li.w5= index + 1
+            %li.w15= balance.created_at.to_s(:db)
+            %li.w15= balance.balance_amount_desc
+            %li.w10= balance.balance_way_desc
+            %li.w10= balance.goods_balance_type_desc
+            %li.w10= balance.balance_person_desc
+            %li.w10
+              %a.balance_detail{:href => "#{order_balance_path(balance)}?layout=false", :title => "\347\202\271\345\207\273\345\261\225\345\274\200\346\230\216\347\273\206"} 明细
+    .h10
+    .input_bd
+      %button.submit1.hand{:name => "loginsubmit", :onclick => "javascript:window.location.href="#{edit_member_path(@member)}";", :tabindex => "100", :type => "submit", :value => "true"}> 修改
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit3.hand{:name => "loginsubmit", :onclick => "javascript:window.location.href="#{members_path}";", :tabindex => "100", :type => "submit", :value => "true"} 返回
+    .clear
+  .h10

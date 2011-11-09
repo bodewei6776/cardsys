@@ -1,0 +1,76 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 会员查询
+    .r_bt_r
+  .soso
+    %form#search_form.form-profile{:action => "/members/advanced_search", :method => "get"}
+      .w95
+        会员名称：
+        %label
+          %input#name{:autocomplete => "/members/autocomplete_name", :name => "name", :type => "text", :value => params[:name]}/
+        \&nbsp;&nbsp;&nbsp;&nbsp;
+        会员卡号：
+        %label
+          %input{:autocomplete => "/members/autocomplete_card_serial_num", :name => "card_serial_num", :tabindex => "1", :type => "text", :value => params[:card_serial_num]}/
+        \&nbsp;&nbsp;&nbsp;&nbsp;
+        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+        = render :partial => "members/advance_search"
+  .h10
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 会员列表
+    .r_bt_r
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 编号
+      %li.w10 会员名称
+      %li.w15 会员卡信息
+      %li.w10 移动电话
+      %li.w8 注册日期
+      %li.w6 现有金额
+      %li.w6 现有次数
+      %li.w6 消费金额
+      %li.w6 消费次数
+      %li.w8 会员生日
+      %li.w12 操作
+    - @members.each_with_index do |member,index|
+      %ul.member_items.table_items
+        %li.w5= index + 1
+        %li.w10= link_to member.name,member
+        %li.w15{:style => "overflow:hidden;", :title => raw member.card_serial_nums}= raw member.card_serial_nums
+        %li.w10= member.mobile
+        %li.w8= member.created_at.nil? ? "" : DateUtil::timeshort(member.created_at)
+        %li.w6= member.member_card_left_fees
+        %li.w6= member.member_card_left_times
+        %li.w6= member.member_consume_amounts
+        %li.w6= member.use_card_times
+        %li.w8
+          = member.birthday.blank? ? ':' : DateUtil::timeshort(member.birthday)
+        %li.w12
+          = link_to '查看', member
+          |
+          \#{link_to '修改', edit_member_path(member)} |
+          \#{link_to '删除', member, :confirm => '确定删除吗?', :method => :delete}
+  .h10
+  .pages
+    = will_paginate @members, :sp => 1
+  .h10
+:javascript
+  $(function() {
+    $("#reg_date_start").new_datepicker();
+    $("#reg_date_end").new_datepicker();
+    $("#expire_date_start").new_datepicker();
+    $("#expire_date_end").new_datepicker();
+    $(".birthday_input").new_datepicker();
+  });
+  $(function() {
+    $("#comer_date_start").new_datepicker();
+    $("#comer_date_end").new_datepicker();
+  });
+  $(".member_card_bind_index").colorbox({width:"80%", height:"99%", iframe:false});
+  $(".member_card_index").colorbox({width:"80%", height:"99%", iframe:false});
+
+ 

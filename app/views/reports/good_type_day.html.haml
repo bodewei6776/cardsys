@@ -1,0 +1,12 @@
+= render :partial => "highlight_hover"
+.w96
+  = raw display_good_type_day_report(@date,@good_type)
+.h10
+= link_to "打印",{:controller => "reports",:action => "print_good_type_day",:date => @date,:id=> @good_type},:class=> "submit1 button" ,:style => "padding:3px 7px;"
+.h10
+:javascript
+  function recalculate(){
+    params = "date=" +$('#date_year').val() + "-" + $('#date_month').val() + "-" + $("#date_day").val(); 
+    $('.pay_ways:checked').each(function(i,node){ params += ("&" + "pay_ways[]=" + $(this).val())});
+    window.location = (window.location.pathname + "?" + params);
+  }

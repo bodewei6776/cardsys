@@ -1,0 +1,26 @@
+= form_for(@common_resource) do |f|
+  - if @common_resource.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@common_resource.errors.count, "error")
+        prohibited this common_resource from being saved:
+      %ul
+        - @common_resource.errors.full_messages.each do |msg|
+          %li= msg
+  .field
+    = f.label :name
+    %br/
+    = f.text_field :name
+  .field
+    = f.label :description
+    %br/
+    = f.text_field :description
+  .field
+    = f.label :detail_str
+    %br/
+    = f.text_field :detail_str
+  /
+    <div><#%= f.label :资源选项 %> <请输入多个资源选项，并用空格分开。如:A B><br />
+    <#%= f.text_field :detail_str %></div>
+  .actions
+    = f.submit

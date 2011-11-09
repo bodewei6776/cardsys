@@ -1,0 +1,51 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 商品信息管理
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/goods/new'", :type => "button"} 添加商品
+  .info
+    .infobox
+      .infobox_bt
+        %p
+          商品 #{@good.name} 的基本信息
+      .infobox_nr
+        %ul
+          %li
+            .w1 商品名称：
+            .w2
+              = @good.name
+            .w1 商品类型：
+            .w2
+              = generate_good_type_str(@good.good_type)
+        %ul
+          %li
+            .w1 入库价格：
+            .w2
+              = @good.purchasing_price
+            .w1 零售价格：
+            .w2
+              = @good.price
+        %ul
+          %li
+            .w1 库存总数：
+            .w2
+              = @good.count_total_now
+            .w1 后台库总数：
+            .w2
+              = @good.count_back_stock
+        %ul
+          %li
+            .w1 前台库总数：
+            .w2
+              = @good.count_total_now
+            .w1 商品来源：
+            .w2
+              = generate_good_source_str(@good.good_source)
+    .h10
+    .input_bd
+      %button.submit1.hand{:onclick => "window.location.href='#{edit_good_path(@good)}'", :type => "button"}> 修改
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit3.hand{:onclick => "window.location.href='#{goods_path}'", :type => "button"} 返回
+    .clear

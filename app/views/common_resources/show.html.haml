@@ -1,0 +1,13 @@
+%p#notice= notice
+%p
+  %b 名称:
+  = @common_resource.name
+%p
+  %b 描述:
+  = @common_resource.description
+%p
+  %b 选项:
+  = @common_resource.detail_str
+= link_to 'Edit', edit_common_resource_path(@common_resource)
+|
+\#{link_to 'Back', common_resources_path}

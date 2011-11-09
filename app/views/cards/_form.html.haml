@@ -1,0 +1,99 @@
+- form_for card  do |f|
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 基本属性
+      = error_messages_for :card
+      .fformbox_nr
+        %ul
+          %li
+            .w1 卡名：
+            .w2
+              = f.text_field :name
+            .w1 基础类型：
+            .w2
+              %select#card_type.select{:name => "card[card_type]", :onchange => "type_change()"}
+                = generate_card_type_options(card)
+        %ul
+          %li
+            .w1 卡前缀：
+            .w2
+              = f.text_field :card_prefix
+            .w1 有效期：
+            .w2
+              = f.text_field :expired
+              个月
+        %ul
+          %li
+            .w1 可消费类型：
+            .w2
+              = f.radio_button :consume_type,1
+              仅限场地消费
+              \#{f.radio_button :consume_type,2}所有消费
+          %li
+            .w1 签字权：
+            .w2
+              = f.text_field :shared_amount
+        %ul
+          %li
+            .w1 提醒金额：
+            .w2
+              = f.text_field :min_amount
+              元
+            .w1 提醒次数：
+            .w2
+              = f.text_field :min_count
+              次
+        %ul
+          %li
+            .w1 预期提醒：
+            .w2
+              = f.text_field :min_time
+              天
+        %ul{:style => "height:80px;"}
+          %li
+            .w1 说明：
+            .ww2
+              %textarea{:cols => "45", :name => "card[description]", :rows => "4"}= card.description
+              .clear
+        .clear
+    .h10
+    .fformbox
+      .fformbox_bt
+        %p 时段折扣价
+      .table2
+        %ul.bttitle.black.fb
+          %li.w5 序号
+          %li.w20 时段
+          %li.w10 标准收费(/小时)
+          %li.w10 可用
+          %li.w15 折扣收费
+          %li.w27 说明
+        - @period_prices.each_with_index do |period_price,index|
+          - available_period = card.generate_card_period_price(period_price)
+          %ul.table_items
+            %li.w5= index + 1
+            %li.w20
+              = period_price.name
+              ：#{period_price.start_time}:00-#{period_price.end_time}:00
+            %li.w10= period_price.price
+            %li.w10
+              <input type="checkbox" name="time_available_#{period_price.id}"  value="1"
+              - if available_period
+                checked
+              \/>
+            %li.w15
+              %input{:maxlength => "4", :name => "time_discount_#{period_price.id}", :size => "4", :type => "text", :value => card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price}/
+            %li.w27= period_price.description
+    .h10
+    .input_bd
+      %button.submit1.hand{:type => "submit"}> 提交
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit2.hand{:onclick => "window.location.href='/cards'", :type => "button"} 返回
+    .clear
+:javascript
+  function fsubmit()
+  {
+    var form = $("form[0]");
+    form.submit();
+  }

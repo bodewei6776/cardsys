@@ -1,0 +1,198 @@
+- if flash[:notice]
+  #errorExplanation
+    %h2 提示
+    %p
+      = flash[:notice]
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 购买商品
+    .r_bt_r
+  .fformbox_nr
+    = form_tag  create_good_buy_balances_path ,:id => "balance_form"  do |f|
+      %ul
+        %li
+          .w1
+            %button#goods-list.submit2.hand{:href => "/goods/goods", :value => "\346\267\273\345\212\240\345\225\206\345\223\201"} 添加商品
+      %ul
+        %li
+          .w1 是否是会员：
+          .w1
+            = radio_button_tag "","",false,:onclick => "show_div($(this),'member')",:id => "radio_yes"
+            是
+            \#{radio_button_tag "","",false,:onclick => "show_div($(this),'sanke')",:id => "radio_no"}否
+            \#{hidden_field_tag "member","member",:id=> "member_or_not"}
+      #member
+        %ul
+          %li
+            .w1
+              会员姓名：
+            .w2
+              %input#member_name{:name => "member_name", :type => "text", :user_autocomplete => "/book_records/complete_for_members"}/
+              %input#member_id{:name => "member_id", :type => "hidden"}/
+            .w1
+              会员卡号：
+            .w2
+              %p#cards
+                %input#member_card_name_field{:member_card_autocomplete => "/member_cards/autocomplete_card_serial_num", :name => "member_card", :type => "field"}/
+                %input#member_card_hidden_id{:name => "member_card_id", :type => "hidden"}/
+              %p#notice{:style => "color:red;display:inline;"}
+        %ul
+          %li
+            .w1
+              卡主信息：
+            .w2
+              %p#member_info{:style => "color:red;"} 未知
+            .w1
+              卡信息
+            .w2{:style => "width:300px;"}
+              %p#member_card_info{:style => "color:red"} 未知
+        %ul
+          %li
+            .w1 支付方式:
+            .w2{:style => "width:500px;"}
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Card,false,:class => 'balance_way'
+                记账
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Cash,false,:class => 'balance_way'
+                现金
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Post,false,:class => 'balance_way'
+                POS机
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Check ,false,:class => 'balance_way'
+                支票
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Guazhang,false,:class => 'balance_way'
+                挂账
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Bank,false,:class => 'balance_way'
+                银行
+      #sanke
+        %ul
+          %li
+            .w1
+              散客姓名：
+            .w2
+              %input#sanke_name.inputtext{:name => "sanke_name", :type => "text", :value => "\346\225\243\345\256\242"}/
+        %ul
+          %li
+            .w1
+              支付方式:
+            .w2
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Cash,false,:class => 'balance_way'
+                现金
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Bank,false,:class => 'balance_way'
+                银行
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Post,false,:class => 'balance_way'
+                POS机
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Check ,false,:class => 'balance_way'
+                支票
+              %label.labelRadio
+                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Guazhang,false,:class => 'balance_way'
+                挂账
+  .h10
+  .infobox_bt
+    %p 商品消费列表
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 序号
+      %li.w10 商品名称
+      %li.w10 商品价格
+      %li.w15 数量
+      %li.w10 折扣
+      %li.w15 总额
+      %li.w15 操作
+    #cart_goods_list
+      - unless cart.blank?
+        = render :partial => "cart_goods_list"
+    .h10
+    = submit_tag "付款",:class => "submit2 hand button confirm"
+    = link_to "清空购物车",clear_goods_balances_path,:class => "submit2 hand",:style => "padding: 3px 7px;"
+  .h10
+.h10
+:javascript
+  function show_div(dom, id){
+    $('#sanke').hide();$('#member').hide();
+    $('#radio_yes').attr('checked',false);
+    $('#radio_no').attr('checked',false);
+    dom.attr('checked',true);
+    $('#' + id +'').show(); 
+    $('#member_or_not').attr('value',id);
+  } 
+<haml:silent> if @order.is_member? 
+</haml:silent><haml:block>  show_div($('#radio_yes'),'member');
+</haml:block><haml:silent> else
+</haml:silent><haml:block>  show_div($('#radio_no'),'sanke');
+</haml:block>
+
+$(document).ready(function(){
+    $("#goods-list").colorbox({width:"900", height:"700", iframe:true});
+    userAutocomplete();
+    goodAutocomplete();
+    $('#quantity').blur(function(){
+      var quantity = $(this).val();
+      if(isNaN(quantity)){
+      alert('请输入正确数量');
+      $(this).focus();
+      return false;
+      }
+      else{
+      $('#sub_total').text(parseInt(quantity) *$('#price').text());
+      }
+
+      });
+    });
+
+$("#balance_form").submit(function(){
+    if($('#member_or_not').attr('value') == "member"){
+    if($('#member_name').attr('value') == ""){ alert("会员姓名不能为空"); return false; }
+    if($('#member_id').attr('value') == ""){ alert("会员卡号不能为空"); return false;}
+    if($('#member input[type=radio]:checked').size() == 0){alert("请选择支付方式");return false;}
+    }
+    else{
+    if($('#sanke_name').attr('value') == ""){ alert("散客姓名不能为空"); return false; }
+    if($('#sanke input[type=radio]:checked').size() == 0){alert("请选择支付方式");return false;}
+    }
+
+    if(!confirm("确认支付？")){ return false;}
+    });
+
+function update_discount(pid,price,discount){
+  if(isNaN(price) || parseFloat(price) < 0){ alert('价格有问题'); return;}
+  $.post("/balances/change_li_real_total_price",{product_id: "" + pid, real_total_price: "" + price,discount:discount},
+      function(reply){ $('#cart_goods_list').html(reply); highlight_table();});
+}
+
+$(document).ready(function(){
+    member_card_Autocomplete();
+    $('select.discount').live('change',function(){
+      var good_id = $(this).parent().parent().find('.good_id'); 
+      var total_price = $(this).parent().parent().find('.total_price'); 
+      var li_real_total_price = $(this).parent().parent().find('.li_real_total_price'); 
+      var discount = $(this).find('option:selected'); 
+      li_real_total_price.attr('value',parseFloat(discount.val()) * total_price.attr('value'));
+      update_discount(good_id.val(),li_real_total_price.val(),discount.val());
+      });
+    $('input.li_real_total_price').live('blur',function(){ 
+      var li_real_total_price = $(this).parent().parent().find('.li_real_total_price'); 
+      var good_id = $(this).parent().parent().find('.good_id'); 
+      var discount = $(this).parent().parent().find('option:selected'); 
+      update_discount(good_id.val(),li_real_total_price.val(),discount.val());
+      });
+    });
+
+<haml:silent> if params[:popup]
+</haml:silent><haml:block>  function PopupCenter(pageURL, title,w,h) {
+    var left = (screen.width/2)-(w/2);
+    var top = (screen.height/2)-(h/2);
+     window.open(pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+  } 
+PopupCenter("/balances/#{params[:id]}/print","打印",400,600);
+</haml:block>

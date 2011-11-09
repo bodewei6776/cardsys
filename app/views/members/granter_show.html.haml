@@ -1,0 +1,39 @@
+%h1.title
+  会员#{@base_member.name}的授权人 #{@granter.name} 的详细资料
+.listcontent_w.clearfix.cleft
+  %ul.clearfix
+  %fieldset.hidden
+    %legend 属性信息
+    %li.cleft
+      .w1 会员名称：
+      .w2
+        = @granter.name
+        - if @granter.name.blank?
+          %a.blank_element
+      .w1 注册日期：
+      .w2
+        = DateUtil::timeshort(@granter.created_at)
+    %li.cleft
+      .w1 会员性别：
+      .w2
+        = gender_desc(@granter)
+      .w1 移动电话：
+      .w2
+        = @granter.mobile
+    %li.cleft
+      .w1 证件类型：
+      .w2
+        = generate_cert_type_str(@granter.cert_type)
+        - if generate_cert_type_str(@granter.cert_type).blank?
+          %a.blank_element
+      .w1 证件号码：
+      .w2
+        = @granter.cert_num
+    %li.cleft
+      .w1 备注：
+      .w2
+        = @granter.description
+.btn.t_center
+  = link_to '修改',{:controller => :members, :action => :granter_edit, :granter_id => @granter.id, :member_id => @base_member.id}
+  |
+  \#{link_to '返回',{:controller => :members, :action => :granter_index, :member_id => @base_member.id}}

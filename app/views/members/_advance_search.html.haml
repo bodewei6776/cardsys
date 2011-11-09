@@ -1,0 +1,51 @@
+:css
+  #adv_search div{width:750px;padding: 5px;margin-left:-30px }
+  #adv_search div label{width: 80px;text-align: right;}
+  .inputtext{width: 70px;}
+#adv_search.w95
+  %input#sp{:name => "sp", :type => "hidden", :value => params[:sp]||0}/
+  %div
+    %label{:for => "card_id"} 注册日期：
+    %input#reg_date_start.inputtext{:name => "reg_date_start", :onblur => "return;", :type => "text", :value => params[:reg_date_start]}/
+    \-
+    %input#reg_date_end.inputtext{:name => "reg_date_end", :onblur => "return;", :type => "text", :value => params[:reg_date_end]}/
+    %label{:for => "card_id"} 到期时间：
+    %input#expire_date_start.inputtext{:name => "expire_date_start", :onblur => "return;", :type => "text", :value => params[:expire_date_start]}/
+    \-
+    %input#expire_date_end.inputtext{:name => "expire_date_end", :onblur => "return;", :type => "text", :value => params[:expire_date_end]}/
+  %div
+    %label{:for => "name"} 来店日期：
+    %input#comer_date_start.inputtext{:name => "comer_date_start", :onblur => "return;", :type => "text", :value => params[:comer_date_start]}/
+    \-
+    %input#comer_date_end.inputtext{:name => "comer_date_end", :onblur => "return;", :type => "text", :value => params[:comer_date_end]}/
+    %label{:for => "card_id"} 刷卡次数：
+    %input.inputtext{:name => "consume_count_start", :tabindex => "1", :type => "text", :value => params[:consume_count_start]}/
+    \-
+    %input.inputtext{:name => "consume_count_end", :tabindex => "1", :type => "text", :value => params[:consume_count_end]}/
+  %div
+    %label{:for => "card_id"} 消费总额：
+    %input.inputtext{:name => "consume_fees_start", :onblur => "return;", :type => "text", :value => params[:consume_fees_start]}/
+    \-
+    %input.inputtext{:name => "consume_fees_end", :onblur => "return;", :type => "text", :value => params[:consume_fees_end]}/
+    %label{:for => "card_id"} 卡内余额：
+    %input.inputtext{:name => "left_fees_start", :onblur => "return;", :type => "text", :value => params[:left_fees_start]}/
+    \-
+    %input.inputtext{:name => "left_fees_end", :onblur => "return;", :type => "text", :value => params[:left_fees_end]}/
+  %div
+    %label{:for => "card_id"} 卡内余次：
+    %input.inputtext{:name => "left_times_start", :onblur => "return;", :type => "text", :value => params[:left_times_start]}/
+    \-
+    %input.inputtext{:name => "left_times_end", :onblur => "return;", :type => "text", :value => params[:left_times_end]}/
+    %label{:for => "card_id"} 会员生日：
+    %input.birthday_input.inputtext{:name => "member_birthday_start", :onblur => "return;", :type => "text", :value => params[:member_birthday_start]}/
+    \-
+    %input.birthday_input.inputtext{:name => "member_birthday_end", :onblur => "return;", :type => "text", :value => params[:member_birthday_end]}/
+  .clear
+  %div
+    %label{:for => "card_id"} 会员性别：
+    - gender = params[:member_gender]
+    = radio_button_tag("member_gender","", ( gender.to_i == "")?true:false)
+    全部
+    \#{radio_button_tag("member_gender",CommonResource::Gender_Man, ( gender.to_i == CommonResource::Gender_Man)?true:false)}男
+    \#{radio_button_tag("member_gender",CommonResource::Gender_Woman, (gender.to_i == CommonResource::Gender_Woman)?true:false)}女
+  .clear

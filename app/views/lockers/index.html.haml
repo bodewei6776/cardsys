@@ -1,0 +1,59 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 储物柜查询
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/locker/new'", :type => "button"} 添加储物柜
+  .soso
+    %form#search_form.form-profile{:action => "/locker/index?p=#{@p}", :method => "post"}
+      .w95
+        按类别：
+        %label
+          = select_tag "locker_type",raw(generate_locker_type_options(@locker_type)),:id => "locker_type",:class=> "select"
+        \&nbsp;&nbsp;&nbsp;&nbsp;
+        按编号：
+        %label
+          %input#num.inputtext{:autocomplete => "/lockers/autocomplete_num", :num => "num", :type => "text", :value => params[:num]}/
+        \&nbsp;&nbsp;&nbsp;&nbsp;
+        %input#search_member.inputsubmit{:num => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+  .h10
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 储物柜列表
+    .r_bt_r
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 编号
+      %li.w10 类型
+      %li.w10 储物柜编号
+      %li.w10 租用状态
+      %li.w10 会员姓名
+      %li.w5 登记日期
+      %li.w5 起租日 
+      %li.w5 到租日 
+      %li.w5 租用费
+      %li.w10 支付方式 
+      %li.w10 备注
+      %li.w10 操作
+    - @lockers.each_with_index do |locker,index|
+      %ul.table_items
+        %li.w5
+          = index.succ
+        %li.w10
+          = locker_type_in_words(locker.locker_type)
+        %li.w10= locker.num
+        %li.w10= locker_state_in_words(locker.state)
+        %li.w10/
+      %li.w5/
+      %li.w5/
+      %li.w5/
+      %li.w5/
+      %li.w10/
+      %li.w10= locker.remark
+      %li.w10= locker.remark
+    .h10
+    .pages
+      = will_paginate @goods, :sp => 1
+    .h10

@@ -1,0 +1,40 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 教练列表
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/coaches/new'", :type => "button"} 添加教练
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 编号
+      %li.w10 教练名称
+      %li.w10 性别
+      %li.w10 教练类型
+      %li.w10 联系电话
+      %li.w10 费用（￥/小时）
+      %li.w15 状态
+      %li.w15 操作
+    - @coaches.each_with_index do |coach,index|
+      %ul.table_items
+        %li.w5= index + 1
+        %li.w10= coach.name
+        %li.w10= gender_desc(coach.gender)
+        %li.w10= generate_coach_type_str(coach.coach_type)
+        %li.w10= coach.telephone
+        %li.w10= coach.fee
+        %li.w15= coach.coach_status_str
+        %li.w15
+          = link_to '查看', coach
+          |
+          \#{link_to '修改', edit_coach_path(coach)}
+          |
+          - if coach.status == CommonResource::COURT_ON
+            = link_to '停用', {:controller => :coaches, :action => :change_status, :status => 0, :id => coach.id}, {:confirm => '确定停用吗?'}
+          - elsif coach.status == CommonResource::COURT_OFF
+            = link_to '启用', {:controller => :coaches, :action => :change_status, :status => 1, :id => coach.id}, {:confirm => '确定启用吗?'}
+            | #{link_to '删除', coach, :confirm => '确定删除？', :method => :delete}
+  .h10
+  .pages
+    = will_paginate @coachs
+  .h10

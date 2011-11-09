@@ -1,0 +1,30 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 周期预定
+    .r_bt_r
+  .fform
+    - form_for(@order) do |order_form|
+      = render :partial => "form",:locals => {:f => order_form,:order => @order}
+      .h10
+      .input_bd
+        %button.submit1.hand{:onclick => "window.history.back();", :type => "submit"} 预定
+      .clear
+  .h10
+:javascript
+  $(document).ready(function(){
+    //$( ".date-type-input" ).datepicker({ dateFormat: 'yy-mm-dd', changeYear: true, changeMonth: true });
+    $( ".date-type-input" ).new_datepicker({ dateFormat: 'yy-mm-dd', changeYear: true, changeMonth: true });
+    $("#order_member_name" ).autocomplete({
+      source:  "/book_records/complete_for_members",
+      select:  function(ui,li){
+        var item = li.item
+        var reqest_url  = "/book_records/complete_member_infos?id=" + item.id;
+        $.get(reqest_url,function(returned_data)
+        {
+          $('#rel_member').html(returned_data);
+        });
+      }
+    });
+  });

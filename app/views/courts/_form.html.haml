@@ -1,0 +1,79 @@
+- form_for court  do |f|
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 基本属性
+      = error_messages_for :court
+      .fformbox_nr
+        %ul
+          %li
+            .w1 场地名称：
+            .w2
+              = f.text_field :name
+        %ul
+          %li
+            .w1 开始时间：
+            .w2
+              %select#start_time.select{:name => "court[start_time]", :onchange => "check_time();"}
+                = generate_time_options(@court.start_time)
+            .w1 结束时间：
+            .w2
+              %select#end_time.select{:name => "court[end_time]", :onchange => "check_time();"}
+                = generate_time_options(@court.end_time)
+        %ul{:style => "height:80px;"}
+          %li
+            .w1 说明：
+            .ww2
+              %textarea{:cols => "45", :name => "court[description]", :rows => "4"}= court.description
+              .clear
+        .clear
+    .h10
+    .fformbox
+      .fformbox_bt
+        %p 时段价格
+      .table2
+        %ul.bttitle.black.fb
+          %li.w5 序号
+          %li.w20 时段
+          %li.w15 标准收费(/小时)
+          %li.w20 可用
+          %li.w20 说明
+        - @period_prices.each_with_index do |period_price,index|
+          - available_period = court.generate_court_period_price(period_price)
+          %ul.table_items
+            %li.w5= index + 1
+            %li.w20
+              = period_price.name
+              ：#{period_price.start_time}:00-#{period_price.end_time}:00
+            %li.w15= period_price.price
+            %li.w20
+              <input type="checkbox" name="time_available_#{period_price.id}"  value="1"
+              - if available_period
+                checked
+              class="inputtext" />
+            %li.w20= period_price.description
+    .h10
+    .input_bd
+      %button.submit1.hand{:type => "submit"}> 提交
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit2.hand{:onclick => "window.location.href='/courts'", :type => "button"} 返回
+    .clear
+:javascript
+  function fsubmit(){
+    if(check_time()){
+      var form = $("form[id=new_post]");
+      form.submit();
+    }
+  }
+
+  function check_time(){
+    var start_time = $("#start_time")[0].value;
+    var end_time = $("#end_time")[0].value;
+    if(start_time - end_time > 0){
+      alert("开始时间应该小于结束时间！");
+      return false;
+    }else{
+      return true;
+    }
+  }
+

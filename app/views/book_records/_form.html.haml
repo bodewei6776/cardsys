@@ -1,0 +1,127 @@
+.fformbox
+  .fformbox_bt
+    %p 请填写预定信息
+  .fformbox_nr
+    %ul
+      %li
+        .w1 预订：
+        .w2{:style => "width: 500px;"}
+          = DateUtil::timeshort @book_record.record_date
+          = chinese_week_day(Time.parse(@book_record.record_date.to_s).wday)
+          %select#order_start_hour{:name => "order[book_record_attributes][start_hour]", :style => "width: 70px;"}
+            - @court.start_hour(@date).upto(@court.end_hour(@date)) do |i|
+              <option value="#{i}"
+              - if i==@book_record.start_hour
+                selected
+              >#{i}:00
+          %select#order_end_hour{:name => "order[book_record_attributes][end_hour]", :style => "width: 70px;"}
+            - @court.start_hour(@date).upto(@court.end_hour(@date)) do |i|
+              <option value="#{i}"
+              - if i==@book_record.end_hour
+                selected
+              >#{i}:00
+          = "(周期性预定)" if !@book_record.new_record? && !@book_record.order.parent_id.zero?
+          %select#order_court_id{:name => "order[book_record_attributes][court_id]", :style => "width: 70px;"}
+            = generate_book_record_status_options(@court.id)
+          %input#book_record_status{:name => "order[book_record_attributes][status]", :type => "hidden", :value => @book_record.status}/
+          %input#order_date{:name => "order[book_record_attributes][record_date]", :type => "hidden", :value => DateUtil::timeshort @book_record.record_date}/
+          - unless @book_record.new_record?
+            %input{:name => "order[book_record_attributes][id]", :type => "hidden", :value => @book_record.id}/
+            %input#order_id{:name => "order_id", :type => "hidden", :value => @order.id}/
+    %ul
+      %li
+        .w1 会员：
+        .w2
+          %input#order_operation_type{:name => "order[operation]", :type => "hidden", :value => ""}/
+          <input type="radio" name="order[member_type]"  value="#{Const::YES}" class="is_member_jsjq"
+          - if @order.is_member?
+            checked="zzz"
+          \/>是
+          <input type="radio" name="order[member_type]"  value="#{Const::NO}"  class="is_member_jsjq"
+          - unless @order.is_member?
+            checked="checked"
+          \/>否
+    <ul
+    - if @order.is_member?
+      style="display:none;"
+    class="nonmember">
+    %li
+      .w1 散客姓名：
+      .w2
+        - if @non_member && !@non_member.new_record?
+          %input{:name => "order[non_member_attributes][id]", :type => "hidden", :value => @non_member.id}/
+        %input{:name => "order[non_member_attributes][name]", :type => "text", :value => @non_member && @non_member.name}/
+      .w1 标准收费：
+      #stand_amount.w2
+    <ul
+    - if @order.is_member?
+      style="display:none;"
+    class="nonmember">
+    %li
+      .w1 手机/座机：
+      .w2
+        %input{:name => "order[non_member_attributes][telephone]", :type => "text", :value => @non_member && @non_member.telephone}/
+      .w1 定金：
+      .w2
+        %input{:name => "order[non_member_attributes][earnest]", :type => "text", :value => @non_member && @non_member.earnest}/
+    <div id="rel_member"
+    - unless @order.is_member?
+      style="display:none;"
+    >
+    - if @member
+      = render :partial => "/book_records/serial_num",:locals => {:cards => @cards,                      |
+        :member => @member,:current_card => @current_card,:member_cards => @member_cards,:date => @date} |
+    - else
+      %ul
+        %li
+          .w1 会员姓名：
+          .w2
+            %input{:name => "member_name", :order_autocomplete => "/book_records/complete_for_members", :type => "text"}/
+          .w1 会员卡号：
+          #member_serial_num.w2
+            %input{:name => "serial_num", :order_autocomplete => "/book_records/complete_for_member_card", :type => "text"}/
+          :javascript
+            $(document).ready(function(){
+                orderAutocomplete();
+                });
+  %ul
+  .w1 教练：
+  .w2.coach-list
+    - @order.coaches.map(&:id).each do |coach_id|
+      %select.data-coach-select{:name => "order[coach_attributes][id][]"}
+        = generate_coaches_options(@coaches,coach_id)
+      %input.data-remove-coach{:type => "button", :value => "\345\210\240\351\231\244"}/
+    - if @order.coaches.blank?
+      %select.data-coach-select{:name => "order[coach_attributes][id][]"}
+        = generate_coaches_options(@coaches)
+    %input.data-add-coach{:type => "button", :value => "\346\267\273\345\212\240"}/
+  %ul
+    %li
+      .w1{:style => ""} 操作人：
+      .w2
+        %input#name{:autocomplete => "/users/autocomplete_user_name", :name => "user_name", :value => params[:user_name] || current_user.login}/
+    %li
+    %li
+      .w1{:style => ""} 密码：
+      .w2
+        %input#password{:name => "password", :type => "password", :value => ""}/
+    %li
+  %ul{:style => "height:60px;"}
+  .w1{:style => ""} 备注：
+  .ww2
+    %textarea{:cols => "45", :name => "order[memo]", :rows => "2"}= @order.memo
+%script{:charset => "utf-8", :type => "text/javascript"}
+  $(document).ready(function(){
+  $('.data-add-coach').click(function(){
+  var select = $(this).prev();
+  if(select.attr('type') == 'button'){select = select.prev();}
+  select.clone().appendTo('.coach-list').after('<input type="button"   value="删除" class="data-remove-coach">');
+  });
+  $('.data-remove-coach').live('click',function(){
+  $(this).prev('select').remove();
+  $(this).remove();
+  });
+  $('.data-coach-select').change(function(){
+  
+  });
+  });

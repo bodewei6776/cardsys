@@ -1,0 +1,102 @@
+= error_messages_for :balance
+= error_messages_for :order
+= form_for([@order,@balance],:html => {:id => 'balance-form'}) do |f|
+  .fformbox_nr
+    %ul
+      %li
+        .w1 会员：
+        .w2= @order.member_name
+      - unless @order.is_member?
+        %li
+          .w2{:style => "color:red;"}
+            散客消费，客人需要补交费用#{@order.extra_fee_for_no_member}元
+    %ul
+      - if @order.is_member?
+        %li
+          .w1 会员卡：
+          .w2{:style => "width:600px;"}
+            = @current_card.card_serial_num
+            类型:#{@current_card.card.card_type_desc}
+            余额(次):#{@current_card.left_fee_value}
+    %ul
+      %li
+        .w1 场地：
+        .w2
+          = @book_record.court.name
+          \&nbsp;&nbsp;(#{@book_record.record_date.to_s(:db)}
+          \#{@book_record.start_hour}:00-#{@book_record.end_hour}:00)
+    %ul
+      %li
+        .w1 支付方式：
+        .w2{:style => "width:500px;"}
+          - if @order.is_member?
+            - if @balance.should_use_counter_to_balance?
+              %input#br_conter_amount{:name => "balance[count_amount]", :type => "hidden", :value => @order.hours}/
+              %label.labelRadio
+                = f.radio_button :balance_way, Balance::Balance_Way_Use_Counter,:class => 'balance_way', :checked => true
+                计次
+            - if @balance.should_use_card_to_blance?
+              %label.labelRadio
+                = f.radio_button :balance_way, Balance::Balance_Way_Use_Card, :class => 'balance_way'
+                记账
+          %label.labelRadio
+            = f.radio_button :balance_way, Balance::Balance_Way_Use_Cash,:class => 'balance_way'
+            现金
+          %label.labelRadio
+            = f.radio_button :balance_way, Balance::Balance_Way_Use_Post,:class => 'balance_way'
+            POS机
+          %label.labelRadio
+            = f.radio_button :balance_way, Balance::Balance_Way_Use_Check ,:class => 'balance_way'
+            支票
+          %label.labelRadio
+            = f.radio_button :balance_way, Balance::Balance_Way_Use_Guazhang,:class => 'balance_way'
+            挂账
+          %label.labelRadio
+            = f.radio_button :balance_way, Balance::Balance_Way_Use_Bank,:class => 'balance_way'
+            银行
+    %ul
+      %li
+        .w1 消费合计：
+        .w2
+          %p#no_amount
+            = @balance.real_amount
+            元
+          %p#with_amount
+            = @balance.other_amount
+            元；#{@balance.count_amount}次场地
+          = "（ 总价已变更　）" if @balance.total_changed?
+    %ul
+      %li
+        .w1 结算人：
+        .w2
+          = text_field_tag "user_name","#{params[:user_name] || current_user.login}"
+      %li
+        .w1 密码：
+        = password_field_tag "password",""
+        .w2
+    %ul
+      %li{:style => "display:block;"}
+        %div{:style => "padding-left: 200px;"}
+          = submit_tag "支付",:type => "button", :class => "submit1", :id => "submit_form"
+= render :partial => "/balance_items/balance_item", :locals => {:balance_items => @balance.balance_items }
+:javascript
+  $(document).ready(function(){
+      $('#submit_form').click(function(){
+        if(confirm("确定支付!")){ $('#balance-form').submit();} 
+        else{return false;}
+        });
+
+      $("input.balance_way").change(function(){
+        if($("input.balance_way:checked").val() == "7"){
+        $("#with_amount").show();      
+        $("#no_amount").hide();      
+        }
+        else{
+        $("#with_amount").hide();      
+        $("#no_amount").show();      
+        }
+        });
+      });
+
+
+

@@ -2,6 +2,7 @@ class Order < ActiveRecord::Base
   has_many    :balance_items
   belongs_to  :card
   belongs_to  :user
+  belongs_to  :member_card
   has_one     :balance, :dependent => :destroy
   has_one     :book_record, :dependent => :destroy
   has_many    :order_items

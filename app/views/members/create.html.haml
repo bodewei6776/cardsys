@@ -1,0 +1,26 @@
+%h1 会员查询
+%fieldset.hidden
+  %form.form-profile{:action => "/members/search", :method => "post"}
+    %label{:for => "name"} 会员名：
+    %input.inputtext{:maxlength => "30", :name => "name", :tabindex => "1", :type => "text", :value => ""}/
+    %label{:for => "card_id"} 会员卡号
+    %input.inputtext{:name => "card_serial_num", :tabindex => "1", :type => "text", :value => ""}/
+    %input.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+%br/
+%h1 会员列表
+%fieldset.table
+  %ul
+    %li 会员名称
+    %li 性别
+    %li 会员卡号
+    %li 移动电话
+    %li 登记日期
+    %li 删除
+  - for member in @members
+    %ul
+      %li= link_to member.name, :action => 'show', :id => member
+      %li= h member.sex_desc
+      %li= h member.card_ids
+      %li= h member.mobile_phone
+      %li= member.register_date.nil? ? "" : DateUtil::timelong(member.register_date)
+      %li= link_to '删除', member, :confirm => 'Are you sure?', :method => :delete

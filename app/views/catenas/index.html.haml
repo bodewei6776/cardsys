@@ -1,0 +1,26 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 分店列表
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/catenas/new'", :type => "button"} 创建分店
+  .h10
+  .table
+    %ul.bttitle.black.fb
+      %li.w10 名称
+      %li.w10 说明
+      %li.w20 操作
+    - for catena in @catenas
+      %ul.table_items
+        %li.w10= catena.name
+        %li.w10= catena.description
+        %li.w20
+          = link_to '查看', catena
+          | #{link_to '修改', edit_catena_path(catena)}
+          | #{link_to '删除', catena_path(catena),:method => :delete}
+          |
+          - if catena.status == CommonResource::COURT_ON
+            = link_to '停用', {:controller => :catenas, :action => :change_status, :status => 0, :id => catena.id}, {:confirm => '确定停用吗?'}
+          - elsif catena.status == CommonResource::COURT_OFF
+            = link_to '启用', {:controller => :catenas, :action => :change_status, :status => 1, :id => catena.id}, {:confirm => '确定启用吗?'}

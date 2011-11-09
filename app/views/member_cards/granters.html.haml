@@ -1,0 +1,105 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 会员查询
+    .r_bt_r
+  .soso
+    %form#search_form.form-profile{:action => "/member_cards/granters", :method => "post"}
+      = hidden_field_tag "_method","get"
+      .w95
+        会员名称：
+        = succeed "&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;" do
+          %label{:for => "name"}
+            %input.inputtext{:autocomplete => "/members/autocomplete_name", :maxlength => "24", :name => "member_name", :tabindex => "1", :type => "text", :value => params[:member_name]}/
+        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+        - unless @member_cards.blank?
+          %br/
+          #member_cards_list
+            %label{:for => "card_id"} 选择充值的会员卡号：
+            - for member_card in @member_cards
+              - unless member_card.card_serial_num.blank?
+                = radio_button_tag("card_serial_num", member_card.card_serial_num, (member_card.card_serial_num == @serial_num)? true : false)
+                = member_card.card_serial_num
+  .h10
+  - unless @member_card.new_record?
+    .fformbox{:style => "width:100%;"}
+      .fformbox_bt
+        %p 请填写预定信息
+      .fformbox_nr
+        %ul
+          %li
+            .w1 注册日期：
+            .w2
+              = DateUtil::timeshort(@member_card.created_at)
+            .w1 有效期：
+            .w2
+              = DateUtil.timeshort(@member_card.expire_date)
+          %li
+            .w1 余额/余次：
+            .w2{:style => ""}
+              = @member_card.left_fee_value
+            .w1 会员卡状态：
+            .w2
+              = @member_card.status_desc
+          %li
+            .w1 可授权人数：
+            .w2
+              = @member_card.max_granter
+        .h10
+        .h10
+  .h10
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 授权人列表
+    .r_bt_r
+      - if @member_card.member.present?
+        = link_to '添加授权人', {:action => :granter_new, :controller => "members",:member_id => @member_card.member.id, |
+          :member_card_id => @member_card.id}, :class => "granter_new submit2 hand"                                           |
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 编号
+      %li.w10 会员名称
+      %li.w15 会员卡信息
+      %li.w10 移动电话
+      %li.w8 注册日期
+      /
+        <li class="w6">现有金额</li>
+        <li class="w6">现有次数</li>
+        <li class="w6">消费金额</li>
+        <li class="w6">消费次数</li>
+      %li.w8 会员生日
+      %li.w12 操作
+    - @member_card.granters.each_with_index do |member,index|
+      %ul.member_items.table_items
+        %li.w5= index + 1
+        %li.w10= link_to member.name,member
+        %li.w15{:style => "overflow:hidden;", :title => raw member.card_serial_nums}= raw member.card_serial_nums
+        %li.w10= member.mobile
+        %li.w8= member.created_at.nil? ? "" : DateUtil::timeshort(member.created_at)
+        /
+          <li class="w6"><haml:loud> member.member_card_left_fees </haml:loud></li>
+          <li class="w6"><haml:loud> member.member_card_left_times </haml:loud></li>
+          <li class="w6"><haml:loud> member.member_consume_amounts </haml:loud></li>
+          <li class="w6"><haml:loud> member.use_card_times</haml:loud></li>
+        %li.w8
+          = member.birthday.blank? ? ':' : DateUtil::timeshort(member.birthday)
+        %li.w12
+          - if member.member_card_granter.enabled?
+            = link_to '停用', switch_member_card_granter_path(member.member_card_granter) , :confirm => '确定停用么?', :method => :put
+          - else
+            = link_to '启用', switch_member_card_granter_path(member.member_card_granter), :confirm => '确定删除吗?', :method => :put,:confirm => "确定启用么"
+  .h10
+  .h10
+:javascript
+  $(document).ready(function(){
+      $(":radio").click(function(){
+        var form = $("form[0]");
+        form.attr("action", "/member_cards/granters?p=num");
+        form.submit();
+        });
+
+      $(".granter_new").colorbox({width:"90%", height:"90%", iframe:false});
+      });
+    

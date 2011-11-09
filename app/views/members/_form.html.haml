@@ -1,0 +1,76 @@
+= form_for(@member,:html  => {:id => 'member_form'}) do |f|
+  = error_messages_for :member
+  .fformbox_nr
+    %ul
+      %li
+        .w1 会员名称：
+        .w2
+          %input{:name => "member[is_member]", :type => "hidden", :value => "1"}/
+          %input{:name => "member_id", :type => "hidden", :value => ""}/
+          = f.text_field :name
+          %span{:style => "color:red;"} *
+        .w1 注册日期：
+        .w2
+          = DateUtil::timeshort(Time.now)
+    %ul
+      %li
+        .w1 会员昵称：
+        .w2
+          = f.text_field :nickname
+        .w1 性别：
+        .w2
+          = f.radio_button :gender,CommonResource::Gender_Man
+          男
+          \#{f.radio_button :gender,CommonResource::Gender_Woman}女
+    %ul
+      %li
+        .w1 移动电话：
+        .w2
+          = f.text_field :mobile
+          %span{:style => "color:red;"} *
+        .w1 固定电话：
+        .w2
+          = f.text_field :telephone
+    %ul
+      %li
+        .w1 会员生日：
+        .w2
+          = f.text_field :birthday
+        .w1 电子邮箱：
+        .w2
+          = f.text_field :email
+    %ul
+      %li
+        .w1 证件类型：
+        .w2
+          %select#cert_type.select{:name => "member[cert_type]"}
+            = generate_cert_type_options(@member)
+        .w1 证件号码：
+        .w2
+          = f.text_field :cert_num
+    %ul
+      %li
+        .w1 备用电话：
+        .w2
+          = f.text_field :standby_phone
+        .w1 介绍人：
+        .w2
+          = f.text_field :mentor
+    %ul{:style => "height:60px;"}
+      %li
+        .w1 联系地址：
+        .ww2
+          %textarea{:cols => "45", :name => "member[address]", :rows => "2"}= @member.address
+    %ul{:style => "height:60px;"}
+      %li
+        .w1 备注：
+        .ww2
+          %textarea{:cols => "45", :name => "member[description]", :rows => "2"}= @member.description
+:javascript
+  $(function() {
+    $("#member_birthday").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true,yearRange:'c-80:c+5'});
+  });
+  function fsubmit(){
+    var form = $("form[0]");
+    form.submit();
+  }

@@ -1,0 +1,20 @@
+- cart.line_items.each_with_index do |li,index|
+  %ul.table_items
+    %li.w5= index + 1
+    %li.w10= li.product.name
+    %li.w10= li.product.price
+    %li.w15= li.quantity
+    %li.w10
+      %select.discount{:name => "discount"}= raw discount_options(li.discount)
+    %li.w15
+      = text_field_tag :real_total_price,li.real_total_price ,:class=>"li_real_total_price"
+      = hidden_field_tag "total_price",li.sub_total_price,:class=>"total_price"
+      = hidden_field_tag "good_id",li.product_id,:class=> "good_id"
+    %li.w15
+      = link_to "删除", destroy_good_balances_path(:id => li.product_id), |
+        :class => 'destory_order_item',:method => :delete                   |
+%ul.table_items
+  %li.w5 合计
+  %li.w70{:style => "text-align:right;"}
+    = cart.total_price
+    元

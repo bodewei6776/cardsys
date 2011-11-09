@@ -1,0 +1,28 @@
+%p#notice= notice
+%p
+  %b Locker:
+  = @rent.locker_id
+%p
+  %b Member:
+  = @rent.member_id
+%p
+  %b Card:
+  = @rent.card_id
+%p
+  %b Start date:
+  = @rent.start_date
+%p
+  %b End date:
+  = @rent.end_date
+%p
+  %b Total fee:
+  = @rent.total_fee
+%p
+  %b Pay way:
+  = @rent.pay_way
+%p
+  %b Remark:
+  = @rent.remark
+= link_to 'Edit', edit_rent_path(@rent)
+|
+\#{link_to 'Back', rents_path}

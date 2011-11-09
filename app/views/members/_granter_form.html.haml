@@ -1,0 +1,56 @@
+- path = @member.id.blank? ? "/members/create" : "/members/#{@member.id}"
+= form_for :member, :url =>path, :html => {:id=>"granter_form", :method => @member.id.blank? ? :post : :put} do |f|
+  = error_messages_for :member
+  .fformbox_nr
+    %ul
+      %li
+        .w1 名称：
+        .w2
+          %input{:name => "member[is_member]", :type => "hidden", :value => "0"}/
+          %input{:name => "member_id", :type => "hidden", :value => @member_base.id}/
+          %input{:name => "member_card_id", :type => "hidden", :value => @member_card_id}/
+          %input{:name => "member[name]", :type => "text", :value => @member.name}/
+        .w1 性别：
+        .w2
+          = radio_button_tag("member[gender]",CommonResource::Gender_Man, true)
+          男
+          \#{radio_button_tag("member[gender]",CommonResource::Gender_Woman, @member.gender == CommonResource::Gender_Woman)}女
+    %ul
+      %li
+        .w1 会员昵称：
+        .w2
+          = f.text_field :nickname
+    %ul
+      %li
+        .w1 手机号：
+        .w2
+          %input#mobile{:name => "member[mobile]", :type => "text", :value => @member.mobile}/
+        .w1 电子邮箱：
+        .w2
+          = f.text_field :email
+    %ul
+      %li
+        .w1 证件类型：
+        .w2
+          %select#cert_type.select{:name => "member[cert_type]"}
+            = generate_cert_type_options(@member)
+        .w1 证件号码：
+        .w2
+          = f.text_field :cert_num
+    %ul
+      %li
+        .w1 联系地址：
+        .w2
+          = f.text_field :address
+    %ul{:style => "height:80px;"}
+      %li
+        .w1 备注：
+        .ww2
+          %textarea{:cols => "45", :name => "member[description]", :rows => "4"}= @member.description
+:javascript
+  function fsubmit(){
+    $("#colorbox").hide();
+    $("#cboxOverlay").hide();
+    var form = $("#granter_form");
+    form.submit();
+  }

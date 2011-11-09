@@ -1,0 +1,36 @@
+%label{:align => "right"}
+  = link_to '创建新连锁店', new_catena_path
+  %br/
+%br/
+- if notice
+  %p.notice= notice
+%h1 连锁店信息
+.listcontent_w.clearfix.cleft
+  %ul.clearfix
+  %fieldset.hidden
+    %legend 属性信息
+    %li.cleft
+      .w1 连锁店名称：
+      .w2
+        = @catena.name
+        - if @catena.name.blank?
+          %a.blank_element
+      .w1 联系人：
+      .w2
+        = @catena.contact
+    %li.cleft
+      .w1 联系电话：
+      .w2
+        = @catena.telephone
+        - if @catena.telephone.blank?
+          %a.blank_element
+    %li.cleft
+      .w1 说明：
+      .w2
+        = @catena.description
+        - if @catena.description.blank?
+          %a.blank_element
+.btn.t_center
+  = link_to '修改', edit_catena_path(@catena)
+  |
+  \#{link_to '返回', catenas_path}

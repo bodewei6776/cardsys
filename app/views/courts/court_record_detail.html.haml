@@ -1,0 +1,12 @@
+%h1
+  场地 #{@court.name} 在#{@record_date} #{@search_hour}点的预定详情
+%fieldset.table
+  %ul.title_ul
+    %li{:style => "width:15%;"} 开始时间
+    %li{:style => "width:15%;"} 结束时间
+    %li 预定会员
+  - for order_info in @order_infos
+    %ul#num_ul
+      %li{:style => "width:15%;"}= order_info[0]
+      %li{:style => "width:15%;"}= order_info[1]
+      %li= order_info[2]

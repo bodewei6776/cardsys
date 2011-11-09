@@ -1,0 +1,61 @@
+= form_for(@coach) do |f|
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 填写教练信息
+      = error_messages_for :coach
+      .fformbox_nr
+        %ul
+          %li
+            .w1 名称：
+            .w2
+              = f.text_field :name
+            .w1 性别：
+            .w2
+              = f.radio_button(:gender,CommonResource::Gender_Man)
+              男
+              \#{f.radio_button(:gender,CommonResource::Gender_Woman)}女
+        %ul
+          %li
+            .w1 类型：
+            .w2
+              %select#coach_type.select{:name => "coach[coach_type]"}
+                = generate_coach_type_options(@coach)
+        %ul
+          %li
+            .w1 电话：
+            .w2
+              = f.text_field :telephone
+            .w1 email：
+            .w2
+              = f.text_field :email
+        %ul
+          %li
+            .w1 证件类型：
+            .w2
+              %select#cert_type.select{:name => "coach[cert_type]"}
+                = generate_cert_type_options(@coach)
+            .w1 证件号码：
+            .w2
+              = f.text_field :cert_num
+        %ul
+          %li
+            .w1 费用：
+            .w2
+              = f.text_field :fee
+        %ul{:style => "height:80px;"}
+          %li
+            .w1 描述：
+            .ww2
+              %textarea{:cols => "45", :name => "coach[description]", :rows => "4"}= @coach.description
+    .h10
+    .input_bd
+      %button.submit1.hand{:type => "submit"}> 提交
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit2.hand{:onclick => "window.location.href='/coaches'", :type => "button"} 返回
+    .clear
+:javascript
+  function fsubmit(){
+    var form = $("form[0]");
+    form.submit();
+  }

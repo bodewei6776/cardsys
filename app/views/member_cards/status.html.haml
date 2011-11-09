@@ -1,0 +1,48 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 会员查询
+    .r_bt_r
+  .soso
+    %form#search_form.form-profile{:action => "/member_cards/status", :method => "get"}
+      .w95
+        会员名称：
+        %label
+          %input#name{:autocomplete => "/member_cards/autocomplete_name", :name => "name", :type => "text", :value => params[:name]}/
+        \&nbsp;&nbsp;&nbsp;&nbsp;
+        会员卡号：
+        %label
+          %input{:autocomplete => "/member_cards/autocomplete_card_serial_num", :name => "card_serial_num", :tabindex => "1", :type => "text", :value => params[:card_serial_num]}/
+        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+  .h10
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 会员卡列表
+    .r_bt_r
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 序号
+      %li.w10 卡名称
+      %li.w10 卡类型
+      %li.w15 卡余额/余次
+      %li.w15 有效期
+      %li.w10 取消绑定
+    - unless @member_cards.blank?
+      - @member_cards.each_with_index do |member_card,index|
+        %ul.table_items
+          %li.w5= index + 1
+          %li.w10= member_card.card_serial_num
+          %li.w10= member_card.card.card_type_desc
+          %li.w15= member_card.left_fee_value
+          %li.w15= DateUtil::timelong(member_card.expire_date)
+          %li.w10
+            - if member_card.enable?
+              = link_to '注销此卡',switch_member_card_path(member_card,:name => params[:name],:card_serial_num => params[:card_serial_num]), :confirm => "确定要进行此操作？" ,:method =>:put
+            - else
+              = link_to '启用此卡', switch_member_card_path(member_card,:name => params[:name],:card_serial_num => params[:card_serial_num]), :confirm => "确定要进行此操作？",:method =>:put
+  .h10
+  .pages
+    = will_paginate(@member_cards)
+  .h10

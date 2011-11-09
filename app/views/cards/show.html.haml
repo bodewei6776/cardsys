@@ -1,0 +1,95 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 卡模版信息
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/cards/new'", :type => "button"} 创建卡模板
+  .info
+    .infobox
+      .infobox_bt
+        %p
+          卡模版 #{@card.name} 的基本信息
+      .infobox_nr
+        %ul
+          %li
+            .w1 卡名：
+            .w2
+              = @card.name
+              - if @card.name.blank?
+                %a.blank_element
+            .w1 基础类型：
+            .w2
+              = display_card_type_desc(@card)
+        %ul
+          %li
+            .w1 卡前缀：
+            .w2
+              = @card.card_prefix
+              - if @card.card_prefix.blank?
+                %a.blank_element
+            .w1 有效期：
+            .w2
+              = @card.expired
+              %span.hint.gray 个月
+        %ul
+          %li
+            .w1 提醒金额：
+            .w2
+              = @card.min_amount
+              元
+            .w1 提醒次数：
+            .w2
+              = @card.min_count
+              次
+        %ul
+          %li
+            .w1 提醒时间：
+            .w2
+              = @card.min_time
+              天
+            .w1 授权人数量：
+            .w2
+              = @card.shared_amount
+              - if @card.shared_amount.blank?
+                %a.blank_element
+        %ul
+          %li
+            .w1 说明：
+            .w2
+              = @card.description
+    .h10
+    .infobox
+      .infobox_bt
+        %p 时段折扣价
+      .table2
+        %ul.bttitle.black.fb
+          %li.w5 序号
+          %li.w20 时段
+          %li.w15 标准收费(/小时)
+          %li.w10 可用
+          %li.w15 折扣收费
+          %li.w20 说明
+        - @period_prices.each_with_index do |period_price,index|
+          - available_period = @card.generate_card_period_price(period_price)
+          %ul.table_items
+            %li.w5= index + 1
+            %li.w20
+              = period_price.name
+              ：#{period_price.start_time}:00-#{period_price.end_time}:00
+            %li.w15= period_price.price
+            %li.w10
+              <input type="checkbox" name="time_available_#{period_price.id}"  value="1"
+              - if available_period
+                checked
+              \/>
+            %li.w15
+              %input{:maxlength => "4", :name => "time_discount_#{period_price.id}", :size => "4", :type => "text", :value => @card.generate_card_period_price(period_price).nil? ? period_price.price : @card.generate_card_period_price(period_price).card_price}/
+            %li.w20= period_price.description
+    .h10
+    .input_bd
+      %button.submit1.hand{:onclick => "window.location.href='#{edit_card_path(@card)}'", :type => "button"}> 修改
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit3.hand{:onclick => "window.location.href='#{cards_path}'", :type => "button"} 返回
+    .clear
+  .h10

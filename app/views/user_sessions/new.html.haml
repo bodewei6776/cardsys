@@ -1,0 +1,61 @@
+!!!
+%html{:xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %meta{:content => "text/html; charset=gb2312", "http-equiv" => "Content-Type"}/
+    %title 博德维网球管理系统
+    = stylesheet_link_tag 'main'
+    :css
+          = javascript_include_tag 'jquery-1.4.2'
+    :javascript
+      $(document).ready(function(){
+          $('body').keypress(function(event) {
+            if (event.which == '13') {
+            $("#new_user_action").submit();
+            event.preventDefault();
+            }
+       });
+
+          });
+  %body
+    .login
+      .login_bt.white.fmic30
+        = Catena.first.name
+        / 博德维
+        管理系统
+      .login_tu
+      = form_for @user_session, :url => user_session_path,:html => {:id => 'new_user_action'} do |f|
+        = error_messages_for :user_session
+        .login_bd
+          /
+            <ul>
+            <li class="w25  tright" >分店：</li>
+            <li>
+            <label>
+            <haml:loud> select_tag :catena_id,options_for_select(Catena.all.collect{|c| [c.name,c.id]})</haml:loud>
+            </label>
+            </li>
+            </ul>
+          %ul
+            %li.w25.tright 用户名：
+            %li
+              %label
+                = f.text_field :login,:style => "height:20px; line-height:20px;"
+          %ul
+            %li.w25.tright 密码：
+            %li
+              %label
+                = f.password_field :password,:style => "height:20px; line-height:20px;"
+          /
+            <ul>
+            <li class="w25  tright" ></li>
+            <li >
+            <label>
+            <haml:loud> f.check_box :remember_me,{:size =&amp;gt; 20}, 1 , 1</haml:loud>  记住我的密码
+            </label>
+            </li>
+            </ul>
+        .login_bb
+          %a{:href => "#", :onclick => "$('#new_user_action').submit();return false;", :title => "\347\231\273\345\275\225"}
+            %img{:alt => "\347\231\273\345\275\225", :src => "/images/new/login_dl.gif"}/
+          /
+            <a title="新用户注册" href="#"><img src="/images/new/login_zc.gif" alt="新用户注册" /></a>

@@ -1,0 +1,17 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 添加会员
+    .r_bt_r
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 请填写会员资料
+      = render :partial => 'members/form'
+    .h10
+    .input_bd
+      %button.submit1.hand{:name => "loginsubmit", :onclick => "fsubmit();return false;", :tabindex => "100", :type => "submit", :value => "true"} 提交
+      %button.submit2.hand{:onclick => "window.location.href='/members'", :type => "button"} 返回
+    .clear
+  .h10

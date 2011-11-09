@@ -1,0 +1,6 @@
+.w178.menu_item{:id => current_menu}
+  .bt1.f14b.white= menus_map[current_menu.to_sym]
+  .left_nav
+    .xdh
+      = render :partial => "menus/#{current_menu}"
+    .h10

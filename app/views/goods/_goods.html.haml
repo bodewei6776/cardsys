@@ -1,0 +1,78 @@
+%form#add_to_cart_form{:action => "/goods/add_to_cart"}
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 编号
+      %li.w20 商品名称
+      %li.w10 商品分类
+      %li.w10 零售价
+      %li.w10 商品总数
+      %li.w10 库房商品数
+      %li.w10 前台商品数
+      %li.w20 操作
+    - @goods.each_with_index do |good,index|
+      %ul.table_items{:entry_id => good.id}
+        %li.w5= index + 1
+        %li.w20= good.name
+        %li.w10= generate_good_type_str(good.good_type)
+        %li.w10= good.price
+        %li.w10= good.count_total_now
+        %li.w10= good.count_back_stock
+        %li.w10= good.count_front_stock
+        %li.w20
+          %input.for-display-only{:size => "5", :type => "text"}/
+          %input.reduce-goods-button{:entry_id => good.id, :type => "button", :value => "\346\267\273\345\212\240"}/
+.h10
+.input_bd
+  %input.submit-goods-button.submit1.button.hand{:type => "button", :value => "\347\241\256\350\256\244\346\267\273\345\212\240"}/
+.clear
+%script{:charset => "utf-8", :type => "text/javascript"}
+  $(document).ready(function(){
+  $('.reduce-goods-button').click(function(){
+  var input = $(this);
+  var input_value = input.prev('input:text').val();
+  var count = isNaN(parseInt(input_value))  ? 0 : parseInt(input_value);
+  count += 1;
+  input.prev('input:text').val(count);
+  if(input.next('.goods_id').size()==0){
+  input.after('<input type="hidden" name="goods[][count]" class="goods_count" value=0>');
+  input.after('<input type="hidden" name="goods[][id]" class="goods_id" value="">');
+  input.next('.goods_id').val(input.attr('entry_id'));
+  }
+  input.next('.goods_id').next('.goods_count').val(count);
+  });
+  $('.for-display-only').change(function(){
+  var input = $(this).next('input');
+  if(input.next('.goods_id').size()==0){
+  input.after('<input type="hidden" name="goods[][count]" class="goods_count" value=0>');
+  input.after('<input type="hidden" name="goods[][id]" class="goods_id" value="">');
+  input.next('.goods_id').val(input.attr('entry_id'));
+  }
+  input.next('.goods_id').next('.goods_count').val($(this).val());
+  });
+  
+  $('.submit-goods-button').click(function(){
+  var cart_form = $('#add_to_cart_form');
+  var input = $(this);
+  var order_id = $('#order_id',$(window.parent.document)).val();
+  var cart_goods_list;
+  if(order_id == undefined){
+  url = "/balances/add_good"
+  cart_goods_list = $('#cart_goods_list',$(window.parent.document));
+  }
+  else{
+  var url = cart_form.attr('action') + "?order_id=" + order_id;
+  }
+  $.post(url,cart_form.serialize(),function(reply){
+  if(reply.match(/class='error'/)){
+  input.next('span').remove();
+  input.after(reply);
+  }else{
+  if(order_id != undefined){ window.parent.location.reload();}
+  else{
+  cart_goods_list = $('#cart_goods_list',$(window.parent.document));
+  cart_goods_list.text(""); cart_goods_list.html(reply); }
+  parent.window.highlight_table();
+  parent.$.colorbox.close();}
+  });
+  });
+  });

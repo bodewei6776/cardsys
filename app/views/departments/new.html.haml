@@ -1,0 +1,16 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 添加部门
+    .r_bt_r
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 请填写部门资料
+      = render :partial => 'form'
+    .h10
+    .input_bd
+      %button.submit1.hand{:name => "loginsubmit", :onclick => "fsubmit();return false;", :tabindex => "100", :type => "submit", :value => "true"} 提交
+    .clear
+  .h10

@@ -1,0 +1,113 @@
+!!!
+%html{:lang => "en", "xml:lang" => "en", :xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "content-type"}/
+    %title 注册 - 用户
+    %meta{:content => "\346\263\250\345\206\214", :name => "keywords"}/
+    %meta{:content => "\346\263\250\345\206\214", :name => "description"}/
+    = stylesheet_link_tag 'login', 'jquery-ui-1.8.2.custom'
+    = javascript_include_tag  'jquery-1.4.2'
+    = javascript_include_tag :all
+  %body
+    %a{:name => "top"}
+    #site_nav_bk
+    #site_header.site_head_not_index
+      #site_nav
+        .site_logo
+          #texture{:style => "WIDTH: 273px; HEIGHT:33px"}
+            %div{:align => "center", :style => "FONT-SIZE: 27px; FILTER: Chroma(color=#FCFBFA); FLOAT: left; WIDTH: 273px; HEIGHT:33px;"}
+              %font{:color => "#FCFBFA"}
+                %b 博德维网球管理系统
+    #main
+      .container
+        #content
+          #main_content
+            .site_box.float_left.site_signup_box
+              %b.rc-tp{:style => "background-position: -162px -195px;"}
+                %b{:style => "background-position: -159px -195px;"}
+              .site_box_in
+                .box_title
+                  .float_left
+                    %h1 注册
+                .box_content
+                  - form_for @user, :url => "/users/create" do |f|
+                    = error_messages_for :user
+                    %table
+                      %tbody
+                        %tr
+                          %td.t1
+                            %label{:for => "login"}> 用户名
+                            \:
+                          %td.t2
+                            = f.text_field :login,:size => 20,:class => "input_text"
+                            %span.disabled (必填)
+                          %td
+                            .input_info
+                              \&nbsp;
+                              %label.info (用户名长度为2-30个字符。)
+                        %tr
+                          %td.t1
+                            %label{:for => "email"}> 昵称
+                            \:
+                          %td.t2
+                            = f.text_field :user_name,:size => 20,:class => "input_text"
+                            %span.disabled (必填)
+                          %td
+                            .input_info
+                              \&nbsp;
+                              %label.info (昵称长度为2-30个字符。)
+                        %tr
+                          %td.t1
+                            %label{:for => "password"}> 密码
+                            \:
+                          %td.t2
+                            = f.text_field :password,:size => 20,:class => "input_text"
+                            %span.disabled.small (必填)
+                          %td
+                            .input_info
+                              \&nbsp;
+                              %label.info (密码可以是6位以上的字母或数字的组合。)
+                        %tr
+                          %td.t1
+                            %label{:for => "password_confirmation"}> 再次输入密码
+                            \:
+                          %td.t2
+                            = f.text_field :password_confirmation,:size => 20,:class => "input_text"
+                            %span.disabled &nbsp;(必填)
+                          %td
+                            .input_info
+                              \&nbsp;
+                              %label.info
+                        %tr
+                          %td.t1
+                            %label{:for => "phone"}> 选择分店
+                            \:
+                            %br/
+                          %td.t2
+                            %select.select{:id => "", :name => "user[catena_id]"}
+                              = generate_catena_options
+                            %span.disabled (必填)
+                          %td
+                            .input_info
+                              \&nbsp;
+                              %label.info
+                    %br/
+                    %br/
+                    %input#submit_signup.btn{:name => "commit", :type => "submit", :value => "\346\263\250\345\206\214"}/
+                    已有了用户名？请直接
+                    %a{:href => "/user_session/new", :style => ""} &nbsp;登录
+                    %span#form_err_info{:style => "color: red; display: none;"} 表单输入有错误,请检查
+            :javascript
+              //
+              $('#user_login').focus();
+              //
+          .clear
+      %br{:style => "clear: both;"}/
+    #footer
+      .container000
+        .footer_content
+          .clear
+          .foot_logo
+          .copyright
+            %p.icp
+          .clear

@@ -1,0 +1,46 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 修改用户
+    .r_bt_r
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 请填写用户资料
+      = form_for @user do |f|
+        = error_messages_for :user
+        .fformbox_nr
+          %ul
+            %li
+              .w1 用户名：
+              .w2
+                %input#name.inputtext{:maxlength => "24", :name => "user[login]", :onblur => "return;", :type => "text", :value => @user.login}/
+            %li
+              .w1 昵&nbsp;&nbsp;&nbsp;称：
+              .w2
+                %input{:name => "user[user_name]", :type => "text", :value => @user.user_name}/
+          %ul
+            %li
+              .w1 所属部门：
+              %div{:style => "width:500px;"}
+                - @departments.each do |d|
+                  = check_box_tag "dep[]",d.id.to_s, @user.departments.presence && @user.departments.include?(d)
+                  = d.name
+          %ul
+            %li
+              .w1 所属分店：
+              %div{:style => "width:500px;"}
+                - @catenas.each do |d|
+                  = check_box_tag "catenas[]",d.id.to_s, @user.catenas.presence && @user.catenas.include?(d)
+                  = d.name
+      :javascript
+        function fsubmit(){
+          var form = $("form[0]");
+          form.submit();
+        }
+      .h10
+    .input_bd
+      %button.submit1.hand{:name => "loginsubmit", :onclick => "fsubmit();return false;", :tabindex => "100", :type => "submit", :value => "true"} 提交
+    .clear
+  .h10

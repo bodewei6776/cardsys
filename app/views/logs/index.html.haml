@@ -1,0 +1,66 @@
+:css
+  .current_log{
+    border: 2px solid #84dd69;  
+    background-color: #84dd69;
+  }
+
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 操作记录
+    .r_bt_r
+  .soso
+    %form#search_form.form-profile{:action => "/logs", :method => "get"}
+      .w95
+        .fformbox_nr
+          %ul
+            %li
+              = link_to "全部",logs_path(:user => params[:user],:start => params[:start],:end => params[:end]),:style => "font-size:14px;color:black;padding:5px 10px!important;", |
+                :class => "#{params[:t].present? ? "" : "current_log"}"                                                                                                              |
+              - Log::LOG_TYPE.each do |k,v|
+                = link_to v,logs_path(:t => k,:user => params[:user],:start => params[:start],:end => params[:end] ) , |
+                  :style => "font-size:14px;color:black;padding:5px 10px!important;" ,                                 |
+                  :class => "#{ (params[:t].presence && k == params[:t].to_sym)?  "current_log" : ""}"                 |
+          %ul
+            %li
+              %span 开始时间
+              = text_field_tag "start",params[:start],:id => "start"
+              %span 结束时间
+              = text_field_tag "end",params[:end],:id => "end"
+          %ul
+            %li
+              %span &nbsp;&nbsp;&nbsp;操作人 
+              %input{:autocomplete => "/users/autocomplete_user_name", :name => "user", :type => "field", :value => params[:user]}/
+            %li
+              %span
+                = submit_tag "查询",:class => "inputsubmit"
+  .h10
+  .r_bt
+    .r_bt_l
+    .r_bt_r
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 编号
+      %li.w10 用户
+      %li.w15 时间
+      %li.w20 描述
+    - @logs.each_with_index do |log,index|
+      %ul.member_items.table_items
+        %li.w5= index + 1
+        %li.w10= log.user_name
+        %li.w15
+          = DateUtil::timelong(log.created_at)
+        %li.w20
+          = log.desc
+  .h10
+  .pages
+    = will_paginate @logs
+  .h10
+:javascript
+  $(function() {
+    $("#start").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
+    $("#end").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
+    });
+ 
+  

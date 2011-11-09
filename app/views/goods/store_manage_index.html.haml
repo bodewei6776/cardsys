@@ -1,0 +1,145 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 商品出入库登记
+    .r_bt_r
+  .fform
+    .fformbox
+      = form_for :good, @good,:url => {:action => "store_manage_update", :id => @good.id, :p => @p}, :html => {:id => 'goods_stock_form'} do |f|
+        .fformbox_bt
+          %p 入库等级
+        .fformbox_nr
+          %ul
+            %li
+              .w1 商品名称：
+              .w2
+                = @good.name
+              .w1 现库存数：
+              .w2
+                %input#ct_num_1{:type => "hidden", :value => @good.count_back_stock}/
+                %input#ct_num_2{:type => "hidden", :value => @good.count_front_stock}/
+                前台:#{@good.count_front_stock};后台:#{@good.count_back_stock}
+          - if @p =='back'
+            %ul
+              %li
+                .w1 新入库数：
+                .w2
+                  %input#count_back_stock_in{:name => "good[count_back_stock_in]", :onblur => "return;", :type => "text", :value => ""}/
+                .w1 退货数：
+                .w2
+                  %input#count_back_stock_out{:name => "good[count_back_stock_out]", :onblur => "return;", :type => "text", :value => ""}/
+                  %a#reCount{:href => "javascript:void(0);"} 获取全部退货数
+          - else
+            %ul
+              %li
+                .w1 前台入库数：
+                .w2
+                  %input#count_back_stock_out{:name => "good[count_back_stock_out]", :onblur => "return;", :type => "hidden", :value => ""}/
+                  %input#count_front_stock_in{:name => "good[count_front_stock_in]", :onblur => "return;", :type => "text", :value => ""}/
+    .h10
+    .input_bd
+      %button.submit1.hand{:onclick => "fsubmit('#{@p}');return false;", :type => "submit"} 提交
+    .clear
+:javascript
+  function fsubmit(p){
+    var _form = $('#goods_stock_form');
+    if(checkNum(p)){
+      $.post(_form.attr('action'),_form.serialize(),function(date){
+        if(date == 'yes'){
+          window.location.href = "/goods?p="+p;
+        }else{
+          $('.notice').remove();
+          $('.btn').append("<p class='notice'>"+"操作失败"+'</p>');
+        }
+      });
+    }
+  }
+
+  function checkNum(p){
+    var ct_1 = $("#ct_num_1")[0].value;//库房数
+    var ct_2 = $("#ct_num_2")[0].value;//前台数
+
+    if(p == "back") {
+      var out_num_1 = $("#count_back_stock_out")[0].value;
+      if(!isNumTemp(out_num_1)){
+        alert("商品退货数不为有效数字！");
+        $("#count_back_stock_out").focus();
+        return false;
+      }else if(isNumTemp(out_num_1) && (out_num_1 - (ct_1 + ct_2) > 0)){
+        alert("商品退货数量大于库存总数！");
+        $("#count_back_stock_out").focus();
+        return false;
+      }
+      var out_num_4 = $("#count_back_stock_in")[0].value;
+      if(!isNumTemp(out_num_4)){
+        alert("新入库房数量不为有效数字！");
+        $("#count_back_stock_in").focus();
+        return false;
+      }
+    }else{
+      var out_num_2 = $("#count_front_stock_in")[0].value;
+      if(!isNumTemp(out_num_2)){
+        alert("前台新进商品数不为有效数字！");
+        $("#count_front_stock_in").focus();
+        return false;
+      }else if(isNumTemp(out_num_2) && (out_num_2 - ct_1 > 0)){
+        alert("前台新进商品数量大于库存总数！");
+        $("#count_front_stock_in").focus();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  $(document).ready(function() {
+
+    $("#count_back_stock_in").change(function(){
+      var out_num = $("#count_back_stock_in")[0].value;
+      if(!isNumTemp(out_num)){
+        alert("新进库房商品数量不为有效数字！");
+        $("#count_back_stock_in").focus();
+      }
+    })
+
+    $("#count_back_stock_out").change(function(){
+      var ct1 = $("#ct_num_1")[0].value;
+      var ct2 = $("#ct_num_2")[0].value;
+      var out_num = $("#count_back_stock_out")[0].value;
+      if(!isNumTemp(out_num)){
+        alert("商品退货数量不为有效数字！");
+        $("#count_back_stock_out").focus();
+      }else if(isNumTemp(out_num) && (out_num - (ct1 + ct2) > 0)){
+        alert("商品退货数量大于商品现有货总数！");
+        $("#count_back_stock_out").focus();
+      }
+    })
+
+    $("#count_front_stock_in").change(function(){
+      var ct_1 = $("#ct_num_1")[0].value;
+      var out_num = $("#count_front_stock_in")[0].value;
+      if(!isNumTemp(out_num)){
+        alert("前台新进商品数量不为有效数字！");
+        $("#count_front_stock_in").focus();
+      }else if(isNumTemp(out_num) && (out_num - ct_1 > 0)){
+        alert("前台新进商品数量大于库存总数！");
+        $("#count_front_stock_in").focus();
+      }
+    })
+
+    $("#reCount").click(function(){
+      var ct1 = $("#ct_num_1")[0].value;
+      var ct2 = $("#ct_num_2")[0].value;
+      if(ct2 < 0) ct2 = (0 - ct2);
+      $("#count_back_stock_out")[0].value = ct1 - (-ct2);
+    })
+  })
+
+  function isNumTemp(str){
+    if(str != ""){
+      var re = /^[1-9]\d*$/;
+      return re.test(str);
+    }else{
+      return true;
+    }
+  }

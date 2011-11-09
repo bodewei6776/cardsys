@@ -1,0 +1,112 @@
+:javascript
+  $(document).ready(function(){
+    $('.is_member_jsjq').click(function(){
+      if($(this).attr('value') == '1'){
+        $('#rel_member').show();
+        $('.nonmember').hide();
+      }else{
+        $('#rel_member').hide();
+        recaculateAmount(true);
+        $('.nonmember').show();
+      }
+    });
+  });
+
+  $(document).ready(function(){
+    recaculateAmount();
+    $('#order_end_hour').change(function(){
+      recaculateAmount();
+    });
+  });
+
+  function recaculateAmount(force){
+    if(force || $($('.is_member_jsjq').filter(':checked')).val() == '0'  ){
+      var url = "/book_records/recalculate_court_amount?court_id=" + $('#order_court_id').val() +"&start_hour="
+        + $('#order_start_hour').val() + "&end_hour=" + $('#order_end_hour').val() + "&date=" + $('#order_date').val();
+      $.get(url,function(date){
+        $('#stand_amount').text(date+'元');
+      });
+    }
+  }
+
+  function addOperation(element,callback){
+    $(element).click(function(){
+      if(!$(this).hasClass('confirm') || confirm($(this).attr('conform_msg'))){
+        $("#order_operation_type").val($(this).attr('operation'));
+        if(callback){
+          var that = this;
+          if(callback(that)){
+            $(this.form).submit();
+          };
+        }else{
+         $(this.form).submit();
+        }
+      }
+      return false;
+    });
+  }
+  $(document).ready(function(){
+    addOperation($('.data-change-booke'));
+    addOperation($('.update-coaches'));
+    addOperation($('.data-cancle-booke'),function(element){
+      $('input[name="_method"]').val('delete');
+      return true
+    });
+    addOperation($('.data-agent-to-buy'),function(element){
+      $('#book_record_status').val('#{BookRecord::Status_Agent}');
+      return true
+    });
+    addOperation($('.data-active-booke'),function(element){
+      return true
+    });
+    addOperation($('.data-do-agent'),function(element){
+      window.location.href='#{"/book_records/\#{@book_record.id}/agent"}';
+      return false
+    });
+   	addOperation($('.add-goolds'),function(element){
+      openGooldsDiv();
+      return false
+    });
+<haml:silent>     if @original_book_record 
+</haml:silent><haml:block>    addOperation($('.data-cancle-agent'),function(element){
+      window.location.href='#{"/book_records/\#{@original_book_record.id}/cancle_agent"}';
+      return false
+    });
+</haml:block><haml:silent>    if @book_record.should_to_balance? || @book_record.should_blance_as_expired? 
+</haml:silent><haml:block>  	addOperation($('.data-balance-order'),function(element){
+     window.location.href='#{edit_balance_path(@order.balance)}';
+     return false
+    });
+</haml:block>  });
+$(".goods-list").colorbox({width:"900", height:"700", iframe:true});
+$(document).ready(function(){
+    $('#delete_button').click(function(){
+      var user_name = $('#name').val();
+      var password = $('#password').val();
+      if("" == user_name || "" == password){ alert("用户名密码不能空"); return;}
+      if(!confirm("确认要删除此预订？")){
+        return;
+      }
+      $.ajax({ url: "/book_records/" + $(this).attr('bid'), type: "delete",
+data: "user_name=" + user_name + "&password=" + password + "",
+success: function(reply){
+//  if(reply.result == "1")
+    window.location.href= "/book_records" ;
+//  else 
+//    alert('用户名密码不正确，或者权限不足。') ; 
+  }
+});
+      });
+    });
+
+$(document).ready(function(){
+    $('body').keyup(function(event) {
+      if (event.keyCode == '13') {
+<haml:silent>       if @book_record.should_to_balance? 
+</haml:silent><haml:block>        $('button[operation=balance]').trigger('click');
+</haml:block><haml:silent>       elsif @book_record.should_to_active? 
+</haml:silent><haml:block>        $('button[operation=active]').trigger('click');
+</haml:block>      }
+      });
+    })
+

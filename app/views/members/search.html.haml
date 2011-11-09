@@ -1,0 +1,40 @@
+%h1 会员查询
+%fieldset.hidden
+  %form#search_form.form-profile{:action => "/members/search", :method => "post"}
+    %label{:for => "name"} 会员名：
+    %input.inputtext{:autocomplete => "/members/autocomplete_name", :maxlength => "30", :name => "name", :tabindex => "1", :type => "text", :value => params[:name]}/
+    %label{:for => "card_id"} 会员卡号：
+    %input.inputtext{:autocomplete => "/members/autocomplete_card_serial_num", :name => "card_serial_num", :tabindex => "1", :type => "text", :value => @serial_num}/
+    %label{:for => "card_id"} 注册日期：
+    %input#search_date.inputtext{:name => "search_date", :onblur => "return;", :type => "text", :value => params[:search_date]}/
+    %input.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+%br/
+%label{:align => "right"}
+  %a{:href => "/members/new"} 新增会员
+  %br/
+%br/
+%h1 会员列表
+%fieldset.table
+  %ul.title_ul
+    %li{:style => "width:15%;"} 会员名称
+    %li 性别
+    %li{:style => "width:20%;"} 会员卡号
+    %li{:style => "width:15%;"} 移动电话
+    %li{:style => "width:15%;"} 注册日期
+    %li 操作
+  - for member in @members
+    %ul
+      %li{:style => "width:15%;"}= link_to member.name, member
+      %li= gender_desc(member.gender)
+      %li{:style => "width:20%;text-align:left;"}= member.card_serial_nums
+      %li{:style => "width:15%;"}= member.mobile
+      %li{:style => "width:15%;"}= member.created_at.nil? ? "" : DateUtil::timeshort(member.created_at)
+      %li{:style => "width:25%;"}
+        = link_to '查看', member
+        | #{link_to '修改', edit_member_path(member)} | #{link_to '删除', member, :confirm => '确定删除吗?', :method => :delete}
+        | #{link_to '会员卡管理',{:controller => :members, :action => :member_card_index, :member_id => member.id}}
+        | #{link_to '授权人管理',{:controller => :members, :action => :granter_index, :member_id => member.id}}
+:javascript
+  $(function() {
+    $("#search_date").new_datepicker({dateFormat: 'yy-mm-dd'});
+  });

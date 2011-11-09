@@ -1,0 +1,52 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 时段价格信息
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/period_prices/new'", :type => "button"} 创建时段
+  .info
+    .infobox
+      .infobox_bt
+        %p
+          时段 #{@period_price.name} 的基本信息
+      .infobox_nr
+        %ul
+          %li
+            .w1 时段：
+            .w2
+              = @period_price.name
+              - if @period_price.name.blank?
+                %a.blank_element
+            .w1 时段类型：
+            .w2
+              = display_period_price_type_desc(@period_price.period_type)
+        %ul
+          %li
+            .w1 开始时间：
+            .w2
+              = @period_price.start_time
+              \:00
+              - if @period_price.start_time.blank?
+                %a.blank_element
+            .w1 结束时间：
+            .w2
+              = @period_price.end_time
+              \:00
+        %ul
+          %li
+            .w1 标准收费：
+            .w2
+              = @period_price.price
+              - if @period_price.price.blank?
+                %a.blank_element
+            .w1 时段描述：
+            .w2
+              = @period_price.description
+    .h10
+    .input_bd
+      %button.submit1.hand{:onclick => "window.location.href='#{edit_period_price_path(@period_price)}'", :type => "button"}> 修改
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit3.hand{:onclick => "window.location.href='#{period_prices_path}'", :type => "button"} 返回
+    .clear
+  .h10

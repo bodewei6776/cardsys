@@ -1,0 +1,30 @@
+= form_for(@catena) do |f|
+  = error_messages_for :catena
+  .fformbox_nr
+    %ul
+      %li
+        .w1 连锁名称：
+        .w2
+          %input#name.inputtext{:maxlength => "12", :name => "catena[name]", :onblur => "return;", :type => "text", :value => @catena.name}/
+        .w1 联系人：
+        .w2
+          %input#name.inputtext{:maxlength => "12", :name => "catena[contact]", :onblur => "return;", :type => "text", :value => @catena.contact}/
+    %ul
+      %li
+        .w1 联系电话：
+        .w2
+          %input{:name => "catena[telephone]", :onblur => "return;", :type => "text", :value => @catena.telephone}/
+    %ul
+      %li
+        .w1
+          描
+          %a.blank_element_10>
+          述：
+        .w2
+          %input{:name => "catena[description]", :type => "text"}/
+          = @catena.description
+:javascript
+  function fsubmit(){
+    var form = $("form[0]");
+    form.submit();
+  }

@@ -1,0 +1,67 @@
+:css
+  .content {
+    color:white;
+    }
+    
+  #rent_table{
+  }
+  
+
+  table#rent_table th{
+    background-color: #dfff92;
+  }
+
+  table#rent_table td,th{
+    border: 1px solid black;
+    height: 45px;
+    text-align: center;
+    width: 100px;
+  }
+
+  table td.rent_group_name{ color:black;}
+  table th{color:black;}
+
+  .locker_div{
+    height: 100%;
+    width: 100%;
+    padding-top: 10px;
+  }
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white
+        = current_catena.name
+        = DateUtil.format_to_chinese_date(@current_date)
+        的储物柜出租
+    .r_bt_r
+      %button.submit2.hand{:onclick => "location.href="/rents?date=#{@predate}"", :type => "button"}> << 前一天
+      \&nbsp;&nbsp;
+      = succeed "&amp;nbsp;&amp;nbsp;" do
+        %button.submit2.hand{:onclick => "location.href='/rents'", :type => "button"} 今天
+      = succeed "&amp;nbsp;&amp;nbsp;" do
+        %button.submit2.hand{:onclick => "location.href="/rents?date=#{@nextdate}"", :type => "button"} 后一天>>
+      = succeed "&amp;nbsp;&amp;nbsp;" do
+        %button.submit2.hand{:onclick => "location.reload();", :type => "button", :value => "true"} 刷新
+  .content
+    = rents_in_table(@lockers,@current_date)
+  .h10
+  .color
+    %span.color03 紫色-使用中
+    %span.color05 褐色-即将到期
+    %span.color04 绿色-空
+  .h10
+:javascript
+  $(document).ready(function(){
+      $('.popup-new-window').popupWindow({
+centerScreen: 1,
+windowName: "场地预定",
+width: 850,
+height: 750,
+resizable: true,
+location: 0,
+status: 0,
+menubar: 0
+});
+      });
+

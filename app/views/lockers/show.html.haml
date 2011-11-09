@@ -1,0 +1,16 @@
+%p#notice= notice
+%p
+  %b Num:
+  = @locker.num
+%p
+  %b Locker type:
+  = @locker.locker_type
+%p
+  %b State:
+  = @locker.state
+%p
+  %b Remark:
+  = @locker.remark
+= link_to 'Edit', edit_locker_path(@locker)
+|
+\#{link_to 'Back', lockers_path}

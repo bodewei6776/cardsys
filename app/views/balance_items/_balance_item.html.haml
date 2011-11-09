@@ -1,0 +1,69 @@
+.table
+  %ul.bttitle.black.fb
+    %li.w5 编号
+    %li.w20 名称
+    %li.w10 数量
+    %li.w10 单价
+    %li.w10 总价
+    %li.w10 实收总价
+    %li.w10 折扣
+  - balance_items.each_with_index do |item, index|
+    <ul class='table_items' item_id=#{item.id}>
+    %li{:style => "width:5%;"}= index + 1
+    %li{:style => "width:20%;"}
+      （#{item.order_item.order_item_type_str}）#{item.name}
+    %li{:style => "width:10%;"}= item.order_item.quantity
+    %li{:style => "width:10%;"}= item.order_item.price
+    %li{:style => "width:10%;"}= item.price
+    - if !item.balance.paid? and item.order_item.item_type != "BookRecord"
+      %li{:style => "width:10%;"}= text_field_tag :price_field, item.real_price, :class => "real_price_field"
+      %li{:style => "width:10%;"}= text_field_tag :discount_rate_field, item.discount_rate, :class => "discount_rate_field"
+    - else
+      %li{:style => "width:10%;"}= item.real_price
+      %li{:style => "width:10%;"}= sprintf("%.2f", item.discount_rate)
+:javascript
+  function update_real_price(id, number){
+    $.ajax({
+        type: "POST",
+        url: "/balance_items/" + id + "/update_real_price",
+        data: {real_price: number},
+        success: function(){ 
+        window.location.reload();
+        }}); 
+  }
+
+function update_discount_rate(id, rate){
+    $.ajax({
+        type: "POST",
+        url: "/balance_items/" + id + "/update_discount_rate",
+        data: {discount_rate: rate},
+        success: function(){ 
+        window.location.reload();
+        }}); 
+  }
+  $(document).ready(function(){
+      $('.real_price_field').change(function(){
+        var price = $(this).val(); 
+        var id = $(this).parent().parent().attr("item_id");
+        if(isNaN(price) || Number(price) <= 0){
+        alert("价格必须为大于零的数字");
+        window.location.reload();
+        return;
+        }
+
+        update_real_price(id, price);
+        }); 
+
+      $('.discount_rate_field').change(function(){
+        var rate = $(this).val(); 
+        var id = $(this).parent().parent().attr("item_id");
+        if(isNaN(rate) || Number(rate) <= 0 || Number(rate) > 1){
+        alert("折扣不能小于零或者大于一");
+        window.location.reload();
+        return;
+        }
+
+        update_discount_rate(id, rate);
+        }); 
+      });
+    

@@ -1,0 +1,40 @@
+- current_card = @rent.member_card || MemberCard.new
+- member = @rent.member || Member.new(:name => @rent.member_name)
+- date = @rent.start_date
+%ul
+  %li
+    .w1 预定人：
+    .w2= text_field_tag "rent[member_name]" ,(member.name rescue ""),:rent_autocomplete=>'/book_records/complete_for_members'
+  %li
+    .w1  会员卡号：
+    - if @cards.present?
+      .w2= select_tag "rent[card_num]",options_from_collection_for_select(cards,:id,:card_serial_num,current_card.id),:onchange=>'card_num_change();',:id => "card_num"
+    - else
+      .w2= text_field_tag "rent[card_num]",current_card.card_serial_num,:rent_autocomplete=>'/book_records/complete_for_member_card'
+%ul
+  %li
+    .w1 卡类型：
+    .w2
+      \&nbsp;
+      \#{current_card.card.card_type_desc if current_card.card}
+    .w1 卡内余额(次)：
+    .w2
+      \&nbsp;
+      \#{current_card.left_fee_value unless current_card.new_record?}
+%ul
+  %li
+    .w1 卡状态：
+    .w2
+      \&nbsp;
+      \#{current_card.status_desc unless current_card.new_record?}
+      - if !current_card.new_record? && current_card.should_notice_remain_amount_due?(date)
+        %p{:style => "color:red;display:inline;"}= current_card.remain_amount_notice(date) unless current_card.new_record?
+    .w1 联系电话：
+    .w2
+      %input{:name => "telephone", :type => "text", :value => member.mobile rescue ""}/
+      %input{:name => "card_id", :type => "hidden", :value => current_card.id}/
+:javascript
+  $(document).ready(function(){
+      rentAutocomplete();
+      });
+    

@@ -1,0 +1,66 @@
+%ul
+  %li
+    .w1
+      = member.is_member? ? '会员名称' : '授权人'
+      ：
+    .w2
+      %input{:name => "member_name", :order_autocomplete => "/book_records/complete_for_members", :type => "text", :value => member.name}/
+      %input{:name => "order[member_attributes][member_name]", :type => "hidden", :value => member.name}/
+      %input#member_id{:name => "order[member_attributes][id]", :type => "hidden", :value => member.id}/
+    .w1 会员卡号：
+    .w2
+      %select#member_card_nubers_selec{:name => "order[member_card_attributes][id]"}
+        - for member_card in member_cards
+          <option value="#{member_card.card_serial_num}"
+          - if current_card && member_card.id == current_card.id
+            selected
+          >
+          \#{member_card.card_serial_num}
+- unless member.is_member?
+  %ul
+    - grantee = member.grantee
+    %li
+      .w1 会员名称：
+      .w2
+        = grantee.name
+      .w1 联系电话：
+      .w2
+        = grantee.mobile
+- if current_card
+  %ul
+    %li
+      .w1 卡类型：
+      .w2
+        = current_card.card.card_type_desc
+      .w1 卡内余额(次)：
+      .w2
+        = current_card.left_fee_value
+  %ul
+    %li
+      .w1 卡状态：
+      .w2
+        = current_card.status_desc
+        - if current_card.should_notice_remain_amount_due?(date)
+          %p{:style => "color:red;display:inline;"}= current_card.remain_amount_notice(date)
+      .w1 联系电话：
+      .w2
+        %input{:name => "telephone", :type => "text", :value => member.mobile}/
+        %input{:name => "card_id", :type => "hidden", :value => current_card.id}/
+- else
+  %ul
+    %li
+      .w1 提示信息：
+      .w2
+        %input{:name => "card_id", :type => "hidden", :value => ""}/
+        此会员没有会员卡
+:javascript
+  $(document).ready(function(){
+    orderAutocomplete();
+    $('#member_card_nubers_selec').change(function(){
+      url = "/book_records/complete_member_infos?id=" + $(this).val() + "&date=" + $('#book_date').text()  ;
+      $.get(url,function(returned_data)
+      {
+        $('#rel_member').html(returned_data);
+      });
+    });
+  });

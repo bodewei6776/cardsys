@@ -1,0 +1,67 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white
+        = current_catena.name
+        = DateUtil.format_to_chinese_date(@date)
+        的场地预定
+    .r_bt_r
+      %button.submit2.hand{:onclick => "location.href="/book_records?date=#{@predate}"", :type => "button"}> 前一天
+      \&nbsp;&nbsp;
+      = succeed "&amp;nbsp;&amp;nbsp;" do
+        %button.submit2.hand{:onclick => "location.href='/book_records'", :type => "button"} 今天
+      = succeed "&amp;nbsp;&amp;nbsp;" do
+        %button.submit2.hand{:onclick => "location.href="/book_records?date=#{@nextdate}"", :type => "button"} 后一天
+      = succeed "&amp;nbsp;&amp;nbsp;" do
+        %button.submit2.hand{:onclick => "location.reload();", :type => "button", :value => "true"} 刷新
+      %a.submit2.hand{:href => "/book_records/print?date=#{@date}", :style => "color:black;padding: 3px;", :target => "_blank"} 打印
+  .content
+    - (0...([(@courts.length%6 == 0 ? @courts.length/6  : @courts.length/6+1),1].max )).each do |row|  tcs = @courts[6*row,6]
+      %ul.time
+        %li.tit 时段/场地
+        - for period in @daily_periods
+          - period.start_time.upto(period.end_time - 1) do |i|
+            %li{:style => "line-height:30px;"}
+              = i
+              \:00-#{i+1}:00
+      .sep
+      - tcs.each_with_index do |court,index|
+        %ul{:class => index == (tcs.size - 1) ? 'date2' : 'date'}
+          %li.tit= court.name
+          = display_period_per_hour(@daily_periods,court,@date)
+        .sep
+      %div{:style => "clear:both;"}
+  .h10
+  .color
+    %span.color01 红色-已预定
+    %span.color02 浅灰色-已过期
+    %span.color03 紫色-开打中
+    %span.color05 褐色-已结算
+    %span.color04 绿色-代卖中
+  .h10
+:javascript
+  $(document).ready(function(){
+      $('.popup-new-window').popupWindow({
+centerScreen: 1,
+windowName: "场地预定",
+width: 850,
+height: 750,
+resizable: true,
+location: false,
+status: false,
+menubar: 0
+});
+
+      $('.content li').mousemove(function(even){
+        var mouse_y = even.pageY;
+        var this_top = $(this).offset().top; 
+        $('.content li').removeClass('book_records_mousehover');
+        $('.content li').each(function(i,node){
+          var node_top = $(node).offset().top;
+          var node_bottom = $(node).offset().top - 30;
+          //if(node_top > mouse_y && mouse_y > node_bottom) { $(node).addClass('book_records_mousehover')}
+          if((node_top <= this_top + 3) &&(node_top >= this_top - 3)) { $(node).addClass('book_records_mousehover')}
+          }); 
+        });
+});

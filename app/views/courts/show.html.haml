@@ -1,0 +1,70 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 网球场地信息
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/courts/new'", :type => "button"} 创建新场地
+  .info
+    .infobox
+      .infobox_bt
+        %p
+          场地 #{@court.name} 的基本信息
+      .infobox_nr
+        %ul
+          %li.cleft
+            .w1 场地名称：
+            .w2
+              = @court.name
+              - if @court.name.blank?
+                %a.blank_element
+            .w1 联系人：
+            .w2
+              = get_user_name(@court.contact)
+        %ul
+          %li.cleft
+            .w1 开放时间：
+            .w2
+              = generate_time_str(@court.start_time)
+              至
+              \#{generate_time_str(@court.end_time)}
+        %ul
+          %li.cleft
+            .w1 说明：
+            .w2
+              = @court.description
+              - if @court.description.blank?
+                %a.blank_element
+    .h10
+    .infobox
+      .infobox_bt
+        %p 时段折扣价
+      .table2
+        %ul.bttitle.black.fb
+          %li.w5 序号
+          %li.w20 时段
+          %li.w15 标准收费(/小时)
+          %li.w10 可用
+          %li.w20 说明
+        - @period_prices.each_with_index do |period_price,index|
+          - next unless @court.is_useable_in_time_span?(period_price)
+          - available_period = @court.generate_court_period_price(period_price)
+          %ul.table_items
+            %li.w5= index + 1
+            %li.w20
+              = period_price.name
+              ：#{period_price.start_time}:00-#{period_price.end_time}:00
+            %li.w15= period_price.price
+            %li.w10
+              <input type="checkbox" name="time_available_#{period_price.id}"  value="1"
+              - if available_period
+                checked
+              \/>
+            %li.w20= period_price.description
+    .h10
+    .input_bd
+      %button.submit1.hand{:onclick => "window.location.href='#{edit_court_path(@court)}'", :type => "button"}> 修改
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit3.hand{:onclick => "window.location.href='#{courts_path}'", :type => "button"} 返回
+    .clear
+  .h10

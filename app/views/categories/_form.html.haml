@@ -1,0 +1,24 @@
+= form_for(@category) do |f|
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 基本属性
+      = error_messages_for :category
+      .fformbox_nr
+        %ul
+          %li
+            .w1 分类上级：
+            .w2
+              = f.select :parent_id,indent_category_options(params[:p]) ,:include_blank => true
+        %ul
+          %li
+            .w1 分类名称：
+            .w2
+              = f.text_field :name
+        %ul
+          %li
+            .w1= f.submit "#{@category.new_record? ? "新建" : "修改"}" ,:class => "submit1 hand button"
+          %li
+            .w1= link_to "返回",categories_url,:class => "submit1 hand button"
+        .clear
+  .h10

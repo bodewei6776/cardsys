@@ -1,0 +1,57 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 教练信息
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/coaches/new'", :type => "button"} 添加新教练
+  .info
+    .infobox
+      .infobox_bt
+        %p
+          教练#{@coach.name} 的基本信息
+      .infobox_nr
+        %ul
+          %li
+            .w1 教练名称：
+            .w2
+              = @coach.name
+              - if @coach.name.blank?
+                %a.blank_element
+            .w1 教练性别：
+            .w2
+              = gender_desc(@coach.gender)
+        %ul
+          %li
+            .w1 联系电话：
+            .w2
+              = @coach.telephone
+              - if @coach.telephone.blank?
+                %a.blank_element
+            .w1 email：
+            .w2
+              = @coach.email
+        %ul
+          %li
+            .w1 教练类型：
+            .w2
+              = generate_coach_type_str(@coach.coach_type)
+              - if generate_coach_type_str(@coach.coach_type).blank?
+                %a.blank_element
+            .w1 教练费用：
+            .w2
+              = @coach.fee
+        %ul
+          %li
+            .w1 教练简介：
+            .w2
+              = @coach.description
+              - if @coach.description.blank?
+                %a.blank_element
+    .h10
+    .input_bd
+      %button.submit1.hand{:onclick => "window.location.href='#{edit_coach_path(@coach)}'", :type => "button"}> 修改
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit3.hand{:onclick => "window.location.href='#{coaches_path}'", :type => "button"} 返回
+    .clear
+  .h10

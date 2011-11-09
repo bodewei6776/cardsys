@@ -1,0 +1,41 @@
+= form_for(@vacation) do |f|
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 填写节假日信息
+      = error_messages_for :vacation
+      .fformbox_nr
+        %ul
+          %li
+            .w1 假日名称：
+            .w2
+              = f.text_field :name
+            .w1 假日类型：
+            .w2
+              = radio_button_tag("vacation[status]", "1", 1 == @vacation.status)
+              节假日
+              \#{radio_button_tag("vacation[status]", "0", 0 == @vacation.status)}平时日
+        %ul
+          %li
+            .w1 开始时间：
+            .w2
+              %input#start_date{:name => "vacation[start_date]", :type => "text", :value => ftime_date(@vacation.start_date)}/
+            .w1 结束时间：
+            .w2
+              %input#end_date{:name => "vacation[end_date]", :type => "text", :value => ftime_date(@vacation.end_date)}/
+    .h10
+    .input_bd
+      %button.submit1.hand{:type => "submit"}> 提交
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit2.hand{:onclick => "window.location.href='/vacations'", :type => "button"} 返回
+    .clear
+:javascript
+  $(function() {
+    $("#start_date").new_datepicker({dateFormat: 'yy-mm-dd'});
+    $("#end_date").new_datepicker({dateFormat: 'yy-mm-dd'});
+  });
+
+  function fsubmit(){
+    var form = $("form[0]");
+    form.submit();
+  }

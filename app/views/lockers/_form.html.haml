@@ -1,0 +1,23 @@
+= form_for(@locker) do |f|
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 储物柜基本信息
+      = error_messages_for :locker
+      .fformbox_nr
+        %ul
+          %li
+            .w1
+              = f.label :locker_type,"储物柜类型"
+            .w2= f.select :locker_type,raw(generate_locker_type_options_without_all(@locker.locker_type))
+        %ul
+          %li
+            .w1= f.label :num,"编号"
+            .w2= f.text_field :num
+        %ul
+          %li
+            .w1= f.label :remark,"备注"
+            .w2= f.text_field :remark
+        %ul
+          %li
+            = f.submit @locker.new_record? ? "创建" : "更新"

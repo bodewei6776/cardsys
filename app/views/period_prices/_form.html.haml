@@ -1,0 +1,65 @@
+= form_for(@period_price) do |f|
+  .fform
+    .fformbox
+      .fformbox_bt
+        %p 请填写时段信息
+      = error_messages_for :period_price
+      .fformbox_nr
+        %ul
+          %li
+            .w1 时段名称：
+            .w2
+              = f.text_field :name
+            .w1 时段类型：
+            .w2
+              <select name="period_price[period_type]" id="type" class="select"
+              - if(!@period_price.id.blank?)
+                disabled="true"
+              >
+              \#{generate_period_price_type_options(@period_price)}
+        %ul
+          %li
+            .w1 开始时间：
+            .w2
+              %select#start_time.select{:name => "period_price[start_time]", :onchange => "check_time();"}
+                = generate_time_options(@period_price.start_time)
+            .w1 结束时间：
+            .w2
+              %select#end_time.select{:name => "period_price[end_time]", :onchange => "check_time();"}
+                = generate_time_options(@period_price.end_time)
+        %ul
+          %li
+            .w1 时段价格：
+            .w2
+              = f.text_field :price
+            .w1 创建时间：
+            .w2
+              = @period_price.new_record? ? DateTime.now.to_s(:db) : @period_price.created_at.to_s(:db)
+        %ul{:style => "height:80px;"}
+          %li
+            .w1 备注：
+            .ww2
+              %textarea{:cols => "45", :name => "period_price[description]", :rows => "4"}= @period_price.description
+    .h10
+    .input_bd
+      %button.submit1.hand{:type => "submit"}> 提交
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %button.submit2.hand{:onclick => "window.location.href='#{period_prices_path}'", :type => "button"} 查看
+    .clear
+:javascript
+  function fsubmit(){
+    if(check_time()){
+      var form = $("form[0]");
+      form.submit();
+    }
+  }
+  function check_time(){
+    var start_time = $("#start_time")[0].value;
+    var end_time = $("#end_time")[0].value;
+    if(start_time - end_time > 0){
+      alert("开始时间应该小于结束时间！");
+      return false;
+    }else{
+      return true;
+    }
+  }

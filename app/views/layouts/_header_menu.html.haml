@@ -1,0 +1,76 @@
+:css
+  #menu li a:hover{background: #E78F08}
+.menu
+  %ul#menu
+    %li
+      %a#a.header_menu{:href => "/period_prices", :sub_menu => "common_memu", :title => "\345\237\272\347\241\200\344\277\241\346\201\257\347\256\241\347\220\206"}
+      %p
+        %img{:alt => "", :src => "/images/new/tb_01.gif"}>/
+        基础信息管理
+    %li
+      %a#d.header_menu{:href => "/members", :sub_menu => "member_memu", :title => "\344\274\232\345\221\230\347\256\241\347\220\206"}
+      %p
+        %img{:alt => "", :src => "/images/new/tb_04.gif"}/
+        会员管理
+    %li
+      %a#c.header_menu{:href => "/members/member_card_bind_index", :sub_menu => "member_card_memu", :title => "\344\274\232\345\221\230\345\215\241\347\256\241\347\220\206"}
+      %p
+        %img{:alt => "", :src => "/images/new/tb_03.gif"}/
+        %span 会员卡管理
+    %li
+      %a#f.header_menu{:href => "/book_records", :sub_menu => "book_record_menu", :title => "\345\234\272\345\234\260\351\242\204\345\256\232"}
+      %p
+        %img{:alt => "", :src => "/images/new/tb_06.gif"}/
+        %span 场地预定
+    %li
+      %a#b.header_menu{:href => "/goods", :sub_menu => "goods_memu", :title => "\345\272\223\345\255\230\347\256\241\347\220\206"}
+      %p
+        %img{:alt => "", :src => "/images/new/tb_02.gif"}/
+        %span 库存管理
+    %li
+      %a#e.header_menu{:href => "/reports/income", :sub_menu => "report_menu", :title => "\345\210\206\346\236\220\346\212\245\350\241\250"}
+      %p
+        %img{:alt => "", :src => "/images/new/tb_05.gif"}/
+        %span 分析报表
+    %li
+      %a#g.header_menu{:href => "/balances/new_good_buy", :sub_menu => "balance_menu", :title => "\346\266\210\350\264\271\347\273\223\347\256\227"}
+      %p
+        %img{:alt => "", :src => "/images/new/tb_07.gif"}/
+        %span 消费结算
+    %li
+      %a#h.header_menu{:href => "/rents", :sub_menu => "locker_menu", :title => "\345\202\250\347\211\251\346\237\234\347\256\241\347\220\206"}
+      %p
+        %img{:alt => "", :src => "/images/new/tb_08.gif"}/
+        %span 储物柜管理
+    %li
+      %a#h.header_menu{:href => "/users", :sub_menu => "authorize_menu", :title => "\346\235\203\351\231\220\347\256\241\347\220\206"}
+      %p
+        %img{:alt => "", :src => "/images/new/tb_08.gif"}/
+        %span 权限管理
+    %li
+      %a#i.header_menu{:href => "/users/change_password", :sub_menu => "system_menu", :title => "\347\263\273\347\273\237\347\256\241\347\220\206"}
+      %p
+        %img{:alt => "", :src => "/images/new/tb_09.gif"}/
+        %span 系统管理
+:javascript
+  $(document).ready(function(){
+    $('.header_menu').click(function(){
+      $('.menu_item').hide();
+      $("#"+$(this).attr('sub_menu')).show();
+      return true;
+    });
+
+    var user_menus = [];
+<haml:silent>     current_user.menus.each do |menu|
+</haml:silent><haml:block>      user_menus.push("#{menu}");
+</haml:block>
+
+    $('#menu li').each(function(index,node){
+      if($.inArray($(node).find('p').text().trim(),user_menus) < 0){ $(node).hide();} 
+      });
+
+    $('div.xdh li').each(function(index,node){
+      if($(node).is(":visible") && ($.inArray($(node).find('a').text().trim(),user_menus) < 0 )){ $(node).hide();} 
+      });
+
+    });

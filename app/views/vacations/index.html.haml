@@ -1,0 +1,31 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 节假日列表
+    .r_bt_r
+      %button.submit2.hand{:onclick => "window.location.href='/vacations/new'", :type => "button"} 创建节假日
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 序号
+      %li.w30 名称
+      %li.w10 开始日期
+      %li.w10 结束日期
+      %li.w10 节假日类型
+      %li.w10 操作
+    - @vacations.each_with_index do |vacation,index|
+      %ul.table_items
+        %li.w5= index + 1
+        %li.w30.overflow_hidden= vacation.name
+        %li.w10= ftime_date(vacation.start_date)
+        %li.w10= ftime_date(vacation.end_date)
+        %li.w10= vacation.status==1?"节假日":"平日"
+        %li.w10
+          - if vacation.can_edit?
+            = link_to '修改', edit_vacation_path(vacation)
+          - if vacation.can_edit?
+            = link_to '删除', vacation, :confirm => '确定删除?', :method => :delete
+  .h10
+  .pages
+    = will_paginate(@vacations)
+  .h10

@@ -1,0 +1,11 @@
+%label{:align => "right"}
+  = link_to '创建节假日', new_vacation_path
+  %br/
+%br/
+%p#notice= notice
+%p
+  %b Name:
+  = @vacation.name
+= link_to 'Edit', edit_vacation_path(@vacation)
+|
+\#{link_to 'Back', vacations_path}

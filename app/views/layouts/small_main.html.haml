@@ -1,0 +1,15 @@
+!!!
+%html{:xmlns => "http://www.w3.org/1999/xhtml"}
+  %head
+    %meta{:content => "text/html; charset=gb2312", "http-equiv" => "Content-Type"}/
+    %title 博德维网球管理系统
+    = javascript_include_tag "m97/WdatePicker.js"
+    = javascript_include_tag 'jquery-1.4.2','jquery.ui.core','jquery-ui-1.8.2.custom.min','new_datepicker','rails'
+    = javascript_include_tag "jquery.colorbox-min.js"
+    = javascript_include_tag "autocomplete-rails.js","jquery.popupWindow.js"
+    = stylesheet_link_tag 'main', 'jquery-ui-1.8.2.custom','colorbox'
+    :css
+      /*     div .w1{height: 80px;}
+           div .w2{height: 80px;} */
+           %body
+    = yield

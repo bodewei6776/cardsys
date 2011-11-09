@@ -1,0 +1,45 @@
+= javascript_include_tag "autocomplete-rails"
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 商品查询
+    .r_bt_r
+      - unless request.referrer =~ /book_record|goods|new_good_buy/
+        %button.submit2.hand{:onclick => "window.location.href='/goods/new'", :type => "button"} 添加商品
+  .soso
+    = form_tag "/goods/find_goods",{:remote => true ,:id => "search-goods-form"} do |f|
+      = hidden_field_tag "_method","get"
+      .w95
+        照商品类别：
+        %label
+          = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
+        \&nbsp;&nbsp;&nbsp;&nbsp;
+        按照商品名称：
+        %label
+          %input#name.inputtext{:autocomplete => "/goods/autocomplete_name", :name => "name", :type => "text", :value => params[:name]}/
+  .h10
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 商品列表
+    .r_bt_r
+  #goods
+    = render :partial => "goods", :locals => { :goods => @goods }
+  .h10
+%script{:charset => "utf-8", :type => "text/javascript"}
+  $(document).ready(function(){
+  $('#name').autocomplete({
+  source: "/goods/autocomplete_name",
+  select: function(ui, li){
+  var item = li.item;
+  $(this).val(item.value);
+  $('#search-goods-form').submit();
+  }
+  });
+  });
+  
+  $('#good_type').change(function(){
+  
+  $('#search-goods-form').submit();
+  });
