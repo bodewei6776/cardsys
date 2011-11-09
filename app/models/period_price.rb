@@ -2,7 +2,6 @@ class PeriodPrice < ActiveRecord::Base
 
   has_many :card_period_prices
 
-  #default_scope where({:catena_id => current_catena.id})
   scope :search_order, PeriodPrice.order("period_type desc, name desc, created_at desc")
 
   validates :name,  :presence => {:message => "时段名称不能为空！"}

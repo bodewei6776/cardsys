@@ -1,6 +1,6 @@
 class CreateLockers < ActiveRecord::Migration
   def self.up
-    create_table :lockers, :options => ' DEFAULT CHARSET=utf8' do |t|
+    create_table :lockers do |t|
       t.string :num
       t.string :locker_type
       t.string :state

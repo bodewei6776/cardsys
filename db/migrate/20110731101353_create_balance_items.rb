@@ -4,9 +4,9 @@ class CreateBalanceItems < ActiveRecord::Migration
       t.integer :order_id
       t.integer :order_item_id
       t.integer :balance_id
-      t.integer :price
-      t.float :discount_rate
-      t.string :reason
+      t.integer :total_price
+      t.float   :discount_rate
+      t.string  :reason
 
       t.timestamps
     end

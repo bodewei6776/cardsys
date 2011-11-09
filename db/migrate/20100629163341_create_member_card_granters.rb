@@ -1,9 +1,9 @@
 class CreateMemberCardGranters < ActiveRecord::Migration
   def self.up
-    create_table :member_card_granters , :options => ' DEFAULT CHARSET=utf8' do |t|
-      t.integer :member_card_id, :null => false
-      t.integer :granter_id, :null => false
-      t.integer :catena_id
+    create_table :member_card_granters do |t|
+      t.integer :member_card_id
+      t.integer :granter_id
+      t.integer :member_id
       t.timestamps
     end
   end

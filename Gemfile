@@ -11,7 +11,6 @@ gem 'jquery-rails'
 gem 'highline'
 gem 'awesome_print', :require => 'ap'
 
-gem 'shoulda'
 
 gem 'inherited_resources'
 
@@ -19,7 +18,9 @@ gem 'haml-rails', :group => :development
 gem 'erb2haml'
 
 group :test do
+  gem 'factory_girl_rails'
   gem 'rails3-generators' #mainly for factory_girl & simple_form at this point
   gem 'rspec-rails'
+  gem 'shoulda'
 end
 

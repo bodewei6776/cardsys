@@ -1,20 +1,18 @@
 class CreateUsers < ActiveRecord::Migration
   def self.up
-    create_table :users , :options => ' DEFAULT CHARSET=utf8' do |t|
+    create_table :users do |t|
       t.timestamps
-      t.string :user_name,:null => false,:default => ''
-      t.string :login, :null => false
-      t.string :crypted_password, :null => false
-      t.string :password_salt, :null => false
-      t.string :persistence_token, :null => false
-      t.integer :login_count, :default => 0, :null => false
+      t.string :user_name
+      t.string :login
+      t.string :crypted_password
+      t.string :password_salt
+      t.string :persistence_token
+      t.integer :login_count
       t.datetime :last_request_at
       t.datetime :last_login_at
       t.datetime :current_login_at
       t.string :last_login_ip
       t.string :current_login_ip
-      t.integer :catena_id, :null => false,:default => 0
-      t.integer :status, :default => 1
     end
 
     add_index :users, :login

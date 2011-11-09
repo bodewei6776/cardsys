@@ -1,9 +1,9 @@
 class CreateVacations < ActiveRecord::Migration
   def self.up
-    create_table :vacations , :options => ' DEFAULT CHARSET=utf8' do |t|
-      t.datetime :start_date, :null => false
-      t.datetime :end_date, :null => false
-      t.string :name, :null => false
+    create_table :vacations  do |t|
+      t.datetime :start_date
+      t.datetime :end_date
+      t.string :name
       t.timestamps
     end
   end

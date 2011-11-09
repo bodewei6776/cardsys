@@ -1,14 +1,13 @@
 class CreateCourts < ActiveRecord::Migration
   def self.up
-    create_table :courts , :options => ' DEFAULT CHARSET=utf8' do |t|
-      t.string     :name, :null => false, :default => ''
-      t.string     :contact, :null => false, :default => ''
+    create_table :courts do |t|
+      t.string     :name
+      t.string     :contact
       t.string     :telephone
-      t.integer    :start_time, :null => false#开放时间
-      t.integer    :end_time, :null => false
+      t.integer    :start_time
+      t.integer    :end_time
       t.text       :description
-      t.integer    :status, :null => false, :default => 1#Court::Status_Free#默认为空闲状态
-      t.integer    :catena_id, :null => false, :default => 0
+      t.string     :state
       t.timestamps
     end
   end

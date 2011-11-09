@@ -3,12 +3,10 @@ class Card < ActiveRecord::Base
   CONSUME_TYPE_1 = 1 #场地消费
   CONSUME_TYPE_2 = 2 #可买商品
 
-  STATUS = %w( 未使用 使用中 已停用 已注销 )
+  STATE = %w( 未使用 使用中 已停用 已注销 )
   
-  scope :search_order, order("created_at desc")
   has_many :member_cards
   has_many :card_period_prices
-
 
   
   validates :name, :presence => {:message => "卡名称不能为空！"}
@@ -17,9 +15,9 @@ class Card < ActiveRecord::Base
     
   validates :card_prefix, :presence => {:message => "卡前缀不能为空！"}
   validates :expired, :numericality => true, :presence => {:message => "有效期不能为空！"}
-  validates_numericality_of :min_time ,:only_integer => true,:greater_than => -1,:message => "提醒时间必须为非负整数",:allow_nil => true
-  validates_numericality_of :min_amount,:only_integer => true,:greater_than => -1,:message => "提醒金额必须为非负整数",:allow_nil => true
-  validates_numericality_of :min_count,:only_integer => true,:greater_than =>-1,:message => "提醒次数必须为非负整数",:allow_nil => true
+  validates_numericality_of :min_time ,:only_integer => true, :greater_than => -1, :message => "提醒时间必须为非负整数",:allow_nil => true
+  validates_numericality_of :min_amount,:only_integer => true, :greater_than => -1, :message => "提醒金额必须为非负整数",:allow_nil => true
+  validates_numericality_of :min_count,:only_integer => true, :greater_than =>-1, :message => "提醒次数必须为非负整数",:allow_nil => true
 
   before_save :auto_fill_nil
   def auto_fill_nil

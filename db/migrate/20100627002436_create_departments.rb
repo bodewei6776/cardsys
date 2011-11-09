@@ -1,7 +1,7 @@
 class CreateDepartments < ActiveRecord::Migration
   def self.up
-    create_table :departments , :options => ' DEFAULT CHARSET=utf8' do |t|
-      t.string :name,:null => false,:default => '',:limit => 50
+    create_table :departments  do |t|
+      t.string :name
     end
   end
 
