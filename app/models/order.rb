@@ -1,6 +1,5 @@
 class Order < ActiveRecord::Base
   has_many    :balance_items
-  belongs_to  :card
   belongs_to  :user
   belongs_to  :member_card
   has_one     :balance, :dependent => :destroy
@@ -184,9 +183,6 @@ class Order < ActiveRecord::Base
     @book_record.blank? ? nil : @book_record
   end
   
-  def is_member?
-    self.member_type == Const::YES
-  end
 
   def coach_attributes=(coach_attri)
     unless coach_attri[:id].blank?

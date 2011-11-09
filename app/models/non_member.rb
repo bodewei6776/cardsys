@@ -1,9 +1,5 @@
 require 'pinyin/pinyin'
 class NonMember < ActiveRecord::Base
-
-
-  has_one :order,:foreign_key => 'member_id',:conditions => "member_type=#{Const::NO}"
-  
   validates :telephone, :presence => {:message => I18n.t('order_msg.non_member.mobile_no_presence')}
   validates :telephone, :format => {:with =>/^(?:0{0,1}(13[0-9]|15[0-9])[0-9]{8})|(?:[-0-9]+)$/,
     :message => I18n.t('order_msg.non_member.invalid_mobile_format')}
@@ -31,8 +27,5 @@ class NonMember < ActiveRecord::Base
     book_record = order.book_record
     date,start_hour,end_hour = book_record.record_date,book_record.start_hour,book_record.end_hour
     court_amount = book_record.court.calculate_amount_in_time_span(date,start_hour,end_hour)
-   # if earnest.blank? || earnest.to_i < court_amount
-   #   order_errors << I18n.t('order_msg.non_member.earnest_not_enougth')
-   # end
   end
 end

@@ -26,6 +26,7 @@ class BookRecord < ActiveRecord::Base
       transition [:to_be_sold, :booked] => :canceld
     end
   end
+
   All_Operations = [:book,:agent,:active,:balance,:cancle,:do_agent,:change_coaches]
   OPERATION_MAP = {:book => "预定",
                    :agent => "申请代卖",
@@ -40,11 +41,9 @@ class BookRecord < ActiveRecord::Base
   validates :start_hour, :numericality => {:message => "开始时间必须为整数"}
   validates :end_hour, :numericality => {:message => "结束时间必须为整数"}
 
-  has_one     :order
+  belongs_to  :order
   belongs_to  :court
 
-  delegate :name, :to => :court
-  
   scope :daily_book_records, lambda {|date| where(:record_date => date) }
   scope :court_book_records, lambda {|court_id| where(:court_id => court_id) }
   scope :playing, where(:status => Status_Active)

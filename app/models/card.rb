@@ -10,9 +10,7 @@ class Card < ActiveRecord::Base
 
   
   validates :name, :presence => {:message => "卡名称不能为空！"}
-  validates :name, :uniqueness => {:on => :create, :message => '卡名称已经存在！', 
-    :if => Proc.new { |card| !card.name.nil? && !card.name.blank? }}
-    
+  validates :name, :uniqueness => {:message => '卡名称已经存在! '}
   validates :card_prefix, :presence => {:message => "卡前缀不能为空！"}
   validates :expired, :numericality => true, :presence => {:message => "有效期不能为空！"}
   validates_numericality_of :min_time ,:only_integer => true, :greater_than => -1, :message => "提醒时间必须为非负整数",:allow_nil => true
@@ -93,10 +91,6 @@ class Card < ActiveRecord::Base
     is_member_card?
   end
   
-  def card_type_desc
-    @card_type_desc ||= CommonResourceDetail.find_by_id(card_type).try(:detail_name)
-  end
-
   def card_type_opt
     (is_member_card? || is_balance_card?) ? "充值" : "充次"
   end
