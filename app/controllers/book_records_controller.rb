@@ -3,7 +3,7 @@ class BookRecordsController < ApplicationController
 
 
   def index
-    @courts       = Court.where({:status => 1})
+    @courts       = Court.enabled
     @date = params[:date].blank? ? Date.today : Date.parse(params[:date])
     @daily_periods   = PeriodPrice.all_periods_in_time_span(@date)
     @predate      = @date.yesterday.strftime("%Y-%m-%d")

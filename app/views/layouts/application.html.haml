@@ -2,18 +2,55 @@
 %html{:xmlns => "http://www.w3.org/1999/xhtml"}
   %head
     %meta{:content => "text/html; charset=gb2312", "http-equiv" => "Content-Type"}/
-    %title
-      = current_catena.name || "博德维网球"
-      管理系统
+    %title 管理系统
+    = stylesheet_link_tag 'main','jquery-ui-1.8.2.custom','colorbox'
     = javascript_include_tag 'jquery','jquery.ui.core','jquery-ui-1.8.2.custom.min', 'rails'
-      = javascript_include_tag "jquery.colorbox-min.js"
-      = javascript_include_tag "autocomplete-rails.js","jquery.popupWindow.js","new_datepicker.js"
-      = javascript_include_tag "m97/WdatePicker.js"
-      = yield :head_content
-      :javascript
-      function jump_to_somewhere(dp){
-        var dateText = dp.cal.getDateStr();
-        $("#calendar_con").val(dateText);
+    = javascript_include_tag "jquery.colorbox-min.js"
+    = javascript_include_tag "autocomplete-rails.js","jquery.popupWindow.js","new_datepicker.js"
+    = javascript_include_tag "m97/WdatePicker.js"
+
+    = yield :head_content
+
+  %body
+    .top
+      .top_logo.white.fmic30
+        博德维网球管理系统
+      .top_user
+        %strong 登录用户:
+        = current_user.user_name ||  current_user.login || current_user.email
+        [ #{link_to "退出",user_session_path(current_user),:method =>:delete,:class => "cyellow"} ]
+    .dh
+      = render :partial => "layouts/header_menu"
+    .left
+      .h10
+      .bt_time
+        #linkweb
+          #arrow_holder
+            %img{:src => "/images/arrow_left.gif"}
+      #datepicker.w178
+        #date_picker.w178
+          %button.submit2.hand{:onclick => "location.href='/book_records?date=#{@predate}'", :type => "button"}> 前一天
+          %button.submit2.hand{:onclick => "location.href='/book_records'", :type => "button"} 今天
+          %button.submit2.hand{:onclick => "location.href='/book_records?date=#{@nextdate}'", :type => "button"} 后一天
+      .h10
+      = render :partial => "layouts/menu"
+    .right
+      .right_ddd
+        %img{:alt => "", :src => "/images/new/r_ddd_yj.jpg"}
+
+      .w96
+        .notice= flash[:notice] if flash[:notice]
+        = yield
+        .h10
+        .foot
+          Broadwell Club Mangement System  博德维球馆管理系统 #{link_to "www.broadwell.cn","www.broadwell.cn"}
+
+
+
+:javascript
+  function jump_to_somewhere(dp){
+    var dateText = dp.cal.getDateStr();
+      $("#calendar_con").val(dateText);
         var domain = document.domain;
         var port = window.location.port;
         var urls = ["http://",domain];
@@ -27,114 +64,38 @@
         else{
           urls.push("/book_records?date=" + dateText)
         }
-
         window.location.href=urls.join('');
-      }
-$(document).ready(function() {
-    WdatePicker({startDate:'#{ftime_date(@date)}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
-    //          $('#datepicker').datepicker({
-    //onSelect: function(dateText, inst) {
-    //$("#calendar_con").val(dateText);
-    //var domain = document.domain;
-    //var port = window.location.port
-    //var urls = ["http://",domain];
-    //if(port && port != ''){
-    //urls.push(":" + port)
-    //}
-    //if(window.location.pathname.match(/rents/))
-    //{ 
-    //  urls.push("/rents?date=" + dateText)
-    //}
-    //else{
-    //  urls.push("/book_records?date=" + dateText)
-    //}
-    //
-    //window.location.href=urls.join('');
-    //},
-    //dateFormat: 'yy-mm-dd',
-    //changeMonth: true,
-    //changeYear: true
-    //});
-    //          $('#datepicker').datepicker('setDate','#{ftime_date(@date)}')
-    //
-});
-function highlight_table(){
-  $(".table_items").filter(':even').css("background-color", "#EFFFC8");
-  $('.table_items').mouseover(function(){
-      $(this).css('background-color','#E78F08');
-      });
-  $('.table_items').mouseout(function(){
-      $(this).css('background-color','#ffffff');
-      $(".table_items").filter(':even').css("background-color", "#EFFFC8");
-      });
+    }
 
-}
-$(document).ready(function(){
+  $(document).ready(function() {
+    WdatePicker({startDate:'#{ftime_date(@date)}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
+
     highlight_table();
     $(".balance_detail").colorbox({width:"900", height:"400", iframe:false});
-    });
 
 
-$(document).ready(function(){
     $('#arrow_holder').toggle(function(){
       $('.left').animate({"left": "-180px"});
-      $('.right').animate({"margin-left":"20px"});
-      $(this).find('img').attr('src','/images/arrow_right.gif');
-      },function(){
-      $('.left').animate({"left": "0px"});
-      $('.right').animate({"margin-left": "200px"});
-      $(this).find('img').attr('src','/images/arrow_right.gif');
-      });
-    });
+        $('.right').animate({"margin-left":"20px"});
+        $(this).find('img').attr('src','/images/arrow_right.gif');
+        },function(){
+        $('.left').animate({"left": "0px"});
+        $('.right').animate({"margin-left": "200px"});
+        $(this).find('img').attr('src','/images/arrow_right.gif');
+        });
+  });
 
-if(typeof(String.prototype.trim) === "undefined")
-{
-  String.prototype.trim = function() 
-  {
-    return String(this).replace(/^\s+|\s+$/g, '');
-  };
-}
+  function highlight_table(){
+    $(".table_items").filter(':even').css("background-color", "#EFFFC8");
+    $('.table_items').mouseover(function(){
+      $(this).css('background-color','#E78F08');
+        });
+    $('.table_items').mouseout(function(){
+      $(this).css('background-color','#ffffff');
+        $(".table_items").filter(':even').css("background-color", "#EFFFC8");
+        });
+
+  }
 
 
 
-
-      = stylesheet_link_tag 'main', 'jquery-ui-1.8.2.custom','colorbox'
-      :css
-        /* div .w1{height: 80px;}
-        div .w2{height: 80px;} */
-  %body
-    .top
-      .top_logo.white.fmic30
-        = current_catena.name || "博德维网球"
-        管理系统
-      .top_user
-        %strong 登录用户:
-        = current_user.user_name ||  current_user.login || current_user.email
-        [ #{link_to "退出",user_session_path(current_user),:method =>:delete,:class => "cyellow"} ]
-        / [<haml:loud> select_tag &amp;quot;catena&amp;quot;,options_for_select(current_user.catenas.collect{|c| [c.name,c.id]}),:onchange =&amp;gt; &amp;quot;javascript:change_catena($(this).val());return;&amp;quot;</haml:loud>]
-    .clear
-    .dh
-      = render :partial => "layouts/header_menu"
-    .clear
-    .left
-      .h10
-      .bt_time
-        #linkweb
-        #arrow_holder
-          %img{:src => "/images/arrow_left.gif"}/
-      #datepicker.w178
-      #date_picker.w178
-        %button.submit2.hand{:onclick => "location.href="/book_records?date=#{@predate}"", :type => "button"}> 前一天
-        \&nbsp;&nbsp;
-        = succeed "&amp;nbsp;&amp;nbsp;" do
-          %button.submit2.hand{:onclick => "location.href='/book_records'", :type => "button"} 今天
-        = succeed "&amp;nbsp;&amp;nbsp;" do
-          %button.submit2.hand{:onclick => "location.href="/book_records?date=#{@nextdate}"", :type => "button"} 后一天
-      .h10
-      = render :partial => "layouts/menu"
-    .right
-      .right_ddd
-        %img{:alt => "", :src => "/images/new/r_ddd_yj.jpg"}/
-      = yield
-      .foot
-        Broadwell Club Mangement System  博德维球馆管理系统 #{link_to "www.broadwell.cn","www.broadwell.cn"}

@@ -1,11 +1,10 @@
 !!!
 %html{:xmlns => "http://www.w3.org/1999/xhtml"}
   %head
-    %meta{:content => "text/html; charset=gb2312", "http-equiv" => "Content-Type"}/
+    %meta{:content => "text/html; charset=gb2312", "http-equiv" => "Content-Type"}
     %title 博德维网球管理系统
     = stylesheet_link_tag 'main'
-    :css
-          = javascript_include_tag 'jquery-1.4.2'
+    = javascript_include_tag 'jquery-1.4.2'
     :javascript
       $(document).ready(function(){
           $('body').keypress(function(event) {

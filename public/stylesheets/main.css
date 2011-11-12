@@ -12,6 +12,9 @@ div,form,img,ul,ol,li,dl,dt,dd,table,td,tr,th{ margin:0;padding:0;border:none;}
 .submit1 {	border: #fe8848 1px solid; padding: 0px 5px; background: url(/images/new/btn1_bg.jpg) repeat-x 0 0;color: #000; font-size:12px;height:20px;  line-height:20px;}
 .submit2 {	border: #8f9f56 1px solid; padding: 0px 5px; background: url(/images/new/btn2_bg.jpg) repeat-x 0 0;color: #000; font-size:12px;height:20px; line-height:20px;}
 .submit3 {	border: #464646 1px solid; padding: 0px 5px; background: url(/images/new/btn3_bg.jpg) repeat-x 0 0;color: #000; font-size:12px;height:20px; line-height:20px;}
+a.button_link {	border: #fe8848 1px solid; padding: 3px 5px 1px 5px; background: url(/images/new/btn1_bg.jpg) repeat-x 0 0;color: #000; font-size:12px;height:20px;  line-height:20px; font-color:black;important! font-size:12px; margin-left:10px;}
+.float_right { float:right;}
+.float_left { float:left;}
 
 body{width:100%;/*<随屏幕大小自动充满>*/
 	 color:#000;/*<定义字体颜色>*/
@@ -442,7 +445,7 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 
 #errorExplanation ul li {
   font-size: 12px;
-  list-style: square;
+  list-style: none;
 }
 
 

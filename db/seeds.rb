@@ -5,7 +5,7 @@
 #
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
-user = User.create(:login => "admin",:password => "admin01",:password_confirmation => "admin01",:user_name => "超级管理员",:catena_id => 1)
+user = User.create(:login => "admin",:password => "admin01",:password_confirmation => "admin01",:user_name => "超级管理员")
 card_type = CommonResource.create(:name => "card_type", :description => "卡类型", :detail_str => "储值卡 记次卡")
 period_type = CommonResource.create(:name => "period_type", :description => "时段类型", :detail_str => "夏令时 冬令时 节假日")
 coach_type= CommonResource.create(:name => "coach_type", :description => "教练类型", :detail_str => "全职教练 客人自带")
@@ -130,5 +130,4 @@ Department.create(:name => "培训部")
 
 user.departments << Department.all
 user.powers << Power.all
-user.catenas << Catena.all
 user.save

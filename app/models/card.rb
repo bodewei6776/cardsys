@@ -4,6 +4,12 @@ class Card < ActiveRecord::Base
   CONSUME_TYPE_2 = 2 #可买商品
 
   STATE = %w( 未使用 使用中 已停用 已注销 )
+  CARD_TYPE = {
+    "MemberCard" => "会员卡",
+    "BalanceCard" => "储值卡",
+    "CounterCard" => "计次卡",
+    "ZigeCard" => "资格卡"
+  }
   
   has_many :member_cards
   has_many :card_period_prices

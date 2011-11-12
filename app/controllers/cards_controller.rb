@@ -23,9 +23,6 @@ class CardsController < ApplicationController
 
   def create
     @card = Card.new(params[:card])
-    @card.catena_id = session[:catena_id]
-    @card.status = CommonResource::CARD_ON
-
     #设置卡的时段价格
     @period_prices = PeriodPrice.search_order
     format_card_period_price @card 
@@ -81,8 +78,7 @@ class CardsController < ApplicationController
           price = 0
         end
         card.card_period_prices << CardPeriodPrice.new(:period_price_id => period_price.id,
-                                                       :card_price =>  price,
-                                                       :catena_id =>  session[:catena_id])
+                                                       :card_price =>  price)
       end
     end
   end

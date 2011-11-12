@@ -3,7 +3,6 @@ class UserSessionsController < ApplicationController
 
   def new
     @user_session = UserSession.new
-
     render :layout => false
   end
 

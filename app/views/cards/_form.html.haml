@@ -1,9 +1,9 @@
-- form_for card  do |f|
+= render :partial => "layouts/errors", :locals => {:target => @card}
+- form_for @card  do |f|
   .fform
     .fformbox
       .fformbox_bt
         %p 基本属性
-      = error_messages_for :card
       .fformbox_nr
         %ul
           %li
@@ -12,8 +12,7 @@
               = f.text_field :name
             .w1 基础类型：
             .w2
-              %select#card_type.select{:name => "card[card_type]", :onchange => "type_change()"}
-                = generate_card_type_options(card)
+              = f.select :type, options_for_select(Card::CARD_TYPE.invert,  @card.type)
         %ul
           %li
             .w1 卡前缀：
@@ -33,7 +32,7 @@
           %li
             .w1 签字权：
             .w2
-              = f.text_field :shared_amount
+              = f.text_field :max_shared_count
         %ul
           %li
             .w1 提醒金额：
@@ -54,7 +53,7 @@
           %li
             .w1 说明：
             .ww2
-              %textarea{:cols => "45", :name => "card[description]", :rows => "4"}= card.description
+              = f.text_area :description, :cols => "45", :rows => "4"
               .clear
         .clear
     .h10
@@ -70,7 +69,7 @@
           %li.w15 折扣收费
           %li.w27 说明
         - @period_prices.each_with_index do |period_price,index|
-          - available_period = card.generate_card_period_price(period_price)
+          - available_period = @card.generate_card_period_price(period_price)
           %ul.table_items
             %li.w5= index + 1
             %li.w20
@@ -83,17 +82,10 @@
                 checked
               \/>
             %li.w15
-              %input{:maxlength => "4", :name => "time_discount_#{period_price.id}", :size => "4", :type => "text", :value => card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price}/
+              %input{:maxlength => "4", :name => "time_discount_#{period_price.id}", :size => "4", :type => "text", :value => @card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price}/
             %li.w27= period_price.description
     .h10
     .input_bd
       %button.submit1.hand{:type => "submit"}> 提交
-      \&nbsp;&nbsp;&nbsp;&nbsp;
-      %button.submit2.hand{:onclick => "window.location.href='/cards'", :type => "button"} 返回
+      = link_to "返回", cards_path, :class => "button_link"
     .clear
-:javascript
-  function fsubmit()
-  {
-    var form = $("form[0]");
-    form.submit();
-  }

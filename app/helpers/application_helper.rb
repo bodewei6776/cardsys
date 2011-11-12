@@ -1,5 +1,19 @@
 module ApplicationHelper
 
+  def user_menus
+    [
+      {:image_offset => "1", :link => "/period_prices", :sub_menu => "common_menu", :display => "基础信息管理"},
+      {:image_offset => "4", :link => "/members",       :sub_menu => "member_menu", :display => "会员管理"},
+      {:image_offset => "3", :link => "/members/member_card_bind_index", :sub_menu => "member_card_menu", :display => "会员卡管理"},
+      {:image_offset => "6", :link => "/book_records", :sub_menu => "book_record_menu", :display => "场地预定"},
+      {:image_offset => "2", :link => "/goods",        :sub_menu => "goods_menu", :display => "库存管理"},
+      {:image_offset => "5", :link => "/reports/income", :sub_menu => "report_menu", :display => "分析报表"},
+      {:image_offset => "7", :link => "/balances/new_good_buy", :sub_menu => "balance_menu", :display => "消费结算"},
+      {:image_offset => "8", :link => "/rents", :sub_menu => "locker_menu", :display => "储物柜管理"},
+      {:image_offset => "9", :link => "/users",  :sub_menu => "authorize_menu", :display => "权限管理"}
+    ]
+  end
+
   def error_messages_for(object_name, options = {})
     options = options.symbolize_keys
     object = instance_variable_get("@#{object_name}")
@@ -46,7 +60,7 @@ module ApplicationHelper
     controller_name == "reports"
   end
 
-def should_display_locker_menu?
+  def should_display_locker_menu?
     %{lockers rents}.include?(controller_name.to_s) && action_name.to_s != "list"
   end
 
@@ -70,10 +84,6 @@ def should_display_locker_menu?
     end
   end
 
-  def generate_card_type_options(card)
-    options = generate_res_options CommonResource::CARD_TYPE
-    options_for_select(options, card.card_type)
-  end
 
   def generate_card_status_options(selected_value)
     options = [['所有状态','-1'],['使用中','1'],['未使用','0'],['已停用','2'],['已注销','3']]
@@ -346,6 +356,14 @@ def menus_map
     :authorize_menu => "权限管理",
     :system_menu => "系统管理"
   }
+end
+
+def current_catena
+  OpenStruct.new(:name => "博德维")  
+end
+
+def chinese_date(date = Date.today)
+ date.strftime("%Y年%m月%d日") 
 end
 
 end
