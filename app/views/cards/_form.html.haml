@@ -1,7 +1,7 @@
-= render :partial => "layouts/errors", :locals => {:target => @card}
 - form_for @card  do |f|
   .fform
     .fformbox
+      = render :partial => "layouts/errors", :locals => {:target => @card}
       .fformbox_bt
         %p 基本属性
       .fformbox_nr

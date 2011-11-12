@@ -145,6 +145,15 @@ class MembersController < ApplicationController
   end
 
   def create
+    @member = Member.new(params[:member])
+    if @member.save
+      redirect_to :action => "index", :notice => '会员信息添加成功！'
+    else
+      render :new
+    end
+  end
+
+  def createa
     is_member = params[:member][:is_member]
     @member = Member.new(params[:member])
     @member_base = Member.find_by_id(params[:member_id])

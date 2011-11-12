@@ -419,30 +419,22 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 }
 
 #errorExplanation {
-  width: 94%;
-  border: 2px solid  #FE8848;
-  padding: 3px;
   padding-bottom: 5px;
-  background-color: #f0f0f0;
-  margin: 3px auto;
+  border: 2px solid #FE8848;
 }
 
 #errorExplanation h2 {
   text-align: left;
   font-weight: bold;
-  padding: 3px;
   font-size: 12px;
-  margin: -3px;
   background-color:  #FE8848;
-  color: #fff;
+  padding-left: 4px;
 }
 
-#errorExplanation p {
-  color: #333;
-  margin-bottom: 0;
-  padding: 5px;
+#errorExplanation ul{
+  margin-top: 3px;
+  padding-left: 4px;
 }
-
 #errorExplanation ul li {
   font-size: 12px;
   list-style: none;

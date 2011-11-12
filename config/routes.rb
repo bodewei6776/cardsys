@@ -223,7 +223,7 @@ Cardsys::Application.routes.draw do |map|
   resource :user_session
 
   resources :departments do
-    collection do
+    member do
       get :department_power_index
       get :department_power_update
     end

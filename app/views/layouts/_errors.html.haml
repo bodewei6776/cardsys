@@ -3,6 +3,6 @@
     %h2.title
       == #{target.errors.count}个错误发生，请检查
     %ul
-      - target.errors.full_messages.each do |msg|
-        %li= msg
+      - target.errors.each do |node, msg|
+        %li=node.to_s +   msg
     .bottom
