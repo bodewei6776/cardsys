@@ -1,10 +1,9 @@
 class MemberCard < ActiveRecord::Base
-
   belongs_to  :card
   belongs_to  :member
   has_many    :orders
   has_many :member_card_granters
-  has_many :granters,:class_name => "Member",:through => :member_card_granters
+  has_many :granters, :class_name => "Member", :through => :member_card_granters
 
 
   scope :autocomplete_for, lambda {|num| where("status = 0 and card_serial_num like '#{num.downcase}%'").limit(10) }
@@ -30,8 +29,8 @@ class MemberCard < ActiveRecord::Base
     Balance.find_all_by_book_reocrd_member_card_id(self.id) & Balance.find_all_by_goods_member_card_id(self.id)
   end
 
-  def max_granter_due?
     self.max_granter <= self.granters.count
+  def max_granter_due?
   end
 
   def enable?

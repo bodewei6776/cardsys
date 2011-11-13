@@ -1,5 +1,9 @@
 require 'spec_helper'
 
 describe MemberCard do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "associations" do
+    should_belong_to :card
+    should_belong_to :member
+    should_have_many :orders
+  end
 end
