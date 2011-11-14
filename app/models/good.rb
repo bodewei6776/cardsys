@@ -15,7 +15,7 @@ class Good < ActiveRecord::Base
 
 
   
-  before_create  :geneate_name_pinyin
+#  before_create  :geneate_name_pinyin
   attr_accessor :order_count
 
   scope :valid_goods,where(:status => 0)
