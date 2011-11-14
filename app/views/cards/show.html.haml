@@ -20,7 +20,7 @@
                 %a.blank_element
             .w1 基础类型：
             .w2
-              = display_card_type_desc(@card)
+              = Card::CARD_TYPE[@card.type]
         %ul
           %li
             .w1 卡前缀：
@@ -50,8 +50,8 @@
               天
             .w1 授权人数量：
             .w2
-              = @card.shared_amount
-              - if @card.shared_amount.blank?
+              = #@card.shared_amount
+              - if true#@card.shared_amount.blank?
                 %a.blank_element
         %ul
           %li

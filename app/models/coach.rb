@@ -6,11 +6,6 @@ class Coach < ActiveRecord::Base
   validates :email, :format => {:with =>/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/, :allow_blank => true,:message => '邮箱格式不正确！'}
 
 
-  after_create :set_default_status
-
-  def set_default_status
-    self.update_attribute(:status, 1)
-  end
 
 
   def coach_status_str

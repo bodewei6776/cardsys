@@ -9,7 +9,7 @@ class CreateCards < ActiveRecord::Migration
       t.boolean :shared, :default => 0#是否有授权人
       t.integer :max_shared_count, :default => 0#授权人的数量
       t.integer :total_sold_amount, :default => 0#
-      t.string  :description, :null => false
+      t.string  :description
       t.decimal :balance, :default => 0, :precision => 10, :scale => 2#默认储值数目
       t.string  :state
       t.timestamps

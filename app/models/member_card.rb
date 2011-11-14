@@ -1,4 +1,4 @@
-class MembersCard < ActiveRecord::Base
+class MemberCard < ActiveRecord::Base
   set_table_name 'member_cards'
 
   belongs_to  :card

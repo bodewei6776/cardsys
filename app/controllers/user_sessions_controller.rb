@@ -11,7 +11,7 @@ class UserSessionsController < ApplicationController
     if @user_session.save
       redirect_back_or_default root_path 
     else
-      render :action => :new
+      render :action => "new", :layout => false
     end
   end
 

@@ -54,9 +54,6 @@ class Card < ActiveRecord::Base
     self.is_counter_card? ? "#{self.counts||0}次" : "#{self.balance||0}元"
   end
 
-  def status_desc
-    STATUS[status] || "已注销"
-   end
 
   def generate_card_period_price(period_price)
     self.card_period_prices.find_all_by_period_price_id(period_price.id).first

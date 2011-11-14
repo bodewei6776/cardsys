@@ -13,9 +13,9 @@
     %ul.table_items
       %li.w5= index.succ
       %li.w10= card.name
-      %li.w10= display_card_type_desc(card)
+      %li.w10= Card::CARD_TYPE[card.type]
       %li.w10= card.card_prefix
-      %li.w10= card.status_desc
+      %li.w10= card.state
       %li.w20= card.description
       %li.w15
         = link_to '查看', card
