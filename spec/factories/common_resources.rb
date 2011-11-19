@@ -1,6 +1,4 @@
 # Read about factories at http://github.com/thoughtbot/factory_girl
 
-FactoryGirl.define do
-  factory :common_resource do
-    end
+Factory.define(:common_resources) do
 end

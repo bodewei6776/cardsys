@@ -1,6 +1,4 @@
 # Read about factories at http://github.com/thoughtbot/factory_girl
 
-FactoryGirl.define do
-  factory :court_period_price do
-    end
+Factory.define(:court_period_prices) do
 end

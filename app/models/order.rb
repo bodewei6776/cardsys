@@ -2,14 +2,13 @@ class Order < ActiveRecord::Base
   has_many    :balance_items
   belongs_to  :user
   belongs_to  :member_card
-  belongs_to :advanced_order
+  belongs_to  :advanced_order
   has_many    :balances, :dependent => :destroy
   has_one     :court_book_record, :dependent => :destroy
   has_many    :coach_book_records, :dependent => :destroy
   has_many    :order_items
 
   validates  :card_id, :member_id, :presence => {:message => "信息不完整，请补充完所需要的信息"}
-
 
   after_create  :generate_balance
   after_save    :update_balance
@@ -18,10 +17,7 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :court_book_record
   accepts_nested_attributes_for :coach_book_records
 
-  #attr_accessor :coach_id,:operation,:updating
-  #attr_accessor :coach,:non_member,:member,:member_card,:book_record
-
-   delegate :record_date,:end_hour,:start_hour,:hours,:to => :book_record
+  delegate :record_date,:end_hour,:start_hour,:hours,:to => :book_record
 
   def operation
     @operation.blank? ? BookRecord.default_operation : @operation.to_sym
@@ -75,15 +71,15 @@ class Order < ActiveRecord::Base
       end
     end
   end
-  
+
   def auto_generate_coaches_items
     OrderItem.order_coaches(self)
   end
-  
+
   def auto_generate_book_record_item
     OrderItem.order_book_record(self)
   end
-  
+
   #add to cart
   def order_goods(goods)
     goods = [goods] unless goods.is_a?(Array)
@@ -97,7 +93,7 @@ class Order < ActiveRecord::Base
     end
   end
 
-                   
+
 
   def cancel_bookrecord
     book_record.try(:cancle) 
@@ -148,8 +144,8 @@ class Order < ActiveRecord::Base
     order.book_record.status = BookRecord::Status_Agent
     order.save!
   end
-  
-  
+
+
   def original_coaches
     (new_record? || coach_items.blank? ? [] : coach_items.map(&:item)).compact
   end
@@ -186,7 +182,7 @@ class Order < ActiveRecord::Base
     @book_record ||=( book_record_id > 0 ?  BookRecord.find(book_record_id) : nil) || ''
     @book_record.blank? ? nil : @book_record
   end
-  
+
 
   def coach_attributes=(coach_attri)
     unless coach_attri[:id].blank?
@@ -216,7 +212,7 @@ class Order < ActiveRecord::Base
     end
     @updating = true
   end
-  
+
   def member_attributes=(member_attributes)
     if is_member?
       @member = Member.find(member_attributes[:id]) if member_attributes[:id].to_i > 0
@@ -230,7 +226,7 @@ class Order < ActiveRecord::Base
     end
     @updating = true
   end
-  
+
   def is_advanced_order?
     parent_id.to_i > 0
   end
@@ -238,15 +234,15 @@ class Order < ActiveRecord::Base
   def is_order_use_zige_card?
     is_member? && member_card.card.is_zige_card?
   end
-  
+
   def amount
     balance.real_amount
   end
-  
+
   def book_record_amount
     is_member? && member_card.card.is_counter_card? ? hours : book_record_item.amount
   end
-      
+
   def product_amount
     p_amount = product_items.map(&:amount).sum
     p_amount += coach_items.map(&:amount).sum unless coach_items.blank?
@@ -260,7 +256,7 @@ class Order < ActiveRecord::Base
   def can_balance?
     self.is_member? && self.member_card.can_balance?(self)
   end
-    
+
   def do_balance
     self.operation = :balance
     member_card.do_balance(self) if is_member?
@@ -268,7 +264,7 @@ class Order < ActiveRecord::Base
     self.updating = false
     save
   end 
-  
+
   def balance_record
     @balance_record ||= Balance.find_by_order_id(id)
   end
@@ -276,15 +272,15 @@ class Order < ActiveRecord::Base
   def has_bean_balanced?
     self.balance.paid?
   end
-  
+
   def should_use_card_to_balance_goods?
     is_member? && !member_card.card.is_counter_card? && member_card.card.is_consume_goods?
   end
-  
+
   def order_member
     is_member? ? member : non_member
   end
-  
+
   def member_card_number
     is_member? ? member_card.card_serial_num : "散客"
   end
@@ -317,5 +313,5 @@ class Order < ActiveRecord::Base
   def clear_order_errors
     order_errors.clear
   end
-  
+
 end

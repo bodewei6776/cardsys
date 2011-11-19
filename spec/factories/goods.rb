@@ -1,6 +1,4 @@
 # Read about factories at http://github.com/thoughtbot/factory_girl
 
-FactoryGirl.define do
-  factory :good do
-    end
+Factory.define(:good) do
 end

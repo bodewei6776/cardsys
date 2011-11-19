@@ -1,6 +1,4 @@
 # Read about factories at http://github.com/thoughtbot/factory_girl
 
-FactoryGirl.define do
-  factory :user_power do
-    end
+Factory.define :user_power do
 end

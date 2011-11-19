@@ -21,6 +21,6 @@ group :test do
   gem 'factory_girl_rails'
   gem 'rails3-generators' #mainly for factory_girl & simple_form at this point
   gem 'rspec-rails'
-  gem 'shoulda'
+  gem "shoulda-matchers"
 end
 

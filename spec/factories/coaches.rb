@@ -1,6 +1,4 @@
 # Read about factories at http://github.com/thoughtbot/factory_girl
 
-FactoryGirl.define do
-  factory :coach do
-    end
+Factory.define(:coaches) do
 end
