@@ -19,7 +19,7 @@
         %li.w30.overflow_hidden= vacation.name
         %li.w10= ftime_date(vacation.start_date)
         %li.w10= ftime_date(vacation.end_date)
-        %li.w10= vacation.status==1?"节假日":"平日"
+        %li.w10= Vacation::STATE_MAP[vacation.state]
         %li.w10
           - if vacation.can_edit?
             = link_to '修改', edit_vacation_path(vacation)

@@ -20,18 +20,18 @@
         %li.w10= court.name
         %li.w10= court.start_time
         %li.w10= court.end_time
-        %li.w10= generate_court_status_str(court.status)
+        %li.w10= Court::STATE_MAP[court.state.to_sym]
         %li.w15= court.description
         %li.w15
           = link_to '查看', court
           | #{link_to '修改', edit_court_path(court)}
           |
-          - if court.status == CommonResource::COURT_ON
-            = link_to '停用', {:controller => :courts, :action => :change_status, :status => 0, :id => court.id}, {:confirm => '确定停用吗?'}
-          - elsif court.status == CommonResource::COURT_OFF
-            = link_to '启用', {:controller => :courts, :action => :change_status, :status => 1, :id => court.id}, {:confirm => '确定启用吗?'}
+          - if court.state == "enabled"
+            = link_to '停用', change_status_court_path(court), :confirm => "确定停用么?"
+          - elsif court.state == "disabled"
+            = link_to '停用', change_status_court_path(court), :confirm => "确定停用么?"
             |
-            \#{link_to '删除', court_path(court),:method => :delete ,:confirm => "删除场地将在系统中彻底删除此记录，确定么？"}
+            \#{link_to '删除', court_path(court), :method => :delete ,:confirm => "删除场地将在系统中彻底删除此记录，确定么？"}
   .h10
   .pages
     = will_paginate @courts

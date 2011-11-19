@@ -1,4 +1,6 @@
 class Coach < ActiveRecord::Base
+  STATE_MAP = {"enabled" => "正常", "disabled" => "禁用"}
+
   validates :name, :presence => {:message => "名称不能为空！"}
   validates :cert_num, :uniqueness => {:on => :create, :message => '证件号已经存在！', :if => Proc.new { |coach|  !coach.cert_num.blank? }}#证件号唯一
   validates :telephone, :presence => {:message => "联系电话不能为空！"}#, :uniqueness => {:if => Proc.new { |coach|  !coach.telephone.blank? }, :message => "联系电话已经被使用了！"}
@@ -6,12 +8,6 @@ class Coach < ActiveRecord::Base
   validates :email, :format => {:with =>/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/, :allow_blank => true,:message => '邮箱格式不正确！'}
 
 
-
-
-  def coach_status_str
-    (self.status == 1) ? "正常" : "禁用"
-  end
-  
   def amount(order_item)
     fee * order_item.quantity
   end

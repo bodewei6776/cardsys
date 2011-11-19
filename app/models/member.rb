@@ -5,10 +5,10 @@ class Member < ActiveRecord::Base
     where("status = '#{CommonResource::MEMBER_STATUS_ON}' and (LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name)", {:member_name => "#{name.downcase}%"}).limit(10).order("pinyin_abbr ASC") }
 
 
-  has_many  :associated_member_cards, :class_name => "MemberCard"
   has_many :orders
   has_many :balances
   has_one  :member_card_granter,:foreign_key => "granter_id"
+  has_many :member_cards
 
 
   validates :name, :presence => {:message => "名称不能为空！"}
@@ -27,8 +27,8 @@ class Member < ActiveRecord::Base
   end
 
   def card_serial_nums
-    return "尚未开通" if self.member_cards.blank?
-    self.member_cards.collect(&:card_serial_num).join(",")
+    return "尚未开通" if self.all_member_cards.blank?
+    self.all_member_cards.collect(&:card_serial_num).join(",")
   end
 
   def generate_member_card?(card)
@@ -37,7 +37,7 @@ class Member < ActiveRecord::Base
   end
 
   def has_card?
-    member_cards.present?
+    all_member_cards.present?
   end
 
   def generate_member_card_granters
@@ -48,7 +48,7 @@ class Member < ActiveRecord::Base
     end
     granter_names = []
     Member.where(["id IN(?)", granter_ids]).where(:catena_id => self.catena_id).each { |member| granter_names << member.name }
-    return granter_names
+    granter_names
   end
 
   def grantee
@@ -64,7 +64,7 @@ class Member < ActiveRecord::Base
   end
 
 
-  def member_cards
+  def all_member_cards
     if is_member?
       MemberCard.where(:member_id => id)
     else
@@ -74,11 +74,11 @@ class Member < ActiveRecord::Base
   end
 
   def member_card_left_times
-    self.member_cards.sum('left_times')
+    self.all_member_cards.sum('left_times')
   end
 
   def member_card_left_fees
-    self.member_cards.sum('left_fee')
+    self.all_member_cards.sum('left_fee')
   end
 
   def member_consume_amounts
@@ -110,6 +110,9 @@ class Member < ActiveRecord::Base
     self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.book_record_real_amount}
   end
 
+  def is_member?
+    !granter?
+  end
 
 
   def order_errors

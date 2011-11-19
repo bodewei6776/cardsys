@@ -1,0 +1,3 @@
+class MemberCard < Card
+
+end

@@ -1,0 +1,3 @@
+class CounterCard < Card
+
+end

@@ -23,16 +23,16 @@
         %li.w10= generate_coach_type_str(coach.coach_type)
         %li.w10= coach.telephone
         %li.w10= coach.fee
-        %li.w15= coach.coach_status_str
+        %li.w15= Coach::STATE_MAP[coach.state]
         %li.w15
           = link_to '查看', coach
           |
           \#{link_to '修改', edit_coach_path(coach)}
           |
-          - if coach.status == CommonResource::COURT_ON
-            = link_to '停用', {:controller => :coaches, :action => :change_status, :status => 0, :id => coach.id}, {:confirm => '确定停用吗?'}
-          - elsif coach.status == CommonResource::COURT_OFF
-            = link_to '启用', {:controller => :coaches, :action => :change_status, :status => 1, :id => coach.id}, {:confirm => '确定启用吗?'}
+          - if coach.state == "enabled"
+            = link_to '停用', change_status_coach_path(coach)
+          - elsif coach.state == "disabled"
+            = link_to '启用', change_status_coach_path(coach)
             | #{link_to '删除', coach, :confirm => '确定删除？', :method => :delete}
   .h10
   .pages

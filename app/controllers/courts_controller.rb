@@ -2,7 +2,7 @@ class CourtsController < ApplicationController
   before_filter :generate_period_prices, :only => [:show, :new, :edit, :create, :update]
 
   def index
-    @courts = Court.all.paginate(default_paginate_options)
+    @courts = Court.paginate(default_paginate_options)
   end
 
   def show

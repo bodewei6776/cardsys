@@ -2,6 +2,7 @@ class Court < ActiveRecord::Base
   has_many :court_period_prices
   has_many :book_records
 
+  STATE_MAP = {:enabled => "", :disabled => ""}
   
   validates :name, :presence => {:message => "场地名称不能为空！"}
   validates :name, :uniqueness => {:on => :create, :message => '场地名称已经存在了！', :if => Proc.new { |court| !court.name.nil? && !court.name.blank? }}

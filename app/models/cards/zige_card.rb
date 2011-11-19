@@ -1,0 +1,3 @@
+class ZigeCard < Card
+
+end

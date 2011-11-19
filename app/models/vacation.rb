@@ -1,4 +1,5 @@
 class Vacation < ActiveRecord::Base
+  STATE_MAP = {"holiday" => "节假日", "workday" => "工作日"}
 
   validates :name, :presence => {:message => "名称不能为空！"}
   validates :name, :uniqueness => {:on => :create, :message => '名称已经存在！', :if => Proc.new { |vacation| !vacation.name.nil? && !vacation.name.blank? }}
