@@ -22,8 +22,8 @@ class CourtsController < ApplicationController
 
     for period_price in PeriodPrice.search_order
       @court.court_period_prices << CourtPeriodPrice.new(:period_price_id => period_price.id,
-                                                         :court_price =>  period_price.price,
-                                                         :catena_id =>  session[:catena_id])
+                                                         :court_price =>  period_price.price)
+                                                         
     end
 
     if @court.save

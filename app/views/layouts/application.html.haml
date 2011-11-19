@@ -6,7 +6,7 @@
     = stylesheet_link_tag 'main','jquery-ui-1.8.2.custom','colorbox'
     = javascript_include_tag 'jquery','jquery.ui.core','jquery-ui-1.8.2.custom.min', 'rails'
     = javascript_include_tag "jquery.colorbox-min.js"
-    = javascript_include_tag "autocomplete-rails.js","jquery.popupWindow.js","new_datepicker.js"
+    = javascript_include_tag "autocomplete-rails.js","new_datepicker.js"
     = javascript_include_tag "m97/WdatePicker.js"
 
     = yield :head_content
@@ -71,7 +71,7 @@
     WdatePicker({startDate:'#{ftime_date(@date)}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
 
     highlight_table();
-    $(".balance_detail").colorbox({width:"900", height:"400", iframe:false});
+    $(".popup-new-window").colorbox({width:"900", height:"400", iframe:false});
 
 
     $('#arrow_holder').toggle(function(){

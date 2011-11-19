@@ -2,8 +2,10 @@ class Order < ActiveRecord::Base
   has_many    :balance_items
   belongs_to  :user
   belongs_to  :member_card
-  has_one     :balance, :dependent => :destroy
-  has_one     :book_record, :dependent => :destroy
+  belongs_to :advanced_order
+  has_many    :balances, :dependent => :destroy
+  has_one     :court_book_record, :dependent => :destroy
+  has_many    :coach_book_records, :dependent => :destroy
   has_many    :order_items
 
   validates  :card_id, :member_id, :presence => {:message => "信息不完整，请补充完所需要的信息"}
@@ -13,9 +15,11 @@ class Order < ActiveRecord::Base
   after_save    :update_balance
   before_create :init_attributes
 
+  accepts_nested_attributes_for :court_book_record
+  accepts_nested_attributes_for :coach_book_records
 
-  attr_accessor :coach_id,:operation,:updating
-  attr_accessor :coach,:non_member,:member,:member_card,:book_record
+  #attr_accessor :coach_id,:operation,:updating
+  #attr_accessor :coach,:non_member,:member,:member_card,:book_record
 
    delegate :record_date,:end_hour,:start_hour,:hours,:to => :book_record
 
@@ -235,11 +239,6 @@ class Order < ActiveRecord::Base
     is_member? && member_card.card.is_zige_card?
   end
   
-  def advanced_order
-    @advanced_order ||= (is_advanced_order? ? AdvancedOrder.find(parent_id) : '')
-    @advanced_order.blank? ? nil : @advanced_order
-  end
-  
   def amount
     balance.real_amount
   end
@@ -288,6 +287,10 @@ class Order < ActiveRecord::Base
   
   def member_card_number
     is_member? ? member_card.card_serial_num : "散客"
+  end
+
+  def advanced_order?
+    !!advanced_order
   end
 
   def extra_fee_for_no_member

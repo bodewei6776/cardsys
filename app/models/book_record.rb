@@ -1,9 +1,9 @@
 class BookRecord < ActiveRecord::Base
-
   Status_Default     = 0  #等待与等
+
   Status_Prearranged = 1  #已预定
   Status_Settling    = 2  #已结算
-  Status_Cancle      = 3  #已取消
+  Status_cancel      = 3  #已取消
   Status_Agent       = 11 #代买中
   Status_Active      = 12 #打开中
   Status_Do_Agent    = 13
@@ -27,27 +27,27 @@ class BookRecord < ActiveRecord::Base
     end
   end
 
-  All_Operations = [:book,:agent,:active,:balance,:cancle,:do_agent,:change_coaches]
+  All_Operations = [:book,:agent,:active,:balance,:cancel,:do_agent,:change_coaches]
   OPERATION_MAP = {:book => "预定",
                    :agent => "申请代卖",
                    :do_agent => "代卖",
                    :balance => "结算",
                    :active => "开场",
-                   :cancle => "取消预定",
+                   :cancel => "取消预定",
                    :change_coaches => "变更教练"}
 
-  attr_accessor :original_book_reocrd
+  #attr_accessor :original_book_reocrd
   
   validates :start_hour, :numericality => {:message => "开始时间必须为整数"}
   validates :end_hour, :numericality => {:message => "结束时间必须为整数"}
 
-  belongs_to  :order
-  belongs_to  :court
+ belongs_to  :order
+ belongs_to  :resource, :polymorphic => true
 
-  scope :daily_book_records, lambda {|date| where(:record_date => date) }
+  scope :daily_book_records, lambda {|date| where(:alloc_date => date) }
   scope :court_book_records, lambda {|court_id| where(:court_id => court_id) }
   scope :playing, where(:status => Status_Active)
-  scope :balanced,where(:status => Status_Settling)
+  scope :balanced, where(:status => Status_Settling)
   
 
   def before_create_init_attributes
@@ -72,8 +72,8 @@ class BookRecord < ActiveRecord::Base
     CommonResource.agent_to_buy_time.hours.ago(self.start_date_time) >= DateTime.now 
   end
 
-  def cancle_condition
-    CommonResource.cancle_time.hours.ago(self.start_date_time) >= DateTime.now
+  def cancel_condition
+    CommonResource.cancel_time.hours.ago(self.start_date_time) >= DateTime.now
   end
 
   def change_conditions
@@ -97,8 +97,8 @@ class BookRecord < ActiveRecord::Base
     is_booked? && agent_to_buy_condition 
   end
 
-  def should_to_cancle?
-    is_booked? && cancle_condition
+  def should_to_cancel?
+    is_booked? && cancel_condition
   end
 
   def should_changed?
@@ -152,7 +152,7 @@ class BookRecord < ActiveRecord::Base
     save
   end
 
-  def cancle_agent
+  def cancel_agent
     if id.to_i > 0 && (db_book_record = self.class.find(self.id))
       self.attributes = db_book_record.attributes.except(:id)
     end
@@ -218,12 +218,12 @@ class BookRecord < ActiveRecord::Base
     status == Status_Active
   end
 
-  def cancle
+  def cancel
     destroy
   end
 
-  def is_cancled?
-    status == Status_Cancle
+  def is_canceld?
+    status == Status_cancel
   end
 
   def is_default?
@@ -246,7 +246,7 @@ class BookRecord < ActiveRecord::Base
     when  is_default?    then   "预定"
     when  is_booked?      then   is_expired? ? "已预定(过期)" : "已预定"
     when  is_balanced?    then   "已结算"
-    when  is_cancled?     then   "已取消"
+    when  is_canceld?     then   "已取消"
     when  is_agented?     then
       is_expired? ? "停止代买" : "代卖中"
     when  is_actived?      then   "开打中"
@@ -260,7 +260,7 @@ class BookRecord < ActiveRecord::Base
     when  is_default?      then  ""
     when  is_booked?         then  "color01"
     when  is_balanced?       then  "color05"
-    when  is_cancled?        then  ""
+    when  is_canceld?        then  ""
     when  is_agented?        then  "color04"
     when  is_actived?        then  "color03"
     when  status == Status_Agent        then  "color04"

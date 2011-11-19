@@ -1,0 +1,2 @@
+class CoachBookRecord < BookRecord
+end

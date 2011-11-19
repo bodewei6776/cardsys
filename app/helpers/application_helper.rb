@@ -53,7 +53,7 @@ module ApplicationHelper
 
   def should_display_book_record_menu?
     action_name.to_s == 'coach_status_search' || action_name.to_s == 'court_status_search' ||
-      controller_name.to_s =~ /book_records|coaches|advanced_order/
+      controller_name.to_s =~ /orders|book_records|coaches|advanced_order/
   end
 
   def should_display_report_menu?
@@ -364,6 +364,10 @@ end
 
 def chinese_date(date = Date.today)
  date.strftime("%Y年%m月%d日") 
+end
+
+def back_to(path)
+  concat(link_to "返回", path)
 end
 
 end

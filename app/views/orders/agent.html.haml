@@ -1,0 +1,17 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 场地代卖
+    .r_bt_r
+  .fform
+    = error_messages_for :order
+    = form_for(@book_record,:url => "/book_records/#{@original_book_record.id}/do_agent",:html => {:class => "form-profile" ,:id => "do_agent"}) do |order_form|
+      = render :partial => "/book_records/form",:f => order_form
+      .h10
+      .input_bd
+        = display_enable_buttons(@book_record)
+        = content_tag("button","删除场地预定",{:type => 'button',:class => 'submit1 hand',:id => "delete_button" ,:bid => @original_book_record.id}) if (current_user.can?("删除场地预定"))
+        %button.submit1.hand{:onclick => "window.history.back();", :type => "button"} 返回
+      .clear
+  = render :partial => '/book_records/share_js'

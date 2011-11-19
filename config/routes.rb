@@ -1,5 +1,6 @@
 Cardsys::Application.routes.draw do |map|
 
+  resources :orders
   resources :rents do
     collection do
       get :complete_member_infos

@@ -23,9 +23,8 @@ class BookRecordsController < ApplicationController
 
   def new    
     @court = Court.find(params[:court_id])
-    @coaches = Coach.default_coaches
-    @book_record = BookRecord.new do |br|
-      br.court = @court
+    @coaches = Coach.enabled
+    @book_record = CourtBookRecord.new do |br|
       br.start_hour, br.end_hour, br.record_date = params[:start_hour], params[:end_hour], params[:date]
     end
     @date = @book_record.record_date

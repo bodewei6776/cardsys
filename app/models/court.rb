@@ -1,6 +1,6 @@
 class Court < ActiveRecord::Base
   has_many :court_period_prices
-  has_many :book_records
+  has_many :book_records, :as => :resource
 
   STATE_MAP = {:enabled => "", :disabled => ""}
   
@@ -8,6 +8,7 @@ class Court < ActiveRecord::Base
   validates :name, :uniqueness => {:on => :create, :message => '场地名称已经存在了！', :if => Proc.new { |court| !court.name.nil? && !court.name.blank? }}
   validates :telephone, :numericality => {:only_integer => true, :message => "电话号码必须为数字！", :allow_blank => true}, :length => {:minimum => 8, :maximum => 11, :message => "联系电话必须大于8位小于11位！", :allow_blank => true}
 
+  before_validation_on_create do |model| model.state = 'enabled' end
 
   scope :enabled, where(:state => "enabled")
   scope :disabled, where(:state => "disabled")
@@ -17,7 +18,7 @@ class Court < ActiveRecord::Base
   end
 
   def daily_book_records(date = Date.today)
-    BookRecord.daily_book_records(date).court_book_records(self.id)
+    book_records.where(:alloc_date => date)
   end
 
   def is_useable_in_time_span?(period_price)
@@ -48,10 +49,19 @@ class Court < ActiveRecord::Base
     perod_prices = daily_period_prices(date)
     perod_prices.blank? ? 0 : perod_prices.first.start_time
   end
-  
+
+  def open_hours_range(date = Date.today)
+    perod_prices = daily_period_prices(date)
+    if perod_prices.blank? 
+      (0..0)
+    else
+      perod_prices.first.start_time..perod_prices.first.end_time
+    end
+  end
+
   def end_hour(date=Date.today)
     perod_prices = daily_period_prices(date)
     perod_prices.blank? ? 0 : perod_prices.last.end_time
   end
-  
+
 end

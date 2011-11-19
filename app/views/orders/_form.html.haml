@@ -1,0 +1,39 @@
+.fformbox
+  = form_for @order do |f|
+    .fformbox_bt
+      %p 请填写预定信息
+    .fformbox_nr
+      %ul
+        %li
+          .w1 预订：
+          .w2{:style => "width: 500px;"}
+            = @order.court_book_record.alloc_date.timeshort
+            = chinese_week_day(Time.parse(@order.court_book_record.alloc_date.to_s).wday)
+            = f.fields_for :court_book_record do |cbr|
+              = cbr.select :start_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]})
+              = cbr.select :end_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]})
+              = "(周期性预定)" if @order.advanced_order?
+              = cbr.select :resource_id, options_for_select(Court.enabled.collect{|c| [c.name, c.id]})
+
+
+      %ul
+        %li
+          .w1 会员：
+
+      %ul
+        %li
+          .w1 会员姓名：
+
+      %ul
+        %li
+          .w1 教练：
+
+      %ul
+        %li
+          .w1 操作人：
+
+
+      %ul
+        %li
+          .w1 备注：
+      =# display_enable_buttons(@order.court_book_record)
