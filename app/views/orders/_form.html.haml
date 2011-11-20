@@ -10,19 +10,39 @@
             = @order.court_book_record.alloc_date.timeshort
             = chinese_week_day(Time.parse(@order.court_book_record.alloc_date.to_s).wday)
             = f.fields_for :court_book_record do |cbr|
-              = cbr.select :start_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]})
-              = cbr.select :end_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]})
+              = cbr.select :start_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.start_hour)
+              = cbr.select :end_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.end_hour)
               = "(周期性预定)" if @order.advanced_order?
-              = cbr.select :resource_id, options_for_select(Court.enabled.collect{|c| [c.name, c.id]})
+              = cbr.select :resource_id, options_for_select(Court.enabled.collect{|c| [c.name, c.id]}, @order.court_book_record.resource_id)
 
 
       %ul
         %li
-          .w1 会员：
+          .w1 是否会员：
+          = f.check_box :is_member
 
-      %ul
-        %li
-          .w1 会员姓名：
+      #is_member{:style => "display:#{@order.is_member ? 'block;' : 'none;'}"}
+        %ul
+          %li
+            .w1 会员姓名：
+            .w2
+              = text_field_tag :member_name, @order.member.name, :id => "order_member_name"
+              = f.hidden_field :member_id
+          %li
+            .w1 卡号：
+            .w2#cards
+              - if @order.member_card
+              - else
+                = text_field_tag :card_serial_num, "", :autocomplete => autocomplete_card_serial_num_members_cards_path
+              = f.hidden_field :member_card_id
+        %ul
+          %li
+            .w1
+      #is_non_member{:style => "display:#{!@order.is_member ? 'block;' : 'none;'}"}
+        = f.fields_for :non_member do |nm|
+          %ul
+            %li
+              .w1 散客姓名：
 
       %ul
         %li
@@ -37,3 +57,54 @@
         %li
           .w1 备注：
       =# display_enable_buttons(@order.court_book_record)
+
+
+      :javascript
+        $(document).ready(function(){
+          $("#order_is_member").click(function(){
+            if($("#order_is_member").attr("checked")){
+              $("#is_member").show();
+              $("#is_non_member").hide();
+            }
+            else{
+              $("#is_member").hide();
+              $("#is_non_member").show();
+          }
+          });
+
+
+
+
+           $('#order_member_name').autocomplete({
+               source:  '/members/autocomplete_name',
+               select:  function(ui,li){
+                 var item = li.item;
+                 var reqest_url  = "/members/" + item.id + "/member_cards_list";
+                 $('#order_member_id').val(item.id);
+                 $.get(reqest_url,function(returned_data)
+                 {
+                   options = '';
+                   $(returned_data).each(function(i,node){
+                        options +=("<option value='" + node.members_card.id +
+                       "' order_tip_message='" + node.members_card.order_tip_message+ 
+                       "' can_buy_good='" + node.members_card.can_buy_good+ 
+                       "' member_info='" + node.members_card.member_info+ 
+                       "' card_info='" + node.members_card.card_info+ 
+                       "'>" + node.members_card.card_serial_num + "</option>") 
+                    });
+
+                    $('#cards').html( "<select name='order[member_card_id]'>" + options + "</select>");
+                    $('#cards select').live('change',function(){
+                      var selected = $(this).find("option:selected");
+                      $('#member_card_info').text(selected.attr('card_info') + selected.attr('order_tip_message'));
+                      $('#member_info').text(selected.attr('member_info'));
+                      if(selected.attr('can_buy_good') == "no"){ $('#member_card_info').append("  [此卡不可消费商品]");}
+                    });
+                    $('#cards select').trigger("change");
+                 });
+               }			
+           });
+        });
+
+       
+       

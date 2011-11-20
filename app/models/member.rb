@@ -1,12 +1,16 @@
 require 'pinyin/pinyin'
 class Member < ActiveRecord::Base
 
-  scope :autocomplete_for, lambda {|name| 
-    where("status = '#{CommonResource::MEMBER_STATUS_ON}' and (LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name)", {:member_name => "#{name.downcase}%"}).limit(10).order("pinyin_abbr ASC") }
+  STATE_MAP = {"enabled" => "启用",
+              "disabled" => "禁用"}
 
+  scope :autocomplete_for, lambda {|name| 
+    where("state= 'enabled' and (LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name)", {:member_name => "#{name.downcase}%"}).limit(10).order("pinyin_abbr ASC") }
+
+    
+  scope :enabled, where(:state => "enabled")
 
   has_many :orders
-  has_many :balances
   has_one  :member_card_granter,:foreign_key => "granter_id"
   has_many :member_cards
 
@@ -64,12 +68,12 @@ class Member < ActiveRecord::Base
   end
 
 
-  def all_member_cards
+  def all_members_cards
     if is_member?
-      MemberCard.where(:member_id => id)
+      MembersCard.where(:member_id => id)
     else
       granters = MemberCardGranter.where(:granter_id => id).all
-      MemberCard.where("id IN (#{granters.map(&:member_card_id).join(',')})")
+      MembersCard.where("id IN (#{granters.map(&:member_card_id).join(',')})")
     end
   end
 
@@ -86,8 +90,7 @@ class Member < ActiveRecord::Base
   end
 
   def latest_comer_date
-    order = Order.where(:member_id => self.id).order("order_time").first
-    order.nil? ? "" : DateUtil::timeshort(order.order_time)
+    self.orders.last.try(:order_time).try(:to_chinese_short) || "无"
   end
 
   def recharge_fees
@@ -98,16 +101,20 @@ class Member < ActiveRecord::Base
     RechargeRecord.where(:member_id => self.id).sum('recharge_times')
   end
 
-  def use_card_times
-    self.balances.balanced.count
+  def balance_times
+    0
+  end
+
+  def use_card_price_amount
+    0
   end
 
   def use_cash_amount
-    self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Cash]).inject(0){|s,b| s + b.book_record_real_amount}
+  #  self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Cash]).inject(0){|s,b| s + b.book_record_real_amount}
   end
 
   def use_card_amount
-    self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.book_record_real_amount}
+   # self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.book_record_real_amount}
   end
 
   def is_member?
@@ -128,5 +135,5 @@ class Member < ActiveRecord::Base
     unless has_card?
       order_errors << I18n.t('order_msg.member.non_card')
     end
-  end
+ end
 end

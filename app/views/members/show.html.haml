@@ -17,7 +17,7 @@
               = @member.name
             .w1 注册日期：
             .w2
-              = DateUtil::timeshort(@member.created_at)
+              = chinese_date(@member.created_at)
         %ul
           %li
             .w1 会员昵称：
@@ -77,7 +77,7 @@
           %li
             .w1 刷卡次数：
             .w2
-              = @member.balances.balanced.count
+              = @member.balance_times
             .w1 最近来店：
             .w2
               = @member.latest_comer_date.blank? ? '无' : @member.latest_comer_date
@@ -102,11 +102,11 @@
           %li
             .w1 卡付金额：
             .w2
-              = @member.use_card_amount
+              = @member.use_card_price_amount
               元
             .w1 卡付小时数：
             .w2
-              = @member.use_card_times
+              = @member.use_card_amount
               次
         %ul
           %li
@@ -189,8 +189,6 @@
               %a.balance_detail{:href => "#{order_balance_path(balance)}?layout=false", :title => "\347\202\271\345\207\273\345\261\225\345\274\200\346\230\216\347\273\206"} 明细
     .h10
     .input_bd
-      %button.submit1.hand{:name => "loginsubmit", :onclick => "javascript:window.location.href="#{edit_member_path(@member)}";", :tabindex => "100", :type => "submit", :value => "true"}> 修改
-      \&nbsp;&nbsp;&nbsp;&nbsp;
-      %button.submit3.hand{:name => "loginsubmit", :onclick => "javascript:window.location.href="#{members_path}";", :tabindex => "100", :type => "submit", :value => "true"} 返回
+      = back_to members_path
     .clear
   .h10

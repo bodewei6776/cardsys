@@ -144,7 +144,6 @@ module ApplicationHelper
   end
 
 
-
   def generate_locker_type_options(locker_type)
     options = generate_res_options CommonResource::LOCKER_TYPE
     options << ['全部', '']

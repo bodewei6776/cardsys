@@ -35,15 +35,3 @@
     %span.color05 褐色-已结算
     %span.color04 绿色-代卖中
   .h10
-:javascript
-   $('.content li').mousemove(function(even){
-     var mouse_y = even.pageY;
-     var this_top = $(this).offset().top; 
-     $('.content li').removeClass('book_records_mousehover');
-     $('.content li').each(function(i,node){
-       var node_top = $(node).offset().top;
-       var node_bottom = $(node).offset().top - 30;
-       if((node_top <= this_top + 3) &&(node_top >= this_top - 3)) { $(node).addClass('book_records_mousehover')}
-       }); 
-     });
-  });

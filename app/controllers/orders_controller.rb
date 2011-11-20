@@ -10,8 +10,11 @@ class OrdersController < ApplicationController
 
   def new
     @order = Order.new
+    @order.is_member = true
     @order.court_book_record = CourtBookRecord.new(params[:court_book_record])
     @order.court_book_record.resource_type = 'Court'
+    @order.member = Member.new
+    @order.non_member = NonMember.new
     render :layout => "small_main"
   end
 

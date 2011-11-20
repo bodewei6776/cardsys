@@ -7,8 +7,10 @@ class Order < ActiveRecord::Base
   has_one     :court_book_record, :dependent => :destroy
   has_many    :coach_book_records, :dependent => :destroy
   has_many    :order_items
+  belongs_to  :member
+  has_one :non_member
 
-  validates  :card_id, :member_id, :presence => {:message => "信息不完整，请补充完所需要的信息"}
+  validates  :card_id, :member_id, :presence => {:message => "信息不完整，请补充完所需要的信息"}, :if => proc { |order| order.is_member }
 
   after_create  :generate_balance
   after_save    :update_balance
@@ -16,6 +18,8 @@ class Order < ActiveRecord::Base
 
   accepts_nested_attributes_for :court_book_record
   accepts_nested_attributes_for :coach_book_records
+  accepts_nested_attributes_for :non_member
+  attr_accessor :is_member
 
   delegate :record_date,:end_hour,:start_hour,:hours,:to => :book_record
 

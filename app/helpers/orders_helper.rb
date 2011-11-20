@@ -28,9 +28,7 @@ module OrdersHelper
       i += 1
     end
     for real_time_span in real_time_spans
-      new_order_params= {:alloc_date => date.to_s(:db), :resource_id => court.id}
-      new_order_params[:start_hour] = real_time_spans[0]
-      new_order_params[:end_hour] = real_time_span[1]
+      new_order_params= {:alloc_date => date.to_s(:db), :resource_id => court.id, :start_hour => real_time_span[0], :end_hour => real_time_span[1]}
       book_url = new_order_path(:court_book_record => new_order_params)
       hours = real_time_span[1]-real_time_span[0]
       li_height = 30*(hours) + (hours - 1)#*1

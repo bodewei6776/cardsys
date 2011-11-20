@@ -5,18 +5,15 @@
       .r_bt_l_c.fb.white 会员查询
     .r_bt_r
   .soso
-    %form#search_form.form-profile{:action => "/members/advanced_search", :method => "get"}
+    = form_tag "/members/advance_search", :method => "get", :class => "form-profile", :id => "search_form" do
       .w95
         会员名称：
-        %label
-          %input#name{:autocomplete => "/members/autocomplete_name", :name => "name", :type => "text", :value => params[:name]}/
-        \&nbsp;&nbsp;&nbsp;&nbsp;
+        = text_field_tag :name, params[:name],:autocomplete => "/members/autocomplete_name"
         会员卡号：
-        %label
-          %input{:autocomplete => "/members/autocomplete_card_serial_num", :name => "card_serial_num", :tabindex => "1", :type => "text", :value => params[:card_serial_num]}/
-        \&nbsp;&nbsp;&nbsp;&nbsp;
-        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+        = text_field_tag :card_serial_num, params[:card_serial_num], :autocomplete => "/members/card_serial_nums"
+        = submit_tag :search, :value => "搜索"
         = render :partial => "members/advance_search"
+
   .h10
   .r_bt
     .r_bt_l
@@ -39,8 +36,9 @@
     - @members.each_with_index do |member,index|
       %ul.member_items.table_items
         %li.w5= index + 1
-        %li.w10= link_to member.name,member
-        %li.w15{:style => "overflow:hidden;", :title => raw member.card_serial_nums}= raw member.card_serial_nums
+        %li.w10= link_to member.name, member_path
+        %li.w15{:style => "overflow:hidden;", :title => raw(member.card_serial_nums)}
+          = raw member.card_serial_nums
         %li.w10= member.mobile
         %li.w8= member.created_at.nil? ? "" : DateUtil::timeshort(member.created_at)
         %li.w6= member.member_card_left_fees

@@ -20,6 +20,7 @@ class Balance < ActiveRecord::Base
   has_many :balance_items, :dependent => :destroy
   attr_accessor :operation
 
+
  # validate do |instance|
  #   return true unless order.is_member?
  #   if instance.use_card_to_balance_goods? && !order.should_use_card_to_balance_goods?

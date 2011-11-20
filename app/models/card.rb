@@ -5,10 +5,10 @@ class Card < ActiveRecord::Base
 
   STATE = %w( 未使用 使用中 已停用 已注销 )
   CARD_TYPE = {
-    "MemberCard" => "会员卡",
-    "BalanceCard" => "储值卡",
-    "CounterCard" => "计次卡",
-    "ZigeCard" => "资格卡"
+    "member_card" => "会员卡",
+    "balance_card" => "储值卡",
+    "counter_card" => "计次卡",
+    "zige_card" => "资格卡"
   }
   
   has_many :member_cards
@@ -30,24 +30,10 @@ class Card < ActiveRecord::Base
     self.min_time = 0 if self.min_time.nil?
   end
 
-  def card_type_record
-    CommonResourceDetail.find_by_id(card_type)
-  end
-  
-  def is_counter_card?
-    card_type_record && card_type_record.is_counter_card_type?
-  end
-
-  def is_balance_card?
-    card_type_record && card_type_record.is_balance_card_type?
-  end
-
-  def is_member_card?
-    card_type_record && card_type_record.is_member_card_type?
-  end
-
-  def is_zige_card?
-    card_type_record && card_type_record.is_zige_card_type?
+  CARD_TYPE.each do |ctype, name|
+    define_method "is_#{ctype}?" do
+      self.card_type == ctype
+    end
   end
   
   def card_balance_desc

@@ -8,7 +8,7 @@ class MembersCard < ActiveRecord::Base
   has_many :granters, :class_name => "Member", :through => :member_card_granters
 
 
-  scope :autocomplete_for, lambda {|num| where("status = 0 and card_serial_num like '#{num.downcase}%'").limit(10) }
+  scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num.downcase}%'").limit(10) }
 
   CARD_STATUS_0 = 0 #正常
   CARD_STATUS_1 = 1 #已注销
@@ -61,7 +61,15 @@ class MembersCard < ActiveRecord::Base
   end
 
   def is_avalible?
-    !is_expired? && is_status_valid?
+    !is_expired? && enabled?
+  end
+
+  def enabled?
+    state == 'enabled'
+  end
+
+  def disalbed?
+    state == 'disalbed'
   end
 
   def is_useable_in_time_span?(book_record)
@@ -102,9 +110,6 @@ class MembersCard < ActiveRecord::Base
       left_times : left_fee
   end
    
-  def is_status_valid?
-    self.status == 0
-  end
 
   def member_card_status_opt
     self.status == 0 ? "正常" : "已注销"

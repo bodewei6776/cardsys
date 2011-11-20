@@ -7,6 +7,7 @@ class NonMember < ActiveRecord::Base
   validates :earnest,:presence => {:message => "定金为必填项"},:numericality => true
 
   before_save :geneate_name_pinyin
+  belongs_to :order
 
   def geneate_name_pinyin
     pinyin = PinYin.new

@@ -39,18 +39,19 @@
         %li.w10= link_to member.name,member
         %li.w15{:style => "overflow:hidden;", :title => member.card_serial_nums} member.card_serial_nums
         %li.w10= member.mobile
-        %li.w8= member.created_at.nil? ? "" : DateUtil::timeshort(member.created_at)
+        %li.w8= member.created_at.nil? ? "" : chinese_date(member.created_at)
         %li.w6= member.member_card_left_fees
         %li.w6= member.member_card_left_times
         %li.w6= member.member_consume_amounts
-        %li.w6= member.use_card_times
+        %li.w6= member.balance_times
         %li.w8
           = member.birthday.blank? ? ':' : DateUtil::timeshort(member.birthday)
         %li.w12
           = link_to '查看', member
           |
-          \#{link_to '修改', edit_member_path(member)} |
-          \#{link_to '删除', member, :confirm => '确定删除吗?', :method => :delete}
+          = link_to '修改', edit_member_path(member) 
+          |
+          = link_to '删除', member, :confirm => '确定删除吗?', :method => :delete
   .h10
   .pages
     = will_paginate @members

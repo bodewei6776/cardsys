@@ -152,7 +152,7 @@ Cardsys::Application.routes.draw do |map|
     end
   end
 
-  resources :member_cards do
+  resources :members_cards do
     collection do
       get :search
       get :granters

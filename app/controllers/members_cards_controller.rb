@@ -1,9 +1,8 @@
-class MemberCardsController < ApplicationController
+class MembersCardsController < ApplicationController
 
 
   autocomplete :members, :name
 
-  Member_Perpage = 15
 
   def autocomplete_name
     @items = Member.autocomplete_for(params[:term])
@@ -13,7 +12,7 @@ class MemberCardsController < ApplicationController
   end
 
   def autocomplete_card_serial_num
-    @items = MemberCard.autocomplete_for(params[:term])
+    @items = MembersCard.autocomplete_for(params[:term])
     @names = []
     @items.each { |i| @names << i.card_serial_num }
     render :inline => @names.to_json
@@ -25,17 +24,17 @@ class MemberCardsController < ApplicationController
     if !@member_name.blank?
       @serial_num = "" if params[:p].blank?
       member = Member.where(:name => @member_name).where(:status => CommonResource::MEMBER_STATUS_ON).first
-      @member_cards = MemberCard.where(:member => member)
+      @member_cards = MembersCard.where(:member => member)
     end
-    @member_card =  MemberCard.new
+    @member_card =  MembersCard.new
     if "num" == params[:p] && !@serial_num.blank?
-      @member_cards = [MemberCard.where(:card_serial_num => @serial_num).first]
-      @member_card = @member_cards.present? ? @member_cards.first : MemberCard.new
+      @member_cards = [MembersCard.where(:card_serial_num => @serial_num).first]
+      @member_card = @member_cards.present? ? @member_cards.first : MembersCard.new
     end
   end
 
   def show
-    @member_card = MemberCard.find(params[:id])
+    @member_card = MembersCard.find(params[:id])
     render :layout => false
   end
 
@@ -48,13 +47,13 @@ class MemberCardsController < ApplicationController
       if member.nil?
         @member_cards = []
       else
-        @member_cards = MemberCard.where(:member_id => member.id)
+        @member_cards = MembersCard.where(:member_id => member.id)
       end
     end
-    @member_card =  MemberCard.new
+    @member_card =  MembersCard.new
     if "num" == params[:p] && !@serial_num.blank?
-      @member_cards = [MemberCard.where(:card_serial_num => @serial_num).first]
-      @member_card = @member_cards.present? ? @member_cards.first : MemberCard.new
+      @member_cards = [MembersCard.where(:card_serial_num => @serial_num).first]
+      @member_card = @member_cards.present? ? @member_cards.first : MembersCard.new
     end
     respond_to do |format|
       format.xml  { render :xml => @member_cards }
@@ -71,12 +70,12 @@ class MemberCardsController < ApplicationController
     if params[:card_serial_num].present?
       conditions.merge!(:card_serial_num => params[:card_serial_num])
     end
-    @member_cards = MemberCard.where(conditions).paginate(default_paginate_options)
+    @member_cards = MembersCard.where(conditions).paginate(default_paginate_options)
   end
 
 
   def switch
-    @card = MemberCard.find(params[:id])
+    @card = MembersCard.find(params[:id])
     @card.status = @card.enable? ? 1 : 0
     @card.save
     redirect_to status_member_cards_path(:name => params[:name],:card_serial_num => params[:card_serial_num])

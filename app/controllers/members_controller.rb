@@ -7,12 +7,13 @@ class MembersController < ApplicationController
   def autocomplete_name
     @items = Member.autocomplete_for(params[:term])
     @names = []
-    @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}"} }
+    @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}", :id => i.id} }
+    ap @names
     render :inline => @names.to_json
   end
 
   def autocomplete_card_serial_num
-    @items = MemberCard.autocomplete_for(params[:term])
+    @items = MembersCard.autocomplete_for(params[:term])
     @names = []
     @items.each { |i| @names << i.card_serial_num }
     render :inline => @names.to_json
@@ -47,7 +48,7 @@ class MembersController < ApplicationController
     @member_birthday_end = params[:member_birthday_end]
     @member_gender = params[:member_gender]#会员性别
 
-    @members = Member.where(:status => CommonResource::MEMBER_STATUS_ON).where(:is_member => CommonResource::IS_MEMBER)
+    @members = Member.enabled
     @members = @members.where(["name like ?", "%#{@name}%"] ) if !@name.blank?
     if !@serial_num.blank?
       @members = @members.where("member_cards.card_serial_num like '%#{@serial_num}%'").joins(:member_cards)
@@ -123,15 +124,14 @@ class MembersController < ApplicationController
       @members = @members.delete_if { |member| member.member_consume_amounts !=( @consume_fees_start.presence.to_i || @consume_fees_end.presence.to_i)}
     end
 
-    @members = @members.paginate(:page => params[:page]||1,:per_page => Member_Perpage)
-
+    @members = @members.paginate(default_paginate_options )
   end
 
 
 
   def show
     @member = Member.find(params[:id])
-    @member_cards = MemberCard.where(:member_id => params[:id])
+    @member_cards = @member.all_member_cards
     @recharge_records = RechargeRecord.where(:member_id => params[:id])
     @balances = @member.member_cards.collect{|mc| mc.balances }.flatten.uniq rescue []
   end
@@ -157,14 +157,14 @@ class MembersController < ApplicationController
     is_member = params[:member][:is_member]
     @member = Member.new(params[:member])
     @member_base = Member.find_by_id(params[:member_id])
-    card = MemberCard.find_by_id(params[:member_card_id])
+    card = MembersCard.find_by_id(params[:member_card_id])
     respond_to do |format|
       if @member.save
         @members = Member.where(:is_member => is_member)
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
           base_member_id = params[:member_id]
-          @mg = MemberCardGranter.new(:member_id => base_member_id, :member_card_id => params[:member_card_id], :granter_id => @member.id)
-          card = MemberCard.find(params[:member_card_id])
+          @mg = MembersCardGranter.new(:member_id => base_member_id, :member_card_id => params[:member_card_id], :granter_id => @member.id)
+          card = MembersCard.find(params[:member_card_id])
           if card.max_granter_due?
             notice = "最多能授权给#{card.max_granter}人"
           else
@@ -234,7 +234,7 @@ class MembersController < ApplicationController
 
   def granter_delete
     @mb = Member.find(params[:member_id])
-    @member_granter = MemberCardGranter.where(:granter_id => params[:granter_id]).first
+    @member_granter = MembersCardGranter.where(:granter_id => params[:granter_id]).first
     @member_granter.destroy if !@member_granter.nil?
 
     @member = Member.find(params[:granter_id])
@@ -251,11 +251,11 @@ class MembersController < ApplicationController
   def member_card_bind_index
     @member_name = params[:member_name]
     @member = Member.where(:name => params[:member_name]).first if !params[:member_name].nil?
-    @member_card = MemberCard.new
+    @member_card = MembersCard.new
     @notice = params[:notice]
     @notice_error = params[:notice_error]
     @cards = Card.where(:status => CommonResource::CARD_ON)
-    @member_cards = MemberCard.where(:member_id => @member.id).where("status != ?", CommonResource::MEMBER_CARD_FREEZE) if !params[:member_name].nil?
+    @member_cards = MembersCard.where(:member_id => @member.id).where("status != ?", CommonResource::MEMBER_CARD_FREEZE) if !params[:member_name].nil?
   end
 
   def member_card_bind_list
@@ -266,7 +266,7 @@ class MembersController < ApplicationController
 
   def member_card_bind_update
     @member = Member.find(params[:member_id])
-    @member_card = MemberCard.new(params[:member_card])
+    @member_card = MembersCard.new(params[:member_card])
     @member_card.member_id = params[:member_id]
     @member_card.card_id = params[:binded_card_id]
     @member_card.user_id = current_user.id
@@ -280,7 +280,7 @@ class MembersController < ApplicationController
 
   def member_card_index
     @member = Member.find(params[:member_id])
-    @member_cards = MemberCard.where(:member_id => params[:member_id])
+    @member_cards = MembersCard.where(:member_id => params[:member_id])
     render :layout => false
   end
 
@@ -311,7 +311,7 @@ class MembersController < ApplicationController
     fee = (params[:fee].blank? ? 0 : params[:fee])
     times = (params[:times].blank? ? 0 : params[:times])
 
-    member_card = MemberCard.find(params[:member_card_id])
+    member_card = MembersCard.find(params[:member_card_id])
     charge_fee = params[:type]=="1" ? fee.to_f : (-fee.to_f)
     charge_times = params[:type]=="1" ? times.to_f : (-times.to_f)
 
@@ -347,11 +347,11 @@ class MembersController < ApplicationController
   end
 
   def member_cards_list
-    @card_list = Member.find(params[:id]).member_cards
-    render :json => @card_list.to_json(:methods =>[ :order_tip_message,:can_buy_good,:member_info,:card_info])
+    @card_list = Member.find(params[:id]).all_members_cards
+    render :json => @card_list.to_json(:methods =>[ :order_tip_message, :can_buy_good, :member_info, :card_info])
   end
 
-  def getMemberCardNo
+  def getMembersCardNo
     cardNo = ""
     if !params[:card_id].blank?
       card = Card.find(params[:card_id])
@@ -364,14 +364,14 @@ class MembersController < ApplicationController
   private
 
   def get_granters
-    @member_card_granters = MemberCardGranter.where(:member_id => params[:member_id])
+    @member_card_granters = MembersCardGranter.where(:member_id => params[:member_id])
     options = []
     @member_card_granters.each { |member_card_granter| options << member_card_granter.granter_id }
     @granters = Member.where(["id IN(?)", options]).where(:is_member => CommonResource::IS_GRANTER)
   end
 
   def member_card_num4(card)
-    last_member_card = MemberCard.where(:card_id => card.id).order("card_serial_num desc").first
+    last_member_card = MembersCard.where(:card_id => card.id).order("card_serial_num desc").first
     if last_member_card.nil?
       num = "0001"
       n2 = ((num[-4, num.length].to_s).to_i).to_s

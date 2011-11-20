@@ -9,7 +9,8 @@ task :migrate_old_db => :environment do
 
   count = {}
 
-  Dir["#{Rails.root}/app/models/*"].each do |model_file|
+  Dir["#{Rails.root}/app/models/**/*"].each do |model_file|
+    next if File.directory?(model_file)
     require model_file
   end
 
