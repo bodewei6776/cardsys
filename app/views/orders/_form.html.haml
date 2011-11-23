@@ -43,6 +43,22 @@
           %ul
             %li
               .w1 散客姓名：
+              .w2 
+                = nm.text_field :name
+
+              .w1 标准收费：
+              .w2 
+                = @order.court_book_record.court.price
+
+          %ul
+            %li
+              .w1 手机/座机：
+              .w2 
+                = nm.text_field :telephone
+
+              .w1 定金：
+              .w2 
+                = nm.text_field :earnst
 
       %ul
         %li

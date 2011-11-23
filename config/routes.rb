@@ -278,5 +278,5 @@ Cardsys::Application.routes.draw do |map|
   match 'backup' =>"welcome#backup"
   match 'change_catena' =>"base#change_catena"
   match ':controller(/:action(/:id(.:format)))'
-  root :to => "book_records#index"
+  root :to => "orders#index"
 end
