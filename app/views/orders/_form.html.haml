@@ -33,8 +33,27 @@
             .w2#cards
               - if @order.member_card
               - else
-                = text_field_tag :card_serial_num, "", :autocomplete => autocomplete_card_serial_num_members_cards_path
+                = text_field_tag :card_serial_num, "", :id => "order_member_card_serial_num"
               = f.hidden_field :member_card_id
+
+
+        %ul
+          %li
+            .w1 卡类型：
+            .w2
+          %li
+            .w1 余额（次）：
+            .w2
+
+        %ul
+          %li
+            .w1 卡状态：
+            .w2
+              #member_card_info
+          %li
+            .w1 联系电话：
+            .w2
+              = f.text_field :telephone
         %ul
           %li
             .w1
@@ -47,8 +66,8 @@
                 = nm.text_field :name
 
               .w1 标准收费：
-              .w2 
-                = @order.court_book_record.court.price
+              .w2#non_member_price
+                = @order.court_book_record.price
 
           %ul
             %li
@@ -58,7 +77,7 @@
 
               .w1 定金：
               .w2 
-                = nm.text_field :earnst
+                = nm.text_field :earnest
 
       %ul
         %li
@@ -90,6 +109,13 @@
 
 
 
+
+           $('#order_member_card_serial_num').autocomplete({
+               source:  '#{autocomplete_card_serial_num_members_cards_path}',
+               select:  function(ui,li){
+               var item = li.item;
+               }			
+           });
 
            $('#order_member_name').autocomplete({
                source:  '/members/autocomplete_name',

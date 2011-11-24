@@ -8,7 +8,6 @@ class MembersController < ApplicationController
     @items = Member.autocomplete_for(params[:term])
     @names = []
     @items.each { |i| @names << {:value => i.name,:label => "#{i.name} - #{i.mobile}", :id => i.id} }
-    ap @names
     render :inline => @names.to_json
   end
 

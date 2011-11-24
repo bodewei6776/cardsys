@@ -13,9 +13,15 @@ class MembersCardsController < ApplicationController
 
   def autocomplete_card_serial_num
     @items = MembersCard.autocomplete_for(params[:term])
-    @names = []
-    @items.each { |i| @names << i.card_serial_num }
-    render :inline => @names.to_json
+    render :json => @items.collect{|item|
+      {:order_tip_message => item.order_tip_message,
+                                     :can_buy_good => item.can_buy_good,
+                                     :member_info => item.member_info,
+                                     :card_info => item.card_info,
+                                     :member_id => item.member_id,
+                                     :member_name => item.member_name,
+                                     :value => item.card_serial_num,
+                                     :label => item.card_serial_num}}
   end
 
   def search

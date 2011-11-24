@@ -34,6 +34,7 @@ class Court < ActiveRecord::Base
     court_available_period_prices.sort{|fst,scd| fst.start_time <=> scd.start_time }
   end
 
+
   def calculate_amount_in_time_span(date,start_hour,end_hour)
     PeriodPrice.calculate_amount_in_time_spans(date,start_hour,end_hour) do |period_price|
       court_period_price = court_period_prices.where("period_price_id=#{period_price.id}").first
