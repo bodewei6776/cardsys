@@ -14,14 +14,11 @@ class MembersCardsController < ApplicationController
   def autocomplete_card_serial_num
     @items = MembersCard.autocomplete_for(params[:term])
     render :json => @items.collect{|item|
-      {:order_tip_message => item.order_tip_message,
-                                     :can_buy_good => item.can_buy_good,
-                                     :member_info => item.member_info,
-                                     :card_info => item.card_info,
-                                     :member_id => item.member_id,
-                                     :member_name => item.member_name,
-                                     :value => item.card_serial_num,
-                                     :label => item.card_serial_num}}
+      {:member_name => item.member.name, 
+        :value => item.card_serial_num,
+        :label => item.card_serial_num,
+        :member_id => item.member_id,
+        :id => item.id}}
   end
 
   def search
@@ -30,18 +27,26 @@ class MembersCardsController < ApplicationController
     if !@member_name.blank?
       @serial_num = "" if params[:p].blank?
       member = Member.where(:name => @member_name).where(:status => CommonResource::MEMBER_STATUS_ON).first
-      @member_cards = MembersCard.where(:member => member)
+      @members_cards = MembersCard.where(:member => member)
     end
-    @member_card =  MembersCard.new
+    @members_card =  MembersCard.new
     if "num" == params[:p] && !@serial_num.blank?
-      @member_cards = [MembersCard.where(:card_serial_num => @serial_num).first]
-      @member_card = @member_cards.present? ? @member_cards.first : MembersCard.new
+      @members_cards = [MembersCard.where(:card_serial_num => @serial_num).first]
+      @members_card = @members_cards.present? ? @members_cards.first : MembersCard.new
     end
   end
 
   def show
-    @member_card = MembersCard.find(params[:id])
-    render :layout => false
+    @members_card = MembersCard.find(params[:id])
+    respond_to do |wants|
+      wants.html { render :layout => false }
+      wants.json { render :json => {
+        :card_type_in_chinese => @members_card.card_type_in_chinese,
+        :remaining_money_and_amount_in_chinese => @members_card.remaining_money_and_amount_in_chinese,
+        :members_card_info => @members_card.members_card_info
+      
+      }} 
+    end
   end
 
   def granters 
@@ -51,18 +56,18 @@ class MembersCardsController < ApplicationController
       @serial_num = "" if params[:p].blank?
       member = Member.where(:name => @member_name).where(:status => CommonResource::MEMBER_STATUS_ON).first
       if member.nil?
-        @member_cards = []
+        @members_cards = []
       else
-        @member_cards = MembersCard.where(:member_id => member.id)
+        @members_cards = MembersCard.where(:member_id => member.id)
       end
     end
-    @member_card =  MembersCard.new
+    @members_card =  MembersCard.new
     if "num" == params[:p] && !@serial_num.blank?
-      @member_cards = [MembersCard.where(:card_serial_num => @serial_num).first]
-      @member_card = @member_cards.present? ? @member_cards.first : MembersCard.new
+      @members_cards = [MembersCard.where(:card_serial_num => @serial_num).first]
+      @members_card = @members_cards.present? ? @members_cards.first : MembersCard.new
     end
     respond_to do |format|
-      format.xml  { render :xml => @member_cards }
+      format.xml  { render :xml => @members_cards }
     end
   end
 
@@ -76,7 +81,7 @@ class MembersCardsController < ApplicationController
     if params[:card_serial_num].present?
       conditions.merge!(:card_serial_num => params[:card_serial_num])
     end
-    @member_cards = MembersCard.where(conditions).paginate(default_paginate_options)
+    @members_cards = MembersCard.where(conditions).paginate(default_paginate_options)
   end
 
 
@@ -84,7 +89,7 @@ class MembersCardsController < ApplicationController
     @card = MembersCard.find(params[:id])
     @card.status = @card.enable? ? 1 : 0
     @card.save
-    redirect_to status_member_cards_path(:name => params[:name],:card_serial_num => params[:card_serial_num])
+    redirect_to status_members_cards_path(:name => params[:name],:card_serial_num => params[:card_serial_num])
   end
 
 end

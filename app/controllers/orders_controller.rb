@@ -15,6 +15,7 @@ class OrdersController < ApplicationController
     @order.court_book_record.resource_type = 'Court'
     @order.member = Member.new
     @order.non_member = NonMember.new
+    @order.telephone = @order.member.telephone
     render :layout => "small_main"
   end
 

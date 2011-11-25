@@ -1,7 +1,7 @@
 class Order < ActiveRecord::Base
   has_many    :balance_items
   belongs_to  :user
-  belongs_to  :member_card
+  belongs_to  :members_card
   belongs_to  :advanced_order
   has_many    :balances, :dependent => :destroy
   has_one     :court_book_record, :dependent => :destroy
@@ -19,7 +19,7 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :court_book_record
   accepts_nested_attributes_for :coach_book_records
   accepts_nested_attributes_for :non_member
-  attr_accessor :is_member
+  attr_accessor :is_member, :coach_ids
 
   delegate :record_date,:end_hour,:start_hour,:hours,:to => :book_record
 
@@ -149,87 +149,6 @@ class Order < ActiveRecord::Base
     order.save!
   end
 
-
-  def original_coaches
-    (new_record? || coach_items.blank? ? [] : coach_items.map(&:item)).compact
-  end
-
-  def coaches
-    updating ? @coaches : original_coaches
-  end
-
-  def coaches=(cs)
-    @coaches = cs
-    @updating = true
-  end
-
-  def non_member
-    return @non_member if new_record?
-    @non_member ||= (!is_member? && member_id > 0 ? NonMember.find(member_id) : nil)||''
-    @non_member.blank? ? nil : @non_member
-  end
-
-  def member
-    return @member if new_record?
-    @member ||= (is_member? && member_id > 0 ? Member.find(member_id) : nil) ||''
-    @member.blank? ? nil : @member
-  end
-
-  def member_card
-    return @member_card if new_record?
-    @member_card ||= (is_member? && member_card_id > 0 ? MemberCard.find(member_card_id) : nil) ||''
-    @member_card.blank? ? nil : @member_card
-  end
-
-  def book_record
-    return @book_record if new_record?
-    @book_record ||=( book_record_id > 0 ?  BookRecord.find(book_record_id) : nil) || ''
-    @book_record.blank? ? nil : @book_record
-  end
-
-
-  def coach_attributes=(coach_attri)
-    unless coach_attri[:id].blank?
-      @coaches = coach_attri[:id].uniq.delete_if{|c_id|c_id.to_i <= 0 }.map{|coach_id| Coach.find(coach_id) }
-    end
-    @updating = true
-  end
-
-  def book_record_attributes=(book_attributes)
-    if new_record?
-      @book_record = BookRecord.new(book_attributes)
-    else
-      @book_record = BookRecord.find(book_attributes[:id])
-      @book_record.attributes=book_attributes
-    end
-    @updating = true
-  end
-
-  def non_member_attributes=(non_member_attributes)
-    unless is_member?
-      if new_record?
-        @non_member = NonMember.new(non_member_attributes)
-      else
-        @non_member = NonMember.find(non_member_attributes[:id])
-        @non_member.attributes=non_member_attributes
-      end
-    end
-    @updating = true
-  end
-
-  def member_attributes=(member_attributes)
-    if is_member?
-      @member = Member.find(member_attributes[:id]) if member_attributes[:id].to_i > 0
-    end
-    @updating = true
-  end
-
-  def member_card_attributes=(member_card_attributes)
-    if is_member? && !member_card_attributes[:id].blank?
-      @member_card = MemberCard.find_by_card_serial_num(member_card_attributes[:id])
-    end
-    @updating = true
-  end
 
   def is_advanced_order?
     parent_id.to_i > 0

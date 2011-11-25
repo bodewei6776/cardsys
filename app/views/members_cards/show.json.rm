@@ -1,0 +1,6 @@
+{ 
+  :id => @members_card.id,
+  :card_type_in_chinese => @members_card.card_type_in_chinese,
+  :remaining_money_and_amount_in_chinese => @members_card.remaining_money_and_amount_in_chinese,
+  :members_card_state => @members_card.members_card_state
+}

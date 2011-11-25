@@ -87,5 +87,9 @@ class Card < ActiveRecord::Base
   def is_consume_goods?
     self.consume_type == CONSUME_TYPE_2
   end
+
+  def card_type_in_chinese
+    CARD_TYPE[card_type] 
+  end
 end
 

@@ -16,6 +16,8 @@ class MembersCard < ActiveRecord::Base
   Free_Count_Limit = 2
   Free_Amount_limit = 500
 
+  delegate :card_type_in_chinese, :to => :card
+
 
   attr_accessor :notice
 
@@ -159,20 +161,12 @@ class MembersCard < ActiveRecord::Base
     (!self.card.is_counter_card? && self.card.is_consume_goods?) ? "yes" : "no"
   end
 
-  def member_info
-    self.member_name + "( #{self.member_phone })"
-  end
-
-  def card_info
+  def remaining_money_and_amount_in_chinese
     self.left_fee_value + " / " + self.expire_date.strftime("%Y-%m-%d")
   end
 
-  def member_name
-    member.name
-  end
-
-  def member_phone
-    (member.mobile + "/" + member.telephone) rescue "未知"
+  def members_card_info
+    remain_amount_notice
   end
 
   def should_notice_remain_amount_due?(due_time = Time.now)

@@ -31,32 +31,35 @@
           %li
             .w1 卡号：
             .w2#cards
-              - if @order.member_card
+              - if @order.members_card
               - else
                 = text_field_tag :card_serial_num, "", :id => "order_member_card_serial_num"
-              = f.hidden_field :member_card_id
+              = f.hidden_field :members_card_id
 
 
         %ul
           %li
             .w1 卡类型：
             .w2
+              #card_type
+                = @order.members_card.try(:card_type_in_chinese)
           %li
             .w1 余额（次）：
             .w2
+              #remaining
+                = @order.members_card.try(:remaining_money_and_amount_in_chinese)
 
         %ul
           %li
             .w1 卡状态：
             .w2
               #member_card_info
+                = @order.members_card.try(:detail_info)
           %li
             .w1 联系电话：
             .w2
               = f.text_field :telephone
-        %ul
-          %li
-            .w1
+
       #is_non_member{:style => "display:#{!@order.is_member ? 'block;' : 'none;'}"}
         = f.fields_for :non_member do |nm|
           %ul
@@ -82,6 +85,8 @@
       %ul
         %li
           .w1 教练：
+          .w1
+            = f.text_field :coach_ids
 
       %ul
         %li
@@ -108,45 +113,57 @@
           });
 
 
+          $('#order_member_card_serial_num').autocomplete({
+              source:  '#{autocomplete_card_serial_num_members_cards_path}',
+              select:  function(ui,li){
+                var item = li.item;
+                $('#order_member_name').val(item.member_name);
+                $('#order_member_id').val(item.member_id);
+                update_detail_info(item.id);
+                }			
+           });
 
+           function update_detail_info(card_id){
+            $.ajax({
+              url: "/members_cards/" + card_id,
+              dataType: 'json',
+              success: function(response){
+                $('#member_card_info').text(response.member_card_info);
+                $('#card_type').text(response.card_type_in_chinese);
+                $('#remaining').text(response.remaining_money_and_amount_in_chinese);
+              }
+            });
+            }
 
-           $('#order_member_card_serial_num').autocomplete({
-               source:  '#{autocomplete_card_serial_num_members_cards_path}',
-               select:  function(ui,li){
-               var item = li.item;
-               }			
+           $('#cards select').live('change', function(){
+             var card_id = $(this).find("option:selected").val();
+             update_detail_info(card_id);
            });
 
            $('#order_member_name').autocomplete({
-               source:  '/members/autocomplete_name',
+             source:  '/members/autocomplete_name',
                select:  function(ui,li){
                  var item = li.item;
                  var reqest_url  = "/members/" + item.id + "/member_cards_list";
                  $('#order_member_id').val(item.id);
                  $.get(reqest_url,function(returned_data)
                  {
-                   options = '';
+                   options = "";
                    $(returned_data).each(function(i,node){
-                        options +=("<option value='" + node.members_card.id +
-                       "' order_tip_message='" + node.members_card.order_tip_message+ 
-                       "' can_buy_good='" + node.members_card.can_buy_good+ 
-                       "' member_info='" + node.members_card.member_info+ 
-                       "' card_info='" + node.members_card.card_info+ 
+                     options +=("<option value='" + node.members_card.id +
                        "'>" + node.members_card.card_serial_num + "</option>") 
                     });
 
                     $('#cards').html( "<select name='order[member_card_id]'>" + options + "</select>");
-                    $('#cards select').live('change',function(){
-                      var selected = $(this).find("option:selected");
-                      $('#member_card_info').text(selected.attr('card_info') + selected.attr('order_tip_message'));
-                      $('#member_info').text(selected.attr('member_info'));
-                      if(selected.attr('can_buy_good') == "no"){ $('#member_card_info').append("  [此卡不可消费商品]");}
-                    });
                     $('#cards select').trigger("change");
                  });
                }			
-           });
+            });
+
+             $("#order_coach_ids").tokenInput("#{coaches_path}", {
+                hintText: "I can has tv shows?",
+                noResultsText: "O noes",
+                searchingText: "Meowing..."
+            });
         });
 
-       
-       
