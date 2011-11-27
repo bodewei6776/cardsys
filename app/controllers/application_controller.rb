@@ -118,5 +118,12 @@ class ApplicationController < ActionController::Base
     @user = User.find_by_login(params[:user_name])
     @user.try(:valid_password?,params[:password])
   end
+
+  def close_colorbox
+    respond_to do |wants|
+      wants.html { render :text => "<script type='javascript'>parent.$.fn.colorbox.close();</script>"}
+    end
+  end
 end
+
 

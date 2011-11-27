@@ -11,6 +11,8 @@ class Coach < ActiveRecord::Base
   scope :enabled, where(:state => "enabled")
 
 
+  has_many :book_records, :as => :resource
+
   before_save :geneate_pinyin_name
 
   def geneate_pinyin_name

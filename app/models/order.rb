@@ -8,23 +8,25 @@ class Order < ActiveRecord::Base
   has_many    :coach_book_records, :dependent => :destroy
   has_many    :order_items
   belongs_to  :member
-  has_one :non_member
+  has_one     :non_member
 
-  validates  :card_id, :member_id, :presence => {:message => "信息不完整，请补充完所需要的信息"}, :if => proc { |order| order.is_member }
-
-  after_create  :generate_balance
-  after_save    :update_balance
-  before_create :init_attributes
+  validates  :members_card_id, :presence => {:message => "请选择会员卡"}, :if => proc { |order| order.is_member? }
+  validates  :member_id, :presence => {:message => "请选择会员"}, :if => proc { |order| order.is_member? }
+  validate :coach_valid
 
   accepts_nested_attributes_for :court_book_record
   accepts_nested_attributes_for :coach_book_records
-  accepts_nested_attributes_for :non_member
-  attr_accessor :is_member, :coach_ids
+  accepts_nested_attributes_for :non_member, :reject_if => proc {|non_member| ap non_member;non_member[:is_member] == "1" }
+  attr_accessor :coach_ids
 
-  delegate :record_date,:end_hour,:start_hour,:hours,:to => :book_record
+  delegate :record_date,:end_hour,:start_hour,:hours, :to => :court_book_record
 
-  def operation
-    @operation.blank? ? BookRecord.default_operation : @operation.to_sym
+
+  def coach_valid
+    return true if coach_ids.blank?
+    coach_book_records.each do |c|
+      errors.add(:base, c.conflict_book_record.to_s + "已经被预约") if c.conflict?
+    end
   end
 
 
@@ -44,6 +46,30 @@ class Order < ActiveRecord::Base
     event :cancel do
       transition [:to_be_sold, :booked] => :canceld
     end
+
+    event :blance do
+      transition :activate => :balanced
+    end
+  end
+
+
+  def coaches
+    coach_book_records.collect(&:resource)
+  end
+
+  def coach_ids
+    coach_book_records.collect(&:resource_id).join(",")
+  end
+
+  def coach_ids=(ids)
+    @coaches = Coach.find(ids.split(",").uniq)
+    self.coach_book_records = @coaches.collect do |c|
+     CoachBookRecord.new(:resource => c, 
+                         :start_hour => start_hour, 
+                         :end_hour => end_hour,
+                         :alloc_date => order_date) 
+    end
+    true
   end
 
   def validates_assocations
@@ -73,27 +99,6 @@ class Order < ActiveRecord::Base
     associations
   end
 
-  def init_attributes
-    self.order_time = DateTime.now
-  end
-
-  def auto_save_order_associations
-    return unless book_record
-    book_record.route_operation(operation) and (self.book_record_id = book_record.id)
-    if is_member?
-      self.member_id      = member.id
-      self.member_name    = member.name
-      self.card_id        = member_card.card_id
-      self.member_card_id = member_card.id
-    else
-      if non_member.save!
-        self.member_id      = non_member.id
-        self.card_id        = 0
-        self.member_name    = non_member.name
-        self.member_card_id = non_member.id
-      end
-    end
-  end
 
   def auto_generate_coaches_items
     OrderItem.order_coaches(self)
@@ -236,24 +241,32 @@ class Order < ActiveRecord::Base
     return self.total_amount - self.non_member.earnest 
   end
 
-  def order_and_order_after
-    self.advanced_order.orders.select{|o| o.book_record.record_date >= self.book_record.record_date}
+
+  def expired?
+    Time.now > court_book_record.start_time
   end
 
-  def generate_balance
-    self.balance = Balance.new(:status => Const::NO, :balance_way => Balance::Balance_Way_Use_Card)
+  def status_desc
+    desc = case
+           when  booked? 
+             expired? ? "已预订（过期）" : "预订"
+           when  balanced?    then   "已结算"
+           when  to_be_sold?     then
+             expired? ? "停止代买" : "代卖中"
+           when  actived?      then   "开打中"
+           else "过期"
+           end
+    desc
   end
 
-  def update_balance
-    self.balance.update_amount
+  def status_color
+    color = case
+            when  booked?         then  "color01"
+            when  balanced?       then  "color05"
+            when  to_be_sold?     then  "color04"
+            when  actived?        then  "color03"
+            else "color02"
+            end
+    color
   end
-
-  def order_errors
-    @order_errors ||= []
-  end
-
-  def clear_order_errors
-    order_errors.clear
-  end
-
 end

@@ -19,14 +19,21 @@ class BookRecord < ActiveRecord::Base
   belongs_to  :order
   belongs_to  :resource, :polymorphic => true
 
-  validates :start_hour, :numericality => {:message => "开始时间必须为整数"}
-  validates :end_hour, :numericality => {:message => "结束时间必须为整数"}
+  #validates :start_hour, :numericality => {:message => "开始时间必须为整数"}
+  #validates :end_hour, :numericality => {:message => "结束时间必须为整数"}
 
   scope :daily_book_records, lambda {|date| where(:alloc_date => date) }
   scope :court_book_records, lambda {|court_id| where(:court_id => court_id) }
   scope :playing, where(:status => Status_Active)
   scope :balanced, where(:status => Status_Settling)
 
+  def start_time
+    alloc_date + start_hour.hours
+  end
+
+  def end_time
+    alloc_date + end_hour.hours
+  end
 
 
   def start_date_time
@@ -177,7 +184,7 @@ class BookRecord < ActiveRecord::Base
   end
 
   def is_agented?
-    status == Status_Agent && !is_expired?
+    state == Status_Agent && !is_expired?
   end
 
   def active

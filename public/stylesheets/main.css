@@ -419,7 +419,10 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 }
 
 #errorExplanation {
+  margin:auto;
+  width: 95%;
   padding-bottom: 5px;
+  margin-bottom: 3px;
   border: 2px solid #FE8848;
 }
 

@@ -1,5 +1,7 @@
+=render :partial => "layouts/errors", :locals => {:target => @order}
 .fformbox
   = form_for @order do |f|
+    = f.hidden_field :order_date
     .fformbox_bt
       %p 请填写预定信息
     .fformbox_nr
@@ -14,6 +16,8 @@
               = cbr.select :end_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.end_hour)
               = "(周期性预定)" if @order.advanced_order?
               = cbr.select :resource_id, options_for_select(Court.enabled.collect{|c| [c.name, c.id]}, @order.court_book_record.resource_id)
+              = cbr.hidden_field :alloc_date
+              = cbr.hidden_field :resource_type 
 
 
       %ul
@@ -21,12 +25,12 @@
           .w1 是否会员：
           = f.check_box :is_member
 
-      #is_member{:style => "display:#{@order.is_member ? 'block;' : 'none;'}"}
+      #is_member{:style => "display:#{@order.is_member? ? 'block;' : 'none;'}"}
         %ul
           %li
             .w1 会员姓名：
             .w2
-              = text_field_tag :member_name, @order.member.name, :id => "order_member_name"
+              = text_field_tag :member_name, @order.member.try(:name), :id => "order_member_name"
               = f.hidden_field :member_id
           %li
             .w1 卡号：
@@ -60,13 +64,14 @@
             .w2
               = f.text_field :telephone
 
-      #is_non_member{:style => "display:#{!@order.is_member ? 'block;' : 'none;'}"}
+      #is_non_member{:style => "display:#{!@order.is_member? ? 'block;' : 'none;'}"}
         = f.fields_for :non_member do |nm|
           %ul
             %li
               .w1 散客姓名：
               .w2 
                 = nm.text_field :name
+                = nm.hidden_field :is_member
 
               .w1 标准收费：
               .w2#non_member_price
@@ -82,10 +87,10 @@
               .w2 
                 = nm.text_field :earnest
 
-      %ul
+      %ul{:style => "height:50px;"}
         %li
           .w1 教练：
-          .w1
+          .w2
             = f.text_field :coach_ids
 
       %ul
@@ -109,7 +114,7 @@
       %ul
         %li
           = f.submit @order.new_record? ? "预订" : "变更", :class => "submit2"
-          = display_enable_buttons(@order)
+          = display_enable_buttons(@order) if !@order.new_record?
 
 
       :javascript
@@ -118,10 +123,12 @@
             if($("#order_is_member").attr("checked")){
               $("#is_member").show();
               $("#is_non_member").hide();
+              $("#order_non_member_attributes_is_member").val(1);
             }
             else{
               $("#is_member").hide();
               $("#is_non_member").show();
+              $("#order_non_member_attributes_is_member").val(0);
           }
           });
 
@@ -168,7 +175,7 @@
                        "'>" + node.members_card.card_serial_num + "</option>") 
                     });
 
-                    $('#cards').html( "<select name='order[member_card_id]'>" + options + "</select>");
+                    $('#cards').html( "<select name='order[members_card_id]'>" + options + "</select>");
                     $('#cards select').trigger("change");
                  });
                }			

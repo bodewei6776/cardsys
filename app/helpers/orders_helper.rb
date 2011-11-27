@@ -1,5 +1,5 @@
 module OrdersHelper
-  def display_period_per_hour(daily_periods,court,date)
+  def display_period_per_hour(daily_periods, court, date)
     info_htmls = []
     time_spans = []
     daily_periods.each do |period|
@@ -17,11 +17,11 @@ module OrdersHelper
     real_time_spans,i = [],0
     while i < time_spans.size
       time_span = time_spans[i]
-      if (book_record =  court_book_records.find{|record|record.start_hour == time_span.first})
+      if (book_record =  court_book_records.find{|record| record.start_hour == time_span.first})
         while i < time_spans.size && time_spans[i].last < book_record.end_hour
           i += 1
         end
-        real_time_spans << [time_span.first,time_spans[i].last,book_record]
+        real_time_spans << [time_span.first,time_spans[i].last, book_record]
       else
         real_time_spans << [time_span.first,time_span.last,nil]
       end
@@ -33,38 +33,32 @@ module OrdersHelper
       hours = real_time_span[1]-real_time_span[0]
       li_height = 30*(hours) + (hours - 1)#*1
       unless (book_record = real_time_span.last).nil?
-        display_content =if book_record.order.member_type == Const::YES
-                           "#{book_record.order.member_name}:#{book_record.order.member_card.card_serial_num}" 
+        display_content =if book_record.order.is_member?
+                           "#{book_record.order.member.name}:#{book_record.order.member_card.card_serial_num}" 
                          else
-                           "#{book_record.order.member_name}:无卡预定" 
+                           "#{book_record.order.non_member.name}:无卡预定" 
                          end
-        display_content = "(授)" + display_content if (book_record.order.member_card_id.present? and \
-                                                       book_record.order.member_type == Const::YES and \
+        display_content = "(授)" + display_content if (book_record.order.members_card_id.present? and \
+                                                       book_record.order.is_member? and \
                                                        book_record.order.member.is_granter_of_card(book_record.order.member_card_id))
         display_content = "(固)" +  display_content if book_record.order.advanced_order
-        unless (coaches = book_record.order.coaches).blank?
-          display_content << "(教练:#{coaches.map(&:name).join(',')})"
-        end
+        display_content << "(教练:#{book_record.order.coaches.map(&:name).join(',')})" if book_record.order.coaches
 
-        if order.balanced?
+        if book_record.order.balanced?
           display_content << "(结算人: #{book_record.order.balance.who_balance.try(:login) || ""})"
         end
-        #display_content <<  "(#{book_record.status_desc})"
-        url = if book_record.is_agented?
-                "/book_records/#{book_record.id}/agent"
-              else
-                book_record.is_balanced? ? order_balance_path(book_record.order,book_record.order.balance_record) : edit_book_record_path(book_record)
-              end
+
+        url = edit_order_path(book_record.order)
         li_class = []
-        if book_record.is_booked?
+        if book_record.order.booked?
           li_class << "book-reocrd-draggable"
           li_class << "book-reocrd-droppable"
         end
-        title = "#{display_content}(#{book_record.status_desc})"
+        title = "#{display_content}(#{book_record.order.status_desc})"
         info_htmls << [real_time_span[0],content_tag(:li,
                                                      content_tag("a",
                                                                  content_tag(:p, display_content,:style =>  "display:inline-block; height:30px; line-height:15px;"),:href => url,
-                                                                 :class =>book_record.status_color ,:title => title,
+                                                                 :class => "#{book_record.order.status_color} popup-new-window ",:title => title,
                                                                  :style => "height:#{li_height}px;display:block;vertical-align:middle;display:table-cell;width: 161px;"),:style => "height:#{li_height}px;line-height:#{li_height}px;",
         :class => li_class.join(' '), :id => "book-record-#{book_record.id}")]
       else
@@ -92,15 +86,21 @@ module OrdersHelper
     confirm_message = "确认要" + text + "?" if confirm_message.blank?
     content_tag(:span, link_to(text, url, :confirm_message => confirm_message))
   end
+
   def display_enable_buttons(order)
     htmls = []
-    (htmls << order_action_link("申请代卖", state_order_path(order, :be_action => "want_sell")) if order.can_want_sell?
-    (htmls << order_action_link("代卖", state_order_path(order, :be_action => "sell")) if order.can_sell?
-    (htmls << order_action_link("取消代卖", state_order_path(order, :be_action => "cancel_want_sell")) if order.can_cancel_want_sell?
-    (htmls << order_action_link("取消预订", state_order_path(order, :be_action => "cancel")) if order.can_cancel?
-    (htmls << order_action_link("连续取消", state_order_path(order, :be_action => "cancel_all")) if order.can_cancel_all?
-    (htmls << order_action_link("连续变更", order_path(order, :be_action => "update_all")) if order.can_update_all?
-    (htmls << order_action_link("", order_path(order, :be_action => "update_all")) if order.can_update_all?
+    htmls << order_action_link("申请代卖", change_state_order_path(order, :be_action => "want_sell")) if order.can_want_sell?
+    htmls << order_action_link("代卖", change_state_order_path(order, :be_action => "sell")) if order.can_sell?
+    htmls << order_action_link("取消代卖", change_state_order_path(order, :be_action => "cancel_want_sell")) if order.can_cancel_want_sell?
+    htmls << order_action_link("取消预订", change_state_order_path(order, :be_action => "cancel")) if order.can_cancel?
+    htmls << order_action_link("连续取消", change_state_order_path(order, :be_action => "cancel_all")) if order.can_cancel_all?
+    htmls << order_action_link("连续变更", order_path(order, :be_action => "update_all")) if order.can_update_all?
+    htmls << order_action_link("预订已过期，请结算", order_blances_path(order)) if order.book_time_due?
+    htmls << order_action_link("代卖已过期，请结算", order_blances_path(order)) if order.to_be_sold_time_due?
+    htmls << order_action_link("开场", change_state_order_path(order, :be_action => "active")) if order.can_active?
+    htmls << order_action_link("结算", change_state_order_path(order, :be_action => "balanced")) if order.can_blance?
+    htmls << order_action_link("添加消费", order_goods_path(order)) if order.can_order_goods?
+    htmls << order_action_link("打印消费记录", print_order_blances_path(order)) if order.can_print_order_balance?
 
    # db_book_record.new_record? and !db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","预定",
    #                                                                                               {:type => 'submit',:operation => :book,:class => 'submit1 hand'})

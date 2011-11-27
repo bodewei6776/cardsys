@@ -1,6 +1,5 @@
 Cardsys::Application.routes.draw do |map|
 
-  resources :orders
   resources :rents do
     collection do
       get :complete_member_infos
@@ -40,15 +39,14 @@ Cardsys::Application.routes.draw do |map|
 
 
 
-  resources :catenas do
-    member do
-      get :change_status
-    end
-  end
 
   resources :vacations
   
   resources :orders do
+    member do
+      get :change_state
+    end
+
     resources :order_items do
       collection do
         post :batch_update
