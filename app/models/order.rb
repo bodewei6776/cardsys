@@ -27,6 +27,25 @@ class Order < ActiveRecord::Base
     @operation.blank? ? BookRecord.default_operation : @operation.to_sym
   end
 
+
+  state_machine  :initial => :booked do
+    event :activate do
+      transition :booked => :activated
+    end
+
+    event :want_sell do
+      transition :booked => :to_be_sold
+    end
+
+    event :sell do
+      transition :to_be_sold => :sold_out
+    end
+
+    event :cancel do
+      transition [:to_be_sold, :booked] => :canceld
+    end
+  end
+
   def validates_assocations
     if is_member? && (member.nil? || member_card.nil?)
       errors[:base] << I18n.t('order_msg.order.member')

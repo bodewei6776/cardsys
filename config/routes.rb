@@ -169,6 +169,10 @@ Cardsys::Application.routes.draw do |map|
     member do
       get :change_status
     end
+
+    collection do
+      get :search
+    end
   end
   
   resources :period_prices

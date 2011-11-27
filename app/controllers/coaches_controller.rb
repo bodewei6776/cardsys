@@ -2,6 +2,17 @@ class CoachesController < ApplicationController
 
   def index
     @coaches = Coach.paginate(default_paginate_options)
+    respond_to do |wants|
+      wants.html {}
+      wants.json { render :json => @coaches.to_json(:only => [:id, :name])}
+    end
+  end
+
+  def search
+    @coaches = Coach.all(:conditions => "lower(pinyin_name) like '%#{params[:q]}%'").paginate(default_paginate_options)
+    respond_to do |wants|
+      wants.json { render :json => @coaches.collect{|c| {"name" => c.name, "id" => c.id, "pinyin_name" => c.pinyin_name}}.to_json}
+    end
   end
 
   def show

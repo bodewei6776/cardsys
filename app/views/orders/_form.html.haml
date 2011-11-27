@@ -91,12 +91,25 @@
       %ul
         %li
           .w1 操作人：
+          .w2
+            = text_field_tag :name
+
+        %li
+          .w1 密码：
+          .w2
+            = password_field_tag :password
 
 
       %ul
         %li
           .w1 备注：
-      =# display_enable_buttons(@order.court_book_record)
+          .w2
+            = f.text_area :memo, :rows => 2
+
+      %ul
+        %li
+          = f.submit @order.new_record? ? "预订" : "变更", :class => "submit2"
+          = display_enable_buttons(@order)
 
 
       :javascript
@@ -131,6 +144,7 @@
                 $('#member_card_info').text(response.member_card_info);
                 $('#card_type').text(response.card_type_in_chinese);
                 $('#remaining').text(response.remaining_money_and_amount_in_chinese);
+                $('#telephone').value(response.telephone);
               }
             });
             }
@@ -160,10 +174,7 @@
                }			
             });
 
-             $("#order_coach_ids").tokenInput("#{coaches_path}", {
-                hintText: "I can has tv shows?",
-                noResultsText: "O noes",
-                searchingText: "Meowing..."
+             $("#order_coach_ids").tokenInput("#{search_coaches_path}", {
             });
         });
 

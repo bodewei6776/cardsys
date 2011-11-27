@@ -28,23 +28,6 @@ class BookRecord < ActiveRecord::Base
   scope :balanced, where(:status => Status_Settling)
 
 
-  state_machine  :initial => :booked do
-    event :activate do
-      transition :booked => :activated
-    end
-
-    event :want_sell do
-      transition :booked => :to_be_sold
-    end
-
-    event :sell do
-      transition :to_be_sold => :sold_out
-    end
-
-    event :cancel do
-      transition [:to_be_sold, :booked] => :canceld
-    end
-  end
 
   def start_date_time
     day = self.record_date.to_datetime

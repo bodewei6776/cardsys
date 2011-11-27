@@ -46,7 +46,7 @@ module OrdersHelper
           display_content << "(教练:#{coaches.map(&:name).join(',')})"
         end
 
-        if book_record.is_balanced?
+        if order.balanced?
           display_content << "(结算人: #{book_record.order.balance.who_balance.try(:login) || ""})"
         end
         #display_content <<  "(#{book_record.status_desc})"
@@ -87,61 +87,70 @@ module OrdersHelper
     info_htmls.sort{|fst,scd| fst.first <=> scd.first}.map{|info_html| info_html.last}.join(' ').html_safe
   end
 
-  def display_enable_buttons(book_record)
 
-    db_book_record = book_record.new_record? ? book_record : BookRecord.find(book_record.id)
+  def order_action_link(text, url, confirm_message = "")
+    confirm_message = "确认要" + text + "?" if confirm_message.blank?
+    content_tag(:span, link_to(text, url, :confirm_message => confirm_message))
+  end
+  def display_enable_buttons(order)
+    htmls = []
+    (htmls << order_action_link("申请代卖", state_order_path(order, :be_action => "want_sell")) if order.can_want_sell?
+    (htmls << order_action_link("代卖", state_order_path(order, :be_action => "sell")) if order.can_sell?
+    (htmls << order_action_link("取消代卖", state_order_path(order, :be_action => "cancel_want_sell")) if order.can_cancel_want_sell?
+    (htmls << order_action_link("取消预订", state_order_path(order, :be_action => "cancel")) if order.can_cancel?
+    (htmls << order_action_link("连续取消", state_order_path(order, :be_action => "cancel_all")) if order.can_cancel_all?
+    (htmls << order_action_link("连续变更", order_path(order, :be_action => "update_all")) if order.can_update_all?
+    (htmls << order_action_link("", order_path(order, :be_action => "update_all")) if order.can_update_all?
 
-    buton_htmls = []
+   # db_book_record.new_record? and !db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","预定",
+   #                                                                                               {:type => 'submit',:operation => :book,:class => 'submit1 hand'})
 
-    db_book_record.new_record? and !db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","预定",
-                                                                                                  {:type => 'submit',:operation => :book,:class => 'submit1 hand'})
+   # db_book_record.should_application_to_agent? and buton_htmls << content_tag("button","申请代卖",{:type => 'button',
+   #                                                                            :class => "data-agent-to-buy confirm submit1 hand",:conform_msg => "确认要变更为代卖预定么",:operation => :agent})
 
-    db_book_record.should_application_to_agent? and buton_htmls << content_tag("button","申请代卖",{:type => 'button',
-                                                                               :class => "data-agent-to-buy confirm submit1 hand",:conform_msg => "确认要变更为代卖预定么",:operation => :agent})
+   # db_book_record.should_to_agent_to_buy? and buton_htmls << content_tag("button","代卖",{:type => 'button',
+   #                                                                       :class => "data-do-agent confirm submit1 hand",:conform_msg => "确认要代卖么",:operation => :do_agent})
 
-    db_book_record.should_to_agent_to_buy? and buton_htmls << content_tag("button","代卖",{:type => 'button',
-                                                                          :class => "data-do-agent confirm submit1 hand",:conform_msg => "确认要代卖么",:operation => :do_agent})
+   # db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","变更会员",{:class=> 'submit confirm submit1 hand',
+   #                                                               :operation => :do_agent,:conform_msg => ""})
 
-    db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","变更会员",{:class=> 'submit confirm submit1 hand',
-                                                                  :operation => :do_agent,:conform_msg => ""})
+   # db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","取消代卖",{:type => 'submit',
+   #                                                               :operation => :cancle_agent,:class => 'data-cancle-agent confirm submit1 hand',:conform_msg => "确认要取消代买么?"})
 
-    db_book_record.is_to_do_agent? and buton_htmls << content_tag("button","取消代卖",{:type => 'submit',
-                                                                  :operation => :cancle_agent,:class => 'data-cancle-agent confirm submit1 hand',:conform_msg => "确认要取消代买么?"})
+   # db_book_record.should_to_cancle? and buton_htmls << content_tag("button","取消预定",{:type => 'button',
+   #                                                                 :class => "data-cancle-booke confirm submit1 hand",:conform_msg => "确认要取消预定么？",:operation => :cancle})
 
-    db_book_record.should_to_cancle? and buton_htmls << content_tag("button","取消预定",{:type => 'button',
-                                                                    :class => "data-cancle-booke confirm submit1 hand",:conform_msg => "确认要取消预定么？",:operation => :cancle})
-
-    db_book_record.should_to_cancle? and db_book_record.consecutive? and buton_htmls << content_tag("button","连续取消",{:type => 'button',
-                                                                                                    :class => "data-cancle-booke confirm submit1 hand",:conform_msg => "确认要取消预定么？",:operation => :consecutive_cancle})
+   # db_book_record.should_to_cancle? and db_book_record.consecutive? and buton_htmls << content_tag("button","连续取消",{:type => 'button',
+   #                                                                                                 :class => "data-cancle-booke confirm submit1 hand",:conform_msg => "确认要取消预定么？",:operation => :consecutive_cancle})
 
 
 
-    db_book_record.should_changed? and buton_htmls << content_tag("button","变更本次预定",{:type => 'button',
-                                                                  :class => "data-change-booke confirm submit1 hand",:conform_msg => "确认要变更预定么？",:operation => :book})
+   # db_book_record.should_changed? and buton_htmls << content_tag("button","变更本次预定",{:type => 'button',
+   #                                                               :class => "data-change-booke confirm submit1 hand",:conform_msg => "确认要变更预定么？",:operation => :book})
 
-    #db_book_record.should_changed? and db_book_record.consecutive?  and buton_htmls << content_tag("button","连续变更",{:type => 'button',
+   # #db_book_record.should_changed? and db_book_record.consecutive?  and buton_htmls << content_tag("button","连续变更",{:type => 'button',
     #                                                              :class => "data-change-booke confirm submit1 hand",:conform_msg => "确认要变更预定么？", :operation => :consecutive_book})
 
-
-    db_book_record.should_blance_as_expired?  and buton_htmls << content_tag("button","#{db_book_record.is_booked? ? '预定已过期，请结算' : '代买已过期，请结算'}",
-                                                                             {:type => 'button',:class => "data-balance-order submit1 hand",:operation => :balance})
-
-    db_book_record.should_to_active? and buton_htmls << content_tag("button","开场",{:type => 'button',
-                                                                    :class => "data-active-booke confirm submit1 hand",:operation => :active,:conform_msg => "确认要开场？"})
-
-    db_book_record.should_to_balance? and buton_htmls << content_tag("button","结算",
-                                                                     {:type => 'button',:class => "data-balance-order submit1 hand",:operation => :balance})
-
-    db_book_record.should_to_balance? and  buton_htmls << content_tag("button","添加消费",{:type => 'button',
-                                                                      :class => 'goods-list submit1 hand',:title => "商品列表",:rel => "goodslist",:href => '/goods/goods'})
-
-    db_book_record.should_to_balance? and buton_htmls << content_tag("button","变更教练",{:type => 'button',
-                                                                     :class => 'update-coaches confirm submit1 hand',:conform_msg => '确定要改变教练么?',:operation => 'change_coaches'})
-
-    db_book_record.is_balanced? and  buton_htmls << content_tag("button","打印消费记录",{:type => 'button',:class => 'print-order-list submit1 hand'})
-
-    (!db_book_record.new_record? and current_user.can?("删除场地预定")) and buton_htmls << content_tag("button","删除场地预定",{:type => 'button',:class => 'submit1 hand confirm',:id => "delete_button" ,:bid => db_book_record.id, :conform_msg => "确定要删除此预订？"})
-
+#
+#    db_book_record.should_blance_as_expired?  and buton_htmls << content_tag("button","#{db_book_record.is_booked? ? '预定已过期，请结算' : '代买已过期，请结算'}",
+#                                                                             {:type => 'button',:class => "data-balance-order submit1 hand",:operation => :balance})
+#
+#    db_book_record.should_to_active? and buton_htmls << content_tag("button","开场",{:type => 'button',
+#                                                                    :class => "data-active-booke confirm submit1 hand",:operation => :active,:conform_msg => "确认要开场？"})
+#
+#    db_book_record.should_to_balance? and buton_htmls << content_tag("button","结算",
+#                                                                     {:type => 'button',:class => "data-balance-order submit1 hand",:operation => :balance})
+#
+#    db_book_record.should_to_balance? and  buton_htmls << content_tag("button","添加消费",{:type => 'button',
+#                                                                      :class => 'goods-list submit1 hand',:title => "商品列表",:rel => "goodslist",:href => '/goods/goods'})
+#
+#    db_book_record.should_to_balance? and buton_htmls << content_tag("button","变更教练",{:type => 'button',
+#                                                                     :class => 'update-coaches confirm submit1 hand',:conform_msg => '确定要改变教练么?',:operation => 'change_coaches'})
+#
+#    db_book_record.is_balanced? and  buton_htmls << content_tag("button","打印消费记录",{:type => 'button',:class => 'print-order-list submit1 hand'})
+#
+#    (!db_book_record.new_record? and current_user.can?("删除场地预定")) and buton_htmls << content_tag("button","删除场地预定",{:type => 'button',:class => 'submit1 hand confirm',:id => "delete_button" ,:bid => db_book_record.id, :conform_msg => "确定要删除此预订？"})
+#
     buton_htmls.join(' ').html_safe
 
   end

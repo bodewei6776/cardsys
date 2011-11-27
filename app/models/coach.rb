@@ -1,3 +1,4 @@
+require 'pinyin/pinyin'
 class Coach < ActiveRecord::Base
   STATE_MAP = {"enabled" => "正常", "disabled" => "禁用"}
 
@@ -8,6 +9,14 @@ class Coach < ActiveRecord::Base
   validates :email, :format => {:with =>/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/, :allow_blank => true,:message => '邮箱格式不正确！'}
 
   scope :enabled, where(:state => "enabled")
+
+
+  before_save :geneate_pinyin_name
+
+  def geneate_pinyin_name
+    pinyin = PinYin.new
+    self.pinyin_name = pinyin.to_pinyin(self.name) if self.name
+  end
 
   def amount(order_item)
     fee * order_item.quantity

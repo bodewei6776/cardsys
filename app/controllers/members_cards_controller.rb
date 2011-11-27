@@ -43,8 +43,8 @@ class MembersCardsController < ApplicationController
       wants.json { render :json => {
         :card_type_in_chinese => @members_card.card_type_in_chinese,
         :remaining_money_and_amount_in_chinese => @members_card.remaining_money_and_amount_in_chinese,
-        :members_card_info => @members_card.members_card_info
-      
+        :members_card_info => @members_card.members_card_info,
+        :telephone => @members_card.member.telephone
       }} 
     end
   end
