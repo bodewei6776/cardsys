@@ -35,9 +35,7 @@
           %li
             .w1 卡号：
             .w2#cards
-              - if @order.members_card
-              - else
-                = text_field_tag :card_serial_num, "", :id => "order_member_card_serial_num"
+              = text_field_tag :card_serial_num, @order.members_card.try(:card_serial_num), :id => "order_member_card_serial_num"
               = f.hidden_field :members_card_id
 
 
@@ -57,12 +55,12 @@
           %li
             .w1 卡状态：
             .w2
-              #member_card_info
-                = @order.members_card.try(:detail_info)
+              #members_card_info
+                = @order.members_card.try(:members_card_info)
           %li
             .w1 联系电话：
             .w2
-              = f.text_field :telephone
+              = f.text_field :telephone, :id => "mobile"
 
       #is_non_member{:style => "display:#{!@order.is_member? ? 'block;' : 'none;'}"}
         = f.fields_for :non_member do |nm|
@@ -109,7 +107,7 @@
         %li
           .w1 备注：
           .w2
-            = f.text_area :memo, :rows => 2
+            = f.text_area :memo, :rows => 2, :style => "width:460px;"
 
       %ul
         %li
@@ -148,10 +146,10 @@
               url: "/members_cards/" + card_id,
               dataType: 'json',
               success: function(response){
-                $('#member_card_info').text(response.member_card_info);
+                $('#members_card_info').text(response.members_card_info);
                 $('#card_type').text(response.card_type_in_chinese);
                 $('#remaining').text(response.remaining_money_and_amount_in_chinese);
-                $('#telephone').value(response.telephone);
+                $('#mobile').val(response.mobile);
               }
             });
             }

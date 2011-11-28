@@ -72,6 +72,42 @@ class Order < ActiveRecord::Base
     true
   end
 
+  #TODO
+  def can_cancel_want_sell?
+    booked?
+  end
+
+  #TODO
+  def can_cancel_all?
+    booked?
+  end
+
+
+  def can_update_all?
+    booked?
+  end
+
+  def book_time_due?
+    false
+  end
+
+  def to_be_sold_time_due?
+    false
+  end
+
+  def can_active?
+    booked?
+  end
+
+  def can_order_goods?
+    activate?
+  end
+
+  def can_print_order_balance?
+    true
+  end
+
+
   def validates_assocations
     if is_member? && (member.nil? || member_card.nil?)
       errors[:base] << I18n.t('order_msg.order.member')

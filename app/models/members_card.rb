@@ -8,6 +8,8 @@ class MembersCard < ActiveRecord::Base
   has_many :granters, :class_name => "Member", :through => :member_card_granters
 
 
+  STATE_DESC = {"enabled" => "正常", "disalbed" => "注销"}
+
   scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num.downcase}%'").limit(10) }
 
   CARD_STATUS_0 = 0 #正常
@@ -113,15 +115,11 @@ class MembersCard < ActiveRecord::Base
   end
    
 
-  def member_card_status_opt
-    self.status == 0 ? "正常" : "已注销"
-  end
-  
-  def status_desc
+  def state_desc
     if is_expired?
       "已过期"
     else
-      member_card_status_opt
+      STATE_DESC[state]
     end
   end
   
@@ -166,7 +164,9 @@ class MembersCard < ActiveRecord::Base
   end
 
   def members_card_info
-    remain_amount_notice
+    desc =  "#{state_desc} "
+    desc += "（#{remain_amount_notice}）"  unless remain_amount_notice.blank?
+    desc
   end
 
   def should_notice_remain_amount_due?(due_time = Time.now)
@@ -191,7 +191,7 @@ class MembersCard < ActiveRecord::Base
   end
 
 
-  
+
   def order_errors
     @order_errors ||= []
   end

@@ -37,11 +37,7 @@ Cardsys::Application.routes.draw do |map|
     end
   end
 
-
-
-
   resources :vacations
-  
   resources :orders do
     member do
       get :change_state
@@ -55,6 +51,7 @@ Cardsys::Application.routes.draw do |map|
     resources :balances do
       collection do 
         get :balanced
+        get :print
       end
     end
   end

@@ -20,6 +20,11 @@ class OrdersController < ApplicationController
     render :layout => "small_main"
   end
 
+  def edit
+    @order = Order.find(params[:id])
+    render :layout => "small_main"
+  end
+
   def create
     @order = Order.new(params[:order])
     if @order.save
