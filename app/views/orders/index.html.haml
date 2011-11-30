@@ -12,21 +12,40 @@
       %button.submit2.hand{:onclick => "location.reload();", :type => "button", :value => "true"} 刷新
       %a.submit2.hand{:href => "/book_records/print?date=#{@date}", :style => "color:black;padding: 3px;", :target => "_blank"} 打印
   .content
-    - @courts.each_slice(6) do |slice|  
-      %ul.time
-        %li.tit 时段/场地
-        - for period in @daily_periods
-          - period.start_time.upto(period.end_time - 1) do |i|
-            %li{:style => "line-height:30px;"}
-              = "#{i}:00-#{i+1}:00"
-      .sep
-      - slice.each_with_index do |court, index|
-        %ul{:class => index.odd? ? 'date2' : 'date'}
-          %li.tit= court.name
-          = display_period_per_hour(@daily_periods, court, @date)
-        .sep
+    =#- @courts.each_slice(6) do |slice|  
+    =#  %ul.time
+    =#    %li.tit 时段/场地
+    =#    - for period in @daily_periods
+    =#      - period.start_time.upto(period.end_time - 1) do |i|
+    =#        %li{:style => "line-height:30px;"}
+    =#          = "#{i}:00-#{i+1}:00"
+    =#  .sep
+    =#  - slice.each_with_index do |court, index|
+    =#    %ul{:class => index.odd? ? 'date2' : 'date'}
+    =#      %li.tit= court.name
+    =#      = display_period_per_hour(@daily_periods, court, @date)
+    =#    .sep
 
-      %div{:style => "clear:both;"}
+    =#  %div{:style => "clear:both;"}
+
+
+    %table.index_order_table{:cellspacing=> 0}
+      - @courts.each_slice(6) do |slice|  
+        %tr.court_name
+          %td.tit.first 时段/场地
+          - slice.each_with_index do |court, index|
+            %td
+              = court.name
+
+          - (@daily_periods.first.start_time..(@daily_periods.last.end_time-1)).each do |hour_start|
+            %tr.period
+              %td.hour_span.first
+                = "#{hour_start}:00-#{hour_start.next}:00"
+              - slice.each do |court|
+                = court_status_in_period(@date, hour_start, court)
+
+
+        %div{:style => "clear:both;"}
   .h10
   .color
     %span.color01 红色-已预定

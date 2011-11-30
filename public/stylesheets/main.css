@@ -497,3 +497,30 @@ table.report_table tr.report_title td{
   overflow:hidden;
 }
 
+
+.index_order_table
+{
+  width: 100%;
+  font-size:12px;
+}
+
+.index_order_table tr{
+  
+}
+
+.index_order_table tr.court_name{
+}
+
+.index_order_table tr.court_name td{
+  border-top: 1px solid black;
+}
+
+.index_order_table td{
+  padding: 3px; 
+  border-right: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.index_order_table td.first{
+  border-left: 1px solid black;
+}

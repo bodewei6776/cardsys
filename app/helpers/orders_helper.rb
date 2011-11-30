@@ -130,4 +130,27 @@ module OrdersHelper
     options_for_select(options,selected_value)
   end
 
+  def display_content(book_record)
+    content = ""
+    order = book_record.order
+    content = if order.is_member?
+                       "#{order.member.name}:#{order.members_card.card_serial_num}" 
+                     else
+                       "#{order.non_member.name}:无卡预定" 
+                     end
+    content = "(授)" + content if (order.members_card_id.present? and \
+                                                   order.is_member? and \
+                                                   order.member.is_granter_of_card(order.members_card_id))
+    content = "(固)" +  content if order.advanced_order
+    content << "(教练:#{order.coaches.map(&:name).join(',')})" if order.coaches
+    content << "(结算人: #{order.balance.who_balance.try(:login) || ""})" if order.balanced?
+    content
+  end
+
+  def court_status_in_period(date, start_hour, court)
+    return content_tag(:td, "场地不可用") unless court.is_useable_in_time_span?(date, start_hour)
+    book_record = court.book_record_start_at(date, start_hour)
+    return content_tag(:td, display_content(book_record)) if book_record.present? && book_record.order
+  end
+
 end

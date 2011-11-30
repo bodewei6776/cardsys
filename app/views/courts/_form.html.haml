@@ -1,4 +1,4 @@
-- form_for court  do |f|
+- form_for @court  do |f|
   .fform
     .fformbox
       .fformbox_bt
@@ -24,7 +24,7 @@
           %li
             .w1 说明：
             .ww2
-              %textarea{:cols => "45", :name => "court[description]", :rows => "4"}= court.description
+              %textarea{:cols => "45", :name => "court[description]", :rows => "4"}= @court.description
               .clear
         .clear
     .h10
@@ -34,15 +34,15 @@
       .table2
         %ul.bttitle.black.fb
           %li.w5 序号
-          %li.w20 时段
+          %li.w30 时段
           %li.w15 标准收费(/小时)
           %li.w20 可用
           %li.w20 说明
         - @period_prices.each_with_index do |period_price,index|
-          - available_period = court.generate_court_period_price(period_price)
+          - available_period = @court.generate_court_period_price(period_price)
           %ul.table_items
             %li.w5= index + 1
-            %li.w20
+            %li.w30
               = period_price.name
               ：#{period_price.start_time}:00-#{period_price.end_time}:00
             %li.w15= period_price.price

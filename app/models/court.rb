@@ -17,12 +17,19 @@ class Court < ActiveRecord::Base
     self.court_period_prices.find_all_by_period_price_id(period_price.id).first
   end
 
+
+  def book_record_start_at(date, start_hour)
+    book_records.where(:start_hour => start_hour)
+  end
+
   def daily_book_records(date = Date.today)
     book_records.where(:alloc_date => date)
   end
 
-  def is_useable_in_time_span?(period_price)
-    !court_period_prices.where("period_price_id=#{period_price.id}").first.nil?
+  def is_useable_in_time_span?(date, start_hour)
+    period_price = PeriodPrice.period_by_date_and_start_hour(date, start_hour)
+    return false unless period_price
+    court_period_prices.exists?(:period_price_id => period_price.id)
   end
 
   def daily_period_prices(date=Date.today, start_hour = nil, end_hour = nil)
