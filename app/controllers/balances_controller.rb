@@ -1,6 +1,11 @@
 class BalancesController < ApplicationController
 
   def index
+    @order = Order.find(params[:order_id])
+    @balances = @order.balances
+  end
+
+  def index_back
     @book_records = BookRecord.playing.order('created_at desc').paginate(default_paginate_options_without_created_at)
   end
 
@@ -40,13 +45,6 @@ class BalancesController < ApplicationController
     end
   end
 
-  def show
-    @order    = Order.find(params[:order_id])
-    @balance  = Balance.find(params[:id])
-    @good_items = @order.product_items
-    pre_date_for_new_create
-    render :layout => params[:layout].blank?
-  end
 
   def print 
     @balance  = Balance.find(params[:id])

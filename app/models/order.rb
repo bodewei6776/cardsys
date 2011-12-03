@@ -9,6 +9,7 @@ class Order < ActiveRecord::Base
   has_many    :order_items
   belongs_to  :member
   has_one     :non_member
+  belongs_to  :advanced_order
 
   validates  :members_card_id, :presence => {:message => "请选择会员卡"}, :if => proc { |order| order.is_member? }
   validates  :member_id, :presence => {:message => "请选择会员"}, :if => proc { |order| order.is_member? }
@@ -16,7 +17,7 @@ class Order < ActiveRecord::Base
 
   accepts_nested_attributes_for :court_book_record
   accepts_nested_attributes_for :coach_book_records
-  accepts_nested_attributes_for :non_member, :reject_if => proc {|non_member| ap non_member;non_member[:is_member] == "1" }
+  accepts_nested_attributes_for :non_member, :reject_if => proc {|non_member| non_member[:is_member] == "1" }
   attr_accessor :coach_ids
 
   delegate :record_date,:end_hour,:start_hour,:hours, :to => :court_book_record
@@ -31,6 +32,9 @@ class Order < ActiveRecord::Base
 
 
   state_machine  :initial => :booked do
+
+    after_transition :on => :cancel , :do => :destroy
+
     event :activate do
       transition :booked => :activated
     end
@@ -48,7 +52,7 @@ class Order < ActiveRecord::Base
     end
 
     event :blance do
-      transition :activate => :balanced
+      transition :activated => :balanced
     end
   end
 
@@ -72,19 +76,25 @@ class Order < ActiveRecord::Base
     true
   end
 
-  #TODO
-  def can_cancel_want_sell?
+  def can_cancel?
+    booked? 
+  end
+
+  def can_want_sell?
     booked?
   end
 
-  #TODO
+  def can_cancel_want_sell?
+    to_be_sold? && activated?
+  end
+
   def can_cancel_all?
-    booked?
+    activated? && is_advanced_order?
   end
 
 
   def can_update_all?
-    booked?
+    booked? && is_advanced_order?
   end
 
   def book_time_due?
@@ -95,16 +105,16 @@ class Order < ActiveRecord::Base
     false
   end
 
-  def can_active?
+  def can_activate?
     booked?
   end
 
   def can_order_goods?
-    activate?
+    activated?
   end
 
   def can_print_order_balance?
-    true
+    balanced?
   end
 
 
@@ -211,7 +221,7 @@ class Order < ActiveRecord::Base
 
 
   def is_advanced_order?
-    parent_id.to_i > 0
+    !!advanced_order
   end
 
   def is_order_use_zige_card?
@@ -237,7 +247,7 @@ class Order < ActiveRecord::Base
   end
 
   def can_balance?
-    self.is_member? && self.member_card.can_balance?(self)
+    true
   end
 
   def do_balance
@@ -300,7 +310,7 @@ class Order < ActiveRecord::Base
             when  booked?         then  "color01"
             when  balanced?       then  "color05"
             when  to_be_sold?     then  "color04"
-            when  actived?        then  "color03"
+            when  activated?        then  "color03"
             else "color02"
             end
     color

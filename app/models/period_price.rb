@@ -21,6 +21,11 @@ class PeriodPrice < ActiveRecord::Base
     end
   end
 
+  def is_fit_for?(date)
+    date_type = CommonResource.date_type(date)
+    self.period_type.to_i == date_type.id
+  end
+
   def is_in_time_span(date = Date.today, start_hour = nil, end_hour = nil)
     start_hour ||= PERIOD_START_TIME
     end_hour   ||= PERIOD_END_TIME

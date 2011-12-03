@@ -40,7 +40,7 @@ Cardsys::Application.routes.draw do |map|
   resources :vacations
   resources :orders do
     member do
-      get :change_state
+      put :change_state
     end
 
     resources :order_items do
@@ -48,11 +48,15 @@ Cardsys::Application.routes.draw do |map|
         post :batch_update
       end
     end
+
     resources :balances do
       collection do 
         get :balanced
         get :print
       end
+    end
+
+    resources :goods do
     end
   end
 

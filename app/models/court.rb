@@ -1,5 +1,6 @@
 class Court < ActiveRecord::Base
   has_many :court_period_prices
+  has_many :period_prices, :through => :court_period_prices
   has_many :book_records, :as => :resource
 
   STATE_MAP = {:enabled => "", :disabled => ""}
@@ -17,26 +18,27 @@ class Court < ActiveRecord::Base
     self.court_period_prices.find_all_by_period_price_id(period_price.id).first
   end
 
+  def can_be_book?(date, hour)
+    book_records.exists?(["alloc_date = ? and start_hour < ? and end_hour > ?", date, hour, hour])
+  end
 
   def book_record_start_at(date, start_hour)
-    book_records.where(:start_hour => start_hour)
+    book_records.where(:start_hour => start_hour, :alloc_date => date).first
   end
 
   def daily_book_records(date = Date.today)
     book_records.where(:alloc_date => date)
   end
 
-  def is_useable_in_time_span?(date, start_hour)
-    period_price = PeriodPrice.period_by_date_and_start_hour(date, start_hour)
-    return false unless period_price
-    court_period_prices.exists?(:period_price_id => period_price.id)
+  def is_useable_in_time_span?(period_price)
+    period_prices.include? period_price
   end
 
-  def daily_period_prices(date=Date.today, start_hour = nil, end_hour = nil)
+  def daily_period_prices(date=Date.today)
     court_available_period_prices = []
     period_prices = PeriodPrice.all_periods_in_time_span(date, start_hour, end_hour)
     period_prices.each do |period_price |
-      court_available_period_prices << period_price  if is_useable_in_time_span?(period_price)
+      court_available_period_prices << period_price  if is_useable_in_time_span?(date)
     end
     court_available_period_prices.sort{|fst,scd| fst.start_time <=> scd.start_time }
   end
@@ -58,13 +60,13 @@ class Court < ActiveRecord::Base
     perod_prices.blank? ? 0 : perod_prices.first.start_time
   end
 
+  def period_prices_by_date(date)
+    period_prices.select{|pp| pp.is_fit_for?(date)}.sort{|a, b| a.start_time <=> b.start_time}
+  end
+
   def open_hours_range(date = Date.today)
-    perod_prices = daily_period_prices(date)
-    if perod_prices.blank? 
-      (0..0)
-    else
-      perod_prices.first.start_time..perod_prices.first.end_time
-    end
+    pps = period_prices_by_date(date)
+    pps.first.start_time..pps.last.end_time
   end
 
   def end_hour(date=Date.today)

@@ -1,56 +1,47 @@
 .w96
-  .soso
-    %form.form-profile{:action => "/balances/balance", :method => "post"}
-      %label{:for => "name"} 卡号：
-      %input.inputtext{:maxlength => "30", :name => "id", :tabindex => "1", :type => "text", :value => ""}/
-      %label{:for => "name"} 场地：
-      %input.inputtext{:maxlength => "30", :name => "court_id", :tabindex => "1", :type => "text", :value => ""}/
-      %label{:for => "name"} 日期：
-      %input.date-type-input{:name => "record_date", :type => "text"}/
-      - if !@member.nil?
-        %fieldset.hidden
-          %label{:for => "name"} 会员姓名：
-          = h @member.name
-          %label 日期：
-          = @date
-      %input.submit2.hand{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 待结算查询
+  .fformbox_nr
+    %ul
+      %li
+        .w1 会员：
+        .w2= @order.member.name
+      - if @order.is_member? && @current_card
+        %li
+          .w1 会员卡：
+          .w2{:style => "width:300px;"}
+            = @current_card.card_serial_num
+            类型:#{@current_card.card.card_type_desc} 余额(次):#{@current_card.left_fee_value}
+    - if @order.court_book_record
+      %ul
+        %li
+          .w1 场地：
+          .w2
+            = @book_record.court.name
+            = @book_record.record_date.to_s(:db)
+            = @book_record.start_hour
+            \:00-#{@book_record.end_hour}:00
+        %li
+          .w1 场地消费：
+          .w2
+            %span.red= @balance.book_record_amount_desc
+            %label= @balance.balance_way_desc
+    %ul
+      %li
+        .w1 其他消费：
+        .w2
+          %span.red= @balance.other_real_amount
+          %label.labelRadio= @balance.balance_way_desciption
+      %li
+        .w1 消费合计：
+        .w2
+          = @balance.balance_amount_desc
+    %ul
+      %li
+        .w1 结算时间：
+        .w2
+          = @balance.created_at.strftime("%Y-%m-%d %H:%M")
   .h10
-  .table
-    %ul.bttitle.black.fb
-      %li.w5 编号
-      %li.w10 预定人姓名
-      %li.w10 卡号
-      %li.w10 场地号
-      %li.w10 消费金额
-      %li.w10 日期
-      %li.w10 时段
-      %li.w10 操作
-      %li.w10 预定人
-    - @book_records.each_with_index do |record,index|
-      %ul.table_items
-        %li.w5= index + 1
-        - if record.order.member
-          %li.w10= h record.order.member.name
-          %li.w10= h record.order.member_card.card_serial_num
-        - else
-          %li.w10= h record.order.non_member.name
-          %li.w10 散客
-        %li.w10= h record.court.name
-        %li.w10= record.order.amount
-        %li.w10= DateUtil::timeshort(record.record_date)
-        %li.w10
-          = record.start_hour
-          \:00-#{h record.end_hour}:00
-        %li.w10
-          %a{:href => "/balances/#{record.order.balance.id}/edit"}> 结算
-          |
-          %a{:href => edit_book_record_path(record)} 添加商品
-        %li.w10= record.order.user.login rescue ""
+  %div{:style => "float:rihgt;"}
+    %button.button.submit1.print{:href => print_balance_path(@balance)} 打印收条
+    = link_to "返回",book_records_path ,:class => "button submit1" ,:style => "padding: 2px 5px;color:black;"
   .h10
-  .pages
-    = will_paginate @book_records , :sp => 1
-  .h10
+    = render :partial => "/orders/order_items_list",:locals => {:good_items => @order.product_items||[],:order => @order}

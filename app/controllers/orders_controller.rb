@@ -25,6 +25,16 @@ class OrdersController < ApplicationController
     render :layout => "small_main"
   end
 
+  def update
+    @order = Order.find(params[:id])
+    if @order.update_attributes(params[:order])
+      flash[:notice] = "场地修改成功"
+      render :action => "create"
+    else
+      render :action => "edit", :layout => "small_main"
+    end
+  end
+
   def create
     @order = Order.new(params[:order])
     if @order.save
@@ -39,8 +49,10 @@ class OrdersController < ApplicationController
     @order = Order.find(params[:id])
     begin
       @order.send("#{params[:be_action]}!") 
+      render :action => "create"
     rescue
       flash[:notice] = "不能进行此操作"
+      render :action => "edit", :layout => "small_main"
     end
   end
 end

@@ -111,8 +111,10 @@
 
       %ul
         %li
-          = f.submit @order.new_record? ? "预订" : "变更", :class => "submit2"
-          = display_enable_buttons(@order) if !@order.new_record?
+          %ul#link_box
+            %li
+              = f.submit @order.new_record? ? "预订" : "变更", :class => "button_link"
+            = display_enable_buttons(@order) if !@order.new_record?
 
 
       :javascript
