@@ -1,4 +1,17 @@
 class OrderItemsController < ApplicationController
+
+  def create
+    @order = Order.find(params[:order_id])
+    @order_item = @order.order_items.find_by_item_type_and_item_id(params[:order_item][:item_type],params[:order_item][:item_id]) || @order.order_items.new(params[:order_item])
+    respond_to do |wants|
+      if @order_item.update_attributes(params[:order_item])
+        wants.html {  redirect_to edit_order_path(@order) }
+      else
+        wants.html { redirect_to :back }
+      end
+    end
+  end
+
    def destroy
     order_item = OrderItem.find(params[:id])
     order_item.destroy

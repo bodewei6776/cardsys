@@ -1,5 +1,6 @@
 require 'order_ext/member_order'
 class OrderItem < ActiveRecord::Base
+  serialize :price, Hash
 
   TYEP_STRING_MAP = {
     "BookRecord"  => "场地预定",
@@ -22,29 +23,60 @@ class OrderItem < ActiveRecord::Base
 
   before_save :update_good_inventory, :only => :update  
   before_destroy :update_good_inventory_before_destroy
-  after_save :update_balance_item
-  
+  before_save :set_price_obj
 
+  validates_numericality_of :quantity, :only_integer => true, :greater_than => 0
+  
+  def set_price_obj
+    case self.item.class
+    when Good
+      price_object = Price.new(self.quantity, :money_price => item.price)
+    end
+
+    self.price_obj = price_object
+  end
+
+  def price_obj=(price_obj)
+    price = price_obj.to_hash
+  end
+
+  def price_obj
+    Price.new(self.quantity, self.price)
+  end
+
+  def total_price
+    price_obj.total_price
+  end
+
+  def self.new_by_good(good, order_id)
+    self.find_by_item_type_and_item_id_and_order_id("Good", good.id, order_id) || new(:quantity => 0, :item => good, :order_id => order_id)
+  end
+
+  def type_name
+    TYEP_STRING_MAP[item.class.name]    
+  end
+
+  def quantity_or_time
+    quantity
+  end
 
 
   # 恢复前面库存的数量
   def update_good_inventory
     return true unless item.is_a?(Good)
     product = item
-    product.count_front_stock_in += ( self.quantity - self.quantity_was ) 
-    product.count_front_stock -= (self.quantity - self.quantity_was) 
+    product.count_front_stock_in += ( self.quantity - (self.quantity_was || 0) ) 
+    product.count_front_stock -= (self.quantity - (self.quantity_was || 0))
     product.count_total_now = product.count_front_stock + product.count_back_stock
     product.save
   end
 
   def update_good_inventory_before_destroy
-    product = self.item
-    if is_product? && product.is_a?(Good)
-      product.count_front_stock += (self.quantity) 
-      product.count_total_now += (self.quantity)
-      product.save
+    if item.is_a?(Good)
+      item.count_front_stock += (self.quantity) 
+      item.count_total_now += (self.quantity)
+      item.save
     end
-
   end
 
 

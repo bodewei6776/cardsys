@@ -13,12 +13,12 @@ class Good < ActiveRecord::Base
   validates :count_front_stock_in, :numericality => {:message => "新入小库数必须为数字！", :allow_blank => true}
   validates :count_front_stock_out, :numericality => {:message => "新出小库数必须为数字！", :allow_blank => true}
 
-
+  has_many :order_items, :as => :item
   
 #  before_create  :geneate_name_pinyin
   attr_accessor :order_count
 
-  scope :valid_goods,where(:status => 0)
+  scope :valid_goods
 
   def geneate_name_pinyin
     pinyin = PinYin.new

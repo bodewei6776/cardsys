@@ -109,12 +109,10 @@
           .w2
             = f.text_area :memo, :rows => 2, :style => "width:460px;"
 
-      %ul
+      %ul#link_box
         %li
-          %ul#link_box
-            %li
-              = f.submit @order.new_record? ? "预订" : "变更", :class => "button_link"
-            = display_enable_buttons(@order) if !@order.new_record?
+          = f.submit @order.new_record? ? "预订" : "变更", :class => "button_link"
+          = display_enable_buttons(@order) if !@order.new_record?
 
 
       :javascript
@@ -185,3 +183,6 @@
             });
         });
 
+
+#order_items
+  =render :partial => "order_items"

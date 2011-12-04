@@ -1,8 +1,6 @@
 class GoodsController < ApplicationController
   def autocomplete_name
-    @goods = Good.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
-    @names = @goods.collect(&:name) rescue []
-    render :inline => @names.to_json
+    render :json => Good.where(["pinyin_abbr like ? or name like ? ","%#{params[:term]}%","%#{params[:term]}%"]).all.collect(&:name).to_json
   end
 
 
@@ -22,19 +20,7 @@ class GoodsController < ApplicationController
     @goods = @category.nil? ? Good.order("id desc") :  @category.all_goods.order("id desc")
     @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @goods = @goods.paginate(default_paginate_options)
-    render :template =>  '/goods/index'
-  end
-
-
-  def find_goods
-    @good_type = params[:good_type]   
-    @name = params[:name]
-    @category = Category.find_by_id(@good_type)
-    @goods = @category.nil? ? Good.order("id desc") :  @category.all_goods.order("id desc")
-    @goods = @goods.valid_goods
-    @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
-    @goods = @goods.paginate(:page => params[:page]||1)
-    render :action => "goods",:layout => "small_main" 
+    render :layout => "small_main"
   end
 
 
@@ -108,10 +94,13 @@ class GoodsController < ApplicationController
   end
 
   def goods
-    if params[:id].to_i > 0
-      @goods = [Good.find(params[:id])]
+    @order = Order.find(params[:order_id])
+    if params[:name]
+      name = "%#{params[:name]}%"
+      @goods = Good.valid_goods.where(["name like ? or name_pinyin like ? or pinyin_abbr like ?",
+                                      name, name, name ]).order('count_back_stock_out desc').limit(20)
     else
-      @goods = Good.valid_goods.order('sale_count desc').limit(20)
+      @goods = Good.valid_goods.order('count_back_stock_out desc').limit(20)
     end
     render :layout => "small_main"
   end

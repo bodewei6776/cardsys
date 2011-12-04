@@ -99,7 +99,7 @@ module OrdersHelper
     htmls << order_action_link("代卖已过期，请结算", order_balances_path(order), :method => :get) if order.to_be_sold_time_due?
     htmls << order_action_link("开场", change_state_order_path(order, :be_action => "activate")) if order.can_activate?
     htmls << order_action_link("结算", order_balances_path(order), :get) if order.can_balance?
-    htmls << order_action_link("添加消费", order_goods_path(order)) if order.can_order_goods?
+    htmls << order_action_link("添加消费", goods_order_goods_path(order), :get) if order.can_order_goods?
     htmls << order_action_link("打印消费记录", print_order_balances_path(order)) if order.can_print_order_balance?
 
     htmls.join(' ').html_safe

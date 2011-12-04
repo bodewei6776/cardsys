@@ -1,84 +1,20 @@
-= form_tag(batch_update_order_order_items_path(order),{:class => 'batch-update-item',:id => "order_update_form"}) do
-  .infobox
-    .infobox_bt
-      %p 商品消费列表
-    .table
-      %ul.bttitle.black.fb
-        %li.w5 序号
-        %li.w10 商品类别
-        %li.w10 商品名称
-        %li.w10 商品价格
-        %li.w15 数量
-        %li.w15 总额
-        %li.w15 操作
-      - unless (coach_items = order.coach_items).blank?
-        - coach_items.each_with_index do |coach_item,index|
-          - coach = coach_item.item
-          %ul.table_items
-            %li.w5= index + 1
-            %li.w10 教练
-            %li.w10= coach.name rescue "被删除"
-            %li.w10
-              %input{:name => "order_item[][id]", :type => "hidden", :value => coach_item.id}/
-              %input{:name => "order_item[][price]", :type => "text", :value => coach_item.price}/
-            %li.w15
-              %input.line_item_quantity{:name => "order_item[][quantity]", :type => "text", :value => coach_item.quantity}/
-            %li.w15= coach_item.amount
-            %li.w15
-              = link_to "删除", order_order_item_path(order,coach_item),:class => 'destory_order_item'
-      - good_items.each_with_index do |good_item,index|
-        - next if (good = good_item.item).blank?
-        %ul.table_items
-          %li.w5= index + 1
-          %li.w10= generate_good_type_str(good.good_type)
-          %li.w10= good.name
-          %li.w10= good.price
-          %li.w15
-            %input{:name => "order_item[][id]", :type => "hidden", :value => good_item.id}/
-            %input.line_item_quantity{:name => "order_item[][quantity]", :type => "text", :value => good_item.quantity}/
-          %li.w15= good_item.amount
-          %li.w15
-            = link_to "删除", order_order_item_path(order,good_item),:class => 'destory_order_item'
-      %ul.table_items.amount-info
-        %li.w5 累计
-        %li.w10
-        %li.w10
-        %li.w10
-        %li.w15
-        %li.w15= order.product_amount
-        %li.w15
-    .h10
-    .input_bd
-      %button.submit1.hand.update-order_items-button{:type => "button"}> 修改消费
-      \&nbsp;&nbsp;&nbsp;&nbsp;
-      %img#loading-img{:alt => "\346\217\220\347\244\272", :src => "/images/loading.gif", :style => "display:none"}/
-      .clear
-%script{:charset => "utf-8", :type => "text/javascript"}
-  $(document).ready(function(){
-  function update_order_items(){
-  var load_img = $('#loading-img');
-  load_img.show();
-  var form = $('.batch-update-item');
-  $.post(form.attr('action'),form.serialize(),function(reply){
-  $('.note-tip-msg').remove();
-  load_img.after("<span class='note-tip-msg' style='color:red'>"+reply+"</span>").hide();
-  location.reload();
-  });
-  }
-  $('.update-order_items-button').live('click',function(){
-  update_order_items();
-  });
-  $('.line_item_quantity').live('blur',function(){ update_order_items();});
-  
-  $('.destory_order_item').live('click',function(){
-  if(confirm('确认要删除么？')){
-  var link = $(this);
-  $.post(link.attr('href'),{_method:'delete',book_record_id:'<haml:loud> params[:id] </haml:loud>'},function(reply){
-  link.parents('ul').remove();
-  $('.amount-info').after(reply).remove();
-  });
-  }
-  return false;
-  });
-  $(".one-good-list").colorbox({width:"80%", height:"80%", iframe:false});
-  });
+.clear
+.table
+  %ul.bttitle.black.fb
+    %li.w5 编号
+    %li.w10 名称
+    %li.w10 类型
+    %li.w10 数量/时间段
+    %li.w10 单价
+    %li.w10 总价
+    %li.w15 操作
+  - @order.order_items.each_with_index do |item ,index|
+    %ul.table_items
+      %li.w5= index.succ
+      %li.w10= item.name
+      %li.w10= item.type_name
+      %li.w10= item.quantity_or_time
+      %li.w10= item.price_obj.single_money_price
+      %li.w10= item.total_price
+      %li.w15= item.total_price
+

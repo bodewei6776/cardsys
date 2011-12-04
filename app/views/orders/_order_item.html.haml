@@ -1,19 +1,18 @@
-= (good_items||[]).each do |good_item|
-  - next if (good = good_item.item).blank?
-  %ul
-    %li{:style => "width:10%;"}= good.name
-    %li{:style => "width:10%;"}= generate_good_type_str(good.good_type)
-    %li{:style => "width:10%;"}= good.price
-    %li{:style => "width:15%;"}
-      %input{:name => "", :type => "text", :value => good_item.quantity}/
-    %li{:style => "width:15%;"}= good_item.amount
-    %li{:style => "width:15%;"}
-      = link_to "删除", order_order_item_path(order,good_item),:confirm => "确认要删除么？",:class => 'destory_order_item'
-    </ul
-%ul.amount-info
-  %li{:style => "width:10%;"} 总额
-  %li{:style => "width:10%;"}
-  %li{:style => "width:10%;"}
-  %li{:style => "width:15%;"}
-  %li{:style => "width:15%;"}= order.product_amount
-  %li{:style => "width:15%;"}
+.clear
+.table
+  %ul.bttitle.black.fb
+    %li.w5 编号
+    %li.w10 名称
+    %li.w10 类型
+    %li.w10 前缀
+    %li.w10 状态
+    %li.w20 说明
+    %li.w15 操作
+  - @order_items.each_with_index do |item ,index|
+    %ul.table_items
+      %li.w5= index.succ
+      %li.w10= 
+      %li.w10= 
+      %li.w10= 
+      %li.w10= 
+

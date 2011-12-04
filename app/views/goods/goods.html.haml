@@ -5,11 +5,10 @@
       .r_bt_l_a
       .r_bt_l_c.fb.white 商品查询
     .r_bt_r
-      - unless request.referrer =~ /book_record|goods|new_good_buy/
-        %button.submit2.hand{:onclick => "window.location.href='/goods/new'", :type => "button"} 添加商品
+      =link_to "返回", edit_order_path(@order) 
   .soso
-    = form_tag "/goods/find_goods",{:remote => true ,:id => "search-goods-form"} do |f|
-      = hidden_field_tag "_method","get"
+    = form_tag "/goods/goods",{:id => "search-goods-form", :method => :get} do |f|
+      = hidden_field_tag :order_id, params[:order_id]
       .w95
         照商品类别：
         %label
