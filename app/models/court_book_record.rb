@@ -7,5 +7,4 @@ class CourtBookRecord < BookRecord
     court.calculate_amount_in_time_span(alloc_date, start_hour, end_hour)
   end
 
-
 end

@@ -3,6 +3,7 @@ class BalancesController < ApplicationController
   def index
     @order = Order.find(params[:order_id])
     @balances = @order.balances
+    render :layout => "small_main"
   end
 
   def index_back

@@ -18,6 +18,7 @@ class BookRecord < ActiveRecord::Base
 
   belongs_to  :order
   belongs_to  :resource, :polymorphic => true
+  has_many :order_items, :as => :item, :dependent => :destroy
 
   #validates :start_hour, :numericality => {:message => "开始时间必须为整数"}
   #validates :end_hour, :numericality => {:message => "结束时间必须为整数"}
@@ -48,6 +49,10 @@ class BookRecord < ActiveRecord::Base
     else
       Time.local(day.year,day.month,day.day,end_hour)
     end
+  end
+
+  def name
+    resource.name
   end
 
   def agent_to_buy_condition

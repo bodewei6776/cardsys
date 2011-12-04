@@ -179,7 +179,8 @@
                }			
             });
 
-             $("#order_coach_ids").tokenInput("#{search_coaches_path}", {
+              $("#order_coach_ids").tokenInput("#{search_coaches_path}", {
+              prePopulate: #{@order.coaches.collect{|c| {:id => c.id, :name => c.name}}.to_json}
             });
         });
 

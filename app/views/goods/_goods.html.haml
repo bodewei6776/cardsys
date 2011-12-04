@@ -19,7 +19,7 @@
       %li.w10= good.count_front_stock
       %li.w20
         - @order_item = OrderItem.new_by_good(good, @order.id)
-        - form_for @order_item, :url => order_order_items_path do |f|
+        - form_for [@order, @order_item] do |f|
           = f.hidden_field :item_id
           = f.hidden_field :item_type
           = f.hidden_field :order_id

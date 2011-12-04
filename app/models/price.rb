@@ -1,16 +1,13 @@
 class Price
   attr_accessor :money_price, :count_price, :single_money_price, :single_count_price
 
-  def initialize(quantity, options)
-    options = {}
-    @single_money_price = options[:money_price] || 0
-    @single_count_price = options[:count_price] || 0
+  def initialize(quantity, options = nil)
+    options ||= {}
+    @single_money_price = options[:single_money_price] || 0
+    @single_count_price = options[:single_count_price] || 0
 
-    ap @single_money_price
-    ap options
-    
-    @money_price = @single_money_price * quantity 
-    @count_price = @single_count_price * quantity
+    @money_price = options[:money_price] || 0 
+    @count_price = options[:count_price] || 0
   end
 
   def +(other)
@@ -24,7 +21,7 @@ class Price
   end
 
   def to_hash
-    {:money_price => @money_price, :count_price => @count_price}
+    {:money_price => @money_price, :count_price => @count_price, :single_money_price => @single_money_price}
   end
 
   def total_price

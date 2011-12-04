@@ -24,6 +24,7 @@ class Coach < ActiveRecord::Base
     fee * order_item.quantity
   end
 
+
   def order_errors
     @order_errors ||= []
   end

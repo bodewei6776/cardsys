@@ -19,9 +19,29 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :coach_book_records
   accepts_nested_attributes_for :non_member, :reject_if => proc {|non_member| non_member[:is_member] == "1" }
   attr_accessor :coach_ids
+  after_save :save_order_items_for_court_and_coaches
 
   delegate :record_date,:end_hour,:start_hour,:hours, :to => :court_book_record
 
+  def save_order_items_for_court_and_coaches
+    court_book_record_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CourtBookRecord", court_book_record.id)
+    price = Price.new(court_book_record.hours)
+    price.money_price = court_book_record.price 
+    price.count_price = court_book_record.hours
+    court_book_record_order_item.update_attributes(:quantity => court_book_record.hours, :price => price.to_hash)
+
+    self.coach_book_records.each do |cbr|
+      coach_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CoachBookRecord", cbr.id) 
+      price = Price.new(court_book_record.hours, :single_money_price => cbr.resource.fee, :money_price => cbr.resource.fee * court_book_record.hours)
+      coach_order_item.update_attributes(:quantity => court_book_record.hours, :price => price.to_hash)
+    end
+
+    self.order_items.each do |oi|
+      oi.destroy if oi.item.nil?
+    end
+
+    true
+  end
 
   def coach_valid
     return true if coach_ids.blank?
@@ -68,12 +88,12 @@ class Order < ActiveRecord::Base
   def coach_ids=(ids)
     @coaches = Coach.find(ids.split(",").uniq)
     self.coach_book_records = @coaches.collect do |c|
-     CoachBookRecord.new(:resource => c, 
-                         :start_hour => start_hour, 
-                         :end_hour => end_hour,
-                         :alloc_date => order_date) 
+      cbr = CoachBookRecord.find_or_initialize_by_resource_type_and_resource_id("Coach", c.id)
+      cbr.start_hour = start_hour 
+      cbr.end_hour = end_hour
+      cbr.alloc_date = order_date
+      cbr
     end
-    true
   end
 
   def can_cancel?
@@ -315,4 +335,4 @@ class Order < ActiveRecord::Base
             end
     color
   end
-end
+  end

@@ -16,7 +16,7 @@ class OrderItem < ActiveRecord::Base
   scope :book_records,where(:item_type => Item_Type_Book_Record)
   scope :good_records,where(:item_type => Item_Type_Product)
   scope :except_book_records,where("item_type <> #{Item_Type_Book_Record}")
-  
+
   belongs_to :item, :polymorphic => true
   belongs_to    :order
   has_one :balance_item, :dependent => :destroy
@@ -26,18 +26,14 @@ class OrderItem < ActiveRecord::Base
   before_save :set_price_obj
 
   validates_numericality_of :quantity, :only_integer => true, :greater_than => 0
-  
+
+
   def set_price_obj
-    case self.item.class
-    when Good
-      price_object = Price.new(self.quantity, :money_price => item.price)
+    case self.item_type
+    when "Good"
+      self.price = Price.new(self.quantity, :money_price => item.price).to_hash
     end
 
-    self.price_obj = price_object
-  end
-
-  def price_obj=(price_obj)
-    price = price_obj.to_hash
   end
 
   def price_obj
