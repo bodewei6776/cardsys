@@ -1,16 +1,20 @@
 require 'pinyin/pinyin'
 class NonMember < ActiveRecord::Base
-  validates :telephone, :presence => {:message => I18n.t('order_msg.non_member.mobile_no_presence')}
+  validates :telephone, :presence => {:message => I18n.t('order_msg.non_member.mobile_no_presence')}, :if => proc {|nm|  !nm.is_member? }
   validates :telephone, :format => {:with =>/^(?:0{0,1}(13[0-9]|15[0-9])[0-9]{8})|(?:[-0-9]+)$/,
     :message => I18n.t('order_msg.non_member.invalid_mobile_format')}, :allow_blank => true
 
-  validates :earnest,:presence => {:message => "定金为必填项"},:numericality => true, :allow_blank => true
-  validates :name, :presence => {:message => "请填写散客姓名"}
+  validates :earnest,:presence => {:message => "定金为必填项"},:numericality => true, :allow_blank => true, :if => proc {|nm| !nm.is_member?}
+  validates :name, :presence => {:message => "请填写散客姓名"}, :if => proc {|nm| !nm.is_member? }
 
   before_save :geneate_name_pinyin
   belongs_to :order
 
   attr_accessor :is_member
+
+  def is_member?
+    is_member == "true" || is_member == "1"
+  end
 
   def geneate_name_pinyin
     pinyin = PinYin.new

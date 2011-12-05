@@ -15,7 +15,7 @@ class OrdersController < ApplicationController
     @order.court_book_record.resource_type = 'Court'
     @order.member = Member.new
     @order.order_date = @order.court_book_record.alloc_date
-    @order.non_member = NonMember.new(:is_member => "1")
+    @order.non_member = NonMember.new(:is_member => true)
     @order.telephone = @order.member.telephone
     render :layout => "small_main"
   end

@@ -30,9 +30,9 @@
             %img{:src => "/images/arrow_left.gif"}
       #datepicker.w178
         #date_picker.w178
-          %button.submit2.hand{:onclick => "location.href='/book_records?date=#{@predate}'", :type => "button"}> 前一天
-          %button.submit2.hand{:onclick => "location.href='/book_records'", :type => "button"} 今天
-          %button.submit2.hand{:onclick => "location.href='/book_records?date=#{@nextdate}'", :type => "button"} 后一天
+          %button.submit2.hand{:onclick => "location.href='/orders?date=#{@predate}'", :type => "button"}> 前一天
+          %button.submit2.hand{:onclick => "location.href='/orders'", :type => "button"} 今天
+          %button.submit2.hand{:onclick => "location.href='/orders?date=#{@nextdate}'", :type => "button"} 后一天
       .h10
       = render :partial => "layouts/menu"
     .right
@@ -63,7 +63,7 @@
           urls.push("/rents?date=" + dateText)
         }
         else{
-          urls.push("/book_records?date=" + dateText)
+          urls.push("/orders?date=" + dateText)
         }
         window.location.href=urls.join('');
     }

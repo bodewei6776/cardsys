@@ -19,7 +19,8 @@ class Court < ActiveRecord::Base
   end
 
   def can_be_book?(date, hour)
-    book_records.exists?(["alloc_date = ? and start_hour < ? and end_hour > ?", date, hour, hour])
+    can_be_book_now = Setting.can_book_time_before_book.from_now > date + hour
+    !book_records.exists?(["alloc_date = ? and start_hour < ? and end_hour > ?", date, hour, hour]) && can_be_book_now
   end
 
   def book_record_start_at(date, start_hour)
