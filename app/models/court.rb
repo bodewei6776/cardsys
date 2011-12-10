@@ -18,9 +18,12 @@ class Court < ActiveRecord::Base
     self.court_period_prices.find_all_by_period_price_id(period_price.id).first
   end
 
+  def can_not_book_now?(date, hour)
+    Setting.can_book_time_before_book.from_now < date + hour
+  end
+
   def can_be_book?(date, hour)
-    can_be_book_now = Setting.can_book_time_before_book.from_now > date + hour
-    !book_records.exists?(["alloc_date = ? and start_hour < ? and end_hour > ?", date, hour, hour]) && can_be_book_now
+    !book_records.exists?(["alloc_date = ? and start_hour < ? and end_hour > ?", date, hour, hour]) 
   end
 
   def book_record_start_at(date, start_hour)
@@ -51,11 +54,11 @@ class Court < ActiveRecord::Base
       [!court_period_price.nil? ,court_period_price.court_price]
     end
   end
-  
+
   def amount(order_item)
     calculate_amount_in_time_span(order_item.order_date,order_item.start_hour,order_item.end_hour)
   end
-  
+
   def start_hour(date=Date.today)
     perod_prices = daily_period_prices(date)
     perod_prices.blank? ? 0 : perod_prices.first.start_time
