@@ -82,15 +82,19 @@ module OrdersHelper
   end
 
 
-  def order_action_link(text, url,  method = :put, confirm_message = "")
+  def order_action_link(text, url,  method = :put, confirm_message = "", function = "")
     confirm_message = "确认要" + text + "?" if confirm_message.blank?
-    content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "button_link inline", :method => method))
+    if function.blank?
+      content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "button_link inline", :method => method))
+    else
+      content_tag(:li, link_to_function(text, function))
+    end
   end
 
   def display_enable_buttons(order)
     htmls = []
     htmls << order_action_link("申请代卖", change_state_order_path(order, :be_action => "want_sell")) if order.can_want_sell?
-    htmls << order_action_link("代卖", change_state_order_path(order, :be_action => "sell")) if order.can_sell?
+    htmls << order_action_link("代卖", sell_order_path(order), :post, "", "submit_to_sell") if order.can_sell?
     htmls << order_action_link("取消代卖", change_state_order_path(order, :be_action => "cancel_want_sell")) if order.can_cancel_want_sell?
     htmls << order_action_link("取消预订", change_state_order_path(order, :be_action => "cancel")) if order.can_cancel?
     htmls << order_action_link("连续取消", change_state_order_path(order, :be_action => "cancel_all")) if order.can_cancel_all?
@@ -145,7 +149,7 @@ module OrdersHelper
     return content_tag(:td, "场地不可用") unless court.is_useable_in_time_span?(PeriodPrice.period_by_date_and_start_hour(date, start_hour))
     book_record = court.book_record_start_at(date, start_hour)
     return content_tag(:td, content_tag(:a, display_content(book_record),:href=> edit_order_path(book_record.order), :class => "popup-new-window"), 
-                                        :rowspan => book_record.hours, :class => book_record.order.status_color) if book_record.present? && book_record.order
+                       :rowspan => book_record.hours, :class => book_record.order.status_color) if book_record.present? && book_record.order
     new_order_params= {:alloc_date => date.to_s(:db), :resource_id => court.id, :start_hour => start_hour, :end_hour => start_hour + 1}
     book_url = new_order_path(:court_book_record => new_order_params)
     return content_tag(:td,  content_tag(:a, "预订", :href=> book_url,:class => "popup-new-window")) if court.can_be_book?(date, start_hour)

@@ -18,7 +18,7 @@ class MembersCard < ActiveRecord::Base
   Free_Count_Limit = 2
   Free_Amount_limit = 500
 
-  delegate :card_type_in_chinese, :to => :card
+  delegate :card_type_in_chinese, :is_counter_card?, :to => :card
 
 
   attr_accessor :notice

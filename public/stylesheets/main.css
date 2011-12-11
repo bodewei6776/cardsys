@@ -447,9 +447,7 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 
 
 
-
-  .book_records_mousehover{
-
+  .orders_mousehover{
   background-color: #dfff92;
 }
 
@@ -509,6 +507,7 @@ table.report_table tr.report_title td{
 }
 
 .index_order_table tr.court_name{
+  background-color: #eee;
 }
 
 .index_order_table tr.court_name td{

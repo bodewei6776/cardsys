@@ -5,6 +5,7 @@ class OrderItemsController < ApplicationController
     @order_item = @order.order_items.find_by_item_type_and_item_id(params[:order_item][:item_type],params[:order_item][:item_id]) || @order.order_items.new(params[:order_item])
     respond_to do |wants|
       if @order_item.update_attributes(params[:order_item])
+        @order_item.set_price_for_good
         wants.html {  redirect_to edit_order_path(@order) }
       else
         wants.html { redirect_to :back }
@@ -17,6 +18,7 @@ class OrderItemsController < ApplicationController
     @order_item = @order.order_items.find_by_item_type_and_item_id(params[:order_item][:item_type],params[:order_item][:item_id]) || @order.order_items.new(params[:order_item])
     respond_to do |wants|
       if @order_item.update_attributes(params[:order_item])
+        @order_item.set_price_for_good
         wants.html {  redirect_to edit_order_path(@order) }
       else
         wants.html { redirect_to :back }

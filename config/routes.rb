@@ -42,6 +42,7 @@ Cardsys::Application.routes.draw do |map|
     member do
       put :change_state
       put :add_good
+      post :sell
     end
 
     resources :order_items do
@@ -53,6 +54,9 @@ Cardsys::Application.routes.draw do |map|
     resources :balances do
       collection do 
         get :balanced
+      end
+
+      member do
         get :print
       end
     end

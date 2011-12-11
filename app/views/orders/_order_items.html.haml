@@ -1,5 +1,4 @@
-.clear
-.table
+.table{:style => "width:95%"}
   %ul.bttitle.black.fb
     %li.w5 编号
     %li.w10 名称
@@ -14,7 +13,7 @@
       %li.w10= item.name
       %li.w10= item.type_name
       %li.w10= item.quantity_or_time
-      %li.w10= item.price_obj.single_money_price
-      %li.w10= item.total_price
-      %li.w15= item.total_price
+      %li.w10= item.unit_money_price || "无"
+      %li.w10= item.total_cost
+      %li.w15= item.total_cost
 

@@ -1,1 +1,177 @@
-= render :partial => "/orders/order_items"
+=render :partial => "layouts/errors", :locals => { :target => @balance }
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 订单详情
+    .r_bt_r
+      =link_to "返回", edit_order_path(@order)
+
+
+  .fformbox{:style => "width:100%;"}
+    .fformbox_nr
+      - if @order.is_member?
+        %ul
+          %li
+            %w1 预订人
+            %w2= @order.member.name
+          %li
+            %w1 卡信息
+            %w2= @order.members_card.card_serial_num
+
+
+
+  = form_for @balance do |f|
+    = f.hidden_field :order_id
+    .h10
+    .r_bt
+      .r_bt_l
+        .r_bt_l_a
+        .r_bt_l_c.fb.white 结算记录
+      .r_bt_r
+    .table
+      %ul.bttitle.black.fb
+        %li.w5 编号
+        %li.w10 结算方式
+        %li.w10 原价
+        %li.w10 折后价格
+        %li.w10 结算时间
+        %li.w10 结算人
+        %li.w10 
+      - @balances.each_with_index do |item ,index|
+        %ul.table_items
+          %li.w5= index.succ
+          %li.w10= item.balance_way_desc
+          %li.w10= item.price
+          %li.w10= item.final_price
+          %li.w10= item.created_at
+          %li.w10= item.user.try(:name)
+          %li.w10= link_to "打印", print_balance_path(item)
+
+      %ul.table_items
+        %li.w5= @balances.count + 1
+        %li.w10= f.select :balance_way, options_for_select(@order.possible_balance_ways, @balance.balance_way)
+        %li.w10= f.text_field :price, :id => "new_price_node", :disabled => true
+        %li.w10= f.text_field :final_price, :id => "new_total_price_node"
+        %li.w10 
+        %li.w10 
+        %li.w10= f.submit "结算"
+    
+    .h10
+    .r_bt
+      .r_bt_l
+        .r_bt_l_a
+        .r_bt_l_c.fb.white 商品列表
+      .r_bt_r
+    .table
+      %ul.bttitle.black.fb
+        %li.w5= check_box_tag "select_deselect_all", :id => "select_deselect_all"
+        %li.w10 名称
+        %li.w10 类型
+        %li.w10 数量/时间段
+        %li.w10 单价
+        %li.w10 总价
+        %li.w15 折扣
+        %li.w15 折后价格
+      = f.fields_for :order_items do |oi|
+        %ul.table_items{:class => (oi.object.item.is_a? CourtBookRecord) ? "court" : "other_product"}
+          %li.w5= oi.check_box :checked, :class => "checkbox_marker" unless oi.object.balanced?
+          %li.w10= oi.object.name
+          %li.w10= oi.object.type_name
+          %li.w10= oi.object.quantity_or_time
+          %li.w10= oi.object.unit_money_price || "无"
+          %li.w10.total_cost
+            %span
+              = oi.object.total_cost
+            = hidden_field_tag "total_count", oi.object.total_count, :class => "total_count_hidden" if oi.object.item.is_a?CourtBookRecord
+            = hidden_field_tag "total_cost", oi.object.total_cost, :class => "total_cost_hidden"
+          %li.w15= oi.object.balanced? ? oi.object.discount : (oi.text_field :discount, :class => "discount")
+          %li.w15= oi.object.balanced? ? oi.object.price_after_discount : (oi.text_field :price_after_discount, :class => "price_after_discount")
+    
+
+:javascript
+  function update_discount_value(field, price_node){
+      var new_total_price_node = $("#new_total_price_node");
+      var new_price_node = $("#new_price_node");
+      var price = price_node.val();
+      if(price.trim() == "")
+        return;
+      price = parseFloat(price);
+      total_cost = parseFloat(price_node.parent().parent().find("li.total_cost span").text());
+
+      if(isNaN(price)){
+        alert('请正确输入数字!');
+        return;
+      }
+    if(field == "price_after_discount"){
+      if(price > total_cost){
+        alert("折后价不能大于原价!");
+        return;
+      }
+      else{
+        price_node.parent().parent().find("input[type=check_box]").attr("checked", true);
+        var closest_discount_node = price_node.parent().parent().find(".discount");
+        closest_discount_node.val(price / total_cost * 10);
+      }
+    }
+    else{
+      if(price > 10.0 || price < 0.0){
+        alert("折扣数需大于0并且小于10!");
+        return;
+      }
+      else{
+        price_node.parent().parent().find(".checkbox_marker").attr("checked", "checked");
+        var closest_price_after_discount_node = price_node.parent().parent().find(".price_after_discount");
+        closest_price_after_discount_node.val(price * total_cost * 0.1);
+      }
+    }
+
+
+    var total_money = 0;
+    var original_total_money = 0
+    $(".checkbox_marker:checked").each(function(index, node){
+      total_money += parseFloat($(node).parent().parent().find(".price_after_discount").val()); 
+      original_total_money += parseFloat($(node).parent().parent().find(".total_cost").text()); 
+    })
+    new_total_price_node.attr('value',total_money);
+    new_price_node.attr('value', original_total_money);
+  }
+  $(document).ready(function(){
+    $("#select_deselect_all").change(function(){
+      var select_deselect_all = $(this)
+      select_deselect_all.parent().parent().parent().find("input[type=checkbox]").each(function(index, node){
+        $(node).attr("checked", select_deselect_all.attr("checked"));
+      });
+    })
+
+    $(".discount").blur(function(){
+      var price = $(this);
+      update_discount_value("discount", price);
+    });
+
+    $(".price_after_discount").blur(function(){
+      var price_after_discount = $(this);
+      update_discount_value("price_after_discount", price_after_discount);
+    });
+
+    $("#balance_balance_way").change(function(){
+      if($(this).val() == "counter"){
+        $(".other_product .checkbox_marker").attr("checked", false);
+        $(".other_product").hide(); 
+        $(".court input[type*=text]").attr("disabled", true);
+        var total_count_hidden_val = $(".court .total_count_hidden").val() + "次";
+        $(".court span").text(total_count_hidden_val);
+        $("#new_total_price_node").val(total_count_hidden_val);
+        $("#new_price_node").val(total_count_hidden_val);
+      }else{
+        $(".other_product").show(); 
+        $(".court input").attr("disabled", false);
+        $(".court span").text($(".court .total_cost_hidden").val());
+        $("#new_total_price_node").val("");
+        $("#new_price_node").val("");
+      }
+
+
+    });
+
+  })

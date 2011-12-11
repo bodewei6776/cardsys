@@ -1,10 +1,9 @@
 require 'order_ext/member_order'
 class OrderItem < ActiveRecord::Base
-  serialize :price, Hash
 
   TYEP_STRING_MAP = {
-    "BookRecord"  => "场地预定",
-    "Coach"       => "教练预定", 
+    "CourtBookRecord"  => "场地预定",
+    "CoachBookRecord"  => "教练预约", 
     "Good"        => "购买商品"
   }
 
@@ -18,31 +17,19 @@ class OrderItem < ActiveRecord::Base
   scope :except_book_records,where("item_type <> #{Item_Type_Book_Record}")
 
   belongs_to :item, :polymorphic => true
-  belongs_to    :order
-  has_one :balance_item, :dependent => :destroy
+  belongs_to :order
+  belongs_to :balance
 
   before_save :update_good_inventory, :only => :update  
   before_destroy :update_good_inventory_before_destroy
-  before_save :set_price_obj
+  after_create :set_default_discount_and_discount_price
 
   validates_numericality_of :quantity, :only_integer => true, :greater_than => 0
+  validates_numericality_of :discount, :greater_than => 0, :less_than => 10
+  validates_numericality_of :price_after_discount, :greater_than => 0
 
+  attr_accessor :checked
 
-  def set_price_obj
-    case self.item_type
-    when "Good"
-      self.price = Price.new(self.quantity, :money_price => item.price).to_hash
-    end
-
-  end
-
-  def price_obj
-    Price.new(self.quantity, self.price)
-  end
-
-  def total_price
-    price_obj.total_price
-  end
 
   def self.new_by_good(good, order_id)
     self.find_by_item_type_and_item_id_and_order_id("Good", good.id, order_id) || new(:quantity => 0, :item => good, :order_id => order_id)
@@ -54,6 +41,10 @@ class OrderItem < ActiveRecord::Base
 
   def quantity_or_time
     quantity
+  end
+
+  def total_cost
+     "#{self.total_money_price}元" + (self.total_count ? "/#{self.total_count}次" : "") 
   end
 
 
@@ -73,6 +64,20 @@ class OrderItem < ActiveRecord::Base
       item.count_total_now += (self.quantity)
       item.save
     end
+  end
+
+  def set_price_for_good
+    return unless self.item
+    return unless self.item.is_a? Good
+    self.unit_money_price = self.item.price
+    self.total_money_price = self.item.price * self.quantity
+    save
+  end
+
+  def set_default_discount_and_discount_price
+    self.discount = 10
+    self.price_after_discount = self.total_money_price
+    save
   end
 
 

@@ -3,6 +3,8 @@ class BalancesController < ApplicationController
   def index
     @order = Order.find(params[:order_id])
     @balances = @order.balances
+    @balance = @order.balances.new
+    @balance.order_items = @order.order_items
     render :layout => "small_main"
   end
 
@@ -46,6 +48,22 @@ class BalancesController < ApplicationController
     end
   end
 
+  def create
+    @order = Order.find(params[:balance][:order_id])
+    @balances = @order.balances
+    @balance = @order.balances.new(params[:balance]) 
+    if @balance.order_items.all?(&:valid?) && @balance.save
+      flash[:notice] = "结算成功"
+    else
+      flash[:notice] = "结算失败"
+    end
+
+    @balance.order_items = @order.order_items.collect do |oi|
+      oi.discount = params[:balance][:order_items_attributes].values.find{|v| v["id"] == oi.id.to_s}["discount"]
+      oi
+    end
+    render :action => "index", :layout => "small_main"
+  end
 
   def print 
     @balance  = Balance.find(params[:id])

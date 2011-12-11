@@ -22,6 +22,7 @@ class OrdersController < ApplicationController
 
   def edit
     @order = Order.find(params[:id])
+    @order.non_member = NonMember.new(:is_member => true) if @order.is_member
     render :layout => "small_main"
   end
 
@@ -54,6 +55,9 @@ class OrdersController < ApplicationController
       flash[:notice] = "不能进行此操作"
       render :action => "edit", :layout => "small_main"
     end
+  end
+
+  def sell
   end
 
 end

@@ -25,15 +25,15 @@ class Order < ActiveRecord::Base
 
   def save_order_items_for_court_and_coaches
     court_book_record_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CourtBookRecord", court_book_record.id)
-    price = Price.new(court_book_record.hours)
-    price.money_price = court_book_record.price 
-    price.count_price = court_book_record.hours
-    court_book_record_order_item.update_attributes(:quantity => court_book_record.hours, :price => price.to_hash)
+    court_book_record_order_item.update_attributes(:quantity => court_book_record.hours,
+                                                   :total_count => court_book_record.hours,
+                                                   :total_money_price => court_book_record.price )
 
     self.coach_book_records.each do |cbr|
       coach_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CoachBookRecord", cbr.id) 
-      price = Price.new(court_book_record.hours, :single_money_price => cbr.resource.fee, :money_price => cbr.resource.fee * court_book_record.hours)
-      coach_order_item.update_attributes(:quantity => court_book_record.hours, :price => price.to_hash)
+      coach_order_item.update_attributes(:quantity => court_book_record.hours,
+                                        :unit_money_price => cbr.resource.fee,
+                                        :total_money_price => cbr.resource.fee * court_book_record.hours)
     end
 
     self.order_items.each do |oi|
@@ -41,6 +41,10 @@ class Order < ActiveRecord::Base
     end
 
     true
+  end
+
+  def replace_by(order_attributes)
+    new_order = Order.new(order_attributes)
   end
 
   def coach_valid
@@ -61,6 +65,11 @@ class Order < ActiveRecord::Base
 
     event :want_sell do
       transition :booked => :to_be_sold
+    end
+
+
+    event :cancel_want_sell do
+      transition :to_be_sold => :booked
     end
 
     event :sell do
@@ -105,7 +114,7 @@ class Order < ActiveRecord::Base
   end
 
   def can_cancel_want_sell?
-    to_be_sold? && activated?
+    to_be_sold?
   end
 
   def can_cancel_all?
@@ -135,6 +144,20 @@ class Order < ActiveRecord::Base
 
   def can_print_order_balance?
     balanced?
+  end
+
+  def possible_balance_ways
+    if self.is_member?
+      if members_card.is_counter_card?
+        possible_ways = ["counter"]
+      else
+        possible_ways = ["card"]
+      end
+    else
+      possible_ways = []
+    end
+    possible_ways = possible_ways | ["cash", "post", "bank", "guazhang", "check"]
+    Balance::BALANCE_WAYS.slice(*possible_ways).collect{|k, v| [v,k]}
   end
 
 

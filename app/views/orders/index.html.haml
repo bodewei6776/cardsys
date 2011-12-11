@@ -54,3 +54,13 @@
     %span.color05 褐色-已结算
     %span.color04 绿色-代卖中
   .h10
+
+:javascript
+  $(document).ready(function(){
+    $("table.index_order_table tr").mouseover(function(){
+      $(this).addClass("orders_mousehover");
+    }).mouseout(function(){
+      $(this).removeClass("orders_mousehover");
+    });
+  
+  })

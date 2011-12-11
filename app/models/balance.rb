@@ -1,36 +1,47 @@
 class Balance < ActiveRecord::Base
-  
+
   Order_Type_Book_Record = 1
   Order_Type_Good        = 2
-  
-  Balance_Way_Use_Card  = 1
-  Balance_Way_Use_Cash  = 2
-  Balance_Way_Use_Post  = 3
-  Balance_Way_Use_Bank  = 4
-  Balance_Way_Use_Check = 5
-  Balance_Way_Use_Guazhang = 6
-  Balance_Way_Use_Counter  = 7
-  
 
-  
+  BALANCE_WAYS = {
+    "card" => "记账",
+    "cash" => "现金",
+    "post" => "POS机",
+    "bank" => "银行",
+    "guazhang" => "挂账",
+    "counter" => "计次",
+    "check" => "支票"
+  }
+
   belongs_to :who_balance,:class_name => "User",:foreign_key => "user_id"
   belongs_to :order
   belongs_to :member
   belongs_to :user
-  has_many :balance_items, :dependent => :destroy
-  attr_accessor :operation
+  has_many :order_items
+
+  accepts_nested_attributes_for :order_items
 
 
- # validate do |instance|
- #   return true unless order.is_member?
- #   if instance.use_card_to_balance_goods? && !order.should_use_card_to_balance_goods?
- #     errors[:base] << "卡不支持购买商品，只能订场"
- #   elsif instance.use_card_to_balance? && !order.member_card.has_enough_money_to_balance?(self)
- #     errors[:base] << "卡余额不足，不能结算"
- #   elsif instance.use_card_to_balance? && !order.member_card.is_avalible?
- #     errors[:base] << "卡已经过期，或者状态不正常不能结算"
- #   end
- # end
+  def order_items_attributes=(attrs)
+    attrs.each do |key, element|
+      next if element["checked"] == "0"
+      oi = OrderItem.find(element["id"])
+      oi.discount = element["discount"]
+      oi.price_after_discount = element["price_after_discount"]
+      oi.balanced = true
+      self.order_items << oi
+    end  
+  end
+  # validate do |instance|
+  #   return true unless order.is_member?
+  #   if instance.use_card_to_balance_goods? && !order.should_use_card_to_balance_goods?
+  #     errors[:base] << "卡不支持购买商品，只能订场"
+  #   elsif instance.use_card_to_balance? && !order.member_card.has_enough_money_to_balance?(self)
+  #     errors[:base] << "卡余额不足，不能结算"
+  #   elsif instance.use_card_to_balance? && !order.member_card.is_avalible?
+  #     errors[:base] << "卡已经过期，或者状态不正常不能结算"
+  #   end
+  # end
 
   def member_card
     MemberCard.find_by_id(self.goods_member_card_id) || MemberCard.find_by_id(self.book_reocrd_member_card_id)#rescue nil
@@ -53,7 +64,7 @@ class Balance < ActiveRecord::Base
     self.save(false)
   end
 
-   #TODO
+  #TODO
   def do_balance!
     return true if self.status == Const::YES
 
@@ -131,17 +142,7 @@ class Balance < ActiveRecord::Base
   end
 
   def balance_way_desciption(way = nil)
-    way ||= self.balance_way
-    case way
-    when Balance_Way_Use_Card then '记账'
-    when Balance_Way_Use_Cash then '现金'
-    when Balance_Way_Use_Post then 'POS机'
-    when Balance_Way_Use_Bank then '银行'
-    when Balance_Way_Use_Guazhang then '挂账'
-    when Balance_Way_Use_Counter  then '计次'
-    when Balance_Way_Use_Check then '支票'
-    else '无'
-    end
+    BALANCE_WAYS[way||self.balance_way] || "无"
   end
 
   def ensure_use_card_counter?
@@ -185,7 +186,7 @@ class Balance < ActiveRecord::Base
     "￥#{other_amount}元"
   end
 
-   def other_amount_real_desc
+  def other_amount_real_desc
     "￥#{other_amount}元"
   end
 
