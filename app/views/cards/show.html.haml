@@ -65,7 +65,7 @@
       .table2
         %ul.bttitle.black.fb
           %li.w5 序号
-          %li.w20 时段
+          %li.w30 时段
           %li.w15 标准收费(/小时)
           %li.w10 可用
           %li.w15 折扣收费
@@ -74,7 +74,7 @@
           - available_period = @card.generate_card_period_price(period_price)
           %ul.table_items
             %li.w5= index + 1
-            %li.w20
+            %li.w30
               = period_price.name
               ：#{period_price.start_time}:00-#{period_price.end_time}:00
             %li.w15= period_price.price

@@ -3,8 +3,8 @@
     .fformbox
       .fformbox_bt
         %p 请填写时段信息
-      = error_messages_for :period_price
       .fformbox_nr
+        =render :partial => "layouts/errors", :locals => {:target => @period_price}
         %ul
           %li
             .w1 时段名称：
@@ -12,11 +12,7 @@
               = f.text_field :name
             .w1 时段类型：
             .w2
-              <select name="period_price[period_type]" id="type" class="select"
-              - if(!@period_price.id.blank?)
-                disabled="true"
-              >
-              \#{generate_period_price_type_options(@period_price)}
+              = f.select :period_type, options_for_select(CommonResource.options_by_identifier("period_type").collect{|a| [a.detail_name, a.id]}, @period_price.period_type)
         %ul
           %li
             .w1 开始时间：
@@ -46,6 +42,7 @@
       \&nbsp;&nbsp;&nbsp;&nbsp;
       %button.submit2.hand{:onclick => "window.location.href='#{period_prices_path}'", :type => "button"} 查看
     .clear
+
 :javascript
   function fsubmit(){
     if(check_time()){

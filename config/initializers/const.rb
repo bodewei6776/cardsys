@@ -9,3 +9,6 @@ class Time
     self.strftime("%m月%d日%H点")
   end
 end
+
+class String
+end

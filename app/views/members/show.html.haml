@@ -64,7 +64,7 @@
         %ul
           %li
             .w1 会员生日：
-            .w2= @member.birthday.blank? ? "未知" : DateUtil.timeshort(@member.birthday)
+            .w2= @member.birthday.blank? ? "未知" : @member.birthday.to_chinese_mdh
             .w1 备注：
             .w2= @member.description
     .h10
@@ -133,17 +133,17 @@
           %li.w15 授权人
         - @member_cards.each_with_index do |card,index|
           %ul.table_items
-          %input#member_id{:type => "hidden", :value => @member.id}/
-          %li.w5= index + 1
-          %li.w10= card.card_serial_num
-          %li.w10= member_card_status_str(card.status)
-          %li.w15= card.left_fee
-          %li.w10= card.left_times
-          %li.w10= DateUtil.timeshort(card.expire_date)
-          %li.w15
-            - for granter in generate_granter_options(@member)
-              - if @member.is_granter(granter[1], card.id)
-                = granter[0]
+            %input#member_id{:type => "hidden", :value => @member.id}/
+            %li.w5= index + 1
+            %li.w10= card.card_serial_num
+            %li.w10= state_in_chinese(card.state)
+            %li.w15= card.left_fee
+            %li.w10= card.left_times
+            %li.w10= card.expire_date.to_chinese_mdh
+            %li.w15
+              - for granter in generate_granter_options(@member)
+                - if @member.is_granter(granter[1], card.id)
+                  = granter[0]
     .h10
     .infobox
       .infobox_bt
@@ -161,7 +161,7 @@
             %li.w5= index + 1
             %li.w15= recharge_record.member_card.card_serial_num
             %li.w15= recharge_record.display_recharge_info
-            %li.w15= DateUtil::timeshort(recharge_record.created_at)
+            %li.w15= recharge_record.created_at.to_chinese_mdh
             %li.w15= recharge_record.recharge_person_name
     .h10
     .infobox
@@ -189,6 +189,6 @@
               %a.balance_detail{:href => "#{order_balance_path(balance)}?layout=false", :title => "\347\202\271\345\207\273\345\261\225\345\274\200\346\230\216\347\273\206"} 明细
     .h10
     .input_bd
-      = back_to members_path
+      =# back_to members_path
     .clear
   .h10

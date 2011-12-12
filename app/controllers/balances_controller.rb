@@ -72,7 +72,6 @@ class BalancesController < ApplicationController
 
   def new_good_buy
     @order = Order.new
-    @order.member_type = Const::YES
   end
 
   def clear_goods

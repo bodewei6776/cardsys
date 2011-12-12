@@ -369,4 +369,8 @@ def back_to(path)
   concat(link_to "返回", path)
 end
 
+  def state_in_chinese(state)
+    return "未知" if state.nil?
+    {"disable" => "禁用", "enable" => "正常"}[state]
+  end
 end

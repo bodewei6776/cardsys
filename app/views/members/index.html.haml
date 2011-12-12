@@ -37,7 +37,8 @@
       %ul.member_items.table_items
         %li.w5= index + 1
         %li.w10= link_to member.name,member
-        %li.w15{:style => "overflow:hidden;", :title => member.card_serial_nums} member.card_serial_nums
+        %li.w15{:style => "overflow:hidden;", :title => member.card_serial_nums}
+          = member.card_serial_nums
         %li.w10= member.mobile
         %li.w8= member.created_at.nil? ? "" : chinese_date(member.created_at)
         %li.w6= member.member_card_left_fees
@@ -45,7 +46,7 @@
         %li.w6= member.member_consume_amounts
         %li.w6= member.balance_times
         %li.w8
-          = member.birthday.blank? ? ':' : DateUtil::timeshort(member.birthday)
+          = member.birthday.blank? ? ':' : member.birthday.to_chinese_mdh
         %li.w12
           = link_to '查看', member
           |

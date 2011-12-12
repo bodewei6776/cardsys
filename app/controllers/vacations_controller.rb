@@ -20,12 +20,10 @@ class VacationsController < ApplicationController
   def create
     @vacation = Vacation.new(params[:vacation])
 
-    respond_to do |format|
-      if @vacation.save
-        redirect_to(:action => "index", :notice => '节假日创建成功！') 
-      else
-        render :action => "new" 
-      end
+    if @vacation.save
+      redirect_to :action => "index", :notice => '节假日创建成功！'
+    else
+      render :action => "new" 
     end
   end
 

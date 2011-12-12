@@ -12,9 +12,10 @@
               = f.text_field :name
             .w1 假日类型：
             .w2
-              = radio_button_tag("vacation[status]", "1", 1 == @vacation.status)
+              = radio_button_tag("vacation[state]", "1", 1 == @vacation.state)
               节假日
-              \#{radio_button_tag("vacation[status]", "0", 0 == @vacation.status)}平时日
+              = radio_button_tag("vacation[state]", "0", 0 == @vacation.state)
+              平时日
         %ul
           %li
             .w1 开始时间：

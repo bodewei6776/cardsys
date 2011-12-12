@@ -13,6 +13,7 @@ class Member < ActiveRecord::Base
   has_many :orders
   has_one  :member_card_granter,:foreign_key => "granter_id"
   has_many :member_cards
+  has_many :blances
 
 
   validates :name, :presence => {:message => "名称不能为空！"}
@@ -31,8 +32,8 @@ class Member < ActiveRecord::Base
   end
 
   def card_serial_nums
-    return "尚未开通" if self.all_member_cards.blank?
-    self.all_member_cards.collect(&:card_serial_num).join(",")
+    return "尚未开通" if self.all_members_cards.blank?
+    self.all_members_cards.collect(&:card_serial_num).join(",")
   end
 
   def generate_member_card?(card)
@@ -41,7 +42,7 @@ class Member < ActiveRecord::Base
   end
 
   def has_card?
-    all_member_cards.present?
+    all_members_cards.present?
   end
 
   def generate_member_card_granters
@@ -78,15 +79,15 @@ class Member < ActiveRecord::Base
   end
 
   def member_card_left_times
-    self.all_member_cards.sum('left_times')
+    self.all_members_cards.sum('left_times')
   end
 
   def member_card_left_fees
-    self.all_member_cards.sum('left_fee')
+    self.all_members_cards.sum('left_fee')
   end
 
   def member_consume_amounts
-    self.orders.inject(0){|s,o| s + (o.amount || 0)} 
+    self.orders.inject(0){|s,o| s + (o.court_book_record.try(:hours) || 0)} 
   end
 
   def latest_comer_date

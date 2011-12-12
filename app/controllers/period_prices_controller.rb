@@ -23,8 +23,7 @@ class PeriodPricesController < ApplicationController
       Court.all.each { |court|
         CourtPeriodPrice.create(:period_price_id => @period_price.id,
                                    :court_price =>  @period_price.price,
-                                   :court_id => court.id,
-                                   :catena_id =>  session[:catena_id])
+                                   :court_id => court.id)
       }
       @period_prices = PeriodPrice.all
       redirect_to :action => 'index', :notice => '时段价格创建成功！'

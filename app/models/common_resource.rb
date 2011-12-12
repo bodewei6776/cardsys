@@ -121,4 +121,8 @@ class CommonResource < ActiveRecord::Base
   def self.locker_due_time
     CommonResource.find_by_name("locker_due_time").detail_str.to_i rescue 7
   end
+
+  def self.options_by_identifier(identifier)
+    find_by_name(identifier).try(:common_resource_details)
+  end
 end

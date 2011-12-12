@@ -52,24 +52,6 @@
           %li
             .w1 支付方式:
             .w2{:style => "width:500px;"}
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Card,false,:class => 'balance_way'
-                记账
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Cash,false,:class => 'balance_way'
-                现金
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Post,false,:class => 'balance_way'
-                POS机
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Check ,false,:class => 'balance_way'
-                支票
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Guazhang,false,:class => 'balance_way'
-                挂账
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Bank,false,:class => 'balance_way'
-                银行
       #sanke
         %ul
           %li
@@ -82,21 +64,6 @@
             .w1
               支付方式:
             .w2
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Cash,false,:class => 'balance_way'
-                现金
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Bank,false,:class => 'balance_way'
-                银行
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Post,false,:class => 'balance_way'
-                POS机
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Check ,false,:class => 'balance_way'
-                支票
-              %label.labelRadio
-                = radio_button_tag :balance_way, Balance::Balance_Way_Use_Guazhang,false,:class => 'balance_way'
-                挂账
   .h10
   .infobox_bt
     %p 商品消费列表
@@ -126,73 +93,60 @@
     $('#' + id +'').show(); 
     $('#member_or_not').attr('value',id);
   } 
-<haml:silent> if @order.is_member? 
-</haml:silent><haml:block>  show_div($('#radio_yes'),'member');
-</haml:block><haml:silent> else
-</haml:silent><haml:block>  show_div($('#radio_no'),'sanke');
-</haml:block>
-
-$(document).ready(function(){
-    $("#goods-list").colorbox({width:"900", height:"700", iframe:true});
-    userAutocomplete();
-    goodAutocomplete();
-    $('#quantity').blur(function(){
-      var quantity = $(this).val();
-      if(isNaN(quantity)){
-      alert('请输入正确数量');
-      $(this).focus();
-      return false;
+  
+  $(document).ready(function(){
+      $("#goods-list").colorbox({width:"900", height:"700", iframe:true});
+      userAutocomplete();
+      goodAutocomplete();
+      $('#quantity').blur(function(){
+        var quantity = $(this).val();
+        if(isNaN(quantity)){
+        alert('请输入正确数量');
+        $(this).focus();
+        return false;
+        }
+        else{
+        $('#sub_total').text(parseInt(quantity) *$('#price').text());
+        }
+  
+        });
+      });
+  
+  $("#balance_form").submit(function(){
+      if($('#member_or_not').attr('value') == "member"){
+      if($('#member_name').attr('value') == ""){ alert("会员姓名不能为空"); return false; }
+      if($('#member_id').attr('value') == ""){ alert("会员卡号不能为空"); return false;}
+      if($('#member input[type=radio]:checked').size() == 0){alert("请选择支付方式");return false;}
       }
       else{
-      $('#sub_total').text(parseInt(quantity) *$('#price').text());
+      if($('#sanke_name').attr('value') == ""){ alert("散客姓名不能为空"); return false; }
+      if($('#sanke input[type=radio]:checked').size() == 0){alert("请选择支付方式");return false;}
       }
-
+  
+      if(!confirm("确认支付？")){ return false;}
       });
-    });
-
-$("#balance_form").submit(function(){
-    if($('#member_or_not').attr('value') == "member"){
-    if($('#member_name').attr('value') == ""){ alert("会员姓名不能为空"); return false; }
-    if($('#member_id').attr('value') == ""){ alert("会员卡号不能为空"); return false;}
-    if($('#member input[type=radio]:checked').size() == 0){alert("请选择支付方式");return false;}
-    }
-    else{
-    if($('#sanke_name').attr('value') == ""){ alert("散客姓名不能为空"); return false; }
-    if($('#sanke input[type=radio]:checked').size() == 0){alert("请选择支付方式");return false;}
-    }
-
-    if(!confirm("确认支付？")){ return false;}
-    });
-
-function update_discount(pid,price,discount){
-  if(isNaN(price) || parseFloat(price) < 0){ alert('价格有问题'); return;}
-  $.post("/balances/change_li_real_total_price",{product_id: "" + pid, real_total_price: "" + price,discount:discount},
-      function(reply){ $('#cart_goods_list').html(reply); highlight_table();});
-}
-
-$(document).ready(function(){
-    member_card_Autocomplete();
-    $('select.discount').live('change',function(){
-      var good_id = $(this).parent().parent().find('.good_id'); 
-      var total_price = $(this).parent().parent().find('.total_price'); 
-      var li_real_total_price = $(this).parent().parent().find('.li_real_total_price'); 
-      var discount = $(this).find('option:selected'); 
-      li_real_total_price.attr('value',parseFloat(discount.val()) * total_price.attr('value'));
-      update_discount(good_id.val(),li_real_total_price.val(),discount.val());
+  
+  function update_discount(pid,price,discount){
+    if(isNaN(price) || parseFloat(price) < 0){ alert('价格有问题'); return;}
+    $.post("/balances/change_li_real_total_price",{product_id: "" + pid, real_total_price: "" + price,discount:discount},
+        function(reply){ $('#cart_goods_list').html(reply); highlight_table();});
+  }
+  
+  $(document).ready(function(){
+      member_card_Autocomplete();
+      $('select.discount').live('change',function(){
+        var good_id = $(this).parent().parent().find('.good_id'); 
+        var total_price = $(this).parent().parent().find('.total_price'); 
+        var li_real_total_price = $(this).parent().parent().find('.li_real_total_price'); 
+        var discount = $(this).find('option:selected'); 
+        li_real_total_price.attr('value',parseFloat(discount.val()) * total_price.attr('value'));
+        update_discount(good_id.val(),li_real_total_price.val(),discount.val());
+        });
+      $('input.li_real_total_price').live('blur',function(){ 
+        var li_real_total_price = $(this).parent().parent().find('.li_real_total_price'); 
+        var good_id = $(this).parent().parent().find('.good_id'); 
+        var discount = $(this).parent().parent().find('option:selected'); 
+        update_discount(good_id.val(),li_real_total_price.val(),discount.val());
+        });
       });
-    $('input.li_real_total_price').live('blur',function(){ 
-      var li_real_total_price = $(this).parent().parent().find('.li_real_total_price'); 
-      var good_id = $(this).parent().parent().find('.good_id'); 
-      var discount = $(this).parent().parent().find('option:selected'); 
-      update_discount(good_id.val(),li_real_total_price.val(),discount.val());
-      });
-    });
-
-<haml:silent> if params[:popup]
-</haml:silent><haml:block>  function PopupCenter(pageURL, title,w,h) {
-    var left = (screen.width/2)-(w/2);
-    var top = (screen.height/2)-(h/2);
-     window.open(pageURL, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
-  } 
-PopupCenter("/balances/#{params[:id]}/print","打印",400,600);
-</haml:block>
+  

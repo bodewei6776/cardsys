@@ -45,9 +45,9 @@
         %li.w15
           - if @p =='back'
             = link_to '库存管理', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index'
-            - if good.status == CommonResource::GOOD_OFF
+            - if good.state == "disabled"
               | #{link_to '启用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_ON, :id => good.id}, {:confirm => '确定重新使用该商品吗?', :style => "color:green;"}}
-            - if good.status == CommonResource::GOOD_ON
+            - if good.state == "enable"
               | #{link_to '停用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_OFF, :id => good.id}, {:confirm => '确定停用该商品吗?', :style => "color:red;"}}
           - elsif @p == 'front'
             = link_to '商品出库', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index'

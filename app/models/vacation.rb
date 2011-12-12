@@ -17,11 +17,13 @@ class Vacation < ActiveRecord::Base
   end
 
   def start_date_should_be_after_now
+    return true if self.start_date.nil?
     self.errors.add(:start_date,"开始时间过了，　别修改啦") if self.start_date < Time.now
   end
 
   def end_date_should_be_after_now
-    self.errors.add(:end_date,"结束时间过了，　别修改啦") if self.start_date < Time.now
+    return true if self.end_date.nil?
+    self.errors.add(:end_date,"结束时间过了，　别修改啦") if self.end_date < Time.now
   end
 
   def is_holiday?
