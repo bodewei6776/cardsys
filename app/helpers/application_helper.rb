@@ -373,4 +373,8 @@ end
     return "未知" if state.nil?
     {"disable" => "禁用", "enable" => "正常"}[state]
   end
+
+  def current_catena_name
+    "博德维"
+  end
 end

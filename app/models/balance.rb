@@ -224,22 +224,22 @@ class Balance < ActiveRecord::Base
   def self.balances_on_date_and_ways(date,select,ways)
     case select
     when "1" #记账
-      self.balanced.where(["date(created_at) = ? and (balance_way=1 or balance_way=1)", date]).includes(:order)
+      where(["date(created_at) = ? and (balance_way=1 or balance_way=1)", date]).includes(:order)
     when "7"
-      self.balanced.where(["date(created_at) = ? and balance_way=7", date]).includes(:order)
+      where(["date(created_at) = ? and balance_way=7", date]).includes(:order)
     else
-      self.balanced.where(["date(created_at) = ? and (balance_way in (?) or balance_way in (?))", date,ways,ways]).includes(:order)
+      where(["date(created_at) = ? and (balance_way in (?) or balance_way in (?))", date,ways,ways]).includes(:order)
     end
   end
 
   def self.balances_on_month_and_ways(date,select,ways)
     case select
     when "1" #记账
-      self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way=1 or balance_way=1)", date.strftime("%Y-%m")]).includes(:order)
+      where(["date_format(created_at,'%Y-%m') = ? and (balance_way=1 or balance_way=1)", date.strftime("%Y-%m")]).includes(:order)
     when "7"
-      self.balanced.where(["date_format(created_at,'%Y-%m') = ? and balance_way=7", date.strftime("%Y-%m")]).includes(:order)
+      where(["date_format(created_at,'%Y-%m') = ? and balance_way=7", date.strftime("%Y-%m")]).includes(:order)
     else
-      self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?) or balance_way in (?))", date.strftime("%Y-%m"),ways,ways]).includes(:order)
+      where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?) or balance_way in (?))", date.strftime("%Y-%m"),ways,ways]).includes(:order)
     end
   end
 
@@ -313,14 +313,14 @@ class Balance < ActiveRecord::Base
   end
 
   def self.total_count_on_date_any_ways(date,select,ways)
-    data = self.balanced.where(["date(created_at) = ? and (balance_way in (?))", date,ways])
+    data = where(["date(created_at) = ? and (balance_way in (?))", date,ways])
     data.present? ? data.inject(0){|sum,b|
       sum += ((b.balance_way == 7) ? b.count_amount : 0)
     } : 0
   end
 
   def self.total_count_on_month_any_ways(date,select,ways)
-    data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way =7 )", date.strftime("%Y-%m")])
+    data = where(["date_format(created_at,'%Y-%m') = ? and (balance_way =7 )", date.strftime("%Y-%m")])
     data.present? ? data.inject(0){|sum,b|
       sum +=  b.count_amount 
     } : 0
@@ -411,16 +411,16 @@ class Balance < ActiveRecord::Base
   def self.total_coach_balance_on_date_any_ways(date,select,ways)
     case select
     when "1","7"
-      data = self.balanced.where(["date(created_at) = ? and (balance_way=?)", date,select])
+      data = where(["date(created_at) = ? and (balance_way=?)", date,select])
     else
-      data = self.balanced.where(["date(created_at) = ? and (balance_way in(?))", date,ways])
+      data = where(["date(created_at) = ? and (balance_way in(?))", date,ways])
     end
     data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(select,ways) } : 0
   end
 
 
   def self.total_coach_balance_on_month_any_ways(date,select,ways)
-    data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?))", date.strftime("%Y-%m"),ways])
+    data = where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?))", date.strftime("%Y-%m"),ways])
     data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(ways) } : 0
   end
 
@@ -430,10 +430,10 @@ class Balance < ActiveRecord::Base
     when "7"
       return "0"
     when "1"
-      data = self.balanced.where(["date(created_at) = ? and (balance_way=1)", date])
+      data = where(["date(created_at) = ? and (balance_way=1)", date])
       data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
     else
-      data = self.balanced.where(["date(created_at) = ? and (balance_way in (?))", date,ways])
+      data = where(["date(created_at) = ? and (balance_way in (?))", date,ways])
       data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
     end
   end
@@ -443,10 +443,10 @@ class Balance < ActiveRecord::Base
     when "7"
       return "0"
     when "1"
-      data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way=1)", date.strftime('%Y-%m')])
+      data = where(["date_format(created_at,'%Y-%m') = ? and (balance_way=1)", date.strftime('%Y-%m')])
       data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
     else
-      data = self.balanced.where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?))", date.strftime("%Y-%m"),ways])
+      data = where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?))", date.strftime("%Y-%m"),ways])
       data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
     end
   end
@@ -456,7 +456,7 @@ class Balance < ActiveRecord::Base
   end
 
   def self.good_stat_per_date_by_type(date,type)
-    balances = self.balanced.where(["date(created_at) = ?", date])
+    balances = where(["date(created_at) = ?", date])
     product_items = balances.present? ? balances.collect{|b| b.order.product_items } : []
     product_items = product_items.flatten.uniq
     hash = {}

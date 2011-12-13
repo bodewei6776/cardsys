@@ -26,23 +26,19 @@
     width: 100%;
     padding-top: 10px;
   }
+
 .w96
   .r_bt
     .r_bt_l
       .r_bt_l_a
       .r_bt_l_c.fb.white
-        = current_catena.name
-        = DateUtil.format_to_chinese_date(@current_date)
+        = @current_date.timeshort
         的储物柜出租
     .r_bt_r
-      %button.submit2.hand{:onclick => "location.href="/rents?date=#{@predate}"", :type => "button"}> << 前一天
-      \&nbsp;&nbsp;
-      = succeed "&amp;nbsp;&amp;nbsp;" do
-        %button.submit2.hand{:onclick => "location.href='/rents'", :type => "button"} 今天
-      = succeed "&amp;nbsp;&amp;nbsp;" do
-        %button.submit2.hand{:onclick => "location.href="/rents?date=#{@nextdate}"", :type => "button"} 后一天>>
-      = succeed "&amp;nbsp;&amp;nbsp;" do
-        %button.submit2.hand{:onclick => "location.reload();", :type => "button", :value => "true"} 刷新
+      %button.submit2.hand{:onclick => "location.href=/rents?date=#{@predate}", :type => "button"}>  前一天
+      %button.submit2.hand{:onclick => "location.href='/rents'", :type => "button"} 今天
+      %button.submit2.hand{:onclick => "location.href=/rents?date=#{@nextdate}", :type => "button"} 后一天
+      %button.submit2.hand{:onclick => "location.reload();", :type => "button", :value => "true"} 刷新
   .content
     = rents_in_table(@lockers,@current_date)
   .h10
@@ -53,15 +49,15 @@
   .h10
 :javascript
   $(document).ready(function(){
-      $('.popup-new-window').popupWindow({
-centerScreen: 1,
-windowName: "场地预定",
-width: 850,
-height: 750,
-resizable: true,
-location: 0,
-status: 0,
-menubar: 0
-});
-      });
-
+    $('.popup-new-window').popupWindow({
+    centerScreen: 1,
+    windowName: "场地预定",
+    width: 850,
+    height: 750,
+    resizable: true,
+    location: 0,
+    status: 0,
+    menubar: 0
+    });
+  });
+    
