@@ -23,6 +23,8 @@ class Card < ActiveRecord::Base
   validates_numericality_of :min_amount,:only_integer => true, :greater_than => -1, :message => "提醒金额必须为非负整数",:allow_nil => true
   validates_numericality_of :min_count,:only_integer => true, :greater_than =>-1, :message => "提醒次数必须为非负整数",:allow_nil => true
 
+  scope :enabled, where(:state => "enabled")
+
   before_save :auto_fill_nil
   def auto_fill_nil
     self.min_count = 0 if self.min_count.nil?

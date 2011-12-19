@@ -254,12 +254,12 @@ class MembersController < ApplicationController
     @notice = params[:notice]
     @notice_error = params[:notice_error]
     @cards = Card.where(:status => CommonResource::CARD_ON)
-    @member_cards = MembersCard.where(:member_id => @member.id).where("status != ?", CommonResource::MEMBER_CARD_FREEZE) if !params[:member_name].nil?
+    @member_cards = @member.try(:all_members_cards) 
   end
 
   def member_card_bind_list
     @member = Member.find(params[:member_id])
-    @cards = Card.where(:status => CommonResource::CARD_ON)
+    @cards = Card.enabled
     render :layout => false
   end
 

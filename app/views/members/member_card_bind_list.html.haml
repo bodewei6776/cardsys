@@ -1,0 +1,45 @@
+.w96
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 会员卡绑定信息列表
+    .r_bt_r
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 序号
+      %li.w30 卡名称
+      %li.w20 卡类型
+      %li.w20 绑定卡
+    - @cards.each_with_index do |card,index|
+      %ul.table_items
+        %li.w5= index + 1
+        %li.w30
+          %input{:name => "member_id", :type => "hidden", :value => @member.id}/
+          = card.name
+        %li.w20= card.card_type_in_chinese
+        %li.w20
+          %input{:id => "card_available_#{card.id}", :name => "card_available", :onclick => "changeCardType(this);", :type => "radio", :value => "#{card.id}-#{card.card_type_opt}-#{card.name}"}/
+  .h10
+  .input_bd
+    %button.submit1.hand{:onclick => "commit();return false;", :type => "submit"} 确定
+  .clear
+:javascript
+  function commit(){
+    $("#colorbox").hide();
+    $("#cboxOverlay").hide();
+  }
+
+  function changeCardType(radio){
+    var card_id = radio.value.split("-")[0];
+    $("#binded_card_id")[0].value = card_id;
+    var card_type = radio.value.split("-")[1];
+    $("#binded_card_type")[0].value = card_type;
+    $.getJSON("/members/getMemberCardNo",
+    {'type':'json', 'card_id':card_id},
+    function(data){
+      $("#card_serial_num").attr("value", data);
+      $(".notice").hide();
+      $(".notice_error").hide();
+    });
+    $("#card_name")[0].innerHTML = radio.value.split("-")[2];
+  }
