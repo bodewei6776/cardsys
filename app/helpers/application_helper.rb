@@ -5,7 +5,7 @@ module ApplicationHelper
       {:image_offset => "1", :link => "/period_prices", :sub_menu => "common_menu", :display => "基础信息管理"},
       {:image_offset => "4", :link => "/members",       :sub_menu => "member_menu", :display => "会员管理"},
       {:image_offset => "3", :link => "/members/member_card_bind_index", :sub_menu => "member_card_menu", :display => "会员卡管理"},
-      {:image_offset => "6", :link => "/book_records", :sub_menu => "book_record_menu", :display => "场地预定"},
+      {:image_offset => "6", :link => "/orders", :sub_menu => "book_record_menu", :display => "场地预定"},
       {:image_offset => "2", :link => "/goods",        :sub_menu => "goods_menu", :display => "库存管理"},
       {:image_offset => "5", :link => "/reports/income", :sub_menu => "report_menu", :display => "分析报表"},
       {:image_offset => "7", :link => "/balances/new_good_buy", :sub_menu => "balance_menu", :display => "消费结算"},
@@ -103,7 +103,7 @@ module ApplicationHelper
     options = generate_res_options CommonResource::PERIOD_TYPE
     options_for_select(options, period_price.period_type)
   end
-  
+
   def display_period_price_type_desc(period_price)
     get_res_item(CommonResource::PERIOD_TYPE, period_price)
   end
@@ -138,7 +138,7 @@ module ApplicationHelper
     get_res_item(CommonResource::CERT_TYPE, type)
   end
 
- def generate_locker_type_options_without_all(locker_type)
+  def generate_locker_type_options_without_all(locker_type)
     options = generate_res_options CommonResource::LOCKER_TYPE
     options_for_select(options, (locker_type.nil? || locker_type == "") ? '' : locker_type.to_i)
   end
@@ -244,41 +244,26 @@ module ApplicationHelper
       column_chn = column_options[column][:chn]
       header_items << "<li class='#{css_klass}'>#{column_chn}</li>"
     end
-    header = <<tb_header
-    <ul class="bttitle black fb ">
-          #{header_items.join('')}
-    </ul>
-tb_header
+    header = content_tag(:ul, header_items.join(' '), :class => "bttitle black fb")
     body_items = []
     objects.each do |object|
       columns.each do |column|
         css_klass = column_options[column][:class]
         display_value = if !(formater = column_options[column][:formater]).blank?
-          send(formater,object,column)
-        else
-          object.send(column)
-        end
+                          send(formater,object,column)
+                        else
+                          object.send(column)
+                        end
         body_items << "<ul class='table_items'><li class='#{css_klass}'>#{display_value}</li></ul>"
       end
     end
-    table = <<tbl
-    <ul class="bttitle black fb ">
-       #{header_items.join('')}
-    </ul>
-    #{body_items.join(',')}
-tbl
+    table = content_tag(:ul, header_items.join(" "), :class => "bttitle black fb") + body_items.join(",")
     table.html_safe
   end
-  
+
   def display_notice_div(title,msg)
     return "" if title.blank? || msg.blank?
-    info = <<notice
-    <div id="errorExplanation" class="errorExplanation">
-	   <h2>#{title}</h2><br>
-	   <ul>#{msg}</ul>
-</div>
-notice
-    info.html_safe
+    content_tag(:div, content_tag(:h2, title) + content_tag(:ul, msg), :id => "errorExplanation", :class => "errorExplanation")
   end
 
 
@@ -305,8 +290,8 @@ notice
   end
 
   def chinese_week_day(offset)
-   week_days = %w{星期日 星期一 星期二 星期三 星期四 星期五 星期六} 
-   week_days[offset]
+    week_days = %w{星期日 星期一 星期二 星期三 星期四 星期五 星期六} 
+    week_days[offset]
   end
 
   private
@@ -332,42 +317,42 @@ notice
   end
 
 
-def days_in_month(year, month)
-  date = Date.new(year, month, -1)
-  if date.beginning_of_month == Date.today.beginning_of_month
-    Date.today.day
-  else
-    date.day
+  def days_in_month(year, month)
+    date = Date.new(year, month, -1)
+    if date.beginning_of_month == Date.today.beginning_of_month
+      Date.today.day
+    else
+      date.day
+    end
   end
-end
 
 
-def menus_map
-  {
-    :common_menu => "基础信息管理",
-    :member_menu => "会员管理",
-    :member_card_menu => "会员卡管理",
-    :goods_menu => "商品库存管理",
-    :report_menu => "分析报表",
-    :book_record_menu => "场地预定",
-    :balance_menu => "消费预算",
-    :locker_menu => "储物柜管理",
-    :authorize_menu => "权限管理",
-    :system_menu => "系统管理"
-  }
-end
+  def menus_map
+    {
+      :common_menu => "基础信息管理",
+      :member_menu => "会员管理",
+      :member_card_menu => "会员卡管理",
+      :goods_menu => "商品库存管理",
+      :report_menu => "分析报表",
+      :book_record_menu => "场地预定",
+      :balance_menu => "消费预算",
+      :locker_menu => "储物柜管理",
+      :authorize_menu => "权限管理",
+      :system_menu => "系统管理"
+    }
+  end
 
-def current_catena
-  OpenStruct.new(:name => "博德维")  
-end
+  def current_catena
+    OpenStruct.new(:name => "博德维")  
+  end
 
-def chinese_date(date = Date.today)
- date.strftime("%Y年%m月%d日") 
-end
+  def chinese_date(date = Date.today)
+    date.strftime("%Y年%m月%d日") 
+  end
 
-def back_to(path)
-  concat(link_to "返回", path)
-end
+  def back_to(path)
+    concat(link_to "返回", path)
+  end
 
   def state_in_chinese(state)
     return "未知" if state.nil?

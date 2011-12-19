@@ -105,7 +105,7 @@ module ReportsHelper
 
     table = ''
     table << "<table class='report_table' border=1>"
-    table <<("<caption><h1>" + current_catena.name  +  "球馆#{date.strftime("%y-%m")}收入月报表"+ "</h1></caption>")
+    table <<("<caption><h1>" + current_catena_name  +  "球馆#{date.strftime("%y-%m")}收入月报表"+ "</h1></caption>")
     # first tr%
     table <<("<tr class='head'>")
     table <<("<td colspan=3>日期 #{ select_year(date,{:start_year => 2008,:end_year => Date.today.year},:onchange => "recalculate();")} 年 " + 

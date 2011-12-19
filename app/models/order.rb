@@ -37,6 +37,7 @@ class Order < ActiveRecord::Base
     end
 
     self.order_items.each do |oi|
+      ap '1'  * 100
       oi.destroy if oi.item.nil?
     end
 
