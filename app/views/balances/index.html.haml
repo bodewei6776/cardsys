@@ -10,16 +10,24 @@
 
   .fformbox{:style => "width:100%;"}
     .fformbox_nr
-      - if @order.is_member?
+      %ul
+        %li
+          %w1= @order.is_member? ? "会员:" : "非会员:" 
+          %w2= @order.is_member? ? @order.member.name : @order.non_member.name 
+
+
+      - if @order.court_book_record
         %ul
           %li
-            %w1 预订人
-            %w2= @order.member.name
+            %w1 场地:
+            %w2= @order.court_book_record.description
+  
+      - if @order.members_card
+        %ul
           %li
-            %w1 卡信息
-            %w2= @order.members_card.card_serial_num
-
-
+            %w1 会员卡:
+            %w2= @order.members_card.description
+  
 
   = form_for @balance do |f|
     = f.hidden_field :order_id
@@ -51,7 +59,7 @@
       %ul.table_items
         %li.w5= @balances.count + 1
         %li.w10= f.select :balance_way, options_for_select(@order.possible_balance_ways, @balance.balance_way)
-        %li.w10= f.text_field :price, :id => "new_price_node", :disabled => true
+        %li.w10= f.text_field :price, :id => "new_price_node"
         %li.w10= f.text_field :final_price, :id => "new_total_price_node"
         %li.w10 
         %li.w10 
@@ -137,6 +145,7 @@
     new_price_node.attr('value', original_total_money);
   }
   $(document).ready(function(){
+    $("#new_total_price_node, #new_price_node").focus(function(){ $(this).blur() });
     $("#select_deselect_all").change(function(){
       var select_deselect_all = $(this)
       select_deselect_all.parent().parent().parent().find("input[type=checkbox]").each(function(index, node){
@@ -159,10 +168,13 @@
         $(".other_product .checkbox_marker").attr("checked", false);
         $(".other_product").hide(); 
         $(".court input[type*=text]").attr("disabled", true);
+        var total_count = $(".court .total_count_hidden").val();
         var total_count_hidden_val = $(".court .total_count_hidden").val() + "次";
         $(".court span").text(total_count_hidden_val);
-        $("#new_total_price_node").val(total_count_hidden_val);
-        $("#new_price_node").val(total_count_hidden_val);
+        $(".court .discount").val(10);
+        $(".court .price_after_discount").val(total_count_hidden_val);
+        $("#new_total_price_node").val(total_count);
+        $("#new_price_node").val(total_count);
       }else{
         $(".other_product").show(); 
         $(".court input").attr("disabled", false);
@@ -170,8 +182,15 @@
         $("#new_total_price_node").val("");
         $("#new_price_node").val("");
       }
+    });
 
-
+    $(".checkbox_marker").change(function(){
+      var marker = $(this);
+      var price = marker.parent().parent().find(".discount");
+      update_discount_value("discount", price);
+  
+      var price_after_discount = marker.parent().parent().find(".price_after_discount");
+      update_discount_value("price_after_discount", price_after_discount);
     });
 
   })

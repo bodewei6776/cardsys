@@ -25,8 +25,8 @@ class OrderItem < ActiveRecord::Base
   after_create :set_default_discount_and_discount_price
 
   validates_numericality_of :quantity, :only_integer => true, :greater_than => 0
-  validates_numericality_of :discount, :greater_than => 0, :less_or_equal_than => 10
-  validates_numericality_of :price_after_discount, :greater_or_equal_than => 0
+  validates_numericality_of :discount, :greater_than => 0, :less_or_equal_than => 10, :allow_blank => true
+  validates_numericality_of :price_after_discount, :greater_or_equal_than => 0, :allow_blank => true
 
   attr_accessor :checked
 
@@ -71,6 +71,8 @@ class OrderItem < ActiveRecord::Base
     return unless self.item.is_a? Good
     self.unit_money_price = self.item.price
     self.total_money_price = self.item.price * self.quantity
+    self.discount = 10
+    self.price_after_discount = self.total_money_price
     save
   end
 

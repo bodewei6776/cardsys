@@ -16,46 +16,15 @@ class BalancesController < ApplicationController
     @book_records = BookRecord.balanced.order('created_at desc').paginate(default_paginate_options_without_created_at)
   end
 
-  def edit 
-    @balance = Balance.find(params[:id])
-    @order = @balance.order
-    @book_record = @order.book_record
-    pre_date_for_new_create
-  end
-
-  def update
-    @order    = Order.find(params[:order_id])
-    @balance  = Balance.find(params[:id])
-
-    unless login_and_password_valid? 
-      pre_date_for_new_create
-      @balance = Balance.find_by_order_id(@order.id) || Balance.new_from_order(@order)
-      @balance.errors.add(:base,"用户名或者密码不正确")
-      render :action =>  "edit" 
-      return
-    end
-
-    @balance.update_attributes(params[:balance])
-
-    if @balance.do_balance!
-      log_action("通过" + @balance.balance_way_desc + "支付了" + @balance.balance_amount_desc, :balance)
-      @balance.update_attribute(:user_id,  current_user.id)
-      pre_date_for_new_create
-      redirect_to order_balance_path(@order,@balance,:popup => true) 
-    else
-      pre_date_for_new_create
-      render :action => "edit"
-    end
-  end
-
   def create
     @order = Order.find(params[:balance][:order_id])
     @balances = @order.balances
     @balance = @order.balances.new(params[:balance]) 
-    if @balance.order_items.all?(&:valid?) && @balance.save
+    if @balance.order_items.present? && @balance.order_items.all?(&:valid?) && @balance.save
       flash[:notice] = "结算成功"
     else
       flash[:notice] = "结算失败"
+      redirect_to :back and return
     end
 
     @balance.order_items = @order.order_items.collect do |oi|

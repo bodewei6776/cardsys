@@ -519,6 +519,7 @@ table.report_table tr.report_title td{
   border-right: 1px solid black;
   border-bottom: 1px solid black;
   text-align: center;
+  width: 147px;
 }
 
 .index_order_table td.first{

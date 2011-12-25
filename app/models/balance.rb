@@ -20,6 +20,28 @@ class Balance < ActiveRecord::Base
   has_many :order_items
 
   accepts_nested_attributes_for :order_items
+  validates_presence_of :price, :message => "价格不能空"
+  validates_presence_of :final_price, :message => "折后价格不能空"
+
+  after_create :deduct_money_from_card_and_mark_order_as_paid
+
+  delegate :members_card, :to => :order
+
+  def deduct_money_from_card_and_mark_order_as_paid
+    if self.balance_way == "counter" && self.order.members_card.try(:is_counter_card?)
+      self.members_card.left_times -= self.price
+    elsif self.balance_way == "card" && self.order.members_card
+      self.members_card.left_fee -= self.final_price
+    end
+
+    self.members_card.save
+
+    if self.order.order_items.all?(&:balanced?)
+      self.order.balance!
+    end
+
+    true
+  end
 
 
   def order_items_attributes=(attrs)
@@ -32,6 +54,7 @@ class Balance < ActiveRecord::Base
       self.order_items << oi
     end  
   end
+
   # validate do |instance|
   #   return true unless order.is_member?
   #   if instance.use_card_to_balance_goods? && !order.should_use_card_to_balance_goods?

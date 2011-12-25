@@ -25,7 +25,7 @@ class Order < ActiveRecord::Base
 
   def save_order_items_for_court_and_coaches
     court_book_record_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CourtBookRecord", court_book_record.id)
-    ap court_book_record_order_item.update_attributes(:quantity => court_book_record.hours,
+    court_book_record_order_item.update_attributes(:quantity => court_book_record.hours,
                                                    :total_count => court_book_record.hours,
                                                    :total_money_price => court_book_record.price,
                                                    :discount => 10,
@@ -88,7 +88,7 @@ class Order < ActiveRecord::Base
       transition [:to_be_sold, :booked] => :canceld
     end
 
-    event :blance do
+    event :balance do
       transition :activated => :balanced
     end
   end

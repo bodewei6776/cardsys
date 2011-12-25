@@ -104,7 +104,7 @@ module OrdersHelper
     htmls << order_action_link("开场", change_state_order_path(order, :be_action => "activate")) if order.can_activate?
     htmls << order_action_link("结算", order_balances_path(order), :get) if order.can_balance?
     htmls << order_action_link("添加消费", goods_order_goods_path(order), :get) if order.can_order_goods?
-    htmls << order_action_link("打印消费记录", print_order_balances_path(order)) if order.can_print_order_balance?
+    htmls << order_action_link("打印消费记录", order_balances_path(order), :get) if order.can_print_order_balance?
 
     htmls.join(' ').html_safe
   end
@@ -141,7 +141,7 @@ module OrdersHelper
     content = "(授)" + content if order.is_member? and order.member.is_granter_of_card(order.members_card_id)
     content = "(固)" +  content if order.advanced_order
     content << "(教练:#{order.coaches.map(&:name).join(',')})" if order.coaches.present?
-    content << "(结算人: #{order.balance.who_balance.try(:login) || ""})" if order.balanced?
+    content << "(结算人: #{order.balances.first.who_balance.try(:login) || ""})" if order.balanced?
     content
   end
 

@@ -1,4 +1,5 @@
 = javascript_include_tag "autocomplete-rails"
+= render :partial => "layouts/errors", :locals => {:target => @order_item} if @order_item && @order_item.errors
 .w96
   .r_bt
     .r_bt_l
@@ -7,7 +8,7 @@
     .r_bt_r
       =link_to "返回", edit_order_path(@order) 
   .soso
-    = form_tag "/goods/goods",{:id => "search-goods-form", :method => :get} do |f|
+    - form_tag "/goods/goods",{:id => "search-goods-form", :method => :get} do |f|
       = hidden_field_tag :order_id, params[:order_id]
       .w95
         照商品类别：

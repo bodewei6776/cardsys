@@ -6,11 +6,11 @@
         = chinese_date(@date)
         的场地预定
     .r_bt_r
-      %button.submit2.hand{:onclick => "location.href='/book_records?date=#{@predate}'", :type => "button"}> 前一天
-      %button.submit2.hand{:onclick => "location.href='/book_records'", :type => "button"} 今天
-      %button.submit2.hand{:onclick => "location.href='/book_records?date=#{@nextdate}'", :type => "button"} 后一天
+      %button.submit2.hand{:onclick => "location.href='/orders?date=#{@predate}'", :type => "button"}> 前一天
+      %button.submit2.hand{:onclick => "location.href='/orders'", :type => "button"} 今天
+      %button.submit2.hand{:onclick => "location.href='/orders?date=#{@nextdate}'", :type => "button"} 后一天
       %button.submit2.hand{:onclick => "location.reload();", :type => "button", :value => "true"} 刷新
-      %a.submit2.hand{:href => "/book_records/print?date=#{@date}", :style => "color:black;padding: 3px;", :target => "_blank"} 打印
+      %a.submit2.hand{:href => "/orders/print?date=#{@date}", :style => "color:black;padding: 3px;", :target => "_blank"} 打印
   .content
     %table.index_order_table{:cellspacing=> 0}
       - @courts.each_slice(6) do |slice|  

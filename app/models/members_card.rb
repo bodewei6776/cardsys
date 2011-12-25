@@ -19,6 +19,7 @@ class MembersCard < ActiveRecord::Base
   Free_Amount_limit = 500
 
   delegate :card_type_in_chinese, :is_counter_card?, :to => :card
+  before_create :left_times_and_left_money_can_not_be_blank
 
 
   attr_accessor :notice
@@ -42,7 +43,9 @@ class MembersCard < ActiveRecord::Base
     self.status == CARD_STATUS_0
   end
 
-  before_create :left_times_and_left_money_can_not_be_blank
+  def description
+    card_serial_num + "   类型: " + card_type_in_chinese + "  " + left_fee_value + "  " + state_desc
+  end
 
   def left_times_and_left_money_can_not_be_blank
     self.left_times = 0 if self.left_times.nil?
