@@ -12,54 +12,54 @@
     %table{:border => "2"}
       %caption/
     %h2
-      = current_catena.name
+      = Setting.site_name
       球馆消费单
-    - if @balance.order.book_record
+    - if @balance.order.court_book_record
       %tr.goods.goods_title
         %td{:colspan => "4"}
           消费时段：#{balance_time_span_in_word(@balance)}
     - if @balance.order.is_member?
       %tr
         %td{:colspan => "2"}
-          姓名: #{@balance.order.member_name}
+          姓名: #{@balance.order.member.name}
         %td{:colspan => "2"}
-          卡号: #{@balance.order.is_member?  ? @balance.order.member_card.card_serial_num : "无卡 "}
+          卡号: #{@balance.order.is_member?  ? @balance.order.members_card.card_serial_num : "无卡 "}
       %tr
         %td{:colspan => "4"}
-          卡到期时间：#{@balance.order.member_card.expire_date.strftime("%Y-%m-%d")}
+          卡到期时间：#{@balance.order.members_card.expire_date.strftime("%Y-%m-%d")}
     - else
       %tr
         %td{:colspan => "4"}
-          散客姓名: #{@balance.order.member_name}
+          散客姓名: #{@balance.order.member.name}
     %tr.goods.goods_title
       %td.left 商品名称
       %td 单价
       %td 数量
       %td.right 小计
-    - if @balance.order.book_record
+    - if @balance.order.court_book_record
       %tr.goods
         %td.left 场地预定费
         - if @balance.balance_way == 7
           %td= 1
-          %td= @balance.order.book_record.end_hour - @balance.order.book_record.start_hour
+          %td= @balance.order.court_book_record.end_hour - @balance.order.court_book_record.start_hour
           %td.right
             = @balance.count_amount
             次
         - else
-          %td= @balance.order.book_record_item.amount
+          %td= @balance.order.court_book_record.amount
           %td 1
-          %td.right= @balance.order.book_record_item.amount
-      - unless (coach_items = @balance.order.coach_items).blank?
-        - coach_items.each do |coach_item|
-          - coach = coach_item.item
+          %td.right= @balance.order.court_book_record.amount
+      - unless (coach_order_items = @balance.order.coach_order_items).blank?
+        - coach_order_items.each do |coach_order_item|
+          - coach = coach_order_item.item
           %tr.goods
             %td.left
               教练(#{coach.name})
             %td
-              = coach.fee
+              = coach.price
             %td
-              = coach_item.quantity
-            %td.right= coach_item.amount
+              = coach_order_item.quantity
+            %td.right= coach_order_item.amount
     - for good_item in @balance.order.product_items
       - next if (good = good_item.item).blank?
       %tr.goods

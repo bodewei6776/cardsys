@@ -23,11 +23,15 @@ class Court < ActiveRecord::Base
   end
 
   def can_be_book?(date, hour)
-    !book_records.exists?(["alloc_date = ? and start_hour < ? and end_hour > ?", date, hour, hour]) 
+    @book_records ||= book_records
+    @book_records.detect do |element|
+      element.alloc_date == date && element.start_hour < hour && element.end_hour > hour
+    end.blank?
   end
 
   def book_record_start_at(date, start_hour)
-    book_records.where(:start_hour => start_hour, :alloc_date => date).first
+    @book_records ||= book_records
+    @book_records.detect { |element| element.start_hour == start_hour && element.alloc_date == date}
   end
 
   def daily_book_records(date = Date.today)
@@ -35,7 +39,8 @@ class Court < ActiveRecord::Base
   end
 
   def is_useable_in_time_span?(period_price)
-    period_prices.include? period_price
+    @period_prices ||= period_prices
+    @period_prices.include? period_price
   end
 
   def daily_period_prices(date=Date.today)

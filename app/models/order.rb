@@ -25,19 +25,22 @@ class Order < ActiveRecord::Base
 
   def save_order_items_for_court_and_coaches
     court_book_record_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CourtBookRecord", court_book_record.id)
-    court_book_record_order_item.update_attributes(:quantity => court_book_record.hours,
+    ap court_book_record_order_item.update_attributes(:quantity => court_book_record.hours,
                                                    :total_count => court_book_record.hours,
-                                                   :total_money_price => court_book_record.price )
+                                                   :total_money_price => court_book_record.price,
+                                                   :discount => 10,
+                                                   :price_after_discount => court_book_record.price)
 
     self.coach_book_records.each do |cbr|
       coach_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CoachBookRecord", cbr.id) 
       coach_order_item.update_attributes(:quantity => court_book_record.hours,
                                         :unit_money_price => cbr.resource.fee,
-                                        :total_money_price => cbr.resource.fee * court_book_record.hours)
+                                        :total_money_price => cbr.resource.fee * court_book_record.hours,
+                                        :discount => 10,
+                                        :price_after_discount => cbr.resource.fee * court_book_record.hours)
     end
 
     self.order_items.each do |oi|
-      ap '1'  * 100
       oi.destroy if oi.item.nil?
     end
 
@@ -53,6 +56,10 @@ class Order < ActiveRecord::Base
     coach_book_records.each do |c|
       errors.add(:base, c.conflict_book_record.to_s + "已经被预约") if c.conflict?
     end
+  end
+
+  def coach_order_items
+    self.order_items.where(:item_type => "CoachBookRecord")
   end
 
 

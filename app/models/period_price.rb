@@ -37,20 +37,16 @@ class PeriodPrice < ActiveRecord::Base
   def self.all_periods_in_time_span(date = Date.today, start_time=nil, end_time=nil)
     start_time ||= PERIOD_START_TIME
     end_time   ||= PERIOD_END_TIME
-    date_type = CommonResource.date_type(date||Date.today)
-    if date_type
-      PeriodPrice.where(["start_time < :end_time AND end_time > :start_time",{:start_time => start_time,
-          :end_time => end_time}]).where(:period_type => date_type.id).order("start_time asc")
-    else
-      []
-    end
+    @date_type ||= CommonResource.date_type(date||Date.today)
+    @pp ||= PeriodPrice.where(:period_type => @date_type.id).order("start_time asc")
+    @pp.select{ |element| element.start_time < end_time && end_time > start_time }
   end
 
 
   def self.period_by_date_and_start_hour(date, start_hour)
-    date_type = CommonResource.date_type(date)
-    PeriodPrice.where(["start_time <= :start_hour AND end_time > :end_hour",{:start_hour => start_hour,
-                      :end_hour=> start_hour + 1}]).where(:period_type => date_type.id).first
+    @date_type ||= CommonResource.date_type(date)
+    @pp ||= PeriodPrice.where(:period_type => @date_type.id)
+    @pp.detect { |element| element.start_time < start_hour && element.end_time > start_hour + 1}
   end
 
   def self.calculate_amount_in_time_spans(date, start_hour, end_hour)
@@ -69,3 +65,4 @@ class PeriodPrice < ActiveRecord::Base
   end
 
 end
+  

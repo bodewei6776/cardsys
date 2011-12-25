@@ -38,12 +38,12 @@ class BookRecord < ActiveRecord::Base
 
 
   def start_date_time
-    day = self.record_date.to_datetime
+    day = self.alloc_date.to_datetime
     Time.local(day.year, day.month, day.day, start_hour)
   end
 
   def end_date_time
-    day = self.record_date.to_datetime
+    day = self.alloc_date.to_datetime
     if end_hour == 24
       Time.local(day.year,day.month,day.day,23,59)
     else
@@ -69,7 +69,7 @@ class BookRecord < ActiveRecord::Base
 
   #开场前半小时到结束时段
   def active_conditions
-    self.record_date.beginning_of_day == Time.now.beginning_of_day
+    self.alloc_date.beginning_of_day == Time.now.beginning_of_day
   end
 
   def should_book?
@@ -265,11 +265,11 @@ class BookRecord < ActiveRecord::Base
   end
 
   def amount_by_court
-    court.calculate_amount_in_time_span(record_date,start_hour,end_hour)
+    court.calculate_amount_in_time_span(alloc_date,start_hour,end_hour)
   end
 
   def amount_by_card
-    order.member_card.calculate_amount_in_time_span(record_date,start_hour,end_hour)
+    order.members_card.calculate_amount_in_time_span(alloc_date,start_hour,end_hour)
   end
 
   def consecutive?
@@ -298,7 +298,7 @@ class BookRecord < ActiveRecord::Base
   end
 
   def conflict_record_in_time_span
-    conflict_record = self.class.where(:record_date => record_date,:court_id => court_id).where(["start_hour < :end_time AND end_hour > :start_time",
+    conflict_record = self.class.where(:alloc_date => alloc_date,:court_id => court_id).where(["start_hour < :end_time AND end_hour > :start_time",
                                                                                                 {:start_time => start_hour,:end_time => end_hour}])
     conflict_record = conflict_record.where("id<>#{self.id}") unless new_record?
     conflict_record.first
@@ -314,7 +314,7 @@ class BookRecord < ActiveRecord::Base
     if end_hour  <= start_hour
       order_errors << I18n.t('order_msg.book_record.invalid_time_span')
     elsif  !is_to_do_agent? and exist_conflict_record? 
-      order_errors << I18n.t('order_msg.book_record.exist_time_span',:date => record_date.to_s(:db),:start_time => start_hour,:end_time => end_hour)
+      order_errors << I18n.t('order_msg.book_record.exist_time_span',:date => alloc_date.to_s(:db),:start_time => start_hour,:end_time => end_hour)
     elsif is_to_do_agent? && (conlict_record = conflict_record_in_time_span)
       if is_a_valid_agented_record?(conlict_record)
         I18n.t('order_msg.book_record.invalid_agent',:start_time => conlict_record.start_hour,

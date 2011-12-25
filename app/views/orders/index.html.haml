@@ -12,23 +12,6 @@
       %button.submit2.hand{:onclick => "location.reload();", :type => "button", :value => "true"} 刷新
       %a.submit2.hand{:href => "/book_records/print?date=#{@date}", :style => "color:black;padding: 3px;", :target => "_blank"} 打印
   .content
-    =#- @courts.each_slice(6) do |slice|  
-    =#  %ul.time
-    =#    %li.tit 时段/场地
-    =#    - for period in @daily_periods
-    =#      - period.start_time.upto(period.end_time - 1) do |i|
-    =#        %li{:style => "line-height:30px;"}
-    =#          = "#{i}:00-#{i+1}:00"
-    =#  .sep
-    =#  - slice.each_with_index do |court, index|
-    =#    %ul{:class => index.odd? ? 'date2' : 'date'}
-    =#      %li.tit= court.name
-    =#      = display_period_per_hour(@daily_periods, court, @date)
-    =#    .sep
-
-    =#  %div{:style => "clear:both;"}
-
-
     %table.index_order_table{:cellspacing=> 0}
       - @courts.each_slice(6) do |slice|  
         %tr.court_name
