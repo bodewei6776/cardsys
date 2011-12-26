@@ -21,6 +21,10 @@ class PeriodPrice < ActiveRecord::Base
     end
   end
 
+  def period_type_in_chinese
+    CommonResourceDetail.find(period_type).detail_name
+  end
+
   def is_fit_for?(date)
     date_type = CommonResource.date_type(date)
     self.period_type.to_i == date_type.id
