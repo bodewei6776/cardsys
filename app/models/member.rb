@@ -22,6 +22,9 @@ class Member < ActiveRecord::Base
   validates :email, :format => {:with =>/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/, :allow_blank => true,:message => '邮箱格式不正确！'}
   validates :cert_num, :uniqueness => {:on => :create, :message => '证件号已经存在！', :if => Proc.new { |member| !member.cert_num.nil? && !member.cert_num.blank? }}#证件号唯一
   validates_with MyValidator
+  before_validation_on_create do |obj|
+    obj.state = 'enabled'
+  end
 
   before_save :geneate_name_pinyin
 
