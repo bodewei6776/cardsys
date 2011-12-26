@@ -43,7 +43,7 @@ class MembersCard < ActiveRecord::Base
     self.status == CARD_STATUS_0
   end
 
-  def description
+  def long_description
     card_serial_num + "   类型: " + card_type_in_chinese + "  " + left_fee_value + "  " + state_desc
   end
 
