@@ -25,6 +25,10 @@ class Card < ActiveRecord::Base
 
   scope :enabled, where(:state => "enabled")
 
+  before_validation_on_create do |card|
+    card.state = 'enabled'
+  end
+
   before_save :auto_fill_nil
   def auto_fill_nil
     self.min_count = 0 if self.min_count.nil?
