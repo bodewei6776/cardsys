@@ -48,6 +48,7 @@ class MembersCard < ActiveRecord::Base
   end
 
   def left_times_and_left_money_can_not_be_blank
+    self.state = 'enabled'
     self.left_times = 0 if self.left_times.nil?
     self.left_fee = 0 if self.left_fee.nil?
   end
@@ -191,6 +192,10 @@ class MembersCard < ActiveRecord::Base
   end
 
   def can_balance_by_amount?
+  end
+
+  def members
+    [member]
   end
 
 

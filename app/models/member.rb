@@ -12,7 +12,7 @@ class Member < ActiveRecord::Base
 
   has_many :orders
   has_one  :member_card_granter,:foreign_key => "granter_id"
-  has_many :member_cards
+  has_many :members_cards
   has_many :blances
 
 

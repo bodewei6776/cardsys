@@ -19,9 +19,9 @@ class MembersController < ApplicationController
   end
 
   def index
-    @members = Member.all
+    @members = Member.scoped
     @members = @members.where(:name => params[:name]) if params[:name].present?
-    @members = @members.where("member_cards.card_serial_num = '#{params[:card_serial_num]}'").joins(:associated_member_cards) if params[:card_serial_num].present?
+    @members = @members.where("member_cards.card_serial_num = '#{params[:card_serial_num]}'").joins(:members_cards) if params[:card_serial_num].present?
     @members = @members.paginate(default_paginate_options)
   end
 

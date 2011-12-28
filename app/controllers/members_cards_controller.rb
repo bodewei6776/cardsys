@@ -22,17 +22,10 @@ class MembersCardsController < ApplicationController
   end
 
   def search
-    @member_name = params[:member_name]
-    @serial_num = params[:card_serial_num]
-    if !@member_name.blank?
-      @serial_num = "" if params[:p].blank?
-      member = Member.where(:name => @member_name).where(:status => CommonResource::MEMBER_STATUS_ON).first
-      @members_cards = MembersCard.where(:member => member)
-    end
-    @members_card =  MembersCard.new
-    if "num" == params[:p] && !@serial_num.blank?
-      @members_cards = [MembersCard.where(:card_serial_num => @serial_num).first]
-      @members_card = @members_cards.present? ? @members_cards.first : MembersCard.new
+    if params[:member_name]
+      @members_cards = Member.find_by_name(params[:member_name]).try(:all_members_cards)
+    elsif params[:card_serial_num]
+      @members_cards = MembersCard.all(:conditions => {:card_serial_num => params[:card_serial_num]})
     end
   end
 
@@ -54,7 +47,7 @@ class MembersCardsController < ApplicationController
     @serial_num = params[:card_serial_num]
     if !@member_name.blank?
       @serial_num = "" if params[:p].blank?
-      member = Member.where(:name => @member_name).where(:status => CommonResource::MEMBER_STATUS_ON).first
+      member = Member.where(:name => @member_name).first
       if member.nil?
         @members_cards = []
       else
@@ -65,9 +58,6 @@ class MembersCardsController < ApplicationController
     if "num" == params[:p] && !@serial_num.blank?
       @members_cards = [MembersCard.where(:card_serial_num => @serial_num).first]
       @members_card = @members_cards.present? ? @members_cards.first : MembersCard.new
-    end
-    respond_to do |format|
-      format.xml  { render :xml => @members_cards }
     end
   end
 

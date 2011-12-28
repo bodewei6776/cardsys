@@ -14,13 +14,13 @@
             .w2
               = f.radio_button(:gender,CommonResource::Gender_Man)
               男
-              \#{f.radio_button(:gender,CommonResource::Gender_Woman)}女
+              = f.radio_button(:gender,CommonResource::Gender_Woman)
+              女
         %ul
           %li
             .w1 类型：
             .w2
-              %select#coach_type.select{:name => "coach[coach_type]"}
-                = generate_coach_type_options(@coach)
+              = f.select :coach_type, Setting.coach_types
         %ul
           %li
             .w1 电话：

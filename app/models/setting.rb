@@ -11,5 +11,9 @@ class Setting
     def site_name
      "博德维"
     end
+
+    def coach_types
+     ["全职教练", "客人自带"] 
+    end
   end
 end

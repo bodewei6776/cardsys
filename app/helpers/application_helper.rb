@@ -36,7 +36,7 @@ module ApplicationHelper
   end
 
   def should_display_member_card_memu?
-    %{member_cards}.include?(controller_name.to_s) || action_name.to_s == 'member_card_bind_index'
+    %{members_cards}.include?(controller_name.to_s) || action_name.to_s == 'member_card_bind_index'
   end
 
   def should_display_goods_memu?
