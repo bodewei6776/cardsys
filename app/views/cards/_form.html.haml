@@ -12,7 +12,7 @@
               = f.text_field :name
             .w1 基础类型：
             .w2
-              = f.select :type, options_for_select(Card::CARD_TYPE.invert,  @card.type)
+              = f.select :card_type, options_for_select(Card::CARD_TYPE.invert,  @card.card_type)
         %ul
           %li
             .w1 卡前缀：

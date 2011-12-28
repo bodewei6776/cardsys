@@ -44,7 +44,7 @@ class CardsController < ApplicationController
     format_card_period_price @card
 
     respond_to do |format|
-      if @card.update_attributes(params[:card]) && @card.update_attribute(params[:card][:type])
+      if @card.update_attributes(params[:card]) 
         format.html { redirect_to(@card, :notice => '卡信息修改成功！') }
       else
         format.html { render :action => "edit" }
