@@ -68,6 +68,18 @@ class CardsController < ApplicationController
     redirect_to(cards_url) 
   end
 
+  def default_card_serial_num
+    card = Card.find(params[:id])
+    cardNo = card.card_prefix + member_card_num4(card)
+    render :json => { :card_serial_num => cardNo }
+  end
+
+  def member_card_num4(card)
+    last_member_card = card.members_cards.last
+    ap  last_member_card.card_serial_num[card.card_prefix.length..-1]
+    last_member_card.nil? ? "00001" : last_member_card.card_serial_num[card.card_prefix.length..-1].succ
+  end
+
   private
   def format_card_period_price(card)
     for period_price in PeriodPrice.search_order

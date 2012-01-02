@@ -1,0 +1,52 @@
+.soso
+  .fform
+    .fformbox
+      .fformbox_nr
+        %ul
+          %li
+            .w1 会员姓名：
+            .w2
+              = text_field_tag :member_name, params[:member_name], :id => "member_name"
+          %li
+            .w1 卡号：
+            .w2#cards
+              = text_field_tag :card_serial_num, params[:card_serial_num], :id => "member_card_serial_num"
+
+:javascript
+  function jump(card_serial_num){
+    window.location.href = ("#{recharge_members_cards_path}" +"?card_serial_num=" + card_serial_num);
+  }
+
+  $(document).ready(function(){
+    $('#member_name').autocomplete({
+      source:  '/members/autocomplete_name',
+        select:  function(ui,li){
+          var item = li.item;
+            var reqest_url  = "/members/" + item.id + "/member_cards_list";
+              $('#order_member_id').val(item.id);
+                $.get(reqest_url,function(returned_data)
+                  {
+                    options = "";
+                   $(returned_data).each(function(i,node){
+                     options +=("<option value='" + node.members_card.card_serial_num+
+                       "'>" + node.members_card.card_serial_num + "</option>") 
+                    });
+                    $('#cards').html( "<select name='order[members_card_id]'>" + options + "</select>");
+                $("#cards select").bind("click", function(){
+                  jump($("#cards select").val());
+                });
+
+                  });
+               }			
+            });
+
+    $('#member_card_serial_num').autocomplete({
+      source:  '#{autocomplete_card_serial_num_members_cards_path}',
+      select:  function(ui,li){
+        var item = li.item;
+          $('#member_name').val(item.member_name);
+            jump(item.label);
+              }			
+           });
+
+   });

@@ -20,6 +20,18 @@ $(document).ready(function(){
         }
       });
   });
+
+
+
+  $('input[member-name-autocomplete]').each(function(i){
+    $(this).autocomplete({
+      source: $(this).attr('member-name-autocomplete'),
+      select: function(ui, li){
+          var item = li.item;
+          $('#members_card_member_id').val(item.id)
+        }
+      });
+  });
 });
 
 function orderAutocomplete(){
@@ -132,3 +144,7 @@ function member_card_Autocomplete(){
 		});
 	});
 }
+
+
+
+

@@ -137,6 +137,8 @@ class MembersController < ApplicationController
 
   def new
     @member = Member.new
+    @member.granter = true if params[:members_card_id]
+    @member.members_card_id = params[:members_card_id] if params[:members_card_id]
   end
 
   def edit
@@ -146,7 +148,11 @@ class MembersController < ApplicationController
   def create
     @member = Member.new(params[:member])
     if @member.save
-      redirect_to :action => "index", :notice => '会员信息添加成功！'
+      if @member.granter?
+        redirect_to new_members_card_path(:member_name => @member.name)
+      else
+        redirect_to :action => "index", :notice => '会员信息添加成功！'
+      end
     else
       render :new
     end
@@ -248,13 +254,10 @@ class MembersController < ApplicationController
   end
 
   def member_card_bind_index
-    @member_name = params[:member_name]
-    @member = Member.where(:name => params[:member_name]).first if !params[:member_name].nil?
-    @member_card = MembersCard.new
-    @notice = params[:notice]
-    @notice_error = params[:notice_error]
-    @cards = Card.where(:status => CommonResource::CARD_ON)
-    @member_cards = @member.try(:all_members_cards) 
+    @member = Member.find_by_name(params[:member_name])
+    @cards = Card.enabled
+    @members_card = MembersCard.new
+    @members_cards = @member.try(:all_members_cards) 
   end
 
   def member_card_bind_list
@@ -350,14 +353,6 @@ class MembersController < ApplicationController
     render :json => @card_list.to_json(:only => [:id, :card_serial_num])
   end
 
-  def getMembersCardNo
-    cardNo = ""
-    if !params[:card_id].blank?
-      card = Card.find(params[:card_id])
-      cardNo = card.card_prefix + member_card_num4(card)
-    end
-    render :inline => cardNo.to_json
-  end
 
 
   private
@@ -369,25 +364,4 @@ class MembersController < ApplicationController
     @granters = Member.where(["id IN(?)", options]).where(:is_member => CommonResource::IS_GRANTER)
   end
 
-  def member_card_num4(card)
-    last_member_card = MembersCard.where(:card_id => card.id).order("card_serial_num desc").first
-    if last_member_card.nil?
-      num = "0001"
-      n2 = ((num[-4, num.length].to_s).to_i).to_s
-    else
-      num = last_member_card.card_serial_num
-      n2 = ((num[-4, num.length].to_s).to_i+1).to_s
-    end
-
-    if(n2.length == 1)
-      n2=("000"+n2)
-    end
-    if(n2.length == 2)
-      n2=("00"+n2)
-    end
-    if(n2.length == 3)
-      n2=("0"+n2)
-    end
-    n2
-  end
 end

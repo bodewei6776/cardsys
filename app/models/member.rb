@@ -11,10 +11,10 @@ class Member < ActiveRecord::Base
   scope :enabled, where(:state => "enabled")
 
   has_many :orders
-  has_one  :member_card_granter,:foreign_key => "granter_id"
   has_many :members_cards
-  has_many :blances
-
+  has_many :balances
+  has_many :member_card_granters, :foreign_key => "granter_id"
+  has_many :granted_member_cards, :class_name => "MembersCard", :through => :member_card_granters, :source => :members_card, :uniq => true
 
   validates :name, :presence => {:message => "名称不能为空！"}
   validates :mobile, :format => {:with =>/^0{0,1}(13[0-9]|15[0-9]|18[0-9])[0-9]{8}$/,:message => '手机号为空或者手机号格式不正确！', :allow_blank => false}
@@ -22,11 +22,30 @@ class Member < ActiveRecord::Base
   validates :email, :format => {:with =>/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/, :allow_blank => true,:message => '邮箱格式不正确！'}
   validates :cert_num, :uniqueness => {:on => :create, :message => '证件号已经存在！', :if => Proc.new { |member| !member.cert_num.nil? && !member.cert_num.blank? }}#证件号唯一
   validates_with MyValidator
+
+  validate :granter_no_more_than_max_num
+
   before_validation_on_create do |obj|
     obj.state = 'enabled'
   end
 
   before_save :geneate_name_pinyin
+
+  attr_accessor :members_card_id
+
+  after_create do |member|
+    if member.granter?
+      mc = MembersCard.find(members_card_id)
+      mc.granters << member
+      mc.save
+    end
+  end
+
+  def granter_no_more_than_max_num
+    return true unless self.granter
+    mc = MembersCard.find(members_card_id)
+    self.errors.add(:base, "此卡最大授权人数已达上限") if mc.max_granter_due?
+  end
 
   def geneate_name_pinyin
     pinyin = PinYin.new
@@ -73,20 +92,15 @@ class Member < ActiveRecord::Base
 
 
   def all_members_cards
-    if is_member?
-      MembersCard.where(:member_id => id)
-    else
-      granters = MemberCardGranter.where(:granter_id => id).all
-      MembersCard.where("id IN (#{granters.map(&:member_card_id).join(',')})")
-    end
+    members_cards.enabled + granted_member_cards.enabled
   end
 
   def member_card_left_times
-    self.all_members_cards.sum('left_times')
+   self.all_members_cards.collect(&:left_times).sum
   end
 
   def member_card_left_fees
-    self.all_members_cards.sum('left_fee')
+   self.all_members_cards.collect(&:left_fee).sum
   end
 
   def member_consume_amounts
@@ -121,18 +135,6 @@ class Member < ActiveRecord::Base
    # self.balances.balanced.where( ["(balance_way = ?)",Balance::Balance_Way_Use_Card]).inject(0){|s,b| s + b.book_record_real_amount}
   end
 
-  def is_member?
-    !granter?
-  end
-
-
-  def order_errors
-    @order_errors ||= []
-  end
-
-  def clear_order_errors
-    order_errors.clear
-  end
   
   def is_ready_to_order?(order)
     clear_order_errors

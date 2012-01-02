@@ -156,20 +156,20 @@ Cardsys::Application.routes.draw do |map|
     member do
       get :bind
       get :change_status
+      get :default_card_serial_num
     end
   end
 
   resources :members_cards do
     collection do
-      get :search
+      get :recharge
       get :granters
       get :status
       get :autocomplete_name
       get :autocomplete_card_serial_num
-      
     end
     member do
-      put :switch
+      put :switch_state
     end
   end
   resources :coaches do 

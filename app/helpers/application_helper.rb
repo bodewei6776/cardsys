@@ -4,7 +4,7 @@ module ApplicationHelper
     [
       {:image_offset => "1", :link => "/period_prices", :sub_menu => "common_menu", :display => "基础信息管理"},
       {:image_offset => "4", :link => "/members",       :sub_menu => "member_menu", :display => "会员管理"},
-      {:image_offset => "3", :link => "/members/member_card_bind_index", :sub_menu => "member_card_menu", :display => "会员卡管理"},
+      {:image_offset => "3", :link => "/members_cards/new", :sub_menu => "member_card_menu", :display => "会员卡管理"},
       {:image_offset => "6", :link => "/orders", :sub_menu => "book_record_menu", :display => "场地预定"},
       {:image_offset => "2", :link => "/goods",        :sub_menu => "goods_menu", :display => "库存管理"},
       {:image_offset => "5", :link => "/reports/income", :sub_menu => "report_menu", :display => "分析报表"},

@@ -21,13 +21,44 @@ class MembersCardsController < ApplicationController
         :id => item.id}}
   end
 
-  def search
-    if params[:member_name]
-      @members_cards = Member.find_by_name(params[:member_name]).try(:all_members_cards)
-    elsif params[:card_serial_num]
-      @members_cards = MembersCard.all(:conditions => {:card_serial_num => params[:card_serial_num]})
+  def recharge
+    if params[:card_serial_num]
+      @members_card = MembersCard.find_by_card_serial_num(params[:card_serial_num])
+      @member = @members_card.member
+      params[:member_name] = @member.name
+    else 
+      @members_card = []
     end
   end
+
+  def new
+    @member = Member.find_by_name(params[:member_name])
+    @cards = Card.enabled
+    @members_card = MembersCard.new(:member_id => @member.try(:id), :expire_date => 6.month.from_now)
+    @members_cards = @member.try(:all_members_cards) || []
+  end
+
+  def create
+    @members_card = MembersCard.new(params[:members_card])
+    if @members_card.save
+      flash[:notice] = "会员卡创建成功"
+    else
+      render :action => "new"
+      return
+    end
+    redirect_to :action => "new", :member_name => @members_card.member.name
+  end
+
+  def update
+    @members_card = MembersCard.find(params[:id])
+    if @members_card.update_attributes(params[:members_card])
+      redirect_to :action => "recharge", :card_serial_num => @members_card.card_serial_num
+    else
+      params[:member_name] = @members_card.member.name
+      render :action => "recharge"
+    end
+  end
+
 
   def show
     @members_card = MembersCard.find(params[:id])
@@ -43,22 +74,8 @@ class MembersCardsController < ApplicationController
   end
 
   def granters 
-    @member_name = params[:member_name]
-    @serial_num = params[:card_serial_num]
-    if !@member_name.blank?
-      @serial_num = "" if params[:p].blank?
-      member = Member.where(:name => @member_name).first
-      if member.nil?
-        @members_cards = []
-      else
-        @members_cards = MembersCard.where(:member_id => member.id)
-      end
-    end
-    @members_card =  MembersCard.new
-    if "num" == params[:p] && !@serial_num.blank?
-      @members_cards = [MembersCard.where(:card_serial_num => @serial_num).first]
-      @members_card = @members_cards.present? ? @members_cards.first : MembersCard.new
-    end
+    @members_card = MembersCard.find_by_card_serial_num params[:card_serial_num]
+    params[:member_name] = @members_card.try(:member).try(:name)
   end
 
 
@@ -75,11 +92,10 @@ class MembersCardsController < ApplicationController
   end
 
 
-  def switch
+  def switch_state
     @card = MembersCard.find(params[:id])
-    @card.status = @card.enable? ? 1 : 0
-    @card.save
-    redirect_to status_members_cards_path(:name => params[:name],:card_serial_num => params[:card_serial_num])
+    @card.switch_state
+    redirect_to :back
   end
 
 end

@@ -1,0 +1,87 @@
+.w96
+.r_bt
+  .r_bt_l
+    .r_bt_l_a
+    .r_bt_l_c.fb.white 会员卡绑定
+  .r_bt_r
+.fform
+  .fformbox
+    =render :partial => "layouts/errors", :locals => {:target => @members_card}
+    .fformbox_bt
+      %p 会员卡绑定
+    .fformbox_nr
+      = form_for(@members_card) do |f|
+        %ul
+          %li
+            .w1 会员名称：
+            .w2
+              = text_field_tag :members_name, @members_card.member.try(:name) || "", "member-name-autocomplete" => "/members/autocomplete_name"
+              = f.hidden_field :member_id
+            .w1 卡名称：
+            .w2
+              = f.select :card_id, options_for_select(Card.all.collect{|c| [c.name, c.id]}, @members_card.card_id)
+        %ul
+          %li
+            .w1 会员卡号：
+            .w2
+              = f.text_field :card_serial_num
+            .w1 卡有效期：
+            .w2
+              = f.text_field :expire_date, :class => "date-type-input"
+        %ul
+          %li
+            .w1 充值金额：
+            .w2
+              = f.text_field :left_fee
+            .w1 充值次数：
+            .w2
+              = f.text_field :left_times
+
+        %ul{:style => "height:80px;"}
+          %li
+            .w1 描述：
+            .ww2
+              = f.text_area :description, :rows => 4
+        .h10
+        .input_bd
+          = f.submit "提交", :class => "submit1 hand"
+        .clear
+  .h10
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white 会员卡列表
+    .r_bt_r
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 序号
+      %li.w10 卡名称
+      %li.w10 卡类型
+      %li.w15 卡余额/余次
+      %li.w15 有效期
+      %li.w15 授权人
+      %li.w20 操作
+    - (@members_cards || []).each_with_index do |member_card,index|
+      %ul.table_items
+        %li.w5= index + 1
+        %li.w10= member_card.card_serial_num
+        %li.w10= member_card.card_type_in_chinese
+        %li.w15= member_card.left_fee_value
+        %li.w15= (member_card.expire_date.to_chinese_mdh)
+        %li.w15
+          = member_card.granters.collect(&:name).join(", ") 
+        %li.w20
+          = link_to '添加授权人', new_member_path(:members_card_id => member_card.id), :class => "granter_new"
+          = link_to '注销此卡', switch_state_members_card_path(member_card), :confirm => "确定要进行此操作？", :method => :put
+  .h10
+  .pages
+  .h10
+
+:javascript
+  $(document).ready(function(){
+    $("#members_card_card_id").change(function(){
+      $.get("/cards/" + $("#members_card_card_id").val() + "/default_card_serial_num", function(response){
+        $('#members_card_card_serial_num').val(response.card_serial_num);
+      })
+    })
+  });

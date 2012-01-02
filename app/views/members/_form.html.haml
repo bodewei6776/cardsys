@@ -3,6 +3,19 @@
     .fformbox
       = render :partial => "layouts/errors", :locals => {:target => @member}
     .fformbox_nr
+      - if params[:members_card_id]
+        %ul
+          %li
+            .w1 会员类型：
+            .w2
+              授权人
+              = f.hidden_field :granter
+
+          %li
+            .w1 会员卡号：
+            .w2 
+              = MembersCard.find(params[:members_card_id]).card_serial_num
+              = f.hidden_field :members_card_id
       %ul
         %li
           .w1 会员名称：

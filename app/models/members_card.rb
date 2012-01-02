@@ -4,13 +4,14 @@ class MembersCard < ActiveRecord::Base
   belongs_to  :card
   belongs_to  :member
   has_many    :orders
-  has_many :member_card_granters
-  has_many :granters, :class_name => "Member", :through => :member_card_granters
+  has_many    :member_card_granters, :foreign_key => "member_card_id"
+  has_many    :granters, :class_name => "Member", :through => :member_card_granters
 
 
   STATE_DESC = {"enabled" => "正常", "disalbed" => "注销"}
 
   scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num.downcase}%'").limit(10) }
+  scope :enabled, where(:state => "enabled")
 
   CARD_STATUS_0 = 0 #正常
   CARD_STATUS_1 = 1 #已注销
@@ -18,18 +19,23 @@ class MembersCard < ActiveRecord::Base
   Free_Count_Limit = 2
   Free_Amount_limit = 500
 
-  delegate :card_type_in_chinese, :is_counter_card?, :to => :card
+  delegate :card_type_in_chinese, :is_counter_card?, :max_shared_count, :to => :card
   before_create :left_times_and_left_money_can_not_be_blank
+  before_update :reset_fee_and_times
 
 
-  attr_accessor :notice
+  validates_presence_of :member_id, :message => "请选择会员"
+  validates_presence_of :card_serial_num, :message => "请输入会员卡号"
+  validates_uniqueness_of :card_serial_num, :message => "会员卡号冲突", :allow_blank => true
+  validates_numericality_of :recharge_fee, :greater_than => 0, :message => "充值金额为正数", :on => :update
+  validates_numericality_of :recharge_times, :greater_than => 0, :only_integer => true, :message => "充值次数为正数", :on => :update
 
-  def max_granter
-    if self.card.shared_amount.nil? or self.card.shared_amount.zero?
-      1000
-    else
-      self.card.shared_amount
-    end
+  attr_accessor :recharge_fee, :recharge_times
+
+
+  def reset_fee_and_times
+    self.left_times += recharge_times.to_i if recharge_times.to_i > 0
+    self.left_fee += recharge_fee.to_i if recharge_fee.to_i > 0
   end
 
   def balances
@@ -40,11 +46,19 @@ class MembersCard < ActiveRecord::Base
   end
 
   def enable?
-    self.status == CARD_STATUS_0
+    state == "enabled"
   end
 
   def long_description
     card_serial_num + "   类型: " + card_type_in_chinese + "  " + left_fee_value + "  " + state_desc
+  end
+
+  def switch_state
+    if enabled?
+      update_attribute(:state, "disabled") 
+    else
+      update_attribute(:state, "enabled") 
+    end
   end
 
   def left_times_and_left_money_can_not_be_blank
@@ -52,9 +66,6 @@ class MembersCard < ActiveRecord::Base
     self.left_times = 0 if self.left_times.nil?
     self.left_fee = 0 if self.left_fee.nil?
   end
-
-  validates :card_serial_num,:uniqueness => {:message => "卡号已经存在，请更换卡号"}
-
 
   def calculate_amount_in_time_span(date,start_hour,end_hour)
     if card.is_counter_card?
@@ -84,12 +95,12 @@ class MembersCard < ActiveRecord::Base
     return true unless book_record
     card.is_useable_in_time_span?(book_record.record_date,book_record.start_hour,book_record.end_hour)
   end
-  
+
   #TODO
   def should_advanced_order?(start_hour,end_hour)
     true
   end
-  
+
   def has_enough_money_to_record?(record)
     #TODO
   end
@@ -111,13 +122,13 @@ class MembersCard < ActiveRecord::Base
       "￥#{left_fee.to_i}元;#{left_times.to_i} 次"
     end
   end
-   
+
   def left_mouny_order_counter(balance = nil)
     card.is_counter_card? ||
       (card.is_zige_card? && balance && balance.use_card_counter_to_balance?) ?
       left_times : left_fee
   end
-   
+
 
   def state_desc
     if is_expired?
@@ -126,25 +137,25 @@ class MembersCard < ActiveRecord::Base
       STATE_DESC[state]
     end
   end
-  
+
   def has_less_count?
     (card.is_counter_card? || card.is_zige_card?) && left_times < Free_Count_Limit
   end
-  
+
   def has_less_fee?
     (!card.is_counter_card? || card.is_zige_card?) && left_fee < Free_Amount_limit
   end
-  
+
   def less_fee_desc
     desc = ''
     desc << "卡余次不足#{Free_Count_Limit},请及时冲次" if has_less_count? 
     desc << "卡余额不足#{Free_Amount_limit}元，请及时充值" if has_less_fee?
   end
-  
+
   def should_charge_counter?
     card.is_zige_card? || card.is_counter_card?
   end
-  
+
   def should_recharge_amount?
     card.is_zige_card? || !card.is_counter_card?
   end
@@ -155,8 +166,8 @@ class MembersCard < ActiveRecord::Base
     msg << less_fee_desc   unless less_fee_desc.blank?
     msg.join(';')
   end
-  
- 
+
+
 
   # 能否进行商品购买
   def can_buy_good
@@ -194,7 +205,7 @@ class MembersCard < ActiveRecord::Base
   def can_balance_by_amount?
   end
 
-  def members
+  def members_include_granters
     [member]
   end
 
@@ -229,10 +240,4 @@ class MembersCard < ActiveRecord::Base
       order_errors << I18n.t('order_msg.member_card.invalid_time_span',:unusable_span => unsuable_span_info)
     end
   end
-
-  def is_status_ready_to_order?
-    order_errors << I18n.t('order_msg.member_card.expired') if is_expired?
-    order_errors << I18n.t('order_msg.member_card.notavalible') unless is_avalible?
-  end
-
 end

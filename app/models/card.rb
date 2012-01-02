@@ -11,7 +11,7 @@ class Card < ActiveRecord::Base
     "zige_card" => "资格卡"
   }
   
-  has_many :member_cards
+  has_many :members_cards
   has_many :card_period_prices
 
   
