@@ -1,29 +1,23 @@
-= link_to "创建卡模版", new_card_path, :class => "button_link float_right"
-.clear
-.table
-  %ul.bttitle.black.fb
-    %li.w5 编号
-    %li.w10 名称
-    %li.w10 类型
-    %li.w10 前缀
-    %li.w10 状态
-    %li.w20 说明
-    %li.w15 操作
-  - @cards.each_with_index do |card,index|
-    %ul.table_items
-      %li.w5= index.succ
-      %li.w10= card.name
-      %li.w10= Card::CARD_TYPE[card.card_type]
-      %li.w10= card.card_prefix
-      %li.w10= state_in_chinese(card.state)
-      %li.w20= card.description
-      %li.w15
-        = link_to '查看', card
-        = link_to '修改', edit_card_path(card)
-        = link_to '删除', card_path(card), :method => :destroy
-
-
-  .h10
-    .pages
-      = will_paginate @cards
-  .h10
+.w96
+  = table_header(:title => "卡模版列表", :link => new_card_path, :link_text => "创建卡模版")
+  .table
+    %ul.bttitle.black.fb
+      %li.w5 编号
+      %li.w10 名称
+      %li.w10 类型
+      %li.w10 前缀
+      %li.w10 状态
+      %li.w20 说明
+      %li.w20 操作
+    - @cards.each_with_index do |card,index|
+      %ul.table_items
+        %li.w5= index.succ
+        %li.w10= card.name
+        %li.w10= Card::CARD_TYPE[card.card_type]
+        %li.w10= card.card_prefix
+        %li.w10= card.state_desc
+        %li.w20= card.description
+        %li.w20
+          = operations_panel(card)
+  
+  =render :partial => "layouts/page_nav", :locals => {:objs => @cards}

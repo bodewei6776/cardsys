@@ -1,10 +1,6 @@
 .w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 商品查询
-    .r_bt_r
-      %button.submit2.hand{:onclick => "window.location.href='/goods/new'", :type => "button"} 添加商品
+
+  = table_header(:title => "商品查询", :link => new_good_path, :link_text => "添加商品")
   .soso
     %form#search_form.form-profile{:action => "/goods/index?p=#{@p}", :method => "post"}
       .w95
@@ -55,10 +51,9 @@
             = link_to '查看', good
             | #{link_to '修改', edit_good_path(good)}
             | #{link_to '删除', good, :confirm => '确定删除商品'+good.name+"？", :method => :delete}
-  .h10
-  .pages
-    = will_paginate @goods, :sp => 1
-  .h10
+
+
+    =render :partial => "layouts/page_nav", :locals => { :objs => @goods }
 :javascript
   $(".store_manage_index").colorbox({width:"80%", height:"70%", iframe:false});
   $('#good_type').change(function(){ $('#search_form').submit(); });

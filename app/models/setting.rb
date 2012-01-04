@@ -15,5 +15,8 @@ class Setting
     def coach_types
      ["全职教练", "客人自带"] 
     end
+
+    def cert_type_options(default_value)
+    end
   end
 end

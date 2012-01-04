@@ -62,9 +62,10 @@ class CardsController < ApplicationController
     redirect_to(cards_url) 
   end
 
-  def change_status
+  def switch_state
     @card = Card.find(params[:id])
-    @card.update_attribute("status", params[:status])
+    ap @card.switch_state!
+    ap @card.state
     redirect_to(cards_url) 
   end
 

@@ -1,4 +1,6 @@
 class Vacation < ActiveRecord::Base
+  include HashColumnState
+
   STATE_MAP = {"holiday" => "节假日", "workday" => "工作日"}
 
   validates :name, :presence => {:message => "名称不能为空！"}

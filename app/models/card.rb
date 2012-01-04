@@ -1,9 +1,9 @@
 class Card < ActiveRecord::Base
+  include HashColumnState
 
   CONSUME_TYPE_1 = 1 #场地消费
   CONSUME_TYPE_2 = 2 #可买商品
 
-  STATE = %w( 未使用 使用中 已停用 已注销 )
   CARD_TYPE = {
     "member_card" => "会员卡",
     "balance_card" => "储值卡",
@@ -22,12 +22,6 @@ class Card < ActiveRecord::Base
   validates_numericality_of :min_time ,:only_integer => true, :greater_than => -1, :message => "提醒时间必须为非负整数",:allow_nil => true
   validates_numericality_of :min_amount,:only_integer => true, :greater_than => -1, :message => "提醒金额必须为非负整数",:allow_nil => true
   validates_numericality_of :min_count,:only_integer => true, :greater_than =>-1, :message => "提醒次数必须为非负整数",:allow_nil => true
-
-  scope :enabled, where(:state => "enabled")
-
-  before_validation_on_create do |card|
-    card.state = 'enabled'
-  end
 
   before_save :auto_fill_nil
   def auto_fill_nil

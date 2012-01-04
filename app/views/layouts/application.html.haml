@@ -69,7 +69,7 @@
     }
 
   $(document).ready(function() {
-    WdatePicker({startDate:'#{ftime_date(@date)}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
+    WdatePicker({startDate:'#{Date.today.strftime("%Y-%m-%d")}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
 
     highlight_table();
     $(".popup-new-window").colorbox({width:"900", height:"600", iframe:true});

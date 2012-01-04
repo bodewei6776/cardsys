@@ -1,10 +1,6 @@
 .w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 教练列表
-    .r_bt_r
-      %button.submit2.hand{:onclick => "window.location.href='/coaches/new'", :type => "button"} 添加教练
+
+  = table_header(:title => "教练列表", :link => new_coach_path, :link_text => "创建教练")
   .table
     %ul.bttitle.black.fb
       %li.w5 编号
@@ -23,18 +19,8 @@
         %li.w10= coach.coach_type
         %li.w10= coach.telephone
         %li.w10= coach.fee
-        %li.w15= Coach::STATE_MAP[coach.state]
+        %li.w15= coach.state_desc
         %li.w15
-          = link_to '查看', coach
-          |
-          \#{link_to '修改', edit_coach_path(coach)}
-          |
-          - if coach.state == "enabled"
-            = link_to '停用', change_status_coach_path(coach)
-          - elsif coach.state == "disabled"
-            = link_to '启用', change_status_coach_path(coach)
-            | #{link_to '删除', coach, :confirm => '确定删除？', :method => :delete}
-  .h10
-  .pages
-    = will_paginate @coachs
-  .h10
+          = operations_panel(coach)
+
+  =render :partial => "layouts/page_nav", :locals => {:objs => @coachs}

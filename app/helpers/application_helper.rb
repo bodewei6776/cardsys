@@ -1,5 +1,19 @@
 module ApplicationHelper
 
+  def table_header locals
+    render :partial => "layouts/table_header", :locals => locals
+  end
+
+  def operations_panel(object, operations = [:show, :edit, :destroy, :switch_state])
+   array = []
+   (array << (link_to "查看", object)) if operations.include?(:show) 
+   (array << (link_to "编辑", send("edit_#{object.class.name.underscore}_path", object))) if operations.include?(:edit) 
+   (array << (link_to "删除", send("#{object.class.name.underscore}_path", object), :confirm => "确认要删除么？", :method => :delete)) if operations.include?(:destroy) 
+   (array << (link_to "启用", send("switch_state_#{object.class.name.underscore}_path", object), :confirm => "确认要启用么？", :method => :put)) if operations.include?(:switch_state) && object.disabled? 
+   (array << (link_to "禁用", send("switch_state_#{object.class.name.underscore}_path", object), :confirm => "确认要禁用么？", :method => :put)) if operations.include?(:switch_state) && object.enabled? 
+   raw array.join(" | ")
+  end
+
   def user_menus
     [
       {:image_offset => "1", :link => "/period_prices", :sub_menu => "common_menu", :display => "基础信息管理"},
@@ -12,18 +26,6 @@ module ApplicationHelper
       {:image_offset => "8", :link => "/rents", :sub_menu => "locker_menu", :display => "储物柜管理"},
       {:image_offset => "9", :link => "/users",  :sub_menu => "authorize_menu", :display => "权限管理"}
     ]
-  end
-
-  def error_messages_for(object_name, options = {})
-    options = options.symbolize_keys
-    object = instance_variable_get("@#{object_name}")
-    unless object.errors.empty?
-      error_lis = []
-      object.errors.each{ |key, msg|
-        error_lis << msg+" "
-      }
-      content_tag("div", content_tag(options[:header_tag] || "h2", "发生#{object.errors.count}个错误" ) + content_tag("br") + content_tag("ul", error_lis), "id" => options[:id] || "errorExplanation", "class" => options[:class] || "errorExplanation" )
-    end
   end
 
   def should_display_common_memu?
@@ -85,28 +87,10 @@ module ApplicationHelper
   end
 
 
-  def generate_card_status_options(selected_value)
-    options = [['所有状态','-1'],['使用中','1'],['未使用','0'],['已停用','2'],['已注销','3']]
-    options_for_select(options,selected_value)
-  end
-
-  def display_card_type_desc(card)
-    return "" if card.nil?
-    get_res_item(CommonResource::CARD_TYPE, card.card_type)
-  end
-
   def card_time_span_available(card, span)
     card.available_on(span) ? "可用" : "不可用"
   end
 
-  def generate_period_price_type_options(period_price)
-    options = generate_res_options CommonResource::PERIOD_TYPE
-    options_for_select(options, period_price.period_type)
-  end
-
-  def display_period_price_type_desc(period_price)
-    get_res_item(CommonResource::PERIOD_TYPE, period_price)
-  end
 
   def generate_time_options(checked_time)
     options = []
@@ -120,43 +104,7 @@ module ApplicationHelper
     time.to_s + ":00"
   end
 
-  def generate_coach_type_options(coach)
-    options = generate_res_options CommonResource::COACH_TYPE
-    options_for_select(options, coach.coach_type ? coach.coach_type.to_s : nil)
-  end
-
-  def generate_coach_type_str(type)
-    get_res_item(CommonResource::COACH_TYPE, type)
-  end
-
-  def generate_cert_type_options(model)
-    options = generate_res_options CommonResource::CERT_TYPE
-    options_for_select(options, model.cert_type.nil? ? model.cert_type : 0)
-  end
-
-  def generate_cert_type_str(type)
-    get_res_item(CommonResource::CERT_TYPE, type)
-  end
-
-  def generate_locker_type_options_without_all(locker_type)
-    options = generate_res_options CommonResource::LOCKER_TYPE
-    options_for_select(options, (locker_type.nil? || locker_type == "") ? '' : locker_type.to_i)
-  end
-
-
-  def generate_locker_type_options(locker_type)
-    options = generate_res_options CommonResource::LOCKER_TYPE
-    options << ['全部', '']
-    options_for_select(options, (locker_type.nil? || locker_type == "") ? '' : locker_type.to_i)
-  end
-
   def generate_good_type_options(good_type)
-    #options = generate_res_options CommonResource::GOOD_TYPE
-    #options << ['全部', '']
-    #options_for_select(options, (good_type.nil? || good_type == "") ? '' : good_type.to_i)
-
-    #"<option value='0'>全部</option>" + 
-    #option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,good_type)
     indent_category_options(good_type)
   end
   def generate_good_type_options_without_all(good_type)
@@ -172,15 +120,6 @@ module ApplicationHelper
     category.parent.name + " / " + category.name
   end
 
-  def generate_good_source_options(model)
-    options = generate_res_options CommonResource::GOOD_SOURCE
-    options_for_select(options, !model.good_source.nil? ? model.good_source : 0)
-  end
-
-  def generate_good_source_str(source)
-    get_res_item(CommonResource::GOOD_SOURCE, source)
-  end
-
   def generate_granter_options(member)
     options = []
     granter_ids = MemberCardGranter.where(:member_id => member.id)
@@ -190,10 +129,6 @@ module ApplicationHelper
     granters = []
     Member.where(["id IN(?)", options]).each { |memb| granters << [memb.name, memb.id] }
     granters
-  end
-
-  def generate_court_status_str(status)
-    CommonResource::COURT_ON == status ? '启用' : '停用'
   end
 
   def get_user_name(id)
@@ -213,11 +148,6 @@ module ApplicationHelper
   def ftime(time)
     return '' if time.nil?
     return time.strftime("%Y年%m月%d日 %H点%M分")
-  end
-
-  def ftime_date(time)
-    return '' if time.nil?
-    return time.strftime("%Y-%m-%d")
   end
 
   def gender_desc(gender)
@@ -294,29 +224,6 @@ module ApplicationHelper
     week_days[offset]
   end
 
-  private
-
-  def generate_res_options res_type
-    com_res = CommonResource.where(:name => res_type).last
-    options = []
-    com_res.common_resource_details.each{|x|
-      options << [x.detail_name, x.id]
-    }
-    options
-  end
-
-  def get_res_item(res_type, option_key)
-    r_detail = ""
-    com_res = CommonResource.where(:name => res_type).last
-    com_res.common_resource_details.each{|x|
-      if x.id == option_key        
-        r_detail = x.detail_name
-      end
-    }
-    r_detail
-  end
-
-
   def days_in_month(year, month)
     date = Date.new(year, month, -1)
     if date.beginning_of_month == Date.today.beginning_of_month
@@ -346,17 +253,8 @@ module ApplicationHelper
     OpenStruct.new(:name => "博德维")  
   end
 
-  def chinese_date(date = Date.today)
-    date.strftime("%Y年%m月%d日") 
-  end
-
   def back_to(path)
     concat(link_to "返回", path)
-  end
-
-  def state_in_chinese(state)
-    return "未知" if state.nil?
-    {"disable" => "禁用", "enable" => "正常"}[state]
   end
 
   def current_catena_name

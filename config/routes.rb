@@ -155,7 +155,7 @@ Cardsys::Application.routes.draw do |map|
   resources :cards do
     member do
       get :bind
-      get :change_status
+      put :switch_state
       get :default_card_serial_num
     end
   end
@@ -203,7 +203,7 @@ Cardsys::Application.routes.draw do |map|
       get :coach_record_detail
     end
      member do
-      get :change_status
+      put :switch_state
     end
   end
 

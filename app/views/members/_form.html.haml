@@ -24,7 +24,7 @@
             %span{:style => "color:red;"} *
           .w1 注册日期：
           .w2
-            = chinese_date(Time.now)
+            = Time.now.to_chinese_mdh
       %ul
         %li
           .w1 会员昵称：

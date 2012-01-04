@@ -32,7 +32,7 @@
     .r_bt_l
       .r_bt_l_a
       .r_bt_l_c.fb.white
-        = @current_date.timeshort
+        = @current_date.to_chinese_ymd
         的储物柜出租
     .r_bt_r
       %button.submit2.hand{:onclick => "location.href=/rents?date=#{@predate}", :type => "button"}>  前一天

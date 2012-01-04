@@ -1,10 +1,5 @@
 .w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 时段价格列表
-    .r_bt_r
-      %button.submit2.hand{:onclick => "window.location.href='/period_prices/new'", :type => "button"} 创建时段
+  = table_header(:title => "时段价格列表", :link => new_period_price_path, :link_text => "创建时段")
   .table
     %ul.bttitle.black.fb
       %li.w5 编号
@@ -29,13 +24,8 @@
         %li.w10= period_price.price
         %li.w15= period_price.description
         %li.w15
-          = link_to '查看', period_price
-          |
-          %a{:href => "/period_prices/#{period_price.id}/edit"} 修改
-          - if period_price.card_period_prices.blank?
-            |
-            \#{link_to '删除', period_price, :confirm => '确定删除吗?', :method => :delete}
-  .h10
-  .pages
-    = will_paginate @period_prices
-  .h10
+          - operations = [:show, :edit]
+          - operations << :destroy if period_price.card_period_prices.blank?
+          = operations_panel(period_price, operations)
+
+  = render :partial => "layouts/page_nav", :locals => { :objs => @period_prices }

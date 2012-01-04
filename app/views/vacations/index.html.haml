@@ -1,10 +1,6 @@
 .w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 节假日列表
-    .r_bt_r
-      %button.submit2.hand{:onclick => "window.location.href='/vacations/new'", :type => "button"} 创建节假日
+
+  = table_header(:title => "节假日列表", :link => new_vacation_path, :link_text => "创建节假日")
   .table
     %ul.bttitle.black.fb
       %li.w5 序号
@@ -17,15 +13,13 @@
       %ul.table_items
         %li.w5= index + 1
         %li.w30.overflow_hidden= vacation.name
-        %li.w10= ftime_date(vacation.start_date)
-        %li.w10= ftime_date(vacation.end_date)
-        %li.w10= Vacation::STATE_MAP[vacation.state]
+        %li.w10= (vacation.start_date.to_chinese_ymd)
+        %li.w10= (vacation.end_date.to_chinese_ymd)
+        %li.w10= vacation.state_desc
         %li.w10
-          - if vacation.can_edit?
-            = link_to '修改', edit_vacation_path(vacation)
-          - if vacation.can_edit?
-            = link_to '删除', vacation, :confirm => '确定删除?', :method => :delete
-  .h10
-  .pages
-    = will_paginate(@vacations)
-  .h10
+          - operations = []
+          - operations << :edit if vacation.can_edit?
+          - operations << :destroy if vacation.can_edit?
+          = operations_panel(vacation, operations)
+
+    =render :partial => "layouts/page_nav", :locals => { :objs => @vacations }

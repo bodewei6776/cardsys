@@ -1,9 +1,9 @@
 - form_for @court  do |f|
   .fform
     .fformbox
+      =render :partial => "layouts/errors", :locals => {:target => @court}
       .fformbox_bt
         %p 基本属性
-      = error_messages_for :court
       .fformbox_nr
         %ul
           %li

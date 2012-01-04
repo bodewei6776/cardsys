@@ -20,7 +20,6 @@ class GoodsController < ApplicationController
     @goods = @category.nil? ? Good.order("id desc") :  @category.all_goods.order("id desc")
     @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @goods = @goods.paginate(default_paginate_options)
-  #  render :layout => "small_main"
   end
 
 

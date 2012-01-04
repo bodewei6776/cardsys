@@ -9,7 +9,7 @@
         %li
           .w1 预订：
           .w2{:style => "width: 500px;"}
-            = @order.court_book_record.alloc_date.timeshort
+            = @order.court_book_record.alloc_date.to_chinese_ymd
             = chinese_week_day(Time.parse(@order.court_book_record.alloc_date.to_s).wday)
             = f.fields_for :court_book_record do |cbr|
               = cbr.select :start_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.start_hour)

@@ -40,7 +40,7 @@
         %li.w15{:style => "overflow:hidden;", :title => member.card_serial_nums}
           = member.card_serial_nums
         %li.w10= member.mobile
-        %li.w8= member.created_at.nil? ? "" : chinese_date(member.created_at)
+        %li.w8= member.created_at.nil? ? "" : member.created_at.to_chinese_mdh
         %li.w6= member.member_card_left_fees
         %li.w6= member.member_card_left_times
         %li.w6= member.member_consume_amounts
@@ -48,12 +48,6 @@
         %li.w8
           = member.birthday.blank? ? ':' : member.birthday.to_chinese_mdh
         %li.w12
-          = link_to '查看', member
-          |
-          = link_to '修改', edit_member_path(member) 
-          |
-          = link_to '删除', member, :confirm => '确定删除吗?', :method => :delete
-  .h10
-  .pages
-    = will_paginate @members
-  .h10
+          = operations_panel(member, [:show, :edit])
+
+    =render :partial => "layouts/page_nav", :locals => { :objs => @members }

@@ -3,7 +3,6 @@
     .fformbox
       .fformbox_bt
         %p 填写教练信息
-      = error_messages_for :coach
       .fformbox_nr
         %ul
           %li
@@ -34,7 +33,7 @@
             .w1 证件类型：
             .w2
               %select#cert_type.select{:name => "coach[cert_type]"}
-                = generate_cert_type_options(@coach)
+                = Setting.cert_type_options(@coach.cert_type)
             .w1 证件号码：
             .w2
               = f.text_field :cert_num

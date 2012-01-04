@@ -49,9 +49,9 @@ class CourtsController < ApplicationController
     redirect_to(courts_url) 
   end
 
-  def change_status
+  def switch_state 
     @court = Court.find(params[:id])
-    @court.update_attribute("status", params[:status])
+    @court.switch_state!
     redirect_to courts_url
   end
 
