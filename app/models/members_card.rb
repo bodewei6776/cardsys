@@ -9,7 +9,6 @@ class MembersCard < ActiveRecord::Base
   has_many    :member_card_granters, :foreign_key => "member_card_id"
   has_many    :granters, :class_name => "Member", :through => :member_card_granters
 
-
   scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num.downcase}%'").limit(10) }
 
   delegate :card_type_in_chinese, :is_counter_card?, :max_shared_count, :to => :card
