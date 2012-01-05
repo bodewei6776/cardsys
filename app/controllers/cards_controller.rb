@@ -5,50 +5,30 @@ class CardsController < ApplicationController
     @cards = Card.paginate(default_paginate_options)
   end
 
-  def show
-    @period_prices = PeriodPrice.search_order
-    @goods = Good.where(:status => 1)
-  end
-
   def new
     @card = Card.new
-    @period_prices = PeriodPrice.search_order
-    @goods = Good.where(:status => 1)
-  end
-
-  def edit
-    @period_prices = PeriodPrice.search_order
-    @goods = Good.where(:status => 1)
   end
 
   def create
     @card = Card.new(params[:card])
     #设置卡的时段价格
-    @period_prices = PeriodPrice.search_order
     format_card_period_price @card 
 
-    respond_to do |format|
-      if @card.save
-        format.html { redirect_to(@card, :notice => '卡信息创建成功！') }
-      else
-        format.html { render :action => "new" }
-      end
+    if @card.save
+      redirect_to(@card, :notice => '卡信息创建成功！') 
+    else
+      render :action => "new" 
     end
   end
 
   def update
-    @period_prices = PeriodPrice.all
-    @goods = Good.all
-
     CardPeriodPrice.delete_all("card_id = #{params[:id]}")
     format_card_period_price @card
 
-    respond_to do |format|
-      if @card.update_attributes(params[:card]) 
-        format.html { redirect_to(@card, :notice => '卡信息修改成功！') }
-      else
-        format.html { render :action => "edit" }
-      end
+    if @card.update_attributes(params[:card]) 
+      redirect_to(@card, :notice => '卡信息修改成功！') 
+    else
+      render :action => "edit" 
     end
   end
 
@@ -64,8 +44,8 @@ class CardsController < ApplicationController
 
   def switch_state
     @card = Card.find(params[:id])
-    ap @card.switch_state!
-    ap @card.state
+    @card.switch_state!
+    @card.state
     redirect_to(cards_url) 
   end
 
@@ -98,5 +78,7 @@ class CardsController < ApplicationController
 
   def load_card 
     @card = Card.find(params[:id])    
+    @period_prices = PeriodPrice.search_order
+    @goods = Good.enabled
   end
 end

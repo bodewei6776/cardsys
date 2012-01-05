@@ -1,4 +1,6 @@
 class GoodsController < ApplicationController
+  before_filter :load_good, :only => [:show, :edit, :update,:destroy, :store_manage_update]
+
   def autocomplete_name
     render :json => Good.where(["pinyin_abbr like ? or name like ? ","%#{params[:term]}%","%#{params[:term]}%"]).all.collect(&:name).to_json
   end
@@ -47,7 +49,6 @@ class GoodsController < ApplicationController
   end
 
   def update
-    @good = Good.find(params[:id])
     @good.count_total_now = @good.count_back_stock + @good.count_front_stock
 
     if @good.update_attributes(params[:good])
@@ -58,7 +59,6 @@ class GoodsController < ApplicationController
   end
 
   def destroy
-    @good = Good.find(params[:id])
     @good.destroy
 
     redirect_to goods_url
@@ -66,12 +66,10 @@ class GoodsController < ApplicationController
 
   def store_manage_index
     @p = params[:p]
-    @good = Good.find(params[:id])
     render :layout => false
   end
 
   def store_manage_update
-    @good = Good.find(params[:id])
     @p = params[:p]
     count_back_stock_out = params[:good][:count_back_stock_out].to_i
     count_back_stock_in  = params[:good][:count_back_stock_in].to_i
@@ -83,29 +81,20 @@ class GoodsController < ApplicationController
     render :text => msg
   end
 
-  def change_status
-    @good = Good.find(params[:id])
-    @good.update_attribute("status", params[:status])
-    respond_to do |format|
-      format.html { redirect_to(goods_url) }
-      format.xml  { head :ok }
-    end
-  end
-
   def goods
     @order = Order.find(params[:order_id])
     if params[:name]
       name = "%#{params[:name]}%"
-      @goods = Good.valid_goods.where(["name like ? or name_pinyin like ? or pinyin_abbr like ?",
+      @goods = Good.enabled.where(["name like ? or name_pinyin like ? or pinyin_abbr like ?",
                                       name, name, name ]).order('count_back_stock_out desc').limit(20)
     else
-      @goods = Good.valid_goods.order('count_back_stock_out desc').limit(20)
+      @goods = Good.enabled.order('count_back_stock_out desc').limit(20)
     end
     render :layout => "small_main"
   end
 
   def to_buy
-    @goods = Good.valid_goods.order('sale_count desc').limit(20)
+    @goods = Good.enabled.order('sale_count desc').limit(20)
     render :action => 'goods'
   end
 

@@ -1,4 +1,6 @@
 class MembersCard < ActiveRecord::Base
+  include HashColumnState
+
   set_table_name 'member_cards'
 
   belongs_to  :card
@@ -8,21 +10,11 @@ class MembersCard < ActiveRecord::Base
   has_many    :granters, :class_name => "Member", :through => :member_card_granters
 
 
-  STATE_DESC = {"enabled" => "正常", "disalbed" => "注销"}
-
   scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num.downcase}%'").limit(10) }
-  scope :enabled, where(:state => "enabled")
-
-  CARD_STATUS_0 = 0 #正常
-  CARD_STATUS_1 = 1 #已注销
-  
-  Free_Count_Limit = 2
-  Free_Amount_limit = 500
 
   delegate :card_type_in_chinese, :is_counter_card?, :max_shared_count, :to => :card
   before_create :left_times_and_left_money_can_not_be_blank
   before_update :reset_fee_and_times
-
 
   validates_presence_of :member_id, :message => "请选择会员"
   validates_presence_of :card_serial_num, :message => "请输入会员卡号"
@@ -32,33 +24,14 @@ class MembersCard < ActiveRecord::Base
 
   attr_accessor :recharge_fee, :recharge_times
 
-
   def reset_fee_and_times
     self.left_times += recharge_times.to_i if recharge_times.to_i > 0
     self.left_fee += recharge_fee.to_i if recharge_fee.to_i > 0
   end
 
-  def balances
-    Balance.find_all_by_book_reocrd_member_card_id(self.id) & Balance.find_all_by_goods_member_card_id(self.id)
-  end
-
-  def max_granter_due?
-  end
-
-  def enable?
-    state == "enabled"
-  end
 
   def long_description
     card_serial_num + "   类型: " + card_type_in_chinese + "  " + left_fee_value + "  " + state_desc
-  end
-
-  def switch_state
-    if enabled?
-      update_attribute(:state, "disabled") 
-    else
-      update_attribute(:state, "enabled") 
-    end
   end
 
   def left_times_and_left_money_can_not_be_blank
@@ -75,20 +48,12 @@ class MembersCard < ActiveRecord::Base
     end
   end
 
-  def is_expired?
+  def expired?
     expire_date <= DateTime.now
   end
 
-  def is_avalible?
-    !is_expired? && enabled?
-  end
-
-  def enabled?
-    state == 'enabled'
-  end
-
-  def disalbed?
-    state == 'disalbed'
+  def avalible?
+    !expired? && enabled?
   end
 
   def is_useable_in_time_span?(book_record)
@@ -131,11 +96,7 @@ class MembersCard < ActiveRecord::Base
 
 
   def state_desc
-    if is_expired?
-      "已过期"
-    else
-      STATE_DESC[state]
-    end
+     expired? ?  "已过期" : state_desc
   end
 
   def has_less_count?
@@ -167,10 +128,8 @@ class MembersCard < ActiveRecord::Base
     msg.join(';')
   end
 
-
-
   # 能否进行商品购买
-  def can_buy_good
+  def can_buy_good?
     (!self.card.is_counter_card? && self.card.is_consume_goods?) ? "yes" : "no"
   end
 
@@ -199,24 +158,8 @@ class MembersCard < ActiveRecord::Base
     notices.join(",")
   end
 
-  def can_balance_by_money?
-  end
-
-  def can_balance_by_amount?
-  end
-
   def members_include_granters
-    [member]
-  end
-
-
-
-  def order_errors
-    @order_errors ||= []
-  end
-
-  def clear_order_errors
-    order_errors.clear
+    [member, granters].flatten.uniq
   end
 
   def is_ready_to_order?(order)

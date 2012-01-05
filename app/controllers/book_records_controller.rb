@@ -82,10 +82,6 @@ class BookRecordsController < ApplicationController
       if @order.save
         operation = :book
         log_action("#{@order.book_record.court.name}#{BookRecord::OPERATION_MAP[operation]}",operation.to_s,user) if operation && BookRecord::OPERATION_MAP.keys.include?(operation)
-        format.html { 
-          render_js(" window.close(); if (window.opener && !window.opener.closed) {  " + 
-                    " window.opener.location.reload(); } ")
-        }
       else
         inite_related_order_objects
         format.html { render :action => "new",:layout => 'small_main' }

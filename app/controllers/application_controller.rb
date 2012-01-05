@@ -17,32 +17,10 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user_session, :current_user
 
-
-  self.allow_forgery_protection = false
-
-  def operation_desc(o)
-    case o
-    when "agent"
-      "申请代卖"
-    when "book"
-      "变更预定"
-    end
-  end
-
-
-
-  def render_js(script)
-    render :js => "<script type='text/javascript'>" + script + "</script>"
-  end
-
   protected
 
   def set_date
     @date ||= DateTime.now
-  end
-
-  def configure_charsets
-    request.headers["Content-Type"] = "text/html;charset=utf-8 "
   end
 
   def authorize
@@ -119,11 +97,6 @@ class ApplicationController < ActionController::Base
     @user.try(:valid_password?,params[:password])
   end
 
-  def close_colorbox
-    respond_to do |wants|
-      wants.html { render :text => "<script type='javascript'>parent.$.fn.colorbox.close();</script>"}
-    end
-  end
 end
 
 

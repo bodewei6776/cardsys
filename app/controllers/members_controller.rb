@@ -158,39 +158,6 @@ class MembersController < ApplicationController
     end
   end
 
-  def createa
-    is_member = params[:member][:is_member]
-    @member = Member.new(params[:member])
-    @member_base = Member.find_by_id(params[:member_id])
-    card = MembersCard.find_by_id(params[:member_card_id])
-    respond_to do |format|
-      if @member.save
-        @members = Member.where(:is_member => is_member)
-        if CommonResource::IS_GRANTER.to_s.eql?(is_member)
-          base_member_id = params[:member_id]
-          @mg = MembersCardGranter.new(:member_id => base_member_id, :member_card_id => params[:member_card_id], :granter_id => @member.id)
-          card = MembersCard.find(params[:member_card_id])
-          if card.max_granter_due?
-            notice = "最多能授权给#{card.max_granter}人"
-          else
-            notice = "添加成功" if @mg.save
-          end
-          format.html { redirect_to granters_member_cards_path(:p => "num",:card_serial_num => card.card_serial_num,:member_name => @member_base.try(:name),:notice => notice) }
-        else
-          format.html { redirect_to :action => "index", :notice => '会员信息添加成功！'}
-        end
-      else
-        if CommonResource::IS_GRANTER.to_s.eql?(is_member)
-          format.html { redirect_to granters_member_cards_path(:p => "num",
-                                                               :card_serial_num => card.card_serial_num,
-                                                               :member_name => @member.name)}
-        else
-          format.html { render :action => 'new'}
-        end       
-      end
-    end
-  end
-
   def update
     @member = Member.find(params[:id])
     is_member = params[:member][:is_member]

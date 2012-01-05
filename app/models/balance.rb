@@ -1,8 +1,5 @@
 class Balance < ActiveRecord::Base
 
-  Order_Type_Book_Record = 1
-  Order_Type_Good        = 2
-
   BALANCE_WAYS = {
     "card" => "记账",
     "cash" => "现金",
@@ -55,19 +52,15 @@ class Balance < ActiveRecord::Base
     end  
   end
 
-  # validate do |instance|
-  #   return true unless order.is_member?
-  #   if instance.use_card_to_balance_goods? && !order.should_use_card_to_balance_goods?
-  #     errors[:base] << "卡不支持购买商品，只能订场"
-  #   elsif instance.use_card_to_balance? && !order.member_card.has_enough_money_to_balance?(self)
-  #     errors[:base] << "卡余额不足，不能结算"
-  #   elsif instance.use_card_to_balance? && !order.member_card.is_avalible?
-  #     errors[:base] << "卡已经过期，或者状态不正常不能结算"
-  #   end
-  # end
-
-  def member_card
-    MemberCard.find_by_id(self.goods_member_card_id) || MemberCard.find_by_id(self.book_reocrd_member_card_id)#rescue nil
+  validate do |instance|
+    return true unless order.is_member?
+    if instance.use_card_to_balance_goods? && !order.should_use_card_to_balance_goods?
+      errors[:base] << "卡不支持购买商品，只能订场"
+    elsif instance.use_card_to_balance? && !order.members_card.has_enough_money_to_balance?(self)
+      errors[:base] << "卡余额不足，不能结算"
+    elsif instance.use_card_to_balance? && !order.members_card.is_avalible?
+      errors[:base] << "卡已经过期，或者状态不正常不能结算"
+    end
   end
 
   def self.default_balance_way_by_order(order)
@@ -82,10 +75,6 @@ class Balance < ActiveRecord::Base
     (order.should_use_card_to_balance_goods? ? Balance_Way_Use_Card : Balance_Way_Use_Cash)
   end
 
-  def hide!
-    self.hide = true
-    self.save(false)
-  end
 
   #TODO
   def do_balance!
@@ -119,17 +108,6 @@ class Balance < ActiveRecord::Base
     save
   end
 
-  def to_change?
-    operation == 'change'
-  end
-
-  def to_balance?
-    operation.blank? || operation == 'balance'
-  end
-
-  def balance_way_desc
-    balance_way_desciption(balance_way)
-  end
 
   def balance_way_desc
     balance_way_desciption(balance_way)
@@ -545,9 +523,6 @@ class Balance < ActiveRecord::Base
     save
   end
 
-  def paid?
-    self.status == Const::YES
-  end
 
   def name
     self.order_item.name

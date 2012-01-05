@@ -15,8 +15,6 @@ class Locker < ActiveRecord::Base
   def locker_type_in_word
     CommonResourceDetail.find(self.locker_type).detail_name rescue "未知"
   end
-  
-
 
   before_create do |record|
    record.state = "empty"

@@ -92,14 +92,6 @@ module ApplicationHelper
   end
 
 
-  def generate_time_options(checked_time)
-    options = []
-    for i in 1..24
-      options << [i.to_s + ":00", i]
-    end
-    options_for_select(options, checked_time ? checked_time : nil)
-  end
-
   def generate_time_str(time)
     time.to_s + ":00"
   end

@@ -17,3 +17,4 @@ end
 
 
 require 'has_column_state'
+require 'pinyin/pinyin'

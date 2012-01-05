@@ -1,4 +1,3 @@
-require 'pinyin/pinyin'
 class NonMember < ActiveRecord::Base
   validates :telephone, :presence => {:message => I18n.t('order_msg.non_member.mobile_no_presence')}, :if => proc {|nm|  !nm.is_member? }
   validates :telephone, :format => {:with =>/^(?:0{0,1}(13[0-9]|15[0-9])[0-9]{8})|(?:[-0-9]+)$/,
@@ -19,15 +18,6 @@ class NonMember < ActiveRecord::Base
   def geneate_name_pinyin
     pinyin = PinYin.new
     self.name_pinyin = pinyin.to_pinyin(self.name) if self.name_pinyin.blank?
-  end
-
-
-  def order_errors
-    @order_errors ||= []
-  end
-
-  def clear_order_errors
-    order_errors.clear
   end
 
   def is_ready_to_order?(order)

@@ -40,7 +40,7 @@ module OrdersHelper
                          end
         display_content = "(授)" + display_content if (book_record.order.members_card_id.present? and \
                                                        book_record.order.is_member? and \
-                                                       book_record.order.member.is_granter_of_card(book_record.order.members_card_id))
+                                                       book_record.order.member.is_granter_of_card?(book_record.order.members_card))
         display_content = "(固)" +  display_content if book_record.order.advanced_order
         display_content << "(教练:#{book_record.order.coaches.map(&:name).join(',')})" if book_record.order.coaches
 

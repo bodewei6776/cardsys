@@ -5,8 +5,6 @@ class Court < ActiveRecord::Base
   has_many :period_prices, :through => :court_period_prices
   has_many :book_records, :as => :resource
 
-  STATE_MAP = {:enabled => "正常", :disabled => "禁用"}
-  
   validates :name, :presence => {:message => "场地名称不能为空！"}
   validates :name, :uniqueness => {:on => :create, :message => '场地名称已经存在了！', :if => Proc.new { |court| !court.name.nil? && !court.name.blank? }}
   validates :telephone, :numericality => {:only_integer => true, :message => "电话号码必须为数字！", :allow_blank => true}, :length => {:minimum => 8, :maximum => 11, :message => "联系电话必须大于8位小于11位！", :allow_blank => true}

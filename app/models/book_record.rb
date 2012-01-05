@@ -20,9 +20,6 @@ class BookRecord < ActiveRecord::Base
   belongs_to  :resource, :polymorphic => true
   has_many :order_items, :as => :item, :dependent => :destroy
 
-  #validates :start_hour, :numericality => {:message => "开始时间必须为整数"}
-  #validates :end_hour, :numericality => {:message => "结束时间必须为整数"}
-
   scope :daily_book_records, lambda {|date| where(:alloc_date => date) }
   scope :court_book_records, lambda {|court_id| where(:court_id => court_id) }
   scope :playing, where(:status => Status_Active)
@@ -107,132 +104,15 @@ class BookRecord < ActiveRecord::Base
     (is_booked? || status == Status_Agent) && is_expired?
   end
 
-  def book
-    update_attribute(:status, Status_Prearranged)
-  end
-
-  def is_booked?
-    status == Status_Prearranged
-  end
-
-  def balance
-    self.update_attribute(:status, Status_Settling)
-  end
-
-  def balance_record
-    order.balance
-  end
-
-  def is_balanced?
-    status == Status_Settling
-  end
-
-  def is_expired?
-    end_date_time <= Time.now
-  end
-
-  def agent
-    if id.to_i > 0 && (db_book_record = self.class.find(self.id))
-      self.attributes = db_book_record.attributes.except(:id)
-    end
-    self.status = Status_Agent
-    save
-  end
-
-  def cancel_agent
-    if id.to_i > 0 && (db_book_record = self.class.find(self.id))
-      self.attributes = db_book_record.attributes.except(:id)
-    end
-    self.status = Status_Prearranged
-    save
-  end
-
-  def is_a_valid_agented_record?(original_book_record)
-    true
-  end
-
-  def less_or_equle_then?(other_book_record)
-    other_book_record.start_hour <= start_hour  && other_book_record.end_hour >= end_hour
-  end
-
-  def is_more_then?(other_book_record)
-    other_book_record.start_hour > start_hour && other_book_record.end_hour < end_hour
-  end
-
-  def is_not_overlap_with?(other_book_record)
-    other_book_record.end_hour <= start_hour || other_book_record.start_hour >= end_hour
-  end
-
-  def do_agent(new_order)
-    new_book_record = new_order.book_record
-    if is_not_overlap_with?(new_book_record)
-      #do nothing,a new book record
-    elsif is_more_then?(new_book_record)
-      #TODO
-    elsif less_or_equle_then?(new_book_record)
-      destroy
-    elsif new_book_record.start_hour != start_hour
-      if new_book_record.start_hour > start_hour
-        self.end_hour = new_book_record.start_hour
-      else
-        self.start_hour = new_book_record.end_hour 
-      end
-      save
-    elsif new_book_record.end_hour != end_hour
-      if new_book_record.end_hour < end_hour
-        self.start_hour = new_book_record.end_hour
-      else
-        self.end_hour = new_book_record.start_hour
-      end
-      save
-    end
-  end
-
-  def is_agented?
-    state == Status_Agent && !is_expired?
-  end
-
-  def active
-    self.status = Status_Active
-    save
-  end
-
-  def is_to_do_agent?
-    status ==  Status_Do_Agent && !is_expired?
-  end
-
-  def is_actived?
-    status == Status_Active
-  end
-
-  def cancel
-    destroy
-  end
-
-  def is_canceld?
-    status == Status_cancel
-  end
-
-  def is_default?
-    status.to_i == Status_Default
-  end
-
-  def route_operation(operation)
-    operation = self.class.default_operation if operation.blank?
-    operation = operation.to_sym
-    raise "invalid operation,not responsed to #{operation}" unless All_Operations.include?(operation)
-    send(operation)
-  end
 
   def status_desc
     desc = case
-           when  is_default?    then   "预定"
-           when  is_booked?      then   is_expired? ? "已预定(过期)" : "已预定"
-           when  is_balanced?    then   "已结算"
-           when  is_canceld?     then   "已取消"
-           when  is_agented?     then
-             is_expired? ? "停止代买" : "代卖中"
-           when  is_actived?      then   "开打中"
+           when  booked?      then   expired? ? "已预定(过期)" : "已预定"
+           when  balanced?    then   "已结算"
+           when  canceld?     then   "已取消"
+           when  agented?     then
+             expired? ? "停止代买" : "代卖中"
+           when  actived?      then   "开打中"
            else "过期"
            end
     desc
@@ -277,21 +157,6 @@ class BookRecord < ActiveRecord::Base
   end
 
 
-  def order_errors
-    @order_errors ||= []
-  end
-
-  def clear_order_errors
-    order_errors.clear
-  end
-
-  def is_ready_to_order?(order)
-    clear_order_errors
-    is_court_ready_to_order?
-    is_time_span_ready_to_order?
-    is_status_ready_to_order?
-  end
-
   def exist_conflict_record?
     conlict_record = conflict_record_in_time_span
     conlict_record && (original_book_reocrd.nil? && conlict_record.id != id  || original_book_reocrd.id != conlict_record.id)
@@ -305,10 +170,6 @@ class BookRecord < ActiveRecord::Base
   end
 
   private
-  #TODO
-  def is_court_ready_to_order?
-    true
-  end
 
   def is_time_span_ready_to_order?
     if end_hour  <= start_hour
@@ -321,11 +182,6 @@ class BookRecord < ActiveRecord::Base
                :end_time => conlict_record.end_hour)
       end
     end
-  end
-
-  #TODO   需要改进
-  def is_status_ready_to_order?
-    (new_record? && !should_book?) and order_errors << I18n.t('order_msg.book_record.invalid_status')
   end
 
 end

@@ -1,7 +1,7 @@
-require 'pinyin/pinyin'
 class Good < ActiveRecord::Base
-  belongs_to :category,:foreign_key => "good_type"
+  include HashColumnState
 
+  belongs_to :category,:foreign_key => "good_type"
 
   validates :name, :presence => {:message => "名称不能为空！"}, :uniqueness => {:on => :create, :message => '名称已经存在！', 
     :if => Proc.new { |member| !member.name.nil? && !member.name.blank? }}
@@ -15,10 +15,7 @@ class Good < ActiveRecord::Base
 
   has_many :order_items, :as => :item
   
-#  before_create  :geneate_name_pinyin
   attr_accessor :order_count
-
-  scope :valid_goods
 
   def geneate_name_pinyin
     pinyin = PinYin.new
@@ -58,6 +55,5 @@ class Good < ActiveRecord::Base
     self.sale_count += self.order_count
     save
   end
-    
   
 end

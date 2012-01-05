@@ -41,88 +41,90 @@ class CommonResource < ActiveRecord::Base
   COACH_BOOK_STATUS_BOOKED = 1 # 0:free, 1:booked
 
   IS_HOLIDAY, IS_DAILY = 1, 0
-  
-  def self.summer_months
-    times_summer = CommonResource.create(:name => "times_summer")
-    CommonResourceDetail.create(:common_resource_id => times_summer.id)
-    times_summer = CommonResource.where(:name => CommonResource::PERIOD_TYPE_1_MONTH).first
-    time_start,time_end = times_summer.detail_str.split(/\s+/)
-    (time_start.to_i..time_end.to_i).to_a
-  end
 
-  def self.record_times
-    all_record_times = []
-    (7..24).each do |i|
-      all_record_times[i] = 0
+  class << self
+    def summer_months
+      times_summer = CommonResource.create(:name => "times_summer")
+      CommonResourceDetail.create(:common_resource_id => times_summer.id)
+      times_summer = CommonResource.where(:name => CommonResource::PERIOD_TYPE_1_MONTH).first
+      time_start,time_end = times_summer.detail_str.split(/\s+/)
+      (time_start.to_i..time_end.to_i).to_a
     end
-    all_record_times
-  end
 
-  def self.is_summer_time?(date = Date.today)
-    summer_time && summer_time.common_resource_details.map(&:detail_name).include?(date.mon.to_s)
-  end
-
-  def self.is_winter_time?(date = Date.today)
-    winter_time && winter_time.common_resource_details.map(&:detail_name).include?(date.mon.to_s)
-  end
-
-  def self.is_weekend?(date = Date.today)
-    !PERIOD_TYPE_1_WEEK.include?(date.wday)
-  end
-  
-  def self.is_holiday?(date = Date.today)
-    vacation = Vacation.where(["start_date <= :date and end_date >= :date",  {:date => date}]).first
-    vacation ?  vacation.is_holiday? : is_weekend?(date)
-  end
-
-  def self.date_type(date = Date.today)
-    period_type = where(:name => "period_type").first
-    return nil unless period_type
-    unless is_holiday?(date)
-      detail_name = is_summer_time?(date) ? Summer_Time_Name_CHN : Winner_Tiem_Name_CHN
-      period_type.common_resource_details.where(:detail_name => detail_name).first
-    else
-      period_type.common_resource_details.where(:detail_name => Holiday_Time_Name_CHN).first
+    def record_times
+      all_record_times = []
+      (7..24).each do |i|
+        all_record_times[i] = 0
+      end
+      all_record_times
     end
-  end
 
-  def self.winter_time
-    @winter_time ||= CommonResource.where(:name => "times_winter").first
-  end
+    def is_summer_time?(date = Date.today)
+      summer_time && summer_time.common_resource_details.map(&:detail_name).include?(date.mon.to_s)
+    end
 
-  def self.summer_time
-    @summer_time ||= CommonResource.where(:name => "times_summer").first
-  end
+    def is_winter_time?(date = Date.today)
+      winter_time && winter_time.common_resource_details.map(&:detail_name).include?(date.mon.to_s)
+    end
 
-  def is_card_type?
-    true
-  end
+    def is_weekend?(date = Date.today)
+      !PERIOD_TYPE_1_WEEK.include?(date.wday)
+    end
 
-  def self.good_types
-    CommonResource.find_by_name("good_type").common_resource_details
-  end
+    def is_holiday?(date = Date.today)
+      vacation = Vacation.where(["start_date <= :date and end_date >= :date",  {:date => date}]).first
+      vacation ?  vacation.is_holiday? : is_weekend?(date)
+    end
 
-  def self.agent_to_buy_time
-    CommonResource.find_by_name("agent_to_buy_time").detail_str.to_i rescue 1
-  end
+    def date_type(date = Date.today)
+      period_type = where(:name => "period_type").first
+      return nil unless period_type
+      unless is_holiday?(date)
+        detail_name = is_summer_time?(date) ? Summer_Time_Name_CHN : Winner_Tiem_Name_CHN
+        period_type.common_resource_details.where(:detail_name => detail_name).first
+      else
+        period_type.common_resource_details.where(:detail_name => Holiday_Time_Name_CHN).first
+      end
+    end
 
-  def self.cancle_time
-    CommonResource.find_by_name("cancle_time").detail_str.to_i rescue 24
-  end
+    def winter_time
+      @winter_time ||= CommonResource.where(:name => "times_winter").first
+    end
 
-  def self.change_time
-    CommonResource.find_by_name("change_time").detail_str.to_i rescue 0
-  end
+    def summer_time
+      @summer_time ||= CommonResource.where(:name => "times_summer").first
+    end
 
-  def self.active_time
-    CommonResource.find_by_name("active_time").detail_str.to_i rescue 30
-  end
+    def is_card_type?
+      true
+    end
 
-  def self.locker_due_time
-    CommonResource.find_by_name("locker_due_time").detail_str.to_i rescue 7
-  end
+    def good_types
+      CommonResource.find_by_name("good_type").common_resource_details
+    end
 
-  def self.options_by_identifier(identifier)
-    find_by_name(identifier).try(:common_resource_details)
+    def agent_to_buy_time
+      CommonResource.find_by_name("agent_to_buy_time").detail_str.to_i rescue 1
+    end
+
+    def cancle_time
+      CommonResource.find_by_name("cancle_time").detail_str.to_i rescue 24
+    end
+
+    def change_time
+      CommonResource.find_by_name("change_time").detail_str.to_i rescue 0
+    end
+
+    def active_time
+      CommonResource.find_by_name("active_time").detail_str.to_i rescue 30
+    end
+
+    def locker_due_time
+      CommonResource.find_by_name("locker_due_time").detail_str.to_i rescue 7
+    end
+
+    def options_by_identifier(identifier)
+      find_by_name(identifier).try(:common_resource_details)
+    end
   end
 end

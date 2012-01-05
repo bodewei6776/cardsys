@@ -1,3 +1,4 @@
+= =render :partial => "layouts/errors", :locals => { :target => @period_price }
 = form_for(@period_price) do |f|
   .fform
     .fformbox
@@ -17,13 +18,10 @@
           %li
             .w1 开始时间：
             .w2
-              %select#start_time.select{:name => "period_price[start_time]", :onchange => "check_time();"}
-                = generate_time_options(@period_price.start_time)
+              = f.select :start_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @period_price.start_time)
             .w1 结束时间：
             .w2
-              %select#end_time.select{:name => "period_price[end_time]", :onchange => "check_time();"}
-                = generate_time_options(@period_price.end_time)
-        %ul
+              = f.select :end_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @period_price.end_time)
           %li
             .w1 时段价格：
             .w2
@@ -38,25 +36,7 @@
               %textarea{:cols => "45", :name => "period_price[description]", :rows => "4"}= @period_price.description
     .h10
     .input_bd
-      %button.submit1.hand{:type => "submit"}> 提交
-      \&nbsp;&nbsp;&nbsp;&nbsp;
+      = f.submit "提交", :class => "submit1 hand"
       %button.submit2.hand{:onclick => "window.location.href='#{period_prices_path}'", :type => "button"} 查看
     .clear
 
-:javascript
-  function fsubmit(){
-    if(check_time()){
-      var form = $("form[0]");
-      form.submit();
-    }
-  }
-  function check_time(){
-    var start_time = $("#start_time")[0].value;
-    var end_time = $("#end_time")[0].value;
-    if(start_time - end_time > 0){
-      alert("开始时间应该小于结束时间！");
-      return false;
-    }else{
-      return true;
-    }
-  }

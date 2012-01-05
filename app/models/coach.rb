@@ -1,4 +1,3 @@
-require 'pinyin/pinyin'
 class Coach < ActiveRecord::Base
   include HashColumnState
 
