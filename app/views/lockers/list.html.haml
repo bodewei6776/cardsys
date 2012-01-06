@@ -10,8 +10,7 @@
       .w95
         按类别：
         %label
-          = select_tag "locker_type",raw(generate_locker_type_options(@locker_type)),:id => "locker_type",:class=> "select"
-        \&nbsp;&nbsp;&nbsp;&nbsp;
+          = select_tag "locker_type", Setting.locker_type_options(@locker_type), :id => "locker_type", :class=> "select"
         按编号：
         %label
           %input#num.inputtext{:autocomplete => "/lockers/autocomplete_num", :name => "num", :type => "text", :value => params[:num]}/

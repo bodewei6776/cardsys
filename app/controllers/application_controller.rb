@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
 
   layout  "application"
 
-  before_filter :configure_charsets ,:set_date
+  before_filter :set_date
   before_filter :require_user
 
   helper_method :current_user_session, :current_user

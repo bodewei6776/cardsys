@@ -17,9 +17,7 @@ class Member < ActiveRecord::Base
   validates :cert_num, :uniqueness => {:on => :create, :message => '证件号已经存在！', :if => Proc.new { |member| !member.cert_num.nil? && !member.cert_num.blank? }}#证件号唯一
 
   validate :granter_no_more_than_max_num
-
   before_save :geneate_name_pinyin
-
   attr_accessor :members_card_id
 
   after_create do |member|
