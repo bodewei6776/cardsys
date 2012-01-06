@@ -68,7 +68,7 @@ module ApplicationHelper
 
 
   def should_display_system_menu?
-    action_name.to_s == "change_password" || controller_name.to_s == "logs" || controller_name.to_s == "welcome"
+    action_name.to_s == "change_password" || controller_name.to_s == "logs" || controller_name.to_s == "welcome" || controller_name.to_s =~ /common_resource/
   end
 
   def current_menu

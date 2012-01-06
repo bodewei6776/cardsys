@@ -1,0 +1,2 @@
+module CommonResourceDetailsHelper
+end

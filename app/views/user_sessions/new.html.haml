@@ -17,11 +17,11 @@
           });
   %body
     .login
+      = render :partial => "layouts/errors", :locals => { :target => @user_session }
       .login_bt.white.fmic30
         博德维 管理系统
       .login_tu
       = form_for @user_session, :url => user_session_path,:html => {:id => 'new_user_action'} do |f|
-        = error_messages_for :user_session
         .login_bd
           %ul
             %li.w25.tright 用户名：

@@ -55,5 +55,7 @@ module Cardsys
       g.template_engine :haml
     end
 
+    
+
   end
 end

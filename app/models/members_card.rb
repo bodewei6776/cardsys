@@ -1,7 +1,7 @@
 class MembersCard < ActiveRecord::Base
+  set_table_name 'member_cards'
   include HashColumnState
 
-  set_table_name 'member_cards'
 
   belongs_to  :card
   belongs_to  :member
@@ -95,7 +95,7 @@ class MembersCard < ActiveRecord::Base
 
 
   def state_desc
-     expired? ?  "已过期" : state_desc
+     expired? ?  "已过期" : super
   end
 
   def has_less_count?

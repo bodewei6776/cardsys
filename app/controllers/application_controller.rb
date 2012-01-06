@@ -17,6 +17,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user_session, :current_user
 
+  skip_before_filter :verify_authenticity_token
+  
   protected
 
   def set_date

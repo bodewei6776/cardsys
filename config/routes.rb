@@ -1,5 +1,11 @@
 Cardsys::Application.routes.draw do |map|
 
+  get "common_resource_details/new"
+
+  get "common_resource_details/edit"
+
+  get "common_resource_details/index"
+
   resources :rents do
     collection do
       get :complete_member_infos
@@ -184,15 +190,12 @@ Cardsys::Application.routes.draw do |map|
   
   resources :period_prices
   resources :common_resources do
+    resources :common_resource_details
+
     collection do
       get :common_resource_detail_index
-      get :update_detail
-      get :delete_detail
       get :power_index
       put :power_update
-    end
-    member do
-      get :edit_detail      
     end
   end
   resources :courts do

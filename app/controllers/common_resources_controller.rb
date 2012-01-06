@@ -51,35 +51,6 @@ class CommonResourcesController < ApplicationController
     redirect_to common_resources_url
   end
 
-  def common_resource_detail_index
-    @common_resource = CommonResource.find(params[:common_resource_id])
-    @common_resource_details = CommonResourceDetail.where(:common_resource_id => params[:common_resource_id])     
-  end
-
-  def edit_detail
-    @common_resource = CommonResource.find(params[:id])
-    @common_resource_detail = CommonResourceDetail.find(params[:detail_id]) if !params[:detail_id].nil?
-    render :layout => false
-  end
-
-  def delete_detail    
-    CommonResourceDetail.destroy(params[:detail_id])
-    redirect_to :action => "common_resource_detail_index", :common_resource_id => params[:common_resource_id] 
-  end
-
-  def update_detail
-    if params[:type] == "0"
-      CommonResourceDetail.new(
-        :common_resource_id => params[:common_resource_id],               
-        :detail_name => params[:detail_name]
-      ).save
-    else
-      CommonResourceDetail.find(params[:detail_id]).update_attribute("detail_name", params[:detail_name])
-    end
-    render :inline => "资源信息更新成功！".to_json
-  end
-
-
   def power_index
   end
 

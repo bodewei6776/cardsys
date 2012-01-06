@@ -54,11 +54,11 @@ class Balance < ActiveRecord::Base
 
   validate do |instance|
     return true unless order.is_member?
-    if instance.use_card_to_balance_goods? && !order.should_use_card_to_balance_goods?
+    if instance.balance_way == "card" && !order.should_use_card_to_balance_goods?
       errors[:base] << "卡不支持购买商品，只能订场"
-    elsif instance.use_card_to_balance? && !order.members_card.has_enough_money_to_balance?(self)
+    elsif instance.balance_way == "card" && !order.members_card.has_enough_money_to_balance?(self)
       errors[:base] << "卡余额不足，不能结算"
-    elsif instance.use_card_to_balance? && !order.members_card.is_avalible?
+    elsif instance.balance_way == "card" && !order.members_card.is_avalible?
       errors[:base] << "卡已经过期，或者状态不正常不能结算"
     end
   end
@@ -113,21 +113,6 @@ class Balance < ActiveRecord::Base
     balance_way_desciption(balance_way)
   end
 
-  def use_card_to_balance_book_record?
-    balance_way == Balance_Way_Use_Card || balance_way == Balance_Way_Use_Counter
-  end
-
-  def use_card_to_balance_goods?
-    balance_way == Balance_Way_Use_Card
-  end
-
-  def use_card_to_balance?
-    balance_way == Balance_Way_Use_Card
-  end
-
-  def use_card_counter_to_balance?
-    balance_way == Balance_Way_Use_Counter
-  end
 
   def card
     @card ||= (order.is_member? ? order.member_card.card : '')

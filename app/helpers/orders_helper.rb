@@ -138,7 +138,7 @@ module OrdersHelper
     content = ""
     order = book_record.order
     content = order.is_member? ?  "#{order.member.name}:#{order.members_card.card_serial_num}" : "#{order.non_member.name}:无卡预定" 
-    content = "(授)" + content if order.is_member? and order.member.is_granter_of_card(order.members_card_id)
+    content = "(授)" + content if order.is_member? and order.members_card.granters.include?(order.member)
     content = "(固)" +  content if order.advanced_order
     content << "(教练:#{order.coaches.map(&:name).join(',')})" if order.coaches.present?
     content << "(结算人: #{order.balances.first.who_balance.try(:login) || ""})" if order.balanced?

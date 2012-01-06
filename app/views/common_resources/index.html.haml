@@ -15,7 +15,7 @@
         %td= link_to '查看', common_resource
         %td= link_to '编辑', edit_common_resource_path(common_resource)
         %td= link_to '删除', common_resource, :confirm => '确定删除?', :method => :delete
-        %td= link_to '资源选项管理', {:action => "common_resource_detail_index", :common_resource_id => common_resource}
+        %td= link_to '资源选项管理', common_resource_common_resource_details_path(common_resource)
   %br/
   = link_to '新加资源', new_common_resource_path
   = link_to '版本调整', power_index_common_resources_path ,:style=>'color:white';
