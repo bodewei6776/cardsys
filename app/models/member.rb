@@ -52,6 +52,10 @@ class Member < ActiveRecord::Base
     members_cards.enabled + granted_member_cards.enabled
   end
 
+  def card_serial_nums
+    all_members_cards.collect(&:card_serial_num).join ", "
+  end
+
   def member_card_left_times
    self.all_members_cards.collect(&:left_times).sum
   end

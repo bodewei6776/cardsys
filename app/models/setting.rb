@@ -19,6 +19,11 @@ class Setting
     end
 
     def cert_type_options(default_value)
+       options_for_select(CommonResource.options_by_identifier("cert_type").collect{ |crd| [crd.detail_name, crd.id] }, default_value)
+    end
+
+    def cert_type_detail_name(value)
+      CommonResourceDetail.find(value).try(:detail_name) 
     end
 
     def locker_type_options(default_value)

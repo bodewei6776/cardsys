@@ -17,7 +17,7 @@
               = @member.name
             .w1 注册日期：
             .w2
-              = chinese_date(@member.created_at)
+              = @member.created_at.to_chinese_ymd
         %ul
           %li
             .w1 会员昵称：
@@ -46,13 +46,10 @@
           %li
             .w1 证件类型：
             .w2
-              = generate_cert_type_str(@member.cert_type)
-              - if generate_cert_type_str(@member.cert_type).blank?
-                %a.blank_element
+              = Setting.cert_type_detail_name(@member.cert_type)
             .w1 证件号码：
             .w2
-              - if !generate_cert_type_str(@member.cert_type).blank?
-                = @member.cert_num
+              = @member.cert_num
         %ul
           %li
             .w1 联系地址：
@@ -136,7 +133,7 @@
             %input#member_id{:type => "hidden", :value => @member.id}/
             %li.w5= index + 1
             %li.w10= card.card_serial_num
-            %li.w10= state_in_chinese(card.state)
+            %li.w10= card.state_desc
             %li.w15= card.left_fee
             %li.w10= card.left_times
             %li.w10= card.expire_date.to_chinese_mdh

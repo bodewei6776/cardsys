@@ -57,8 +57,7 @@
         %li
           .w1 证件类型：
           .w2
-            %select#cert_type.select{:name => "member[cert_type]"}
-              = generate_cert_type_options(@member)
+            = f.select :cert_type, Setting.cert_type_options(@member.cert_type)
           .w1 证件号码：
           .w2
             = f.text_field :cert_num

@@ -1,2 +1,15 @@
-%h1 CommonResourceDetails#index
-%p Find me in app/views/common_resource_details/index.html.haml
+.w96
+  = table_header(:title => "", :link => new_common_resource_common_resource_detail_path, :link_text => "Add")
+  .table
+    %ul.bttitle.black.fb
+      %li.w10 id
+      %li.w30 描述
+      %li.w10
+    - @common_resource_details.each do |crd|
+      %ul
+        %li.w10= crd.id
+        %li.w30= crd.detail_name
+        %li.w20
+          = link_to '查看', common_resource_common_resource_detail_path(@common_resource, crd)
+          = link_to '删除', common_resource_common_resource_detail_path(@common_resource, crd), :confirm => '确定删除?', :method => :delete
+
