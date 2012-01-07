@@ -69,7 +69,7 @@ class Member < ActiveRecord::Base
   end
 
   def latest_comer_date
-    self.orders.last.try(:order_time).try(:to_chinese_ymd) || "无"
+    self.orders.last.try(:created_at).try(:to_chinese_ymd) || "无"
   end
 
   def recharge_fees
