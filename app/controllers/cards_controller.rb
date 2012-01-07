@@ -7,6 +7,7 @@ class CardsController < ApplicationController
 
   def new
     @card = Card.new
+    @period_prices = PeriodPrice.search_order
   end
 
   def create
