@@ -12,6 +12,7 @@ class CardsController < ApplicationController
 
   def create
     @card = Card.new(params[:card])
+    @period_prices = PeriodPrice.search_order
     #设置卡的时段价格
     format_card_period_price @card 
 
@@ -58,7 +59,6 @@ class CardsController < ApplicationController
 
   def member_card_num4(card)
     last_member_card = card.members_cards.last
-    ap  last_member_card.card_serial_num[card.card_prefix.length..-1]
     last_member_card.nil? ? "00001" : last_member_card.card_serial_num[card.card_prefix.length..-1].succ
   end
 

@@ -180,7 +180,7 @@ Cardsys::Application.routes.draw do |map|
   end
   resources :coaches do 
     member do
-      get :change_status
+      put :switch_state
     end
 
     collection do

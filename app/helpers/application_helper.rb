@@ -24,7 +24,8 @@ module ApplicationHelper
       {:image_offset => "5", :link => "/reports/income", :sub_menu => "report_menu", :display => "分析报表"},
       {:image_offset => "7", :link => "/balances/new_good_buy", :sub_menu => "balance_menu", :display => "消费结算"},
       {:image_offset => "8", :link => "/rents", :sub_menu => "locker_menu", :display => "储物柜管理"},
-      {:image_offset => "9", :link => "/users",  :sub_menu => "authorize_menu", :display => "权限管理"}
+      {:image_offset => "9", :link => "/users",  :sub_menu => "authorize_menu", :display => "权限管理"},
+      {:image_offset => "10", :link => "/",  :sub_menu => "system_menu", :display => "系统管理"}
     ]
   end
 

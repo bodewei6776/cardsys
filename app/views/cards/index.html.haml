@@ -15,7 +15,7 @@
         %li.w10= card.name
         %li.w10= Card::CARD_TYPE[card.card_type]
         %li.w10= card.card_prefix
-        %li.w10= card.state_desc
+        %li.w10.red= card.state_desc
         %li.w20= card.description
         %li.w20
           = operations_panel(card)
