@@ -19,10 +19,8 @@
               = cbr.hidden_field :alloc_date
               = cbr.hidden_field :resource_type 
 
-
-      %ul
         %li
-          .w1 是否会员：
+          .w1 会员：
           = f.check_box :is_member
 
       #is_member{:style => "display:#{@order.is_member? ? 'block;' : 'none;'}"}
@@ -180,7 +178,10 @@
             });
 
               $("#order_coach_ids").tokenInput("#{search_coaches_path}", {
-              prePopulate: #{@order.coaches.collect{|c| {:id => c.id, :name => c.name}}.to_json}
+              prePopulate: #{@order.coaches.collect{|c| {:id => c.id, :name => c.name}}.to_json},
+              hintText: "输入教练姓名拼音或者拼音简写...",
+              noResultsText: "没有找到教练",
+              searchingText: "搜索中..."
             });
         });
 

@@ -152,7 +152,7 @@ module OrdersHelper
                        :rowspan => book_record.hours, :class => book_record.order.status_color) if book_record.present? && book_record.order
     new_order_params= {:alloc_date => date.to_s(:db), :resource_id => court.id, :start_hour => start_hour, :end_hour => start_hour + 1}
     book_url = new_order_path(:court_book_record => new_order_params)
-    return content_tag(:td,  content_tag(:a, "预订", :href=> book_url,:class => "popup-new-window")) if court.can_be_book?(date, start_hour)
+    return content_tag(:td,  content_tag(:a, "预订", :href=> book_url,:class => "popup-new-window button_link")) if court.can_be_book?(date, start_hour)
   end
 
 end

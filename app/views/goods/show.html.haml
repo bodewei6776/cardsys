@@ -18,7 +18,7 @@
               = @good.name
             .w1 商品类型：
             .w2
-              = generate_good_type_str(@good.good_type)
+              = Category.find(@good.good_type).name
         %ul
           %li
             .w1 入库价格：
@@ -42,7 +42,7 @@
               = @good.count_total_now
             .w1 商品来源：
             .w2
-              = generate_good_source_str(@good.good_source)
+              = Setting.good_source_name(@good.good_source)
     .h10
     .input_bd
       %button.submit1.hand{:onclick => "window.location.href='#{edit_good_path(@good)}'", :type => "button"}> 修改

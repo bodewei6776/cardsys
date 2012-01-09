@@ -11,6 +11,7 @@ period_type = CommonResource.create(:name => "period_type", :description => "时
 coach_type= CommonResource.create(:name => "coach_type", :description => "教练类型", :detail_str => "全职教练 客人自带")
 cert_type = CommonResource.create(:name => "cert_type", :description => "证件类型", :detail_str => "身份证 军人证")
 good_type = CommonResource.create(:name => "good_type", :description => "商品类型", :detail_str => "食品 球具")
+court_type = CommonResource.create(:name => "court_type", :description => "场地类型", :detail_str => "网球场 羽毛球场")
 good_source = CommonResource.create(:name => "good_source", :description => "商品来源", :detail_str => "代卖")
 #times_summer = CommonResource.create(:name => "times_summer", :description => "平日", :detail_str => "1 12")
 agent_to_buy_time = CommonResource.create(:name => "agent_to_buy_time", :description => "申请代卖提前时间(小时)", :detail_str => "1")
@@ -41,6 +42,10 @@ CommonResourceDetail.create(:common_resource_id => cert_type.id, :detail_name =>
 
 CommonResourceDetail.create(:common_resource_id => good_type.id, :detail_name => "食品")
 CommonResourceDetail.create(:common_resource_id => good_type.id, :detail_name => "球具")
+
+
+CommonResourceDetail.create(:common_resource_id => court_type.id, :detail_name => "网球场")
+CommonResourceDetail.create(:common_resource_id => court_type.id, :detail_name => "羽毛球场")
 
 CommonResourceDetail.create(:common_resource_id => good_source.id, :detail_name => "带卖")
 

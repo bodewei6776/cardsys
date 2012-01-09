@@ -22,7 +22,24 @@ class Setting
        options_for_select(CommonResource.options_by_identifier("cert_type").collect{ |crd| [crd.detail_name, crd.id] }, default_value)
     end
 
+    def good_source_options(default_value)
+       options_for_select(CommonResource.options_by_identifier("good_source").collect{ |crd| [crd.detail_name, crd.id] }, default_value)
+    end
+
+
+    def court_type_options(default_value)
+       options_for_select(CommonResource.options_by_identifier("court_type").collect{ |crd| [crd.detail_name, crd.id] }, default_value)
+    end
+
+    def court_types
+      CommonResource.options_by_identifier("court_type").collect{|c| [c.id, c.detail_name]}
+    end
+
     def cert_type_detail_name(value)
+      CommonResourceDetail.find(value).try(:detail_name) 
+    end
+
+    def good_source_name(value)
       CommonResourceDetail.find(value).try(:detail_name) 
     end
 

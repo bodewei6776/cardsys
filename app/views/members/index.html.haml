@@ -26,12 +26,12 @@
       %li.w10 会员名称
       %li.w15 会员卡信息
       %li.w10 移动电话
-      %li.w8 注册日期
+      %li.w10 注册日期
       %li.w6 现有金额
       %li.w6 现有次数
       %li.w6 消费金额
       %li.w6 消费次数
-      %li.w8 会员生日
+      %li.w10 会员生日
       %li.w12 操作
     - @members.each_with_index do |member,index|
       %ul.member_items.table_items
@@ -40,13 +40,13 @@
         %li.w15{:style => "overflow:hidden;", :title => member.card_serial_nums}
           = member.card_serial_nums
         %li.w10= member.mobile
-        %li.w8= member.created_at.nil? ? "" : member.created_at.to_chinese_mdh
+        %li.w10= member.created_at.nil? ? "" : member.created_at.to_chinese_ymd
         %li.w6= member.member_card_left_fees
         %li.w6= member.member_card_left_times
         %li.w6= member.member_consume_amounts
         %li.w6= member.balance_times
-        %li.w8
-          = member.birthday.blank? ? ':' : member.birthday.to_chinese_mdh
+        %li.w10
+          = member.birthday.blank? ? ':' : member.birthday.to_chinese_ymd
         %li.w12
           = operations_panel(member, [:show, :edit])
 

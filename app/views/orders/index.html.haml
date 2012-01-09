@@ -1,3 +1,4 @@
+= javascript_include_tag "jquery.tabify"
 .w96
   .r_bt
     .r_bt_l
@@ -12,23 +13,31 @@
       %button.submit2.hand{:onclick => "location.reload();", :type => "button", :value => "true"} 刷新
       %a.submit2.hand{:href => "/orders/print?date=#{@date}", :style => "color:black;padding: 3px;", :target => "_blank"} 打印
   .content
-    %table.index_order_table{:cellspacing=> 0}
-      - @courts.each_slice(6) do |slice|  
-        %tr.court_name
-          %td.tit.first 时段/场地
-          - slice.each_with_index do |court, index|
-            %td
-              = court.name
+    %ul#court_menu
+      - Setting.court_types.each do |id, court_type|
+        %li{:class => id == current_active_courts_tab ? "" : "active"}
+          %a{:href => "##{id}"}
+            = court_type
 
-          - (@daily_periods.first.start_time..(@daily_periods.last.end_time-1)).each do |hour_start|
-            %tr.period
-              %td.hour_span.first
-                = "#{hour_start}:00-#{hour_start.next}:00"
-              - slice.each do |court|
-                = court_status_in_period(@date, hour_start, court)
+    - Setting.court_types.each do |id, court_type|
+      %div{:id => id, :class => "court_content"}
+        %table.index_order_table{:cellspacing=> 0}
+          - @courts.select{|c| c.court_type == id.to_s }.each_slice(6) do |slice|  
+            %tr.court_name
+              %td.tit.first 时段/场地
+              - slice.each_with_index do |court, index|
+                %td
+                  = court.name
+
+              - (@daily_periods.first.start_time..(@daily_periods.last.end_time-1)).each do |hour_start|
+                %tr.period
+                  %td.hour_span.first
+                    = "#{hour_start}:00-#{hour_start.next}:00"
+                  - slice.each do |court|
+                    = court_status_in_period(@date, hour_start, court)
 
 
-        %div{:style => "clear:both;"}
+            %div{:style => "clear:both;"}
   .h10
   .color
     %span.color01 红色-已预定
@@ -45,5 +54,8 @@
     }).mouseout(function(){
       $(this).removeClass("orders_mousehover");
     });
+
+    $( "#court_menu" ).tabify(function(arg){ console.log(arg)});
+    
   
   })

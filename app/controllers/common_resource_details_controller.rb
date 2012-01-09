@@ -9,7 +9,7 @@ class CommonResourceDetailsController < ApplicationController
   end
 
   def create
-    @common_resource_detail = @common_resource.common_resource_details.build(params[:common_resource_details])
+    @common_resource_detail = @common_resource.common_resource_details.build(params[:common_resource_detail])
     if @common_resource_detail.save
       redirect_to common_resource_common_resource_details_path(@common_resource)
     else

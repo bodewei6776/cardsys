@@ -10,16 +10,18 @@
             .w1 场地名称：
             .w2
               = f.text_field :name
+
+            .w1 场地类型：
+            .w2
+              = f.select :court_type, Setting.court_type_options(@court.court_type)
         %ul
           %li
             .w1 开始时间：
             .w2
-              %select#start_time.select{:name => "court[start_time]", :onchange => "check_time();"}
-                = generate_time_options(@court.start_time)
+              = f.select :start_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @court.start_time)
             .w1 结束时间：
             .w2
-              %select#end_time.select{:name => "court[end_time]", :onchange => "check_time();"}
-                = generate_time_options(@court.end_time)
+              = f.select :end_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @court.end_time)
         %ul{:style => "height:80px;"}
           %li
             .w1 说明：
@@ -54,26 +56,6 @@
             %li.w20= period_price.description
     .h10
     .input_bd
-      %button.submit1.hand{:type => "submit"}> 提交
-      \&nbsp;&nbsp;&nbsp;&nbsp;
-      %button.submit2.hand{:onclick => "window.location.href='/courts'", :type => "button"} 返回
+      = f.submit "提交", :class => "submit1 hand"
+      %button.submit2.hand{:onclick => "window.location.href='/courts'", :type => "button_link"} 返回
     .clear
-:javascript
-  function fsubmit(){
-    if(check_time()){
-      var form = $("form[id=new_post]");
-      form.submit();
-    }
-  }
-
-  function check_time(){
-    var start_time = $("#start_time")[0].value;
-    var end_time = $("#end_time")[0].value;
-    if(start_time - end_time > 0){
-      alert("开始时间应该小于结束时间！");
-      return false;
-    }else{
-      return true;
-    }
-  }
-

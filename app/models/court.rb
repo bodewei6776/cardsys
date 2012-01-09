@@ -9,6 +9,14 @@ class Court < ActiveRecord::Base
   validates :name, :uniqueness => {:on => :create, :message => '场地名称已经存在了！', :if => Proc.new { |court| !court.name.nil? && !court.name.blank? }}
   validates :telephone, :numericality => {:only_integer => true, :message => "电话号码必须为数字！", :allow_blank => true}, :length => {:minimum => 8, :maximum => 11, :message => "联系电话必须大于8位小于11位！", :allow_blank => true}
 
+
+  validate :validate_start_time_end_time
+
+
+  def validate_start_time_end_time
+    self.errors.add(:base, "开始时间应小于结束时间") if self.start_time >= self.end_time 
+  end
+
   def generate_court_period_price(period_price)
     self.court_period_prices.find_all_by_period_price_id(period_price.id).first
   end

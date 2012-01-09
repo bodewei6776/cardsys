@@ -21,7 +21,7 @@ class MembersController < ApplicationController
   def index
     @members = Member.scoped
     @members = @members.where(:name => params[:name]) if params[:name].present?
-    @members = @members.where("member_cards.card_serial_num = '#{params[:card_serial_num]}'").joins(:members_cards) if params[:card_serial_num].present?
+    @members = @members.where("members_cards.card_serial_num = '#{params[:card_serial_num]}'").joins(:members_cards) if params[:card_serial_num].present?
     @members = @members.paginate(default_paginate_options)
   end
 
@@ -50,7 +50,7 @@ class MembersController < ApplicationController
     @members = Member.enabled
     @members = @members.where(["name like ?", "%#{@name}%"] ) if !@name.blank?
     if !@serial_num.blank?
-      @members = @members.where("member_cards.card_serial_num like '%#{@serial_num}%'").joins(:member_cards)
+      @members = @members.where("member_cards.card_serial_num like '%#{@serial_num}%'").joins(:members_cards)
     end
 
 
@@ -67,7 +67,7 @@ class MembersController < ApplicationController
     if @expire_date_start.present? && @expire_date_end.present?
       @members = @members.where("date_format(member_cards.expire_date,'%Y-%m-%d') >= ? and" +
                                 " date_format(member_cards.expire_date,'%Y-%m-%d') <= ?",
-                                @expire_date_start,@expire_date_end).joins(:member_cards)
+                                @expire_date_start,@expire_date_end).joins(:members_cards)
     elsif @expire_date_start.present? || @expire_date_end.present?
       @members = @members.where("date_format(member_cards.expire_date,'%Y-%m-%d') = ?",
                                 @expire_date_end.presence || @expire_date_start.presence).joins(:member_cards)
@@ -104,17 +104,17 @@ class MembersController < ApplicationController
 
     if @left_fees_start.present? and @left_fees_end.present?
       @members = @members.delete_if { |mem| 
-        mem.member_card_left_fees < @left_fees_start.presence.to_i || mem.member_card_left_fees > @left_fees_end.presence.to_i}
+        mem.members_card_left_fees < @left_fees_start.presence.to_i || mem.members_card_left_fees > @left_fees_end.presence.to_i}
 
     elsif @left_fees_start.present? or @left_fees_end.present?
-      @members = @members.delete_if { |member| member.member_card_left_fees !=( @left_fees_start.presence.to_i || @left_fees_end.presence.to_i )}
+      @members = @members.delete_if { |member| member.members_card_left_fees !=( @left_fees_start.presence.to_i || @left_fees_end.presence.to_i )}
     end
 
 
     if @left_times_start.present? and @left_times_end.present?
-      @members = @members.delete_if { |member| member.member_card_left_times < @left_times_start.to_i || member.member_card_left_times > @left_times_end.presence.to_i}
+      @members = @members.delete_if { |member| member.members_card_left_times < @left_times_start.to_i || member.members_card_left_times > @left_times_end.presence.to_i}
     elsif @left_times_start.present? or @left_times_end.present?
-      @members = @members.delete_if { |member| member.member_card_left_times !=( @left_times_start.presence ||  @left_times_end.presence).to_i}
+      @members = @members.delete_if { |member| member.members_card_left_times !=( @left_times_start.presence ||  @left_times_end.presence).to_i}
     end
 
     if @consume_fees_start.present? and @consume_fees_end.present?
@@ -130,9 +130,9 @@ class MembersController < ApplicationController
 
   def show
     @member = Member.find(params[:id])
-    @member_cards = @member.all_members_cards
+    @members_cards = @member.all_members_cards
     @recharge_records = RechargeRecord.where(:member_id => params[:id])
-    @balances = @member.member_cards.collect{|mc| mc.balances }.flatten.uniq rescue []
+    @balances = @member.members_cards.collect{|mc| mc.balances }.flatten.uniq rescue []
   end
 
   def new
@@ -182,7 +182,7 @@ class MembersController < ApplicationController
 
   def destroy
     @member = Member.find(params[:id])
-    @member.member_cards.update_all("status=1")
+    @member.members_cards.update_all("status=1")
     @member.save
     redirect_to(members_url) 
   end
@@ -195,7 +195,7 @@ class MembersController < ApplicationController
   def granter_new
     @member = Member.new
     @member_base = Member.find(params[:member_id])
-    @member_card_id = params[:member_card_id]
+    @members_card_id = params[:members_card_id]
     render :layout => false
   end
 
@@ -220,40 +220,40 @@ class MembersController < ApplicationController
     @base_member = Member.find(params[:member_id]) if !params[:member_id].nil?
   end
 
-  def member_card_bind_index
+  def members_card_bind_index
     @member = Member.find_by_name(params[:member_name])
     @cards = Card.enabled
     @members_card = MembersCard.new
     @members_cards = @member.try(:all_members_cards) 
   end
 
-  def member_card_bind_list
+  def members_card_bind_list
     @member = Member.find(params[:member_id])
     @cards = Card.enabled
     render :layout => false
   end
 
-  def member_card_bind_update
+  def members_card_bind_update
     @member = Member.find(params[:member_id])
-    @member_card = MembersCard.new(params[:member_card])
-    @member_card.member_id = params[:member_id]
-    @member_card.card_id = params[:binded_card_id]
-    @member_card.user_id = current_user.id
-    @member_card.password = @member.name
-    notice = @member_card.save ? '会员卡绑定成功！' : @member_card.errors.full_messages.join(';')
+    @members_card = MembersCard.new(params[:members_card])
+    @members_card.member_id = params[:member_id]
+    @members_card.card_id = params[:binded_card_id]
+    @members_card.user_id = current_user.id
+    @members_card.password = @member.name
+    notice = @members_card.save ? '会员卡绑定成功！' : @members_card.errors.full_messages.join(';')
     respond_to do |format|
-      format.html { redirect_to :action => "member_card_bind_index",
+      format.html { redirect_to :action => "members_card_bind_index",
         :member_name => @member.name, :member_id => params[:member_id], :notice => notice}
     end
   end
 
-  def member_card_index
+  def members_card_index
     @member = Member.find(params[:member_id])
-    @member_cards = MembersCard.where(:member_id => params[:member_id])
+    @members_cards = MembersCard.where(:member_id => params[:member_id])
     render :layout => false
   end
 
-  def member_card_recharge
+  def members_card_recharge
     user = User.find_by_login(params[:user])
     result = true
     unless user
@@ -280,20 +280,20 @@ class MembersController < ApplicationController
     fee = (params[:fee].blank? ? 0 : params[:fee])
     times = (params[:times].blank? ? 0 : params[:times])
 
-    member_card = MembersCard.find(params[:member_card_id])
+    members_card = MembersCard.find(params[:members_card_id])
     charge_fee = params[:type]=="1" ? fee.to_f : (-fee.to_f)
     charge_times = params[:type]=="1" ? times.to_f : (-times.to_f)
 
-    if (member_card.update_attribute(:left_fee, member_card.left_fee.to_f + charge_fee) &&
-        member_card.update_attribute(:left_times, member_card.left_times.to_f + charge_times))
-      RechargeRecord.new(:member_id => member_card.member_id,
-                         :member_card_id => member_card.id,
+    if (members_card.update_attribute(:left_fee, members_card.left_fee.to_f + charge_fee) &&
+        members_card.update_attribute(:left_times, members_card.left_times.to_f + charge_times))
+      RechargeRecord.new(:member_id => members_card.member_id,
+                         :members_card_id => members_card.id,
                          :recharge_times=> charge_times,
                          :recharge_fee => charge_fee,
                          :recharge_person => user.id
                         ).save
 
-                        log_action("为卡#{member_card.card_serial_num}充值#{charge_fee}元，#{charge_times}次","recharge")
+                        log_action("为卡#{members_card.card_serial_num}充值#{charge_fee}元，#{charge_times}次","recharge")
 
 
                         notice = ""
@@ -302,7 +302,7 @@ class MembersController < ApplicationController
 
     end
     if !params[:expire_date].blank?
-      member_card.update_attribute(:expire_date, params[:expire_date])
+      members_card.update_attribute(:expire_date, params[:expire_date])
       notice = "有效期修改成功！"
     end
     render :json => {:result => 1,:notice => notice }
@@ -325,9 +325,9 @@ class MembersController < ApplicationController
   private
 
   def get_granters
-    @member_card_granters = MembersCardGranter.where(:member_id => params[:member_id])
+    @members_card_granters = MembersCardGranter.where(:member_id => params[:member_id])
     options = []
-    @member_card_granters.each { |member_card_granter| options << member_card_granter.granter_id }
+    @members_card_granters.each { |members_card_granter| options << members_card_granter.granter_id }
     @granters = Member.where(["id IN(?)", options]).where(:is_member => CommonResource::IS_GRANTER)
   end
 

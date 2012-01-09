@@ -1,9 +1,9 @@
 = form_for(@good,:html  => {:id => 'member_form'}) do |f|
   .fform
+    =render :partial => "layouts/errors", :locals => { :target => @good }
     .fformbox
       .fformbox_bt
         %p 填写商品信息
-      = error_messages_for :good
       .fformbox_nr
         %ul
           %li
@@ -15,26 +15,25 @@
               = f.select :good_type, option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,@good.good_type),:id => "good_type",:class=> "select"
         %ul
           %li
-            /
-              <div class="w1">入库价格：</div>
-              <div class="w2">
-              <haml:loud> f.text_field :purchasing_price </haml:loud>
-              </div>
+
+            .w1 入库价格：
+            .w2
+              = f.text_field :purchasing_price
             .w1 入库数量：
             .w2
               - if f.object.new_record?
                 = f.text_field :count_back_stock
               - else
                 = f.object.count_back_stock
+
+        %ul
+          %li
             .w1 零售价格：
             .w2
               = f.text_field :price
-        %ul
-          %li
             .w1 商品来源：
             .w2
-              %select#good_source.select{:name => "good[good_source]"}
-                = generate_good_source_options(@good)
+              = f.select :good_source, Setting.good_source_options(@good.good_source)
     .h10
     .input_bd
       %button.submit1.hand{:type => "submit"}> 提交

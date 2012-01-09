@@ -4,7 +4,7 @@ class Balance < ActiveRecord::Base
     "card" => "记账",
     "cash" => "现金",
     "post" => "POS机",
-    "bank" => "银行",
+    "bank" => "转账",
     "guazhang" => "挂账",
     "counter" => "计次",
     "check" => "支票"

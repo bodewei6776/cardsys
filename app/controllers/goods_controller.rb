@@ -114,4 +114,9 @@ class GoodsController < ApplicationController
     end
   end
 
+  def load_good
+    @good = Good.find params[:id]
+    
+  end
+
 end

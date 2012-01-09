@@ -128,7 +128,7 @@
           %li.w10 卡内次数
           %li.w10 卡有效期
           %li.w15 授权人
-        - @member_cards.each_with_index do |card,index|
+        - @members_cards.each_with_index do |card,index|
           %ul.table_items
             %input#member_id{:type => "hidden", :value => @member.id}/
             %li.w5= index + 1

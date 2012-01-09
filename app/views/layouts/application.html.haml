@@ -40,7 +40,8 @@
         %img{:alt => "", :src => "/images/new/r_ddd_yj.jpg"}
 
       .w96
-        .notice= flash[:notice] if flash[:notice]
+        - if flash[:notice]
+          #flash_notice= flash[:notice] 
         = yield
         .h10
         .foot
@@ -84,6 +85,8 @@
         $('.right').animate({"margin-left": "200px"});
         $(this).find('img').attr('src','/images/arrow_right.gif');
         });
+
+    $("#flash_notice").delay(2000).fadeOut();
   });
 
   function highlight_table(){
@@ -97,6 +100,7 @@
         });
 
   }
+  
 
 
 
