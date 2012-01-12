@@ -195,6 +195,7 @@ class Order < ActiveRecord::Base
 
 
     def split(order_attributes)
+      new_order = Order.new(order_attributes)
     end
 
 
