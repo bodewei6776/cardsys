@@ -6,7 +6,7 @@ class Member < ActiveRecord::Base
 
   has_many :orders
   has_many :members_cards
-  has_many :balances
+  has_many :balances, :through => :orders
   has_many :member_card_granters, :foreign_key => "granter_id"
   has_many :granted_member_cards, :class_name => "MembersCard", :through => :member_card_granters, :source => :members_card, :uniq => true
 
@@ -65,7 +65,7 @@ class Member < ActiveRecord::Base
   end
 
   def member_consume_amounts
-    self.orders.inject(0){|s,o| s + (o.court_book_record.try(:hours) || 0)} 
+    self.balances.sum("final_price")
   end
 
   def latest_comer_date
@@ -81,11 +81,11 @@ class Member < ActiveRecord::Base
   end
 
   def balance_times
-    0
+   self.balances.count
   end
 
   def use_card_price_amount
-    0
+    self.balances.with_balance_way("card").count
   end
 
   def use_cash_amount

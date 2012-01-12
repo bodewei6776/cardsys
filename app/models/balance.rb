@@ -2,11 +2,11 @@ class Balance < ActiveRecord::Base
 
   BALANCE_WAYS = {
     "card" => "记账",
+    "counter" => "计次",
     "cash" => "现金",
     "post" => "POS机",
     "bank" => "转账",
     "guazhang" => "挂账",
-    "counter" => "计次",
     "check" => "支票"
   }
 
@@ -15,6 +15,8 @@ class Balance < ActiveRecord::Base
   belongs_to :member
   belongs_to :user
   has_many :order_items
+
+  scope :with_balance_way, lambda {|balance_way| { :conditions => { :balance_way => balance_way } } }
 
   accepts_nested_attributes_for :order_items
   validates_presence_of :price, :message => "价格不能空"
@@ -33,7 +35,7 @@ class Balance < ActiveRecord::Base
 
     self.members_card.save
 
-    if self.order.order_items.all?(&:balanced?)
+    if self.order.reload.order_items.all?(&:balanced?)
       self.order.balance!
     end
 

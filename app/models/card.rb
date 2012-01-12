@@ -36,6 +36,10 @@ class Card < ActiveRecord::Base
     end
   end
   
+  def is_counter_card?
+    true
+  end
+
   def card_balance_desc
     self.is_counter_card? ? "#{self.counts||0}次" : "#{self.balance||0}元"
   end
