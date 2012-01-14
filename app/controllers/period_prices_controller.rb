@@ -2,6 +2,7 @@ class PeriodPricesController < ApplicationController
   before_filter :load_period_price, :only => [ :show, :edit, :update, :destroy]
 
   def index
+    @date_type = CommonResource.date_type Date.today
     @period_prices = PeriodPrice.paginate(default_paginate_options)
   end
 

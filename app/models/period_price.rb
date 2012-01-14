@@ -51,7 +51,7 @@ class PeriodPrice < ActiveRecord::Base
   def self.period_by_date_and_start_hour(date, start_hour)
     @date_type ||= CommonResource.date_type(date)
     @pp ||= PeriodPrice.where(:period_type => @date_type.id)
-    @pp.detect { |element| element.start_time < start_hour && element.end_time > start_hour + 1}
+    @pp.detect { |element| element.start_time <= start_hour && element.end_time >= start_hour + 1}
   end
 
   def self.calculate_amount_in_time_spans(date, start_hour, end_hour)
