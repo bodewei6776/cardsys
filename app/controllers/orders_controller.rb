@@ -28,11 +28,20 @@ class OrdersController < ApplicationController
 
   def update
     @order = Order.find(params[:id])
-    if @order.update_attributes(params[:order])
-      flash[:notice] = "场地修改成功"
-      render :action => "create"
-    else
-      render :action => "edit", :layout => "small_main"
+    if params[:commit] == "代卖"
+      # 代卖
+      if @order.split params[:order]
+        render :action => "create"
+      else
+        render :action => "edit", :layout => "small_main"
+      end
+    else # 常规更新
+      if @order.update_attributes(params[:order])
+        flash[:notice] = "场地修改成功"
+        render :action => "create"
+      else
+        render :action => "edit", :layout => "small_main"
+      end
     end
   end
 
@@ -58,6 +67,12 @@ class OrdersController < ApplicationController
   end
 
   def sell
+    @order = Order.find params[:id]
+    if @order.split
+      redirect_to edit_order_path(@order)
+    else
+      render :action => "edit"
+    end
   end
 
 end

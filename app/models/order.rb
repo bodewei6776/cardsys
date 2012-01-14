@@ -21,7 +21,7 @@ class Order < ActiveRecord::Base
   attr_accessor :coach_ids
   after_save :save_order_items_for_court_and_coaches
 
-  delegate :record_date,:end_hour,:start_hour,:hours, :to => :court_book_record
+  delegate :record_date, :end_hour, :start_hour, :hours, :to => :court_book_record
 
   def save_order_items_for_court_and_coaches
     court_book_record_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CourtBookRecord", court_book_record.id)
@@ -105,7 +105,9 @@ class Order < ActiveRecord::Base
     def coach_ids=(ids)
       @coaches = Coach.find(ids.split(",").uniq)
       self.coach_book_records = @coaches.collect do |c|
-        cbr = CoachBookRecord.find_or_initialize_by_resource_type_and_resource_id("Coach", c.id)
+        cbr = CoachBookRecord.new
+        cbr.resource_type = "Coach"
+        cbr.resource_id =  c.id
         cbr.start_hour = start_hour 
         cbr.end_hour = end_hour
         cbr.alloc_date = order_date
@@ -193,57 +195,71 @@ class Order < ActiveRecord::Base
       end
     end
 
+    def hour_range
+      self.start_hour..self.end_hour
+    end
 
     def split(order_attributes)
-      new_order = Order.new(order_attributes)
+      new_order = Order.new(order_attributes.deep_except('id'))
+#      begin
+        Order.transaction do
+          # 无重叠
+          if new_order.hour_range.overlap_window_size(self.hour_range).zero?
+            new_order.errors.add(:base, "时间段与当前预订没有重叠")
+            raise Exception
+            # 新订单时间覆盖当前时间段
+          elsif new_order.hour_range.overlap_window_size(self.hour_range) == self.hours
+            self.destroy
+            new_order.save!
+            # 小于当前时间段
+          elsif self.hour_range.include? new_order.hour_range
+            if self.start_hour == new_order.start_hour
+              self.change_start_hour_to(new_order.end_hour)
+            elsif self.end_hour == new_order.end_hour
+              self.change_end_hour_to(new_order.start_hour)
+            else
+              self.change_end_hour_to(new_order.start_hour)
+              cloned_order = clone_new_order
+              cloned_order.change_start_hour_to(new_order.end_hour)
+            end
+
+            new_order.save!
+            # 部分重叠
+          elsif new_order.hour_range.overlap_window_size(self.hour_range) < self.hours
+            self.start_hour < new_order.start_hour ? self.change_end_hour_to(new_order.start_hour) : self.change_start_hour_to(new_order.end_hour) 
+            new_order.save!
+          end
+        end
+        
+        true
+#      rescue Exception => e
+#        puts e
+#        return false
+#      end
     end
 
-
-
-    def do_agent(new_order)
-      new_book_record = new_order.book_record
-      new_book_record.original_book_reocrd = book_record
-      if book_record.is_not_overlap_with?(new_book_record)
-        #do nothing,a new book record
-      elsif book_record.is_more_then?(new_book_record)
-        split_to_left_and_right(new_order)
-      elsif book_record.less_or_equle_then?(new_book_record)
-        destroy
-      else
-        book_record.do_agent(new_order)
-        book_record_item.do_agent if book_record_item
-        coach_items.each {|coach_item| coach_item.do_agent} unless coach_items.blank?
+    def change_start_hour_to(new_start_hour)
+      self.court_book_record.update_attributes(:start_hour => new_start_hour)
+      self.coach_book_records.each do |element|
+        element.update_attributes(:start_hour => new_start_hour)
       end
     end
 
-    def split_to_left_and_right(new_order)
-      if book_record.is_more_then?(new_order.book_record)
-        clone_left(new_order)
-        clone_right(new_order)
-        destroy
+    def change_end_hour_to(new_end_hour)
+      self.court_book_record.update_attributes(:end_hour => new_end_hour)
+      self.coach_book_records.each do |element|
+        element.update_attributes(:end_hour => new_end_hour)
       end
     end
 
-    def clone_left(new_order)
-      clone_as_new(new_order,true)
-    end
-
-    def clone_right(new_order)
-      clone_as_new(new_order,false)
-    end
-
-    def clone_as_new(new_order,left = true)
-      order = Order.new(attributes.except(:book_record_id,:id))
-      [:coache,:non_member,:member,:member_card].each do |association_method|
-        association = send(association_method) and order.send("#{association_method}=",association)
+    def clone_new_order
+      order = Order.new(self.attributes.except("id"))
+      order.court_book_record = CourtBookRecord.new(self.court_book_record.attributes.except("id"))
+      self.coach_book_records.each do |element|
+        order.coach_book_records  << CoachBookRecord.new(element.attributes.except("id"))
       end
-      time_spen = (left ? {:end_hour => new_order.start_hour} : {:start_hour => new_order.end_hour})
-      book_attributes = book_record.attributes.except(:id).merge(time_spen)
-      order.book_record_attributes = book_attributes
-      order.operation = :agent
-      order.book_record.original_book_reocrd = book_record
-      order.book_record.status = BookRecord::Status_Agent
-      order.save!
+      order.save
+      order
     end
 
 
@@ -314,4 +330,6 @@ class Order < ActiveRecord::Base
               end
       color
     end
+
+  
   end

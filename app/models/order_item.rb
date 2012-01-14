@@ -91,60 +91,6 @@ class OrderItem < ActiveRecord::Base
                                                                 {:start_time => order.start_hour,:end_time => order.end_hour}]).all
   end
 
-  def self.order_coaches(order)
-    return true unless order.updating
-    pending_coaches = coaches.where(:order_id => order.id) || []
-    (order.coaches||[]).each_with_index do |coach,index|
-      origin_coach_order_item = pending_coaches.find do |c| c.item_id == coach.id end
-      book_record = order.book_record
-      coach_item =  new
-      coach_item.item_id    = coach.id
-      coach_item.item_type  = Item_Type_Coache
-      coach_item.quantity   = (origin_coach_order_item.present? ?  origin_coach_order_item.quantity  : book_record.hours)
-      coach_item.price      = coach.fee
-      coach_item.order_id   = order.id
-      coach_item.start_hour = book_record.start_hour
-      coach_item.end_hour   = book_record.end_hour
-      coach_item.order_date = book_record.record_date#Date.today
-      coach_item.save
-    end
-    pending_coaches.collect(&:destroy)
-  end
-
-  def self.order_book_record(order)
-    return unless order.book_record
-    book_record = order.book_record
-    book_record_item = new
-    book_record_item.item_id   = book_record.id
-    book_record_item.item_type = Item_Type_Book_Record
-    book_record_item.quantity  = book_record.hours
-    book_record_item.price     = (book_record.amount == book_record.hours) ? book_record.amount_by_court : book_record.amount_by_card
-    book_record_item.order_id  = order.id
-    book_record_item.start_hour = book_record.start_hour
-    book_record_item.end_hour   = book_record.end_hour
-    book_record_item.order_date = book_record.record_date#Date.today
-    book_record_item.save
-  end
-
-  def self.order_good(order, good)
-    book_record  = order.book_record
-    orignial_good = where(:order_id => order.id,:item_type => Item_Type_Product,:item_id => good.id).first
-    good_item = orignial_good || new
-    if good_item.new_record?
-      good_item.item = good
-      good_item.quantity    = good.order_count
-      good_item.price       = good.price
-      good_item.order_id    = order.id
-    else
-      good_item.quantity    = good_item.quantity + good.order_count
-    end
-    if good_item.save
-      good.add_to_cart
-      good_item
-    else
-      nil
-    end
-  end
 
   def do_agent
     self.start_hour = order.start_hour

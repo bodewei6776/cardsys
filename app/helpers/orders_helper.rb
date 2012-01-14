@@ -84,17 +84,17 @@ module OrdersHelper
 
   def order_action_link(text, url,  method = :put, confirm_message = "", function = "")
     confirm_message = "确认要" + text + "?" if confirm_message.blank?
-    if function.blank?
-      content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "button_link inline", :method => method))
-    else
-      content_tag(:li, link_to_function(text, function))
-    end
+    content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "button_link inline", :method => method))
+   # if function.blank?
+   #   content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "button_link inline", :method => method))
+   # else
+   #   content_tag(:li, link_to_function(text, function), :class => "button_link inline", :confirm_message => confirm_message)
+   # end
   end
 
   def display_enable_buttons(order)
     htmls = []
     htmls << order_action_link("申请代卖", change_state_order_path(order, :be_action => "want_sell")) if order.can_want_sell?
-    htmls << order_action_link("代卖", sell_order_path(order), :post, "", "submit_to_sell") if order.can_sell?
     htmls << order_action_link("取消代卖", change_state_order_path(order, :be_action => "cancel_want_sell")) if order.can_cancel_want_sell?
     htmls << order_action_link("取消预订", change_state_order_path(order, :be_action => "cancel")) if order.can_cancel?
     htmls << order_action_link("连续取消", change_state_order_path(order, :be_action => "cancel_all")) if order.can_cancel_all?
