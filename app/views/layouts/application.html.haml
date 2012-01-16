@@ -6,6 +6,7 @@
     = stylesheet_link_tag 'main','jquery-ui-1.8.2.custom','colorbox'
     = javascript_include_tag 'jquery.min','jquery.ui.core','jquery-ui-1.8.2.custom.min', 'rails'
     = javascript_include_tag "jquery.colorbox-min.js"
+    = javascript_include_tag "jquery.popupWindow.js"
     = javascript_include_tag "autocomplete-rails.js","new_datepicker.js"
     = javascript_include_tag "m97/WdatePicker.js"
 
@@ -74,6 +75,12 @@
 
     highlight_table();
     $(".popup-new-window").colorbox({width:"900", height:"600", iframe:true});
+    //$(".popup-new-window").popupWindow({
+    //  height:500, 
+    //  width:800, 
+    //  top:50, 
+    //  left:50 
+    //});
 
 
     $('#arrow_holder').toggle(function(){

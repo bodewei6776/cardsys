@@ -4,11 +4,11 @@
     = f.hidden_field :order_date
     .fformbox_bt
       %p 请填写预定信息
-    .fformbox_nr
+    .fformbox_nr.orders
       %ul
-        %li
+        %li.orders
           .w1 预订：
-          .w2{:style => "width: 500px;"}
+          .w2{:style => "width: 380px;"}
             = @order.court_book_record.alloc_date.to_chinese_ymd
             = chinese_week_day(Time.parse(@order.court_book_record.alloc_date.to_s).wday)
             = f.fields_for :court_book_record do |cbr|
@@ -83,7 +83,7 @@
               .w2 
                 = nm.text_field :earnest
 
-      %ul{:style => "height:50px;"}
+      %ul
         %li
           .w1 教练：
           .w2
@@ -101,7 +101,7 @@
             = password_field_tag :password
 
 
-      %ul
+      %ul{:style => "height: 45px;"}
         %li
           .w1 备注：
           .w2

@@ -390,8 +390,8 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 .fformbox_bt{ width:99.8%;  background:url(/images/new/bt1_bg.jpg) repeat-x 0 0; border-bottom:1px solid #b6d2e2; height:25px; line-height:25px; margin:1px auto;}
 .fformbox_bt p{ width:40%; display:block; float:left; padding-left:30px; background: url(/images/new/xjt.gif) no-repeat 10px 6px; color:#0c34ae; font-weight:bold;}
 .fformbox_nr{ width:99.8%; margin:0 auto; padding:20px 0; background:#f4f8f9;}
-.fformbox_nr ul{width:95%; height:35px; color:#000; margin:0 auto; border-bottom: 1px dotted black; padding-top: 8px;}
-.fformbox_nr ul li{ height:35px;line-height:35px;float:left; display:block;  }
+.fformbox_nr ul{width:95%; height:25px; color:#000; margin:0 auto; border-bottom: 1px dotted black; padding-top: 8px;}
+.fformbox_nr ul li{ height:25px;line-height:25px;float:left; display:block;  }
 .fformbox_nr ul li select{ width: 120px;  }
 .fformbox_nr ul li input[type=text]{ width: 120px;  }
 /*<定义增加和修改表单等样式---结束>*/
@@ -549,3 +549,5 @@ ul#court_menu li a { background: #ccf; padding: 10px; float:left; border-right: 
 ul#court_menu li.active a { background: #eef; }
 .court_content { float: left; clear: both; border: 1px solid #ccf; border-top: none; border-left: none; width: 100%; }
 
+
+.orders ul li select{ width: 80px;  }
