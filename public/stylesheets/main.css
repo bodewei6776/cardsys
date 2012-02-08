@@ -385,8 +385,8 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 
 
 /*<定义增加和修改表单等样式---开始>*/
-.fform{margin:0px auto; width:99.8%; border:1px solid #bceebf; padding:20px 0; background:#f7ffe5; }
-.fformbox{ width:95%; margin:0 auto; height:auto; border:1px solid #b6d2e2; background:#fff;}
+.fform{margin:0px auto; width:99.8%; border:1px solid #bceebf; background:#f7ffe5; }
+.fformbox{ margin:0 auto; height:auto; border:1px solid #b6d2e2; background:#fff;}
 .fformbox_bt{ width:99.8%;  background:url(/images/new/bt1_bg.jpg) repeat-x 0 0; border-bottom:1px solid #b6d2e2; height:25px; line-height:25px; margin:1px auto;}
 .fformbox_bt p{ width:40%; display:block; float:left; padding-left:30px; background: url(/images/new/xjt.gif) no-repeat 10px 6px; color:#0c34ae; font-weight:bold;}
 .fformbox_nr{ width:99.8%; margin:0 auto; padding:20px 0; background:#f4f8f9;}
@@ -410,7 +410,7 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 .w1 { float:left; width:80px; text-align:right;}
 .w2 { padding-left:5px; float:left; width:250px; color:#3366CC; }
 .ww2 { padding-left:5px; float:left; width:500px; color:#3366CC; }
-.input_bd{ width:95%; text-align:center; padding:5px 0px; background:#fff1ce; border-top:1px dotted #ffd56f;  border-bottom:1px dotted #fe8848; margin:0 auto;}
+.input_bd{ text-align:center; padding:5px 0px; background:#fff1ce; border-top:1px dotted #ffd56f;  border-bottom:1px dotted #fe8848; margin:0 auto;}
 
 .fieldWithErrors {
   padding: 2px;
@@ -420,7 +420,6 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 
 #errorExplanation {
   margin:auto;
-  width: 95%;
   padding-bottom: 5px;
   margin-bottom: 3px;
   border: 2px solid #FE8848;
@@ -545,8 +544,8 @@ div#flash_notice {
 
 ul#court_menu { padding: 0; clear: both; }
 ul#court_menu li { display: inline; }
-ul#court_menu li a { background: #ccf; padding: 10px; float:left; border-right: 1px solid #ccf; border-bottom: none; text-decoration: none; color: #000; font-weight: bold;}
-ul#court_menu li.active a { background: #eef; }
+ul#court_menu li a { background: #eef; padding: 0px 5px; float:left; border-right: 1px solid #ccf; border-bottom: none; text-decoration: none; color: #000; font-weight: bold;}
+ul#court_menu li.active a { background: #ccf; }
 .court_content { float: left; clear: both; border: 1px solid #ccf; border-top: none; border-left: none; width: 100%; }
 
 

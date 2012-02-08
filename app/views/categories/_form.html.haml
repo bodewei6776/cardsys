@@ -1,9 +1,9 @@
+=render :partial => "layouts/errors", :locals => { :target => @category }
 = form_for(@category) do |f|
   .fform
     .fformbox
       .fformbox_bt
         %p 基本属性
-      = error_messages_for :category
       .fformbox_nr
         %ul
           %li

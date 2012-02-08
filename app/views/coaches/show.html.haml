@@ -35,9 +35,7 @@
           %li
             .w1 教练类型：
             .w2
-              = generate_coach_type_str(@coach.coach_type)
-              - if generate_coach_type_str(@coach.coach_type).blank?
-                %a.blank_element
+              = @coach.coach_type
             .w1 教练费用：
             .w2
               = @coach.fee

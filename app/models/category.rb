@@ -2,6 +2,7 @@ class Category < ActiveRecord::Base
   has_many :goods,:foreign_key => "good_type"
   acts_as_tree :order => "position"
   validate :category_stack_should_not_too_deep
+  validates_presence_of :name
 
   def all_goods
     parent_id.present? ? goods : Good.where(["good_type in (?)", children.collect(&:id)])
