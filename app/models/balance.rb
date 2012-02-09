@@ -27,13 +27,13 @@ class Balance < ActiveRecord::Base
   delegate :members_card, :to => :order
 
   def deduct_money_from_card_and_mark_order_as_paid
-    if self.balance_way == "counter" && self.order.members_card.try(:is_counter_card?)
+    if self.balance_way == "counter"# && self.order.members_card.try(:is_counter_card?)
       self.members_card.left_times -= self.price
     elsif self.balance_way == "card" && self.order.members_card
       self.members_card.left_fee -= self.final_price
     end
 
-    self.members_card.save
+    self.members_card.save(false)
 
     if self.order.reload.order_items.all?(&:balanced?)
       self.order.balance!
@@ -55,8 +55,9 @@ class Balance < ActiveRecord::Base
   end
 
   validate do |instance|
-    return true unless order.is_member?
-    if instance.balance_way == "card" && !order.should_use_card_to_balance_goods?
+    if instance.balance_way == "counter" && !order.members_card.has_enough_count_to_balance?(self)
+      errors[:base] << "卡余次不足，不能结算"
+    elsif instance.balance_way == "card" && !order.should_use_card_to_balance_goods?
       errors[:base] << "卡不支持购买商品，只能订场"
     elsif instance.balance_way == "card" && !order.members_card.has_enough_money_to_balance?(self)
       errors[:base] << "卡余额不足，不能结算"
@@ -117,8 +118,7 @@ class Balance < ActiveRecord::Base
 
 
   def card
-    @card ||= (order.is_member? ? order.member_card.card : '')
-    @card.blank? ? nil : @card
+    members_card.card
   end
 
   def should_use_counter_to_balance?
@@ -131,6 +131,10 @@ class Balance < ActiveRecord::Base
 
   def balance_way_desciption(way = nil)
     BALANCE_WAYS[way||self.balance_way] || "无"
+  end
+
+  def use_card_to_balance_book_record?
+    true
   end
 
   def ensure_use_card_counter?
@@ -150,23 +154,11 @@ class Balance < ActiveRecord::Base
     card_amount
   end
 
-  def book_record_real_amount
-    self.balance_items.select{ |bi| bi.order_item.item_type == "BookRecord" }.sum(&:real_price)
-  end
-
-  def other_real_amount
-    self.balance_items.select{ |bi| bi.order_item.item_type != "BookRecord" }.sum(&:real_price)
-  end
-
-  def other_amount
-    self.balance_items.select{ |bi| bi.order_item.item_type != "BookRecord" }.sum(&:price)
-  end
-
   def book_record_amount_desc
-    if ensure_use_card_counter?
-      "#{count_amount}次"
+    if balance_way == "counter"
+      "#{final_price}次"
     else
-      "￥#{book_record_real_amount}元"
+      "￥#{final_price}元"
     end
   end
 
@@ -186,11 +178,11 @@ class Balance < ActiveRecord::Base
     end
   end
 
-  def balance_realy_amount_desc
-    if ensure_use_card_counter?
-      "￥#{other_real_amount}元;#{book_record_amount_desc}"
+  def balance_real_amount_desc
+    if balance_way == "counter"
+      "#{final_price}次"
     else
-      "￥#{other_real_amount + book_record_real_amount}元"
+      "￥#{final_price}元"
     end
   end
 

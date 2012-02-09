@@ -11,105 +11,101 @@
   %body
     %table{:border => "2"}
       %caption/
-    %h2
-      = Setting.site_name
-      球馆消费单
-    - if @balance.order.court_book_record
+      %h2
+        = Setting.site_name
+        球馆消费单
+      - if @balance.order.court_book_record
+        %tr.goods.goods_title
+          %td{:colspan => "4"}
+            消费时段：#{balance_time_span_in_word(@balance)}
+      - if @balance.order.is_member?
+        %tr
+          %td{:colspan => "2"}
+            姓名: #{@balance.order.member.name}
+          %td{:colspan => "2"}
+            卡号: #{@balance.order.is_member?  ? @balance.order.members_card.card_serial_num : "无卡 "}
+        %tr
+          %td{:colspan => "4"}
+            卡到期时间：#{@balance.order.members_card.expire_date.strftime("%Y-%m-%d")}
+      - else
+        %tr
+          %td{:colspan => "4"}
+            散客姓名: #{@balance.order.member.name}
       %tr.goods.goods_title
-        %td{:colspan => "4"}
-          消费时段：#{balance_time_span_in_word(@balance)}
-    - if @balance.order.is_member?
-      %tr
-        %td{:colspan => "2"}
-          姓名: #{@balance.order.member.name}
-        %td{:colspan => "2"}
-          卡号: #{@balance.order.is_member?  ? @balance.order.members_card.card_serial_num : "无卡 "}
-      %tr
-        %td{:colspan => "4"}
-          卡到期时间：#{@balance.order.members_card.expire_date.strftime("%Y-%m-%d")}
-    - else
-      %tr
-        %td{:colspan => "4"}
-          散客姓名: #{@balance.order.member.name}
-    %tr.goods.goods_title
-      %td.left 商品名称
-      %td 单价
-      %td 数量
-      %td.right 小计
-    - if @balance.order.court_book_record
-      %tr.goods
-        %td.left 场地预定费
-        - if @balance.balance_way == 7
-          %td= 1
-          %td= @balance.order.court_book_record.end_hour - @balance.order.court_book_record.start_hour
-          %td.right
-            = @balance.count_amount
+        %td.left 商品名称
+        %td 单价
+        %td 数量
+        %td.right 小计
+      - if @balance.order.court_book_record
+        %tr.goods
+          %td.left 场地预定费
+          - if @balance.balance_way == 7
+            %td= 1
+            %td= @balance.order.court_book_record.end_hour - @balance.order.court_book_record.start_hour
+            %td.right
+              = @balance.count_amount
+              次
+          - else
+            %td= @balance.order.court_book_record.amount
+            %td 1
+            %td.right= @balance.order.court_book_record.amount
+        - unless (coach_book_records = @balance.order.coach_book_records).blank?
+          - coach_book_records.each do |coach_order_item|
+            - coach = coach_order_item.coach
+            %tr.goods
+              %td.left
+                教练(#{coach.name})
+              %td
+                = coach.fee
+              %td
+                = coach_order_item.hours
+              %td.right= coach_order_item.hours * coach.fee
+      - for good_item in @balance.order.order_items.good_records
+        - next if (good = good_item.item).blank?
+        %tr.goods
+          %td.left
+            = good.name
+          %td= good.price
+          %td
+            = good_item.quantity
+          %td.right= good_item.amount
+      %tr.total
+        %td{:colspan => "1"}
+        %td{:colspan => "1"} 合计:
+        %td.amount{:colspan => "2"}
+          %span
+            = @balance.balance_real_amount_desc
+      - if @balance.order.is_member?
+        %tr.total_remain
+          %td{:colspan => "1"}
+          %td  剩余金额:
+          %td.amount{:colspan => "2"}
+            %span>
+              = @balance.order.members_card.left_fee
+            元
+        %tr.total_remain
+          %td{:colspan => "1"}
+          %td  剩余次数:
+          %td.amount{:colspan => "2"}
+            %span>
+              = @balance.order.members_card.left_times
             次
-        - else
-          %td= @balance.order.court_book_record.amount
-          %td 1
-          %td.right= @balance.order.court_book_record.amount
-      - unless (coach_order_items = @balance.order.coach_order_items).blank?
-        - coach_order_items.each do |coach_order_item|
-          - coach = coach_order_item.item
-          %tr.goods
-            %td.left
-              教练(#{coach.name})
-            %td
-              = coach.price
-            %td
-              = coach_order_item.quantity
-            %td.right= coach_order_item.amount
-    - for good_item in @balance.order.product_items
-      - next if (good = good_item.item).blank?
-      %tr.goods
-        %td.left
-          = good.name
-        %td= good.price
-        %td
-          = good_item.quantity
-        %td.right= good_item.amount
-    %tr.total
-      %td{:colspan => "1"}
-      %td{:colspan => "1"} 合计:
-      %td.amount{:colspan => "2"}
-        %span
-          = @balance.balance_realy_amount_desc
-    - if @balance.order.is_member?
-      %tr.total_remain
-        %td{:colspan => "1"}
-        %td  剩余金额:
-        %td.amount{:colspan => "2"}
-          %span>
-            = @balance.order.member_card.left_fee
-          元
-      %tr.total_remain
-        %td{:colspan => "1"}
-        %td  剩余次数:
-        %td.amount{:colspan => "2"}
-          %span>
-            = @balance.order.member_card.left_times
-          次
-    %tr
-      %td{:colspan => "4"}
-         备注:
-        \#{@balance.change_note}
-    %tr
-      %td{:colspan => "4"}
-         结算时间:
-        \#{DateUtil.timelong(@balance.created_at)}
-    %tr
-      %td{:colspan => "4"}
-         操作员编号:
-        \#{@balance.who_balance.login}
-    %tr
-      %td{:colspan => "4"}
-         支付方式:
-        - if @balance.order.book_record
-          = @balance.balance_way_desciption
-          （场地费）
-        - if @balance.other_real_amount > 0
-          \/#{@balance.balance_way_desciption}（其他消费）
+      %tr
+        %td{:colspan => "4"}
+           备注:
+          \#{@balance.change_note}
+      %tr
+        %td{:colspan => "4"}
+           结算时间:
+          \#{@balance.created_at.to_chinese_mdh}
+      %tr
+        %td{:colspan => "4"}
+           操作员编号:
+          \#{@balance.who_balance.try(:login) || "未知"}
+      %tr
+        %td{:colspan => "4"}
+           支付方式:
+          = @balance.balance_way_desc
     .noprint
       %form
         %input.submit{:onclick => "window.print()", :style => "margin-top:20px; margin-left:130px;padding:3px 7px;border:1px solid black;", :type => "button", :value => "\346\211\223\345\215\260"}/

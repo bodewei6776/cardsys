@@ -74,7 +74,12 @@ class MembersCard < ActiveRecord::Base
   end
 
   def has_enough_money_to_balance?(balance)
-    left_mouny_order_counter(balance) >= balance.amount_by_card
+    self.left_fee > balance.final_price
+  end
+
+  
+  def has_enough_count_to_balance?(balance)
+    self.left_times > balance.final_price
   end
 
   def member_card_type_opt
@@ -91,7 +96,7 @@ class MembersCard < ActiveRecord::Base
    # end
   end
 
-  def left_mouny_order_counter(balance = nil)
+  def left_money_order_counter(balance = nil)
     card.is_counter_card? ||
       (card.is_zige_card? && balance && balance.use_card_counter_to_balance?) ?
       left_times : left_fee
