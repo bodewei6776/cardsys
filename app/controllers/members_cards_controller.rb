@@ -94,7 +94,7 @@ class MembersCardsController < ApplicationController
 
   def switch_state
     @card = MembersCard.find(params[:id])
-    @card.switch_state
+    @card.switch_state!
     redirect_to :back
   end
 

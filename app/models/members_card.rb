@@ -23,6 +23,10 @@ class MembersCard < ActiveRecord::Base
 
   attr_accessor :recharge_fee, :recharge_times
 
+  def max_granter_due?
+    self.granters.count > max_shared_count - 1
+  end
+
   def reset_fee_and_times
     self.left_times += recharge_times.to_i if recharge_times.to_i > 0
     self.left_fee += recharge_fee.to_i if recharge_fee.to_i > 0
@@ -80,11 +84,11 @@ class MembersCard < ActiveRecord::Base
 
 
   def left_fee_value
-    unless card.is_zige_card?
-      card.is_counter_card? ? "#{left_times.to_i} 次" : "￥#{left_fee.to_i}"
-    else
+   # unless card.is_zige_card?
+   #   card.is_counter_card? ? "#{left_times.to_i} 次" : "￥#{left_fee.to_i}"
+   # else
       "￥#{left_fee.to_i}元;#{left_times.to_i} 次"
-    end
+   # end
   end
 
   def left_mouny_order_counter(balance = nil)

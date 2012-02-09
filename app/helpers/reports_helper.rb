@@ -14,7 +14,8 @@ module ReportsHelper
     radio_map.each do |way|
       html << content_tag(:input,raw("<label>#{way[0]}</label>"),:type => "radio",:name => "selected_way",:value => way[1],:checked => (way[1] == selected.to_i),:onclick=> "toogle_way(#{way[1]});recalculate();" ,:class=>"selected_way")
     end
-    html << "<span style='display:#{selected == "10" ? "visible" : "none"};' id='way_span'>"
+    #html << "<span style='display:#{selected == "10" ? "visible" : "none"};' id='way_span'>"
+    html << "<span id='way_span'>"
     map.each do |way|
       html << content_tag(:input,raw("<label>#{way[0]}</label>"),:type => "checkbox",:name => "way[]",:value => way[1],:checked => checked.include?(way[1].to_s),:onclick=> "recalculate();" ,:class=>"pay_ways")
     end

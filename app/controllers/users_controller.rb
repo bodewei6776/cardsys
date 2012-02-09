@@ -41,7 +41,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = @current_user # makes our views "cleaner" and more consistent
+    @user =User.find(params[:id]) 
     @user.departments = @user.departments | Department.find(params[:dep])
     if @user.update_attributes(params[:user])
       redirect_to users_path, :notice => "用户修改成功"

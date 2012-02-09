@@ -4,17 +4,59 @@
       .r_bt_l_a
       .r_bt_l_c.fb.white 会员查询
     .r_bt_r
+
   .soso
-    %form#search_form.form-profile{:action => "/member_cards/status", :method => "get"}
-      .w95
-        会员名称：
-        %label
-          %input#name{:autocomplete => "/member_cards/autocomplete_name", :name => "name", :type => "text", :value => params[:name]}/
-        \&nbsp;&nbsp;&nbsp;&nbsp;
-        会员卡号：
-        %label
-          %input{:autocomplete => "/member_cards/autocomplete_card_serial_num", :name => "card_serial_num", :tabindex => "1", :type => "text", :value => params[:card_serial_num]}/
-        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+    .fform
+      .fformbox
+        .fformbox_nr
+          %ul
+            %li
+              .w1 会员姓名：
+              .w2
+                = text_field_tag :member_name, params[:member_name], :id => "member_name"
+            %li
+              .w1 卡号：
+              .w2#cards
+                = text_field_tag :card_serial_num, params[:card_serial_num], :id => "member_card_serial_num"
+  
+  :javascript
+    function jump(card_serial_num){
+      window.location.href = ("#{status_members_cards_path}" +"?card_serial_num=" + card_serial_num);
+    }
+  
+    $(document).ready(function(){
+      $('#member_name').autocomplete({
+        source:  '/members/autocomplete_name',
+          select:  function(ui,li){
+            var item = li.item;
+              var reqest_url  = "/members/" + item.id + "/member_cards_list";
+                $('#order_member_id').val(item.id);
+                  $.get(reqest_url,function(returned_data)
+                    {
+                      options = "";
+                     $(returned_data).each(function(i,node){
+                       options +=("<option value='" + node.members_card.card_serial_num+
+                         "'>" + node.members_card.card_serial_num + "</option>") 
+                      });
+                      $('#cards').html( "<select name='order[members_card_id]'>" + options + "</select>");
+                  $("#cards select").bind("click", function(){
+                    jump($("#cards select").val());
+                  });
+  
+                    });
+                 }			
+              });
+  
+      $('#member_card_serial_num').autocomplete({
+        source:  '#{autocomplete_card_serial_num_members_cards_path}',
+        select:  function(ui,li){
+          var item = li.item;
+            $('#member_name').val(item.member_name);
+              jump(item.label);
+                }			
+             });
+  
+     });
   .h10
   .r_bt
     .r_bt_l
@@ -29,19 +71,18 @@
       %li.w15 卡余额/余次
       %li.w15 有效期
       %li.w10 取消绑定
-    - unless @member_cards.blank?
-      - @member_cards.each_with_index do |member_card,index|
-        %ul.table_items
-          %li.w5= index + 1
-          %li.w10= member_card.card_serial_num
-          %li.w10= member_card.card.card_type_desc
-          %li.w15= member_card.left_fee_value
-          %li.w15= DateUtil::timelong(member_card.expire_date)
-          %li.w10
-            - if member_card.enable?
-              = link_to '注销此卡',switch_member_card_path(member_card,:name => params[:name],:card_serial_num => params[:card_serial_num]), :confirm => "确定要进行此操作？" ,:method =>:put
-            - else
-              = link_to '启用此卡', switch_member_card_path(member_card,:name => params[:name],:card_serial_num => params[:card_serial_num]), :confirm => "确定要进行此操作？",:method =>:put
+    - @members_cards.each_with_index do |member_card,index|
+      %ul.table_items
+        %li.w5= index + 1
+        %li.w10= member_card.card_serial_num
+        %li.w10= member_card.card_type_in_chinese
+        %li.w15= member_card.left_fee_value
+        %li.w15= member_card.expire_date.to_chinese_ymd
+        %li.w10
+          - if member_card.enabled?
+            = link_to '注销此卡',switch_state_members_card_path(member_card, :name => params[:name],:card_serial_num => params[:card_serial_num]), :confirm => "确定要进行此操作？" ,:method =>:put
+          - else
+            = link_to '启用此卡', switch_state_members_card_path(member_card, :name => params[:name],:card_serial_num => params[:card_serial_num]), :confirm => "确定要进行此操作？",:method =>:put
   .h10
   .pages
     = will_paginate(@member_cards)

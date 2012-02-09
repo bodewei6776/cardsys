@@ -56,26 +56,13 @@ class CourtsController < ApplicationController
   end
 
 
+
+  def court_status_search
+    @court_book_records = CourtBookRecord.paginate(default_paginate_options.merge!(:order => "id asc"))
+  end
+
   def coach_status_search
-    coach = Coach.where(:name => params[:name]).first  unless params[:name].blank?
-    start_date = params[:start_date].blank? ? Date.today : Date.parse(params[:start_date])
-    end_date = params[:end_date].blank? ? Date.today : Date.parse(params[:end_date])
-    member = Member.where(:name => params[:member_name]).first unless params[:member_name].blank?
-    start_hour,end_hour = params[:start_hour],params[:end_hour]
-    @caoches = Coach.all
-    @order_items = OrderItem.coaches.select('order_items.*')
-    @order_items = @order_items.where(:item_id => coach.id) if coach
-    orde_inner_join = "INNER JOIN orders ON orders.id=order_items.order_id"
-    @order_items = @order_items.joins(orde_inner_join)
-
-    br_inner_join = " INNER JOIN book_records ON orders.book_record_id=book_records.id "
-    @order_items = @order_items.joins(br_inner_join)
-
-    @order_items = @order_items.where(["order_items.start_hour >= ?", start_hour]) unless start_hour.blank?
-    @order_items = @order_items.where(["order_items.end_hour <= ?", end_hour]) unless end_hour.blank?
-    @order_items = @order_items.order("item_id, start_hour")
-    @order_items = @order_items.paginate(:page => params[:page]||1,:per_page => 15)
-
+    @coach_book_records = CoachBookRecord.paginate(default_paginate_options.merge!(:order => "id asc"))
   end
 
   def court_record_detail

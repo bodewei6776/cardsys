@@ -1,6 +1,6 @@
 class AddDiscountToOrderItems < ActiveRecord::Migration
   def self.up
-    add_column :order_items, :discount, :decimal, :scale => 1, :precision => 2
+    add_column :order_items, :discount, :decimal, :scale => 1, :precision => 8
     add_column :order_items, :price_after_discount, :decimal, :scale => 2, :precision => 8
     add_column :order_items, :balance_id, :integer
   end

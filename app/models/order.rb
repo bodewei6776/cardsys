@@ -168,7 +168,7 @@ class Order < ActiveRecord::Base
       end
       possible_ways = possible_ways | ["cash", "post", "bank", "guazhang", "check"]
       result = []
-      possible_ways.each{ |k| result << [k, Balance::BALANCE_WAYS[k]] }
+      possible_ways.each{ |k| result << [Balance::BALANCE_WAYS[k], k] }
       result
     end
 
@@ -329,6 +329,10 @@ class Order < ActiveRecord::Base
               else "color02"
               end
       color
+    end
+
+    def member_name
+      is_member? ? member.name : non_member.name
     end
 
   

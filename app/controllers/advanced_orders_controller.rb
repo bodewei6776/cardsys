@@ -3,8 +3,8 @@ class AdvancedOrdersController < ApplicationController
 
   def new
     @order    = AdvancedOrder.new 
-    @coaches  = Coach.default_coaches
-    @courts   = Court.all(:conditions => {:status => 1})
+    @coaches  = Coach.all
+    @courts   = Court.all
     @book_record = BookRecord.new
   end
 
