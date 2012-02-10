@@ -23,7 +23,20 @@
           = f.hidden_field :item_id
           = f.hidden_field :item_type
           = f.hidden_field :order_id
-          = f.text_field :quantity, :size => 5
-          = f.submit "添加"
+          = f.text_field :quantity, :size => 5, :class => "quantity"
+          = link_to "<<", "#", :class => "remove"
+          = link_to ">>", "#", :class => "add"
+          = f.submit "购买"
 
 
+  :javascript
+    $(document).ready(function(){
+      $('.remove').click(function(){
+        var quantity = $(this).parent().find('.quantity');
+        quantity.attr('value', parseInt(quantity.val()) - 1);
+     });
+      $('.add').click(function(){
+        var quantity = $(this).parent().find('.quantity');
+        quantity.attr('value', parseInt(quantity.val()) + 1);
+      });
+    });
