@@ -291,8 +291,8 @@ class Order < ActiveRecord::Base
       self.product_amount + self.book_record_amount
     end
 
-    def should_use_card_to_balance_goods?
-      is_member? && !members_card.card.is_counter_card? && members_card.card.is_consume_goods?
+    def can_consume_goods?
+      members_card && members_card.can_consume_goods? 
     end
 
 

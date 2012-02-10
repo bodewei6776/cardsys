@@ -67,7 +67,7 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 .cheng{ color:#f5a200;}
 .orangered{ color:orangered;}
 
-.white{ color:white;}
+.white{ color:white;important!}
 .black{ color:black;}
 
 .gray{color:gray;}
@@ -376,11 +376,17 @@ a:hover {line-height:22px;color:#FFF;text-decoration:underline;}
 .color {position: fixed; bottom: 0px; right:0px; background-color: gray;}
 .color SPAN {BORDER-RIGHT: #000 1px solid; PADDING-RIGHT: 5px; BORDER-TOP: #000 1px solid; DISPLAY: block; PADDING-LEFT: 5px; FONT-WEIGHT: bold; FLOAT: left; PADDING-BOTTOM: 3px; BORDER-LEFT: #000 1px solid; MARGIN-RIGHT: 20px; PADDING-TOP: 3px; BORDER-BOTTOM: #000 1px solid; TEXT-ALIGN: center;}
 .color01 {BACKGROUND: #ff0000; COLOR: white;}
+td.color01 a {color: white;}
 .color02 {BACKGROUND: #dcdcdc; COLOR: white;}
+td.color02 a {color: white;}
 .color03 {BACKGROUND: #800080; COLOR: white;}
+td.color03 a {color: white;}
 .color04 {BACKGROUND: #008000; COLOR: white;}
+td.color04 a {color: white;}
 .color05 {BACKGROUND: #993333; COLOR: white;}
+td.color05 a {color: white;}
 .color06 {BACKGROUND: #0066ff; COLOR: white;}
+td.color06 a {color: white;}
 /*<定义场地预订样式---结束>*/
 
 

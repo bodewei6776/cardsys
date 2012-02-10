@@ -57,7 +57,7 @@ class Balance < ActiveRecord::Base
   validate do |instance|
     if instance.balance_way == "counter" && !order.members_card.has_enough_count_to_balance?(self)
       errors[:base] << "卡余次不足，不能结算"
-    elsif instance.balance_way == "card" && !order.should_use_card_to_balance_goods?
+    elsif instance.balance_way == "card" && order.
       errors[:base] << "卡不支持购买商品，只能订场"
     elsif instance.balance_way == "card" && !order.members_card.has_enough_money_to_balance?(self)
       errors[:base] << "卡余额不足，不能结算"

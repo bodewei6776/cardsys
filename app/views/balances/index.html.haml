@@ -30,8 +30,9 @@
             %w2= @order.members_card.long_description
   
 
-  = form_for @balance do |f|
+  = form_for @balance, :url => balances_path, :method => :post do |f|
     = f.hidden_field :order_id
+    = hidden_field_tag :order_id, @order.id
     .h10
     .r_bt
       .r_bt_l
@@ -129,7 +130,7 @@
         return;
       }
       else{
-        price_node.parent().parent().find(".checkbox_marker").attr("checked", "checked");
+        //price_node.parent().parent().find(".checkbox_marker").attr("checked", "checked");
         var closest_price_after_discount_node = price_node.parent().parent().find(".price_after_discount");
         closest_price_after_discount_node.val(price * total_cost * 0.1);
       }

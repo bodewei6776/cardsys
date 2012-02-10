@@ -7,4 +7,11 @@
     = javascript_include_tag  "jquery.tokeninput.js"
     = javascript_include_tag "autocomplete-rails.js"
     = stylesheet_link_tag   'jquery-ui-1.8.2.custom',"main", "token-input"
-    = yield
+
+    %body
+      - if flash[:notice]
+        #flash_notice= flash[:notice] 
+      = yield
+
+  :javascript
+    $("#flash_notice").delay(2000).fadeOut();

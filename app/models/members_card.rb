@@ -23,6 +23,10 @@ class MembersCard < ActiveRecord::Base
 
   attr_accessor :recharge_fee, :recharge_times
 
+  def can_consume_goods?
+  !self.card.is_counter_card? && self.card.is_consume_goods?
+  end
+
   def max_granter_due?
     self.granters.count > max_shared_count - 1
   end

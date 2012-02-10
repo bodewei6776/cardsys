@@ -13,7 +13,7 @@
       %li.w15 说明
       %li.w15 操作
     - @period_prices.each_with_index do |period_price,index|
-      %ul.table_items{:class => period_price.period_type == @date_type.id.to_s ?  "red" : "" }
+      %ul.table_items{:class => period_price.period_type == @date_type.id.to_s ?  "special" : "" }
         %li.w5= index + 1
         %li.w10= period_price.name
         %li.w10= period_price.period_type_in_chinese
