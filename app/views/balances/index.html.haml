@@ -1,4 +1,3 @@
-=render :partial => "layouts/errors", :locals => { :target => @balance }
 = flash[:notice] if flash[:notice]
 .w96
   .r_bt
@@ -10,6 +9,7 @@
 
 
   .fformbox{:style => "width:100%;"}
+    = render :partial => "layouts/errors", :locals => { :target => @balance }
     .fformbox_nr
       %ul
         %li

@@ -24,7 +24,7 @@ class BalancesController < ApplicationController
       flash[:notice] = "结算成功"
     else
       flash[:notice] = "结算失败"
-      redirect_to :back and return
+      render :action => "index", :layout => "small_main" and return
     end
 
     @balance.order_items = @order.order_items.collect do |oi|
