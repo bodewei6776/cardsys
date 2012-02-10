@@ -39,16 +39,17 @@
       - if @balance.order.court_book_record
         %tr.goods
           %td.left 场地预定费
-          - if @balance.balance_way == 7
+          - if @balance.balance_way == "counter"
             %td= 1
             %td= @balance.order.court_book_record.end_hour - @balance.order.court_book_record.start_hour
             %td.right
               = @balance.count_amount
               次
           - else
-            %td= @balance.order.court_book_record.amount
+            %td --
             %td 1
-            %td.right= @balance.order.court_book_record.amount
+            %td.right= @balance.order.court_book_record.price
+
         - unless (coach_book_records = @balance.order.coach_book_records).blank?
           - coach_book_records.each do |coach_order_item|
             - coach = coach_order_item.coach
@@ -66,9 +67,8 @@
           %td.left
             = good.name
           %td= good.price
-          %td
-            = good_item.quantity
-          %td.right= good_item.amount
+          %td= good_item.quantity
+          %td.right= good_item.total_money_price
       %tr.total
         %td{:colspan => "1"}
         %td{:colspan => "1"} 合计:

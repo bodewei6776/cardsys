@@ -141,43 +141,6 @@ class Balance < ActiveRecord::Base
     use_card_to_balance_book_record? && card && (card.is_counter_card? || (card.is_zige_card? && use_card_counter_to_balance?))
   end
 
-  def amount_by_card
-    card_amount = 0
-    if use_card_to_balance? 
-      if use_card_counter_to_balance?
-        card_amount += count_amount
-      else
-        card_amount += book_record_real_amount.to_i if use_card_to_balance_book_record?
-        card_amount += other_real_amount.to_i       if use_card_to_balance_goods?
-      end
-    end
-    card_amount
-  end
-
-  def book_record_amount_desc
-    if balance_way == "counter"
-      "#{final_price}次"
-    else
-      "￥#{final_price}元"
-    end
-  end
-
-  def other_amount_desc
-    "￥#{other_amount}元"
-  end
-
-  def other_amount_real_desc
-    "￥#{other_amount}元"
-  end
-
-  def balance_amount_desc
-    if ensure_use_card_counter?
-      "￥#{other_amount}元;#{book_record_amount_desc}"
-    else
-      "￥#{other_amount + book_record_real_amount}元"
-    end
-  end
-
   def balance_real_amount_desc
     if balance_way == "counter"
       "#{final_price}次"
@@ -193,10 +156,6 @@ class Balance < ActiveRecord::Base
 
   def balance_realy_amount
     book_record_real_amount.to_i + other_real_amount.to_i
-  end
-
-  def total_changed?
-    self.amount != self.real_amount 
   end
 
   ####### for reports #########

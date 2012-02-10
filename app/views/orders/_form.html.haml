@@ -36,7 +36,6 @@
               = text_field_tag :card_serial_num, @order.members_card.try(:card_serial_num), :id => "order_member_card_serial_num"
               = f.hidden_field :members_card_id
 
-
         %ul
           %li
             .w1 卡类型：
@@ -90,22 +89,23 @@
             = f.text_field :coach_ids
 
 
-      %ul
-        %li
-          .w1 操作人：
-          .w2
-            = text_field_tag :name
-
-          .w1 密码：
-          .w2
-            = password_field_tag :password
 
 
       %ul{:style => "height: 45px;"}
         %li
           .w1 备注：
           .w2
-            = f.text_area :memo, :rows => 2, :style => "width:460px;"
+            = f.text_area :memo, :rows => 2, :style => "width:457px;"
+
+      %ul
+        %li
+          .w1 操作人：
+          .w2
+            = text_field_tag :login
+
+          .w1 密码：
+          .w2
+            = text_field_tag :login
 
       %ul#link_box
         %li

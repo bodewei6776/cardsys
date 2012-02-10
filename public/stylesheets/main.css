@@ -12,7 +12,7 @@ div,form,img,ul,ol,li,dl,dt,dd,table,td,tr,th{ margin:0;padding:0;border:none;}
 .submit1 {	border: #fe8848 1px solid; padding: 0px 5px; background: url(/images/new/btn1_bg.jpg) repeat-x 0 0;color: #000; font-size:12px;height:20px;  line-height:20px;}
 .submit2 {	border: #8f9f56 1px solid; padding: 0px 5px; background: url(/images/new/btn2_bg.jpg) repeat-x 0 0;color: #000; font-size:12px;height:20px; line-height:20px;}
 .submit3 {	border: #464646 1px solid; padding: 0px 5px; background: url(/images/new/btn3_bg.jpg) repeat-x 0 0;color: #000; font-size:12px;height:20px; line-height:20px;}
-.button_link {	border: #fe8848 1px solid; padding: 3px 5px 1px 5px; background: url(/images/new/btn1_bg.jpg) repeat-x 0 0; font-size:12px;height:20px;  line-height:20px; font-color:black;important! font-size:12px; margin-left:10px;}
+a.button_link,input.button_link{	border: #fe8848 1px solid; padding: 2px 4px!important; background: url(/images/new/btn1_bg.jpg) repeat-x 0 0; font-size:12px;height:20px;  line-height:20px; color:black!important; font-size:12px; margin-left:10px;}
 .float_right { float:right;}
 .float_left { float:left;}
 
@@ -556,3 +556,5 @@ ul#court_menu li.active a { background: #ccf; }
 
 
 .orders ul li select{ width: 80px;  }
+
+#link_box {display: block; text-align: center;}
