@@ -143,17 +143,6 @@ class OrderItem < ActiveRecord::Base
   end
 
 
-  def update_balance_item
-    balance_item = self.balance_item || BalanceItem.new(:balance_id => self.order.balance.id, 
-                                                        :order_id => self.order_id, 
-                                                        :order_item_id => self.id,
-                                                        :discount_rate => 1,
-                                                        :count_amount => 0)
-    cal_price = quantity * price 
-    balance_item.update_attributes(:price => cal_price,
-                                   :real_price => cal_price)
-    balance_item.update_attributes(:count_amount => self.order.book_record.hours) if item_type == "BookRecord"
-  end
 
   def name
     item.try(:name) || ""

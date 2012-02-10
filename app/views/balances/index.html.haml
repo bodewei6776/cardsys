@@ -83,6 +83,7 @@
         %li.w10 总价
         %li.w15 折扣
         %li.w15 折后价格
+        %li.w10 是否结算
       = f.fields_for :order_items do |oi|
         %ul.table_items{:class => (oi.object.item.is_a? CourtBookRecord) ? "court" : "other_product"}
           %li.w5= oi.check_box :checked, :class => "checkbox_marker" unless oi.object.balanced?
@@ -97,7 +98,7 @@
             = hidden_field_tag "total_cost", oi.object.total_cost, :class => "total_cost_hidden"
           %li.w15= oi.object.balanced? ? oi.object.discount : (oi.text_field :discount, :class => "discount")
           %li.w15= oi.object.balanced? ? oi.object.price_after_discount : (oi.text_field :price_after_discount, :class => "price_after_discount")
-    
+          %li.w10= oi.object.balanced? ? "已结算" : "未结算"
 
 :javascript
   function update_discount_value(field, price_node){
