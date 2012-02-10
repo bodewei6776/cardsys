@@ -270,7 +270,7 @@ class Order < ActiveRecord::Base
     end
 
     def is_order_use_zige_card?
-      is_member? && member_card.card.is_zige_card?
+      is_member? && members_card.card.is_zige_card?
     end
 
     def amount
@@ -278,7 +278,7 @@ class Order < ActiveRecord::Base
     end
 
     def book_record_amount
-      is_member? && member_card.card.is_counter_card? ? hours : book_record_item.amount
+      is_member? && members_card.card.is_counter_card? ? hours : book_record_item.amount
     end
 
     def product_amount
@@ -292,7 +292,7 @@ class Order < ActiveRecord::Base
     end
 
     def should_use_card_to_balance_goods?
-      is_member? && !member_card.card.is_counter_card? && member_card.card.is_consume_goods?
+      is_member? && !members_card.card.is_counter_card? && members_card.card.is_consume_goods?
     end
 
 
