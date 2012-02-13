@@ -15,7 +15,6 @@
       %li.w35
         = link_to '查看', edit_user_path(user),:class => "hand"
         = link_to '删除', user, :confirm => '确定删除吗?', :method => :delete ,:class => "hand"
-        = link_to '设置权限', '/users/user_power_index?id='+user.id.to_s,:class => "hand"
 .h10
 .pages
   = will_paginate @users, :sp => 1

@@ -3,8 +3,8 @@ class CourtBookRecord < BookRecord
     resource
   end
 
-  def price
-    court.calculate_amount_in_time_span(alloc_date, start_hour, end_hour)
+  def price(members_card = nil)
+    members_card.present? ? members_card.card.total_money_in_time_span(alloc_date, start_hour, end_hour) : court.calculate_amount_in_time_span(alloc_date, start_hour, end_hour)
   end
 
   def description

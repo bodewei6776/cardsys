@@ -20,8 +20,6 @@ class User < ActiveRecord::Base
     self.user_name_pinyin = pinyin.to_pinyin(self.user_name) if self.user_name
   end
 
-
-
   def set_powers
     return true unless self.departments
     self.powers = self.departments.collect(&:powers).flatten

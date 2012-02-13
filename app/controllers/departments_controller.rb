@@ -45,7 +45,7 @@ class DepartmentsController < ApplicationController
   def department_power_update
     @department.powers = Power.find(params[:powers])
     @department.save
-    redirect_to :action => "department_power_index", :id => @department.id, :notice => '部门权限设置成功！'
+    redirect_to :action => "department_power_index", :id => @department.id
   end
   
 

@@ -47,7 +47,7 @@ class MembersCard < ActiveRecord::Base
     self.left_fee = 0 if self.left_fee.nil?
   end
 
-  def calculate_amount_in_time_span(date,start_hour,end_hour)
+  def calculate_amount_in_time_span(date, start_hour, end_hour)
     if card.is_counter_card?
       end_hour - start_hour
     else

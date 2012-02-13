@@ -82,8 +82,11 @@ task :get_power=> :environment do
   a.children.create(:subject => "数据备份")
   a.children.create(:subject => "关于软件")
 
+  dep = Department.find_or_create_by_name("系统管理员")
+  dep.powers = Power.all
+  dep.save
   admin = User.find_by_login('admin')
-  admin.powers << Power.all
+  admin.departments << dep
   admin.save
 
 end

@@ -60,20 +60,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def user_power_index
-    @user = User.find(params[:id])
-    @powers = Power.all
-  end
-
-  def user_power_update
-    @user = User.find(params[:id])
-    @user.powers = Power.find(params[:powers]) rescue []
-    @user.save
-    respond_to do |format|
-      format.html { redirect_to :action => "user_power_index", :id => @user.id, :notice => '用户权限设置成功！'}
-      format.xml  { head :ok }
-    end
-  end
 
   def invalid_power_page
   end

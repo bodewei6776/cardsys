@@ -82,7 +82,7 @@
                 checked
               \/>
             %li.w15
-              %input{:maxlength => "4", :name => "time_discount_#{period_price.id}", :size => "4", :type => "text", :value => @card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price}/
+              %input{:name => "time_discount_#{period_price.id}", :size => "4", :type => "text", :value => @card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price}/
             %li.w27= period_price.description
     .h10
     .input_bd

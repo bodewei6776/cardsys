@@ -44,7 +44,7 @@ class PeriodPrice < ActiveRecord::Base
     end_time   ||= PERIOD_END_TIME
     @date_type ||= CommonResource.date_type(date||Date.today)
     @pp ||= PeriodPrice.where(:period_type => @date_type.id).order("start_time asc")
-    @pp.select{ |element| element.start_time < end_time && end_time > start_time }
+    @pp.select{ |element| element.start_time < end_time && element.end_time > start_time }
   end
 
 

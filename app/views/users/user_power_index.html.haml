@@ -1,0 +1,33 @@
+= stylesheet_link_tag "checktree"
+:css
+  #holder{
+    margin-left: 20px;
+  }
+  ul.tree{
+    margin-left: 40px;
+  }
+  ul.tree label{
+    margin-left: 5px;
+  }
+
+:javascript
+  $(document).ready(function(){
+      $("input[type=checkbox]").click(function(){
+          if($(this).is(":checked") && $(this).attr('parent_id') !== undefined){
+            $("input[type=checkbox][value=" + $(this).attr('parent_id') +"]").attr('checked','checked');
+          }
+        });
+  
+  });
+#holder
+  - if @notice
+    %p.notice= @notice
+  .r_bt
+    .r_bt_l
+      .r_bt_l_a
+      .r_bt_l_c.fb.white
+        权限：　(#{@user.login})
+  = form_for :user, @user, :url => {:action => "user_power_update"}, :html => {:class => "form-profile"} do |f|
+    = hidden_field_tag "id",@user.id.to_s
+    = raw powers_tree(@user.powers || @user.department_powers)
+    = f.submit "修改了",:class => "submit1"

@@ -2,6 +2,7 @@ class Power < ActiveRecord::Base
   has_many   :user_powers,:dependent => :destroy
   has_many :users,:through => :user_powers
   has_many   :department_powers,:dependent => :destroy
+  scope :tops, lambda { {:conditions =>  "parent_id = 0" }}
 
   #default_scope where(:will_show  => true)
   #scope :all,where(:will_show => true)

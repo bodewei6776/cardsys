@@ -228,8 +228,6 @@ Cardsys::Application.routes.draw do |map|
   resources :users do
     collection do
       get :autocomplete_user_name
-      get :user_power_index
-      get :user_power_update
       get :change_password
       post :change_pass
     end
@@ -240,7 +238,7 @@ Cardsys::Application.routes.draw do |map|
   resources :departments do
     member do
       get :department_power_index
-      get :department_power_update
+      post :department_power_update
     end
   end
   

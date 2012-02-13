@@ -50,10 +50,17 @@ class Card < ActiveRecord::Base
   end
 
   def calculate_amount_in_time_span(date,start_hour,end_hour)
-    PeriodPrice.calculate_amount_in_time_spans(date,start_hour,end_hour) do |period_price|
+    PeriodPrice.calculate_amount_in_time_spans(date, start_hour, end_hour) do |period_price|
       card_period_price = self.card_period_prices.first(:conditions => "period_price_id=#{period_price.id}")
       [!card_period_price.nil? ,card_period_price.card_price]
     end
+  end
+
+  def total_money_in_time_span(date,start_hour,end_hour)
+    PeriodPrice.all_periods_in_time_span(date, start_hour, end_hour).collect do |pp|
+      card_period_price = self.card_period_prices.first(:conditions => "period_price_id=#{pp.id}")
+      card_period_price.card_price
+    end.sum
   end
 
   def all_periods_in_time_span(date = Date.today, start_time=nil, end_time=nil)
