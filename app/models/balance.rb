@@ -17,6 +17,8 @@ class Balance < ActiveRecord::Base
   has_many :order_items
 
   scope :with_balance_way, lambda {|balance_way| { :conditions => { :balance_way => balance_way } } }
+  scope :balanced, lambda { { :conditions => ["orders.state = ?", "balanced"], :joins => :order } }
+  scope :unbalanced, lambda { { :conditions => ["orders.state != ?", "balanced"], :joins => :order } }
 
   accepts_nested_attributes_for :order_items
   validates_presence_of :price, :message => "价格不能空"

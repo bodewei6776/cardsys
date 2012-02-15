@@ -8,12 +8,12 @@ class BalancesController < ApplicationController
     render :layout => "small_main"
   end
 
-  def index_back
-    @book_records = BookRecord.playing.order('created_at desc').paginate(default_paginate_options_without_created_at)
+  def balanced
+    @balances = Balance.balanced.order('created_at desc').paginate(default_paginate_options_without_created_at)
   end
 
-  def balanced
-    @book_records = BookRecord.balanced.order('created_at desc').paginate(default_paginate_options_without_created_at)
+  def unbalanced
+    @balances = Balance.unbalanced.order('created_at desc').paginate(default_paginate_options_without_created_at)
   end
 
   def create

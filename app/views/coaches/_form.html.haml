@@ -52,10 +52,5 @@
     .input_bd
       %button.submit1.hand{:type => "submit"}> 提交
       \&nbsp;&nbsp;&nbsp;&nbsp;
-      %button.submit2.hand{:onclick => "window.location.href='/coaches'", :type => "button"} 返回
+      %button.submit1.hand{:onclick => "window.location.href='/coaches'", :type => "button"} 返回
     .clear
-:javascript
-  function fsubmit(){
-    var form = $("form[0]");
-    form.submit();
-  }

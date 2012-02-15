@@ -88,6 +88,7 @@ Cardsys::Application.routes.draw do |map|
     collection do
       delete :destroy_good
       get :balanced
+      get :unbalanced
       post :add_good
       post :change_li_real_total_price
       get :new_good_buy
