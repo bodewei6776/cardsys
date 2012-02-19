@@ -170,7 +170,7 @@ class Order < ActiveRecord::Base
       else
         possible_ways = []
       end
-      possible_ways = possible_ways | ["cash", "post", "bank", "guazhang", "check"]
+      possible_ways = possible_ways | ["cash", "pos", "bank", "guazhang", "check"]
       result = []
       possible_ways.each{ |k| result << [Balance::BALANCE_WAYS[k], k] }
       result

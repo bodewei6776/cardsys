@@ -13,9 +13,9 @@
               = text_field_tag :card_serial_num, params[:card_serial_num], :id => "member_card_serial_num"
 
 :javascript
-  //function jump(card_serial_num){
-  //  window.location.href = ("#{recharge_members_cards_path}" +"?card_serial_num=" + card_serial_num);
-  //}
+  function jump(card_serial_num){
+    window.location.href = ("#{recharge_members_cards_path}" +"?card_serial_num=" + card_serial_num);
+  }
 
   $(document).ready(function(){
     $('#member_name').autocomplete({

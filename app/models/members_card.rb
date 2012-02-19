@@ -18,8 +18,8 @@ class MembersCard < ActiveRecord::Base
   validates_presence_of :member_id, :message => "请选择会员"
   validates_presence_of :card_serial_num, :message => "请输入会员卡号"
   validates_uniqueness_of :card_serial_num, :message => "会员卡号冲突", :allow_blank => true
-  validates_numericality_of :recharge_fee, :greater_than => 0, :message => "充值金额为正数", :on => :update
-  validates_numericality_of :recharge_times, :greater_than => 0, :only_integer => true, :message => "充值次数为正数", :on => :update
+  validates_numericality_of :recharge_fee, :greater_than => -1, :message => "充值金额为正数", :on => :update, :allow_blank => true
+  validates_numericality_of :recharge_times, :greater_than => -1, :only_integer => true, :message => "充值次数为正数", :on => :update, :allow_blank => true
 
   attr_accessor :recharge_fee, :recharge_times
 

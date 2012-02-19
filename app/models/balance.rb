@@ -4,7 +4,7 @@ class Balance < ActiveRecord::Base
     "card" => "记账",
     "counter" => "计次",
     "cash" => "现金",
-    "post" => "POS机",
+    "pos" => "POS机",
     "bank" => "转账",
     "guazhang" => "挂账",
     "check" => "支票"
@@ -79,7 +79,6 @@ class Balance < ActiveRecord::Base
   def self.default_goods_balance_way_by_order(order)
     (order.should_use_card_to_balance_goods? ? Balance_Way_Use_Card : Balance_Way_Use_Cash)
   end
-
 
   #TODO
   def do_balance!
@@ -162,238 +161,123 @@ class Balance < ActiveRecord::Base
 
   ####### for reports #########
 
-  def self.balances_on_date_and_ways(date,select,ways)
-    case select
-    when "1" #记账
-      where(["date(created_at) = ? and (balance_way=1 or balance_way=1)", date]).includes(:order)
-    when "7"
-      where(["date(created_at) = ? and balance_way=7", date]).includes(:order)
+  def self.balances_on_date_and_ways(date, ways)
+     where(["date(created_at) = ? and (balance_way in (?))", date, ways])
+  end
+
+  def self.balances_on_month_and_ways(date,ways)
+    where(["date_format(created_at,'%Y-%m') = ? and balance_way in (?)", date.strftime("%Y-%m"),ways])
+  end
+
+
+  def self.total_balance_on_date_any_ways(date, ways)
+    data = balances_on_date_and_ways(date, ways)
+    if ways.include?("counter")
+      money = data.select{|balance| balance.balance_way != "counter" }.sum(&:final_price)
+      count = data.select{|balance| balance.balance_way == "counter"}.sum(&:final_price)
+      "#{money}元/#{count}次"
     else
-      where(["date(created_at) = ? and (balance_way in (?) or balance_way in (?))", date,ways,ways]).includes(:order)
+      money = data.select{|balance| balance.balance_way != "counter" }.sum(&:final_price)
+      "#{money}元" 
     end
   end
 
-  def self.balances_on_month_and_ways(date,select,ways)
-    case select
-    when "1" #记账
-      where(["date_format(created_at,'%Y-%m') = ? and (balance_way=1 or balance_way=1)", date.strftime("%Y-%m")]).includes(:order)
-    when "7"
-      where(["date_format(created_at,'%Y-%m') = ? and balance_way=7", date.strftime("%Y-%m")]).includes(:order)
+  def self.total_balance_on_month_any_ways(date, ways)
+    data =  balances_on_month_and_ways(date,ways)
+    if ways.include?("counter")
+      money = data.select{|balance| balance.balance_way != "counter" }.sum(&:final_price)
+      count = data.select{|balance| balance.balance_way == "counter"}.sum(&:final_price)
+      "#{money}元/#{count}次"
     else
-      where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?) or balance_way in (?))", date.strftime("%Y-%m"),ways,ways]).includes(:order)
+      money = data.select{|balance| balance.balance_way != "counter" }.sum(&:final_price)
+      "#{money}元" 
     end
   end
 
-
-
-  def self.total_balance_on_date_any_ways(date,select,ways)
-    data = balances_on_date_and_ways(date,select,ways)
-    case select
-    when "1"
-      sum = 0
-      data.each do |b|
-        sum += b.book_record_real_amount if b.balance_way == 1
-        sum += b.other_real_amount if b.balance_way == 1
-      end
-      return sum.to_s + "元"
-    when "7"
-      count = 0
-      data.each do |b|
-        count += b.count_amount if b.balance_way == 7
-      end
-      return count.to_s + "次"
-    else
-      sum = 0
-      data.each do |b|
-        sum += b.book_record_real_amount if ways.include?(b.balance_way.to_s)
-        sum += b.other_real_amount if ways.include?(b.balance_way.to_s)
-      end
-      return sum.to_s + "元"
-    end
-  end
-
-  def self.total_balance_on_month_any_ways(date,select,ways)
-    data =  balances_on_month_and_ways(date,select,ways)
-    case select
-    when "1"
-      sum = 0
-      data.each do |b|
-        sum += b.book_record_real_amount if b.balance_way == 1
-        sum += b.other_real_amount if b.balance_way == 1
-      end
-      return sum.to_s + "元"
-    when "7"
-      count = 0
-      data.each do |b|
-        count += b.count_amount if b.balance_way == 7
-      end
-      return count.to_s + "次"
-    else
-      sum = 0
-      data.each do |b|
-        sum += b.book_record_real_amount if ways.include?(b.balance_way.to_s)
-        sum += b.other_real_amount if ways.include?(b.balance_way.to_s)
-      end
-      return sum.to_s + "元"
-
-    end
-  end
-
-  def total_balance_each_balance(ways)
-    total = 0
-    if self.balance_way == 7
-    elsif self.balance_way !=7 && ways.include?(self.balance_way.to_s)
-      total += self.book_record_real_amount
-    end
-
-    if ways.include?(self.balance_way.to_s)
-      total += self.other_real_amount
-    end
-    total
-
-  end
-
-  def self.total_count_on_date_any_ways(date,select,ways)
-    data = where(["date(created_at) = ? and (balance_way in (?))", date,ways])
+  def self.total_count_on_date_any_ways(date, ways)
+    data = where(["date(created_at) = ? and (balance_way in (?))", date, ways])
     data.present? ? data.inject(0){|sum,b|
-      sum += ((b.balance_way == 7) ? b.count_amount : 0)
+      sum += ((b.balance_way == "counter") ? b.final_price : 0)
     } : 0
   end
 
-  def self.total_count_on_month_any_ways(date,select,ways)
-    data = where(["date_format(created_at,'%Y-%m') = ? and (balance_way =7 )", date.strftime("%Y-%m")])
+  def self.total_count_on_month_any_ways(date,ways)
+    data = where(["date_format(created_at,'%Y-%m') = ? and (balance_way = 'counter' )", date.strftime("%Y-%m")])
     data.present? ? data.inject(0){|sum,b|
       sum +=  b.count_amount 
     } : 0
   end
 
-  def coach_amount(select,pay_ways)
-    case select
-    when "1","7"
-      ((select == self.balance_way.to_s) && self.order.coach_items.present?) ?\
-      self.order.coach_items.inject(0){|sum,c| sum + c.amount} : 0
-    else
-      if(pay_ways.include?self.balance_way.to_s)
-        self.order.coach_items.present? ?  self.order.coach_items.inject(0){|sum,c| sum + c.amount} : 0
-      else
-        0
-      end
-    end
-  end
-
-  def good_amount_by_type(type,select,ways)
-    case select
-    when "7" 
-      return '0'
-    when '1'
-      return '0' if self.balance_way != 1
-      product_items =  self.order.product_items(:include =>{:good =>{:include => :category}})
-      product_items = (product_items.present? ? product_items.select{|g| g.item.category.parent_id == type.id} : [])
-      product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : 0
-
-    else
-      return '0' if ways.include?(self.balance_way)
-      product_items =  self.order.product_items(:include =>{:good =>{:include => :category}})
-      product_items = (product_items.present? ? product_items.select{|g| g.good.category.parent_id == type.id} : [])
-      product_items.present? ? product_items.inject(0){|sum,c| sum + c.amount} : 0
-    end
-  end
-
-  def self.total_book_records_balance_on_date_any_ways(date,select,ways)
-    data = balances_on_date_and_ways(date,select,ways)
-    case select
-    when "7"
-      count = 0
-      data.each do |b|
-        count += b.count_amount if b.balance_way == 7
-      end
-      return count.to_s + "次"
-    when "1"
-      sum = 0
-      data.each do |b|
-        sum += b.book_record_real_amount if b.balance_way == 1
-      end
-      return sum.to_s + "元"
-    else
-      sum = 0
-      data.each do |b|
-        sum += b.book_record_real_amount if ways.include?(b.balance_way.to_s)
-      end
-      return sum.to_s + "元"
-    end
-  end
-
-  def self.total_book_records_balance_on_month_any_ways(date,select,ways)
-    data = balances_on_month_and_ways(date,select,ways)
-    case select
-    when "7"
-      count = 0
-      data.each do |b|
-        count += b.count_amount if b.balance_way == 7
-      end
-      return count.to_s + "次"
-    when "1"
-      sum = 0
-      data.each do |b|
-        sum += b.book_record_real_amount if b.balance_way == 1
-      end
-      return sum.to_s + "元"
-    else
-      sum = 0
-      data.each do |b|
-        sum += b.book_record_real_amount if ways.include?(b.balance_way.to_s)
-      end
-      return sum.to_s + "元"
-    end
-
+  def coach_amount(pay_ways)
+    return 0 unless pay_ways.include?(self.balance_way)
+    return self.order_items.select{|oi| oi.item.is_a? CoachBookRecord }.sum(&:price_after_discount)
   end
 
 
-  def self.total_coach_balance_on_date_any_ways(date,select,ways)
-    case select
-    when "1","7"
-      data = where(["date(created_at) = ? and (balance_way=?)", date,select])
-    else
-      data = where(["date(created_at) = ? and (balance_way in(?))", date,ways])
+  def book_record_amount(pay_ways)
+    return 0 unless pay_ways.include?(self.balance_way)
+    return self.order_items.select{|oi| oi.item.is_a? CourtBookRecord }.sum(&:price_after_discount)
+  end
+
+  def goods_amount(type, ways)
+    return 0 unless ways.include?(self.balance_way)
+    return self.order_items.select{|oi| oi.item.is_a? Good}.sum(&:price_after_discount)
+  end
+
+  def good_amount_by_type(type, ways)
+    return 0 unless ways.include?(self.balance_way)
+    return self.order_items.select{|oi| (oi.item.is_a? Good) && oi.item.category == type }.sum(&:price_after_discount)
+  end
+
+  def self.total_book_records_balance_on_date_any_ways(date, ways)
+    data = balances_on_date_and_ways(date, ways)
+    sum = 0
+    count = 0
+    data.each do |element|
+      sum += element.final_price if element.balance_way != "counter" && ways.include?(element.balance_way)
+      count += element.final_price if element.balance_way == "counter" && ways.include?("counter")
     end
-    data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(select,ways) } : 0
+
+    "#{sum}元/#{count}次"
+  end
+
+  def self.total_book_records_balance_on_month_any_ways(date, ways)
+    data = balances_on_month_and_ways(date,ways)
+    sum = 0
+    count = 0
+    data.each do |element|
+      sum += balance.final_price if self.balance_way != "counter" && ways.include?(self.balance_way)
+      count += balance.final_price if self.balance_way == "counter" && ways.include?("counter")
+    end
+
+    "#{sum}元/#{count}次"
   end
 
 
-  def self.total_coach_balance_on_month_any_ways(date,select,ways)
-    data = where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?))", date.strftime("%Y-%m"),ways])
+  def self.total_coach_balance_on_date_any_ways(date,ways)
+    data = balances_on_date_and_ways(date, ways)
     data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(ways) } : 0
   end
 
 
-  def self.total_goods_balance_on_date_any_ways(date,select,ways,gt)
-    case select
-    when "7"
-      return "0"
-    when "1"
-      data = where(["date(created_at) = ? and (balance_way=1)", date])
-      data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
-    else
-      data = where(["date(created_at) = ? and (balance_way in (?))", date,ways])
-      data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
-    end
+  def self.total_coach_balance_on_month_any_ways(date,ways)
+    data = balances_on_month_and_ways(date,ways)
+    data.present? ? data.inject(0){|sum,b| sum += b.coach_amount(ways) } : 0
   end
 
-  def self.total_goods_balance_on_month_any_ways(date,select,ways,gt)
-    case select
-    when "7"
-      return "0"
-    when "1"
-      data = where(["date_format(created_at,'%Y-%m') = ? and (balance_way=1)", date.strftime('%Y-%m')])
-      data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
-    else
-      data = where(["date_format(created_at,'%Y-%m') = ? and (balance_way in (?))", date.strftime("%Y-%m"),ways])
-      data.present? ? data.inject(0){|sum,b| sum + b.good_amount_by_type(gt,select,ways)} : 0
-    end
+
+  def self.total_goods_balance_on_date_any_ways(date,ways,gt)
+    data = balances_on_date_and_ways(date, ways)
+    data.present? ? data.inject(0){|sum,b| sum += b.good_amount_by_type(gt, ways) } : 0
+  end
+
+  def self.total_goods_balance_on_month_any_ways(date,ways,gt)
+    data = balances_on_month_and_ways(date,ways)
+    data.present? ? data.inject(0){|sum,b| sum += b.goods_amount(ways) } : 0
   end
 
   def book_record_span
-    self.order.book_record.start_hour.to_s + ":00 - " + self.order.book_record.end_hour.to_s + ":00"
+    self.order.court_book_record.start_hour.to_s + ":00 - " + self.order.court_book_record.end_hour.to_s + ":00"
   end
 
   def self.good_stat_per_date_by_type(date,type)
@@ -421,20 +305,11 @@ class Balance < ActiveRecord::Base
     end
   end
 
-  def balance_amount_by_ways(select,ways)
-    case select
-    when "1"
-      sum = 0
-      sum += self.book_record_real_amount if self.balance_way == 1
-      sum += self.other_real_amount if self.balance_way == 1
-      return sum.to_s + "元"
-    when "7"
-      return self.count_amount.to_s + "次"  if self.balance_way == 7
+  def balance_amount_by_ways(ways)
+    if self.balance_way == "counter"
+      "#{self.final_price}次"
     else
-      sum = 0
-      sum += self.other_real_amount if ways.include?(self.balance_way.to_s)
-      sum += self.book_record_real_amount if ways.include?(self.balance_way.to_s)
-      return sum.to_s + "元" 
+      "#{self.final_price}元"
     end
   end
 
@@ -468,4 +343,21 @@ class Balance < ActiveRecord::Base
     self.order_item.name
   end
 
+
+  def money_spent_on
+    if self.balance_way == "counter"
+      "#{self.order.court_book_record.court.name} #{self.book_record_span}"
+    else
+      self.order_items.collect do |oi|
+        case oi.item
+        when CourtBookRecord
+          "#{self.order.court_book_record.court.name} #{self.book_record_span}"
+        when CoachBookRecord
+          "#{oi.item.name} #{self.book_record_span}"
+        when Good
+          "#{oi.item.name}"
+        end
+      end.join("/")
+    end
+  end
 end

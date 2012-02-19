@@ -1,6 +1,6 @@
 module ReportsHelper
 
-  def pay_way_checkboxes(selected = "1",checked = [])
+  def pay_way_checkboxes(checked = [])
     #  Balance_Way_Use_Card  = 1
     #  Balance_Way_Use_Cash  = 2
     #  Balance_Way_Use_Post  = 3
@@ -8,35 +8,26 @@ module ReportsHelper
     #  Balance_Way_Use_Check = 5
     #  Balance_Way_Use_Guazhang = 6
     #  Balance_Way_Use_Counter  = 7
-    radio_map = [["记账", 1],["计次", 7 ],["其他",10]]
-    map = [["现金" , 2],["POS机" , 3],["支票" , 5],["银行转账" , 4], ["挂账" , 6]]
+    map = [["记账", "card"],["计次", "counter"],["现金" , "cash"],["POS机" , "pos"],["支票" , "check"],["银行转账" , "bank"], ["挂账" , "guazhang"]]
     html = ""
-    radio_map.each do |way|
-      html << content_tag(:input,raw("<label>#{way[0]}</label>"),:type => "radio",:name => "selected_way",:value => way[1],:checked => (way[1] == selected.to_i),:onclick=> "toogle_way(#{way[1]});recalculate();" ,:class=>"selected_way")
-    end
-    #html << "<span style='display:#{selected == "10" ? "visible" : "none"};' id='way_span'>"
-    html << "<span id='way_span'>"
     map.each do |way|
       html << content_tag(:input,raw("<label>#{way[0]}</label>"),:type => "checkbox",:name => "way[]",:value => way[1],:checked => checked.include?(way[1].to_s),:onclick=> "recalculate();" ,:class=>"pay_ways")
     end
-    html << "</span>"
-    #html << "<button class='button submit1 hand' onclick='recalculate();' style='float:right;'> 查询 </button>"
+
     html
   end
 
 
-  def book_record_amount_desc(b,selected,pay_ways)
-    case selected
-    when "7"
-      b.balance_way == 7 ? b.count_amount.to_s + "次" : " / "
-    when "1"
-      b.balance_way == 1 ? b.book_record_real_amount.to_s + "元" : " / "
+  def book_record_amount_desc(b, pay_ways)
+    return 0 if pay_ways.blank?
+    if pay_ways.include?("counter") && b.balance_way == "counter"
+      "#{b.final_price}次"
     else
-      pay_ways.include?(b.balance_way.to_s) ? b.book_record_real_amount.to_s + "元" : "/"
+      "#{b.final_price}元"
     end
   end
 
-  def display_income_report(date,selected_way,pay_ways)
+  def display_income_report(date, pay_ways)
     table_width = 7 + Category.roots.count
 
     table = ''
@@ -47,8 +38,8 @@ module ReportsHelper
     table <<("<td colspan=3>日期 #{ select_year(date,{:start_year => 2010,:end_year => 2016},:onchange => "recalculate();")} 年 " + 
              "#{select_month(date,:use_month_numbers => true,:onchange => "recalculate();")}月　#{select_day(date,{},:onchange => "recalculate();")} 日</td>")
     table << "<td>支付方式：　</td>"
-    table << "<td colspan=#{table_width - 5} style='width:450px;'>#{pay_way_checkboxes(selected_way,pay_ways)}</td>"
-    table << "<td><p class='money'>合计：　#{Balance.total_balance_on_date_any_ways(date,selected_way,pay_ways)}  <p></td>"
+    table << "<td colspan=#{table_width - 5} style='width:450px;'>#{pay_way_checkboxes(pay_ways)}</td>"
+    table << "<td><p class='money'>合计：　#{Balance.total_balance_on_date_any_ways(date, pay_ways)}  <p></td>"
     table << "</tr>"
 
     # second tr
@@ -64,31 +55,31 @@ module ReportsHelper
     table << "</tr>"
 
     # data tr
-    Balance.balances_on_date_and_ways(date,selected_way,pay_ways).each_with_index do |b,index|
+    Balance.balances_on_date_and_ways(date, pay_ways).each_with_index do |b,index|
       table << "<tr class='report_item'>"
       table <<"<td>#{index+1}</td>"
       table << "<td>#{link_to(b.order.member_name,order_balance_path(b.order,b),:target => "_blank")}</td>"
-      table << "<td>#{b.order.book_record.court.name rescue "购买"}（#{b.book_record_span rescue "商品"}）</td>"
-      table << "<td>#{b.order.member_card.card_serial_num rescue ""}</td>"
-      table << "<td class='mon'>#{ book_record_amount_desc(b,selected_way,pay_ways)}</td>"
-      table << "<td class='mon'>#{b.coach_amount(selected_way,pay_ways)}</td>"
+      table << "<td>#{b.money_spent_on}</td>"
+      table << "<td>#{b.order.members_card.card_serial_num rescue ""}</td>"
+      table << "<td class='mon'>#{ book_record_amount_desc(b,pay_ways)}</td>"
+      table << "<td class='mon'>#{b.coach_amount(pay_ways)}</td>"
       Category.roots.each do |gt|
-      table << "<td class='mon'>#{b.good_amount_by_type(gt,selected_way,pay_ways)}</td>"
+      table << "<td class='mon'>#{b.good_amount_by_type(gt,pay_ways)}</td>"
       end
-      table << "<td class='mon'>#{b.balance_amount_by_ways(selected_way,pay_ways)}</td>"
+      table << "<td class='mon'>#{b.balance_amount_by_ways(pay_ways)}</td>"
       table << "</tr>"
     end
 
     # last tr
 
     table << "<tr class='total head'>"
-    table << "<td colspan=4>合计: #{Balance.total_balance_on_date_any_ways(date,selected_way,pay_ways)}  </td>"
-    table << "<td class='mon'> #{Balance.total_book_records_balance_on_date_any_ways(date,selected_way,pay_ways)} / #{Balance.total_count_on_date_any_ways(date,selected_way,pay_ways)}</td>"
-    table << "<td class='mon'> #{Balance.total_coach_balance_on_date_any_ways(date,selected_way,pay_ways)}</td>"
+    table << "<td colspan=4>合计: #{Balance.total_balance_on_date_any_ways(date, pay_ways)}  </td>"
+    table << "<td class='mon'> #{Balance.total_book_records_balance_on_date_any_ways(date, pay_ways)}</td>"
+    table << "<td class='mon'> #{Balance.total_coach_balance_on_date_any_ways(date, pay_ways)}</td>"
   Category.roots.each do |gt|
-    table << "<td class='mon'> #{Balance.total_goods_balance_on_date_any_ways(date,selected_way,pay_ways,gt)}</td>"
+    table << "<td class='mon'> #{Balance.total_goods_balance_on_date_any_ways(date, pay_ways, gt)}</td>"
       end
-    table << "<td>合计: #{Balance.total_balance_on_date_any_ways(date,selected_way,pay_ways)} </td>"
+    table << "<td>合计: #{Balance.total_balance_on_date_any_ways(date,pay_ways)} </td>"
     table << "</tr>"
     table << "</table>"
     table
@@ -112,8 +103,8 @@ module ReportsHelper
     table <<("<td colspan=3>日期 #{ select_year(date,{:start_year => 2008,:end_year => Date.today.year},:onchange => "recalculate();")} 年 " + 
              "#{choose_month(date)}月</td>")
     table << "<td>支付方式：　</td>"
-    table << "<td colspan=#{table_width - 5}>#{pay_way_checkboxes(selected_way,pay_ways)}</td>"
-    table << "<td><p class='money'>合计：　#{Balance.total_balance_on_month_any_ways(date,selected_way,pay_ways)}<p></td>"
+    table << "<td colspan=#{table_width - 5}>#{pay_way_checkboxes(pay_ways)}</td>"
+    table << "<td><p class='money'>合计：　#{Balance.total_balance_on_month_any_ways(date, pay_ways)}<p></td>"
     table << "</tr>"
 
     # second tr
@@ -134,25 +125,25 @@ module ReportsHelper
       table << "<tr class='report_item'>"
       table <<"<td>#{index+1}</td>"
       table << "<td> #{ current_date}</td>"
-      table << "<td class='mon'>#{Balance.total_book_records_balance_on_date_any_ways(current_date,selected_way,pay_ways)}</td>"
-      table << "<td class='mon'>#{Balance.total_coach_balance_on_date_any_ways(current_date,selected_way,pay_ways)}</td>"
+      table << "<td class='mon'>#{Balance.total_book_records_balance_on_date_any_ways(current_date,pay_ways)}</td>"
+      table << "<td class='mon'>#{Balance.total_coach_balance_on_date_any_ways(current_date,pay_ways)}</td>"
       Category.roots.each do |gt|
-      table << "<td class='mon'>#{Balance.total_goods_balance_on_date_any_ways(current_date,selected_way,pay_ways,gt)}</td>"
+      table << "<td class='mon'>#{Balance.total_goods_balance_on_date_any_ways(current_date,pay_ways,gt)}</td>"
       end
-      table << "<td class='mon'>#{Balance.total_balance_on_date_any_ways(current_date,selected_way,pay_ways)} </td>"
+      table << "<td class='mon'>#{Balance.total_balance_on_date_any_ways(current_date,pay_ways)} </td>"
       table << "</tr>"
     end
 
     # last tr
 
     table << "<tr class='total head'>"
-    table << "<td colspan=2>合计: #{Balance.total_balance_on_month_any_ways(date,selected_way,pay_ways)}</td>"
-    table << "<td class='mon'> #{Balance.total_book_records_balance_on_month_any_ways(date,selected_way,pay_ways)} </td>"
-    table << "<td class='mon'> #{Balance.total_coach_balance_on_month_any_ways(date,selected_way,pay_ways)}</td>"
+    table << "<td colspan=2>合计: #{Balance.total_balance_on_month_any_ways(date,pay_ways)}</td>"
+    table << "<td class='mon'> #{Balance.total_book_records_balance_on_month_any_ways(date,pay_ways)} </td>"
+    table << "<td class='mon'> #{Balance.total_coach_balance_on_month_any_ways(date,pay_ways)}</td>"
   Category.roots.each do |gt|
-    table << "<td class='mon'> #{Balance.total_goods_balance_on_month_any_ways(date,selected_way,pay_ways,gt)}</td>"
+    table << "<td class='mon'> #{Balance.total_goods_balance_on_month_any_ways(date,pay_ways,gt)}</td>"
       end
-    table << "<td>合计: #{Balance.total_balance_on_month_any_ways(date,selected_way,pay_ways)}</td>"
+    table << "<td>合计: #{Balance.total_balance_on_month_any_ways(date,pay_ways)}</td>"
     table << "</tr>"
     table << "</table>"
     table

@@ -27,10 +27,10 @@ class BalancesController < ApplicationController
       render :action => "index", :layout => "small_main" and return
     end
 
-    @balance.order_items = @order.order_items.collect do |oi|
-      oi.discount = params[:balance][:order_items_attributes].values.find{|v| v["id"] == oi.id.to_s}["discount"]
-      oi
-    end
+    #@balance.order_items = @order.order_items.collect do |oi|
+    #  oi.discount = params[:balance][:order_items_attributes].values.find{|v| v["id"] == oi.id.to_s}["discount"]
+    #  oi
+    #end
     render :action => "index", :layout => "small_main"
   end
 

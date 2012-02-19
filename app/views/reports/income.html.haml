@@ -1,22 +1,11 @@
 = render :partial => "highlight_hover"
 .w96
-  = raw display_income_report(@date,@select_way,@pay_ways)
+  = raw display_income_report(@date, @pay_ways)
 .h10
 :javascript
   function recalculate(){
      params = "date=" +$('#date_year').val() + "-" + $('#date_month').val() + "-" + $("#date_day").val(); 
-     $('.selected_way:checked').each(function(i,node){ params += ("&" + "select_way=" + $(this).val())});
-     if($('.selected_way:checked').val() == "10"){
-      $('.pay_ways:checked').each(function(i,node){ params += ("&" + "pay_ways[]=" + $(this).val())});
-     }
+     $('.pay_ways:checked').each(function(i,node){ params += ("&" + "pay_ways[]=" + $(this).val())});
      window.location = (window.location.pathname + "?" + params);
    }
   
-  function toogle_way(val){
-  //  if(val == "10"){
-  //    $('#way_span').show();   
-  //    $('.pay_ways').attr("checked", "checked");
-  //  }else{
-  //    $('#way_span').hide();   
-  //  }
-  }

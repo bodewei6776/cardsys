@@ -4,13 +4,11 @@ class ReportsController < ApplicationController
 
   def income
     @date = Date.parse(params[:date]) rescue  Date.today
-    @select_way = params[:select_way] || "1"
     @pay_ways = params[:pay_ways] || [] 
   end
 
   def income_by_month
     @date = Date.parse(params[:date] + "-1") rescue  Date.today.beginning_of_month
-    @select_way = params[:select_way] || "1"
     @pay_ways = params[:pay_ways] || [] 
   end
 
