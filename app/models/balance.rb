@@ -10,26 +10,38 @@ class Balance < ActiveRecord::Base
     "check" => "支票"
   }
 
-  belongs_to :who_balance,:class_name => "User",:foreign_key => "user_id"
+  belongs_to :who_balance, :class_name => "User", :foreign_key => "user_id"
   belongs_to :order
   belongs_to :member
   belongs_to :user
   has_many :order_items
 
-  scope :with_balance_way, lambda {|balance_way| { :conditions => { :balance_way => balance_way } } }
-  scope :balanced, lambda { { :conditions => ["orders.state = ?", "balanced"], :joins => :order } }
-  scope :unbalanced, lambda { { :conditions => ["orders.state != ?", "balanced"], :joins => :order } }
+  scope :with_balance_way, lambda { |balance_way| { :conditions => { :balance_way => balance_way } } }
+  scope :balanced,         lambda { { :conditions => ["orders.state = ?", "balanced"], :joins => :order } }
+  scope :unbalanced,       lambda { { :conditions => ["orders.state != ?", "balanced"], :joins => :order } }
 
   accepts_nested_attributes_for :order_items
   validates_presence_of :price, :message => "价格不能空"
   validates_presence_of :final_price, :message => "折后价格不能空"
+
+  validate do |instance|
+    if instance.balance_way == "counter" && !order.members_card.has_enough_count_to_balance?(self)
+      errors[:base] << "卡余次不足，不能结算"
+    elsif instance.balance_way == "card" && order.
+      errors[:base] << "卡不支持购买商品，只能订场"
+    elsif instance.balance_way == "card" && !order.members_card.has_enough_money_to_balance?(self)
+      errors[:base] << "卡余额不足，不能结算"
+    elsif instance.balance_way == "card" && !order.members_card.is_avalible?
+      errors[:base] << "卡已经过期，或者状态不正常不能结算"
+    end
+  end
 
   after_create :deduct_money_from_card_and_mark_order_as_paid
 
   delegate :members_card, :to => :order
 
   def deduct_money_from_card_and_mark_order_as_paid
-    if self.balance_way == "counter"# && self.order.members_card.try(:is_counter_card?)
+    if self.balance_way == "counter"
       self.members_card.left_times -= self.price
     elsif self.balance_way == "card" && self.order.members_card
       self.members_card.left_fee -= self.final_price
@@ -44,7 +56,6 @@ class Balance < ActiveRecord::Base
     true
   end
 
-
   def order_items_attributes=(attrs)
     attrs.each do |key, element|
       next if element["checked"] == "0"
@@ -56,31 +67,6 @@ class Balance < ActiveRecord::Base
     end  
   end
 
-  validate do |instance|
-    if instance.balance_way == "counter" && !order.members_card.has_enough_count_to_balance?(self)
-      errors[:base] << "卡余次不足，不能结算"
-    elsif instance.balance_way == "card" && order.
-      errors[:base] << "卡不支持购买商品，只能订场"
-    elsif instance.balance_way == "card" && !order.members_card.has_enough_money_to_balance?(self)
-      errors[:base] << "卡余额不足，不能结算"
-    elsif instance.balance_way == "card" && !order.members_card.is_avalible?
-      errors[:base] << "卡已经过期，或者状态不正常不能结算"
-    end
-  end
-
-  def self.default_balance_way_by_order(order)
-    if order.is_member?
-      order.member_card.card.is_counter_card? ? Balance_Way_Use_Counter : Balance_Way_Use_Card
-    else
-      Balance_Way_Use_Cash
-    end
-  end
-
-  def self.default_goods_balance_way_by_order(order)
-    (order.should_use_card_to_balance_goods? ? Balance_Way_Use_Card : Balance_Way_Use_Cash)
-  end
-
-  #TODO
   def do_balance!
     return true if self.status == Const::YES
 
@@ -112,11 +98,27 @@ class Balance < ActiveRecord::Base
     save
   end
 
+  def money_spent_on
+    if self.balance_way == "counter"
+      "#{self.order.court_book_record.court.name} #{self.book_record_span}"
+    else
+      self.order_items.collect do |oi|
+        case oi.item
+        when CourtBookRecord
+          "#{self.order.court_book_record.court.name} #{self.book_record_span}"
+        when CoachBookRecord
+          "#{oi.item.name} #{self.book_record_span}"
+        when Good
+          "#{oi.item.name}"
+        end
+      end.join("/")
+    end
+  end
+
 
   def balance_way_desc
     balance_way_desciption(balance_way)
   end
-
 
   def card
     members_card.card
@@ -126,9 +128,6 @@ class Balance < ActiveRecord::Base
     card && (card.is_counter_card? || card.is_zige_card?)
   end
 
-  def should_use_card_to_blance?
-    card && !card.is_counter_card?
-  end
 
   def balance_way_desciption(way = nil)
     BALANCE_WAYS[way||self.balance_way] || "无"
@@ -151,18 +150,10 @@ class Balance < ActiveRecord::Base
   end
 
 
-  def balance_amount
-    book_record_amount.to_i + other_amount.to_i
-  end
-
-  def balance_realy_amount
-    book_record_real_amount.to_i + other_real_amount.to_i
-  end
-
   ####### for reports #########
 
   def self.balances_on_date_and_ways(date, ways)
-     where(["date(created_at) = ? and (balance_way in (?))", date, ways])
+    where(["date(created_at) = ? and (balance_way in (?))", date, ways])
   end
 
   def self.balances_on_month_and_ways(date,ways)
@@ -313,51 +304,4 @@ class Balance < ActiveRecord::Base
     end
   end
 
-  def balance_person_desc
-    member = self.member
-    member_card = self.member_card
-
-    result = if member_card.member == member
-               "本人"
-             elsif member_card.granters.include? member
-               "授权人(#{member.name})"
-             else
-               "未知"
-             end
-    return result
-  end
-
-  def update_amount
-    reload
-    self.count_amount = self.amount = self.real_amount = 0
-    self.balance_items.each do |item|
-      self.count_amount += item.count_amount
-      self.amount       += item.price
-      self.real_amount  += item.real_price
-    end
-    save
-  end
-
-
-  def name
-    self.order_item.name
-  end
-
-
-  def money_spent_on
-    if self.balance_way == "counter"
-      "#{self.order.court_book_record.court.name} #{self.book_record_span}"
-    else
-      self.order_items.collect do |oi|
-        case oi.item
-        when CourtBookRecord
-          "#{self.order.court_book_record.court.name} #{self.book_record_span}"
-        when CoachBookRecord
-          "#{oi.item.name} #{self.book_record_span}"
-        when Good
-          "#{oi.item.name}"
-        end
-      end.join("/")
-    end
-  end
 end
