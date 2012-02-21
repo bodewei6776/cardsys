@@ -1,5 +1,4 @@
 class Order < ActiveRecord::Base
-  has_many    :balance_items
   belongs_to  :user
   belongs_to  :members_card
   belongs_to  :advanced_order
@@ -11,21 +10,19 @@ class Order < ActiveRecord::Base
   has_one     :non_member
   belongs_to  :advanced_order
 
-  validates  :members_card_id, :presence => {:message => "请选择会员卡"}, :if => proc { |order| order.is_member? }
-  validates  :member_id, :presence => {:message => "请选择会员"}, :if => proc { |order| order.is_member? }
-  validate :coach_valid
+  validates  :members_card_id, :presence => { :message => "请选择会员卡" }, :if => proc { |order| order.is_member? }
+  validates  :member_id, :presence => { :message => "请选择会员" }, :if => proc { |order| order.is_member? }
+  validate   :coach_valid
 
   accepts_nested_attributes_for :court_book_record
   accepts_nested_attributes_for :coach_book_records
-  accepts_nested_attributes_for :non_member, :reject_if => proc {|non_member| non_member[:is_member] == "1" }
+  accepts_nested_attributes_for :non_member, :reject_if => proc { |non_member| non_member[:is_member] == "1" }
   attr_accessor :coach_ids
   after_save :save_order_items_for_court_and_coaches
 
   delegate :record_date, :end_hour, :start_hour, :hours, :to => :court_book_record
 
   def save_order_items_for_court_and_coaches
-    ap '1' * 1000
-    ap self.members_card
     court_book_record_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CourtBookRecord", court_book_record.id)
     court_book_record_order_item.update_attributes(:quantity => court_book_record.hours,
                                                    :total_count => court_book_record.hours,
@@ -66,7 +63,6 @@ class Order < ActiveRecord::Base
 
 
   state_machine  :initial => :booked do
-
     after_transition :on => :cancel , :do => :destroy
 
     event :activate do
@@ -133,7 +129,6 @@ class Order < ActiveRecord::Base
       activated? && is_advanced_order?
     end
 
-
     def can_update_all?
       booked? && is_advanced_order?
     end
@@ -176,8 +171,6 @@ class Order < ActiveRecord::Base
       result
     end
 
-
-
     def auto_generate_coaches_items
       OrderItem.order_coaches(self)
     end
@@ -205,7 +198,7 @@ class Order < ActiveRecord::Base
 
     def split(order_attributes)
       new_order = Order.new(order_attributes.deep_except('id'))
-#      begin
+      begin
         Order.transaction do
           # 无重叠
           if new_order.hour_range.overlap_window_size(self.hour_range).zero?
@@ -234,12 +227,12 @@ class Order < ActiveRecord::Base
             new_order.save!
           end
         end
-        
+
         true
-#      rescue Exception => e
-#        puts e
-#        return false
-#      end
+      rescue Exception => e
+        puts e
+        return false
+      end
     end
 
     def change_start_hour_to(new_start_hour)
@@ -265,7 +258,6 @@ class Order < ActiveRecord::Base
       order.save
       order
     end
-
 
     def is_advanced_order?
       !!advanced_order
@@ -339,5 +331,5 @@ class Order < ActiveRecord::Base
       is_member? ? member.name : non_member.name
     end
 
-  
+
   end

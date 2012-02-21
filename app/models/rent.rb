@@ -10,7 +10,6 @@ class Rent < ActiveRecord::Base
     "total_fee"  => "租用费用"
   }
 
-  
   attr_accessor :card_num,:password,:user_name
 
   [:locker_id,:start_date,:end_date, :pay_way, :total_fee].each do |c|
@@ -39,11 +38,9 @@ class Rent < ActiveRecord::Base
   end
 
 
-
   def almost_due?(date = Date.today)
     CommonResource.locker_due_time.days.from_now > self.end_date && date < self.end_date
   end
-
 
   def pay
     self.card_id = self.card_num
@@ -62,7 +59,6 @@ class Rent < ActiveRecord::Base
     end
     true
   end
-
 
   def expire?(date = Date.today)
     date > self.end_date
