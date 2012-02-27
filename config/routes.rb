@@ -170,6 +170,7 @@ Cardsys::Application.routes.draw do |map|
   resources :members_cards do
     collection do
       get :recharge
+      get :recharge_form
       get :granters
       get :status
       get :autocomplete_name

@@ -7,60 +7,18 @@
 
   =render :partial => "soso"
 
-  - unless @members_card.blank?
-    .fform
-      .fformbox
-        =render :partial => "layouts/errors", :locals => {:target => @members_card} if @members_card
-        - form_for @members_card do |f|
-          .fformbox_bt
-            %p 会员卡充值
-          .fformbox_nr
-            %ul
-              %li
-                .w1 所属会员：
-                .w2
-                  = @members_card.member.name
-                .w1 卡类型：
-                .w2
-                  = @members_card.card_type_in_chinese
-            %ul
-              %li
-                .w1 卡内金额：
-                .w2
-                  = @members_card.left_fee
-                  　元
-                .w1 充金额：
-                .w2
-                  = f.text_field :recharge_fee
-            %ul
-              %li
-                .w1 有效期：
-                .w2
-                  - time = @members_card.expire_date
-                  = time.blank? ? "未知" : time.strftime("%Y-%m-%d")
-                .w1 修改有效期：
-                .w2
-                  = f.text_field :expire_date, :class => "select-date"
-            %ul
-              %li
-                .w1 卡内次数：
-                .w2
-                  = @members_card.left_times
-                  次
-                .w1 充次数：
-                .w2
-                  = f.text_field :recharge_times
-            %ul
-              %li
-                .w1 充值人：
-                .w2
-                  %input#recharge_person{:name => "recharge_person", :type => "textfield", :value => current_user.login}/
-                .w1 密码：
-                .w2
-                  %input#recharge_password{:name => "recharge_password", :type => "password", :value => ""}/
-
-            %ul
-              %li
-                = f.submit "充值"
+#recharge_form_div
 
 
+:javascript 
+  function jump(card_serial_num){
+    $("#recharge_form_div").load("#{recharge_form_members_cards_path}?card_serial_num=" + card_serial_num); 
+    $("#recharge_form_div select-date").live("click", function(){
+        WdatePicker({onpicked:function(dp){}, lang:"zh-cn",isShowToday:true})
+      });
+  }
+
+
+- if @members_card
+  :javascript
+    jump("#{@members_card.card_serial_num}");

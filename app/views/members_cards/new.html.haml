@@ -27,7 +27,7 @@
               = f.text_field :card_serial_num
             .w1 卡有效期：
             .w2
-              = f.text_field :expire_date, :class => "date-type-input"
+              = f.text_field :expire_date, :value => @members_card.expire_date.strftime("%Y-%m-%d"), :class => "date-type-input"
         %ul
           %li
             .w1 充值金额：
@@ -57,20 +57,20 @@
       %li.w5 序号
       %li.w10 卡名称
       %li.w10 卡类型
-      %li.w15 卡余额/余次
-      %li.w15 有效期
-      %li.w15 授权人
-      %li.w20 操作
+      %li.w10 卡余额/余次
+      %li.w10 有效期
+      %li.w20 授权人
+      %li.w15 操作
     - (@members_cards || []).each_with_index do |member_card,index|
       %ul.table_items
         %li.w5= index + 1
         %li.w10= member_card.card_serial_num
         %li.w10= member_card.card_type_in_chinese
-        %li.w15= member_card.left_fee_value
-        %li.w15= (member_card.expire_date.to_chinese_mdh)
-        %li.w15
-          = member_card.granters.collect(&:name).join(", ") 
+        %li.w10= member_card.left_fee_value
+        %li.w10= (member_card.expire_date.to_chinese_ymd)
         %li.w20
+          = member_card.granters.collect(&:name).join(", ") 
+        %li.w15
           = link_to '添加授权人', new_member_path(:members_card_id => member_card.id), :class => "granter_new"
           = link_to '注销此卡', switch_state_members_card_path(member_card), :confirm => "确定要进行此操作？", :method => :put
   .h10
@@ -84,4 +84,6 @@
         $('#members_card_card_serial_num').val(response.card_serial_num);
       })
     })
+
+    $("#members_card_card_id").trigger("change");
   });

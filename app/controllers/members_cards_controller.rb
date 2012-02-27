@@ -3,6 +3,10 @@ class MembersCardsController < ApplicationController
 
   autocomplete :members, :name
 
+  def index
+    redirect_to new_members_card_path
+  end
+
 
   def autocomplete_name
     @items = Member.autocomplete_for(params[:term])
@@ -21,20 +25,23 @@ class MembersCardsController < ApplicationController
         :id => item.id}}
   end
 
+  def recharge_form
+    @members_card = MembersCard.find_by_card_serial_num(params[:card_serial_num])
+    @member = @members_card.member
+    render :layout => false
+  end
+
   def recharge
-    if params[:card_serial_num]
-      @members_card = MembersCard.find_by_card_serial_num(params[:card_serial_num])
-      @member = @members_card.member
-      params[:member_name] = @member.name
-    else 
-      @members_card = []
-    end
+    @members_card = MembersCard.find_by_card_serial_num(params[:card_serial_num])
   end
 
   def new
     @member = Member.find_by_name(params[:member_name])
     @cards = Card.enabled
-    @members_card = MembersCard.new(:member_id => @member.try(:id), :expire_date => 6.month.from_now)
+    @members_card = MembersCard.new(:member_id => @member.try(:id), 
+                                    :expire_date => 6.month.from_now,
+                                    :left_fee => 1000,
+                                    :left_times => 100)
     @members_cards = @member.try(:all_members_cards) || []
   end
 
@@ -46,7 +53,7 @@ class MembersCardsController < ApplicationController
       render :action => "new"
       return
     end
-    redirect_to :action => "new", :member_name => @members_card.member.name
+    redirect_to :action => "new", :card_serial_num => @members_card.card_serial_num
   end
 
   def update

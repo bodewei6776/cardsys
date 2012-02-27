@@ -149,7 +149,7 @@ module ApplicationHelper
   end
 
   def gender_desc(gender)
-    gender == 1 ? '男' : '女'
+    gender == "1" ? '男' : '女'
   end
 
   def get_coach_avater

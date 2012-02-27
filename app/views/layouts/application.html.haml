@@ -7,7 +7,8 @@
     = javascript_include_tag 'jquery.min','jquery.ui.core','jquery-ui-1.8.2.custom.min', 'rails'
     = javascript_include_tag "jquery.colorbox-min.js"
     = javascript_include_tag "jquery.popupWindow.js"
-    = javascript_include_tag "autocomplete-rails.js","new_datepicker.js"
+    = javascript_include_tag "autocomplete-rails.js"
+    = javascript_include_tag "new_datepicker.js"
     = javascript_include_tag "m97/WdatePicker.js"
 
 
@@ -81,6 +82,9 @@
     //  top:50, 
     //  left:50 
     //});
+
+    $(".date-type-input").new_datepicker();
+    $(".select-date").new_datepicker();
 
 
     $('#arrow_holder').toggle(function(){

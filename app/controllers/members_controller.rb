@@ -136,7 +136,7 @@ class MembersController < ApplicationController
   end
 
   def new
-    @member = Member.new
+    @member = Member.new(:gender => CommonResource::Gender_Man)
     @member.granter = true if params[:members_card_id]
     @member.members_card_id = params[:members_card_id] if params[:members_card_id]
   end
@@ -151,7 +151,8 @@ class MembersController < ApplicationController
       if @member.granter?
         redirect_to new_members_card_path(:member_name => @member.name)
       else
-        redirect_to :action => "index", :notice => '会员信息添加成功！'
+        flash[:notice] = "会员信息添加成功"
+        redirect_to members_path
       end
     else
       render :new
