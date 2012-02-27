@@ -1,8 +1,7 @@
 .w96
   .fform
     .fformbox
-      =render :partial => "layouts/errors", :locals => {:target => @members_card} if @members_card
-      - form_for @members_card do |f|
+      = form_for @members_card do |f|
         .fformbox_bt
           %p 会员卡充值
         .fformbox_nr
@@ -22,7 +21,7 @@
                 　元
               .w1 充金额：
               .w2
-                = f.text_field :recharge_fee
+                = f.text_field :recharge_fee, :value => "0"
           %ul
             %li
               .w1 有效期：
@@ -31,7 +30,7 @@
                 = time.blank? ? "未知" : time.strftime("%Y-%m-%d")
               .w1 修改有效期：
               .w2
-                = f.text_field :expire_date, :class => "select-date"
+                = f.text_field :expire_date, :class => "date-input-type", :value => @members_card.expire_date.strftime("%Y-%m-%d")
           %ul
             %li
               .w1 卡内次数：
@@ -40,7 +39,7 @@
                 次
               .w1 充次数：
               .w2
-                = f.text_field :recharge_times
+                = f.text_field :recharge_times, :value => "0"
           %ul
             %li
               .w1 充值人：
@@ -51,6 +50,6 @@
                 %input#recharge_password{:name => "recharge_password", :type => "password", :value => ""}/
       
           %ul
-            %li
-              = f.submit "充值"
+            %li{:style => "text-align:center"}
+              = f.submit "充值", :class => "button_link"
       

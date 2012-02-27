@@ -27,12 +27,13 @@ class MembersCardsController < ApplicationController
 
   def recharge_form
     @members_card = MembersCard.find_by_card_serial_num(params[:card_serial_num])
-    @member = @members_card.member
+    params[:member_name] = @members_card.try(:member).try(:name)
     render :layout => false
   end
 
   def recharge
     @members_card = MembersCard.find_by_card_serial_num(params[:card_serial_num])
+    params[:member_name] = @members_card.try(:member).try(:name)
   end
 
   def new
@@ -50,18 +51,18 @@ class MembersCardsController < ApplicationController
     if @members_card.save
       flash[:notice] = "会员卡创建成功"
     else
-      render :action => "new"
-      return
+      render new_members_card_path
     end
-    redirect_to :action => "new", :card_serial_num => @members_card.card_serial_num
+    redirect_to new_members_card_path(:card_serial_num => @members_card.card_serial_num)
   end
 
   def update
     @members_card = MembersCard.find(params[:id])
-    if @members_card.update_attributes(params[:members_card])
-      redirect_to :action => "recharge", :card_serial_num => @members_card.card_serial_num
+    if @members_card.recharge_with(params[:members_card])
+      redirect_to recharge_members_cards_path(:card_serial_num => @members_card.card_serial_num)
     else
       params[:member_name] = @members_card.member.name
+      params[:card_serial_num] = @members_card.card_serial_num
       render :action => "recharge"
     end
   end

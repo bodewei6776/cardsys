@@ -13,15 +13,10 @@ class MembersCard < ActiveRecord::Base
 
   delegate :card_type_in_chinese, :is_counter_card?, :max_shared_count, :to => :card
   before_create :left_times_and_left_money_can_not_be_blank
-  before_update :reset_fee_and_times
 
   validates_presence_of :member_id, :message => "请选择会员"
   validates_presence_of :card_serial_num, :message => "请输入会员卡号"
   validates_uniqueness_of :card_serial_num, :message => "会员卡号冲突", :allow_blank => true
-  validates_numericality_of :recharge_fee, :greater_than => -1, :message => "充值金额为正数", :on => :update, :allow_blank => true
-  validates_numericality_of :recharge_times, :greater_than => -1, :only_integer => true, :message => "充值次数为正数", :on => :update, :allow_blank => true
-
-  attr_accessor :recharge_fee, :recharge_times
 
   def can_consume_goods?
   !self.card.is_counter_card? && self.card.is_consume_goods?
@@ -29,11 +24,6 @@ class MembersCard < ActiveRecord::Base
 
   def max_granter_due?
     self.granters.count > max_shared_count - 1
-  end
-
-  def reset_fee_and_times
-    self.left_times += recharge_times.to_i if recharge_times.to_i > 0
-    self.left_fee += recharge_fee.to_i if recharge_fee.to_i > 0
   end
 
 
@@ -179,6 +169,23 @@ class MembersCard < ActiveRecord::Base
     has_enough_amount_to_order?(order)
     should_order_in_time_span?(order)
     is_status_ready_to_order?
+  end
+
+  def recharge_with(params)
+    #begin 
+      self.errors.add(:recharge_fee, "充值费用不能小于0") if Integer(params[:recharge_fee]) < 0
+      self.errors.add(:recharge_times, "充值次数不能小于0") if Integer(params[:recharge_fee]) < 0
+      self.errors.add(:expire_date, "结束时间不能小于当前时间") if Date.parse(params[:expire_date]) < Date.today
+
+      self.left_fee += Integer(params[:recharge_fee])
+      self.left_times += Integer(params[:recharge_times])
+      self.expire_date Date.parse(params[:expire_date])
+
+      save
+    #rescue
+    #  self.errors.add(:base, "格式错误") 
+    #  false
+    #end
   end
 
   private

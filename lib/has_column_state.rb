@@ -2,7 +2,7 @@ module HashColumnState
   def self.included(base)
     base.class_eval do
       scope :enabled, where(:state => "enabled")
-      before_validation_on_create do 
+      before_validation(:on => :create) do 
         self.state = 'enabled'
       end
     end
