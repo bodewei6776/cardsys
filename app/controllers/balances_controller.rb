@@ -51,15 +51,12 @@ class BalancesController < ApplicationController
   def add_good
     session[:cart]  ||= Cart.new
     params[:goods].each do |g|
-      #session[:cart].destock(g[:id],g[:count].to_i)
       session[:cart].add(g[:id],g[:count].to_i)
     end
-    #redirect_to new_good_buy_balances_path
     render :partial => "cart_goods_list"
   end
 
   def destroy_good
-    #session[:cart].restock(params[:id])
     session[:cart].remove(params[:id])
     redirect_to new_good_buy_balances_path
   end
