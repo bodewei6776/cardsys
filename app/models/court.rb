@@ -12,7 +12,6 @@ class Court < ActiveRecord::Base
 
   validate :validate_start_time_end_time
 
-
   def validate_start_time_end_time
     self.errors.add(:base, "开始时间应小于结束时间") if self.start_time >= self.end_time 
   end
@@ -46,7 +45,7 @@ class Court < ActiveRecord::Base
     @period_prices.include? period_price
   end
 
-  def daily_period_prices(date=Date.today)
+  def daily_period_prices(date = Date.today)
     court_available_period_prices = []
     period_prices = PeriodPrice.all_periods_in_time_span(date, start_hour, end_hour)
     period_prices.each do |period_price |

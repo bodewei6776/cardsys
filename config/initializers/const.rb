@@ -36,4 +36,4 @@ class Hash
 end
 
 require 'has_column_state'
-require 'pinyin/pinyin'
+require 'has_pinyin_column'

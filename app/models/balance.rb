@@ -67,36 +67,6 @@ class Balance < ActiveRecord::Base
     end  
   end
 
-  def do_balance!
-    return true if self.status == Const::YES
-
-    # change status
-    self.order.book_record.balance if self.order.book_record
-    self.update_attribute(:status, Const::YES)
-
-    return true  unless order.is_member?
-
-    card = order.member_card.card
-    member_card = order.member_card
-
-
-    if use_card_counter_to_balance?
-      member_card.left_times -= self.count_amount
-    elsif use_card_to_balance?
-      member_card.left_fee -= self.book_record_real_amount.to_i
-    end
-
-    if use_card_to_balance? and order.should_use_card_to_balance_goods?
-      member_card.left_fee -= self.other_real_amount.to_i
-    end
-
-    member_card.save
-  end
-
-  def change_note_by(user)
-    self.change_note = "订单消费总价变更（#{self.book_record_amount + self.goods_amount}  变为#{ self.book_record_real_amount + self.other_real_amount}）,修改人#{user.login}"
-    save
-  end
 
   def money_spent_on
     if self.balance_way == "counter"
@@ -124,21 +94,8 @@ class Balance < ActiveRecord::Base
     members_card.card
   end
 
-  def should_use_counter_to_balance?
-    card && (card.is_counter_card? || card.is_zige_card?)
-  end
-
-
   def balance_way_desciption(way = nil)
     BALANCE_WAYS[way||self.balance_way] || "无"
-  end
-
-  def use_card_to_balance_book_record?
-    true
-  end
-
-  def ensure_use_card_counter?
-    use_card_to_balance_book_record? && card && (card.is_counter_card? || (card.is_zige_card? && use_card_counter_to_balance?))
   end
 
   def balance_real_amount_desc
@@ -146,6 +103,14 @@ class Balance < ActiveRecord::Base
       "#{final_price}次"
     else
       "￥#{final_price}元"
+    end
+  end
+
+  def balance_amount_by_ways(ways)
+    if self.balance_way == "counter"
+      "#{self.final_price}次"
+    else
+      "#{self.final_price}元"
     end
   end
 
@@ -293,14 +258,6 @@ class Balance < ActiveRecord::Base
       stat.inject(0){|sum,record| sum + record[0].price * record[1]} 
     else
       0
-    end
-  end
-
-  def balance_amount_by_ways(ways)
-    if self.balance_way == "counter"
-      "#{self.final_price}次"
-    else
-      "#{self.final_price}元"
     end
   end
 

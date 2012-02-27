@@ -1,5 +1,8 @@
 class Good < ActiveRecord::Base
   include HashColumnState
+  include HasPinyinColumn
+
+  set_abbr_field :pinyin_abbr, :name
 
   belongs_to :category,:foreign_key => "good_type"
 
@@ -17,34 +20,8 @@ class Good < ActiveRecord::Base
   
   attr_accessor :order_count
 
-  def geneate_name_pinyin
-    pinyin = PinYin.new
-    self.pinyin_abbr = pinyin.to_pinyin_abbr(self.name) if self.pinyin_abbr.blank?
-  end
-
   def amount(order_item)
-    price*order_item.quantity
-  end
-  
-  def increment_sale_count
-    self.class.execute("UPDATE sale_count = sale_count+1 WHERE id=#{self.id}")
-  end
-  
-  def should_add_to_cart?(order)
-    if count_front_stock.to_i < order_count
-      errors[:base] << I18n.t('order_msg.good.count_front_stock',
-      {:name => self.name,:count => count_front_stock,:back_count => count_back_stock})
-      return false
-    end
-    return true
-  end  
-  
-  def sale(count)
-    set_sql = ''
-    set_sql << " count_back_stock_out ＝ count_back_stock_out ＋ #{count} "
-    set_sql << " ,count_front_stock = CASE count_front_stock-#{count} >= 0 THEN count_front_stock-#{count} ELSE 0 END "
-    set_sql << ",sale_count = sale_count + #{count}"
-    self.class.execute("UPDATE goods SET #{set_sql} WHERE id=#{self.id}")
+    price * order_item.quantity
   end
   
   def add_to_cart

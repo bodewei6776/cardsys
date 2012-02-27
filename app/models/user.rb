@@ -1,5 +1,6 @@
-require 'pinyin/pinyin'
 class User < ActiveRecord::Base
+  include HasPinyinColumn
+  set_pinyin_field :user_name_pinyin, :user_name
 
   has_many :department_users
   has_many :departments,:through => :department_users
@@ -13,18 +14,12 @@ class User < ActiveRecord::Base
   has_many   :user_powers
   has_many :powers,:through => :user_powers
 
-  before_save :geneate_name_pinyin, :set_powers
-
-  def geneate_name_pinyin
-    pinyin = PinYin.new
-    self.user_name_pinyin = pinyin.to_pinyin(self.user_name) if self.user_name
-  end
+  before_save :set_powers
 
   def set_powers
     return true unless self.departments
     self.powers = self.departments.collect(&:powers).flatten
   end
-
 
   def is_admin?
     self.login == 'admin'

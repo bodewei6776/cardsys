@@ -1,8 +1,13 @@
 class Member < ActiveRecord::Base
   include HashColumnState
+  include HasPinyinColumn
 
   scope :autocomplete_for, lambda {|name| 
     where("state= 'enabled' and (LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name)", {:member_name => "#{name.downcase}%"}).limit(10).order("pinyin_abbr ASC") }
+
+
+  set_pinyin_field :name_pinyin, :name
+  set_abbr_field :pinyin_abbr, :name
 
   has_many :orders
   has_many :members_cards
@@ -17,7 +22,6 @@ class Member < ActiveRecord::Base
   validates :cert_num, :uniqueness => {:on => :create, :message => '证件号已经存在！', :if => Proc.new { |member| !member.cert_num.nil? && !member.cert_num.blank? }}#证件号唯一
 
   validate :granter_no_more_than_max_num
-  before_save :geneate_name_pinyin
   attr_accessor :members_card_id
 
   after_create do |member|
@@ -32,12 +36,6 @@ class Member < ActiveRecord::Base
     return true unless self.granter
     mc = MembersCard.find(members_card_id)
     self.errors.add(:base, "此卡最大授权人数已达上限") if mc.max_granter_due?
-  end
-
-  def geneate_name_pinyin
-    pinyin = PinYin.new
-    self.name_pinyin = pinyin.to_pinyin(self.name) if self.name
-    self.pinyin_abbr = pinyin.to_pinyin_abbr(self.name) if self.name
   end
 
   def has_card?

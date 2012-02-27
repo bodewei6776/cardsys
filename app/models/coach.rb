@@ -1,5 +1,8 @@
 class Coach < ActiveRecord::Base
   include HashColumnState
+  include HasPinyinColumn
+
+  set_pinyin_field :pinyin_name, :name
 
   validates :name, :presence => {:message => "名称不能为空！"}
   validates :cert_num, :uniqueness => {:on => :create, :message => '证件号已经存在！', :if => Proc.new { |coach|  !coach.cert_num.blank? }}#证件号唯一
@@ -10,11 +13,6 @@ class Coach < ActiveRecord::Base
   has_many :book_records, :as => :resource
 
   before_save :geneate_pinyin_name
-
-  def geneate_pinyin_name
-    pinyin = PinYin.new
-    self.pinyin_name = pinyin.to_pinyin(self.name) if self.name
-  end
 
   def amount(order_item)
     fee * order_item.quantity
