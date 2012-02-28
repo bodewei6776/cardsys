@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateCourtPeriodPrices < ActiveRecord::Migration
   def self.up
     create_table :court_period_prices  do |t|

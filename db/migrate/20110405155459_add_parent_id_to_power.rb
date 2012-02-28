@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddParentIdToPower < ActiveRecord::Migration
   def self.up
     add_column :powers,:parent_id,:integer

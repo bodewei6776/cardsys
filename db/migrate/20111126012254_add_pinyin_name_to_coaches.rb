@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddPinyinNameToCoaches < ActiveRecord::Migration
   def self.up
     add_column :coaches, :pinyin_name, :string

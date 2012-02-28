@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddTypeToBookRecord < ActiveRecord::Migration
   def self.up
     add_column :book_records, :type, :string

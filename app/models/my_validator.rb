@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class MyValidator < ActiveModel::Validator
   # implement the method where the validation logic must reside
   def validate(record)

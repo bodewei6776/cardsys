@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Category < ActiveRecord::Base
   has_many :goods,:foreign_key => "good_type"
   acts_as_tree :order => "position"

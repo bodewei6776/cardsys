@@ -1,25 +1,48 @@
-source 'http://ruby.taobao.org/'
+#source 'http://ruby.taobao.org/'
 
-gem 'rails', '3.0.3'
-gem 'ruby-mysql'
-gem 'will_paginate', '3.0.pre'
+gem 'rails', '3.2.1'
+
+gem 'mysql2'
+
+
 gem 'rails3-jquery-autocomplete', '>= 0.2.0'
+gem 'will_paginate', '~> 3.0'
 gem 'acts_as_tree'
 gem 'state_machine', '1.1.0'
 gem 'jquery-rails'
 gem 'highline'
 gem 'awesome_print', :require => 'ap'
+gem 'authlogic', '3.1.0'
 
 
-gem 'inherited_resources'
+gem 'will_paginate', '~> 3.0'
 
-gem 'haml-rails', :group => :development
-gem 'erb2haml'
+
 
 group :test do
   gem 'factory_girl_rails'
-  gem 'rails3-generators' #mainly for factory_girl & simple_form at this point
+  gem 'rails3-generators'
   gem 'rspec-rails'
   gem "shoulda-matchers"
 end
 
+gem 'twitter-bootstrap-rails', '2.0.3'
+
+
+  
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'coffee-rails', '~> 3.2.1'
+
+  gem 'uglifier', '>= 1.0.3'
+end
+
+
+
+group :development do
+  gem 'haml-rails'
+  gem 'erb2haml'
+  gem 'magic_encoding'
+end

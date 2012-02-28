@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Order < ActiveRecord::Base
   belongs_to  :user
   belongs_to  :members_card
@@ -13,6 +14,7 @@ class Order < ActiveRecord::Base
   validates  :members_card_id, :presence => { :message => "请选择会员卡" }, :if => proc { |order| order.is_member? }
   validates  :member_id, :presence => { :message => "请选择会员" }, :if => proc { |order| order.is_member? }
   validate   :coach_valid
+  validate   :card_avaliable_in_time_span
 
   accepts_nested_attributes_for :court_book_record
   accepts_nested_attributes_for :coach_book_records
@@ -20,7 +22,7 @@ class Order < ActiveRecord::Base
   attr_accessor :coach_ids
   after_save :save_order_items_for_court_and_coaches
 
-  delegate :record_date, :end_hour, :start_hour, :hours, :to => :court_book_record
+  delegate :alloc_date, :end_hour, :start_hour, :hours, :to => :court_book_record
 
   def save_order_items_for_court_and_coaches
     court_book_record_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CourtBookRecord", court_book_record.id)
@@ -44,6 +46,11 @@ class Order < ActiveRecord::Base
     end
 
     true
+  end
+
+  def card_avaliable_in_time_span
+    return true unless self.members_card
+    self.errors.add(:members_card_id, "卡在此时段不可用") unless self.members_card.card.avaliable_in_time_span?(self.alloc_date, self.end_hour, self.start_hour)
   end
 
   def replace_by(order_attributes)
@@ -102,15 +109,19 @@ class Order < ActiveRecord::Base
 
     def coach_ids=(ids)
       @coaches = Coach.find(ids.split(",").uniq)
-      self.coach_book_records = @coaches.collect do |c|
-        cbr = CoachBookRecord.new
-        cbr.resource_type = "Coach"
-        cbr.resource_id =  c.id
-        cbr.start_hour = start_hour 
-        cbr.end_hour = end_hour
-        cbr.alloc_date = order_date
-        cbr
-      end
+      #self.coach_book_records = @coaches.collect do |c|
+      #  cbr = CoachBookRecord.new
+      #  cbr.resource_type = "Coach"
+      #  cbr.resource_id =  c.id
+      #  cbr.start_hour = start_hour 
+      #  cbr.end_hour = end_hour
+      #  cbr.alloc_date = order_date
+      #  cbr
+      #end
+    end
+
+    def can_sell?
+      to_be_sold?
     end
 
     def can_cancel?

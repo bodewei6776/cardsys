@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module ReportsHelper
 
   def pay_way_checkboxes(checked = [])

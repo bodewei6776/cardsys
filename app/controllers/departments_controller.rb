@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class DepartmentsController < ApplicationController
   before_filter :load_department, :only => [:show, :edit, :update, :destroy, :department_power_index, :department_power_update]
   def index

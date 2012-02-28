@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddPriceToOrderItem < ActiveRecord::Migration
   def self.up
     add_column :order_items, :price, :string

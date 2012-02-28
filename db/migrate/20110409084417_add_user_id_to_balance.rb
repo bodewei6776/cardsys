@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddUserIdToBalance < ActiveRecord::Migration
   def self.up
     add_column :balances,:user_id,:integer

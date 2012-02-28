@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddIsMemberToOrders < ActiveRecord::Migration
   def self.up
     add_column :orders, :is_member, :boolean

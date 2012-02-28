@@ -7,13 +7,13 @@
   .soso
     %form#search_form.form-profile{:action => "/members", :method => "get"}
       .w95
-        会员名称：
+        会员名称:
         %label
           %input#name{:autocomplete => "/members/autocomplete_name", :name => "name", :onclick => "$('#card_serial_num').attr('value','');", :type => "text", :value => params[:name]}/
-        会员卡号：
+        会员卡号:
         %label
           %input#card_serial_num{:autocomplete => "/members/autocomplete_card_serial_num", :name => "card_serial_num", :onclick => "$(\"#name\").attr(\"value\",\"\");", :tabindex => "1", :type => "text", :value => params[:card_serial_num]}/
-        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
+        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "查询"}/
   .h10
   .r_bt
     .r_bt_l

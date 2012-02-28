@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CommonResourceDetail < ActiveRecord::Base
   belongs_to :common_resource
 

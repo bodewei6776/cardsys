@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'pinyin/pinyin'
 
 module HasPinyinColumn
@@ -10,6 +11,20 @@ module HasPinyinColumn
     self.pinyin_abbr_mapping = {}
     class_eval do
       before_validation :update_pinyin_fields
+
+
+    def update_pinyin_fields
+      pinyin = PinYin.new
+      self.class.pinyin_fields_mapping.each_pair do |k, v|
+        next if self.send("#{v}").blank?
+        self.send("#{k.to_s}=", pinyin.to_pinyin(self.send("#{v}")) )
+      end
+
+      self.class.pinyin_abbr_mapping.each_pair do |k, v|
+        next if self.send("#{v}").blank?
+        self.send("#{k.to_s}=", pinyin.to_pinyin_abbr(self.send("#{v}")) )
+      end
+    end
     end
   end
 
@@ -25,18 +40,4 @@ module HasPinyinColumn
     end
   end
 
-  module InstanceMethods
-    def update_pinyin_fields
-      pinyin = PinYin.new
-      self.class.pinyin_fields_mapping.each_pair do |k, v|
-        next if self.send("#{v}").blank?
-        self.send("#{k.to_s}=", pinyin.to_pinyin(self.send("#{v}")) )
-      end
-
-      self.class.pinyin_abbr_mapping.each_pair do |k, v|
-        next if self.send("#{v}").blank?
-        self.send("#{k.to_s}=", pinyin.to_pinyin_abbr(self.send("#{v}")) )
-      end
-    end
-  end
 end

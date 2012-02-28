@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateCoaches < ActiveRecord::Migration
   def self.up
     create_table :coaches   do |t|

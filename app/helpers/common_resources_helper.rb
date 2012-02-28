@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module CommonResourcesHelper
   def all_powers_tree(powers)
     html = "<ul class='tree'>"

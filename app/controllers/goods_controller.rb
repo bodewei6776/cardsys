@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class GoodsController < ApplicationController
   before_filter :load_good, :only => [:show, :edit, :update,:destroy, :store_manage_update]
 

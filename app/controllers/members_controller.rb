@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class MembersController < ApplicationController
 
   before_filter :get_granters, :only => [:granter_index]

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreatePowers < ActiveRecord::Migration
   def self.up
     create_table :powers  do |t|      

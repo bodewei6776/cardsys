@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateCommonResourceDetails < ActiveRecord::Migration
   def self.up
     create_table :common_resource_details do |t|

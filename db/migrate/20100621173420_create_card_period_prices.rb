@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateCardPeriodPrices < ActiveRecord::Migration
   def self.up
     create_table :card_period_prices do |t|

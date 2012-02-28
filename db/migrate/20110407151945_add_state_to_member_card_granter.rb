@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddStateToMemberCardGranter < ActiveRecord::Migration
   def self.up
     add_column :member_card_granters,:state,:string

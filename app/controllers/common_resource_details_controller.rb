@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CommonResourceDetailsController < ApplicationController
   before_filter :find_common_resource, :only => [:new, :edit, :index, :create, :destroy]
 

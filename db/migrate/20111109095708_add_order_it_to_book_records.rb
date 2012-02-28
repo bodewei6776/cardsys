@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddOrderItToBookRecords < ActiveRecord::Migration
   def self.up
     add_column :book_records, :order_id, :integer

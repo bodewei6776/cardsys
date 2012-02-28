@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Vacation < ActiveRecord::Base
   include HashColumnState
 

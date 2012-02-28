@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddColumnToGoods < ActiveRecord::Migration
   def self.up
     add_column :goods, :count_total_now, :integer, :null => false,:default => 0

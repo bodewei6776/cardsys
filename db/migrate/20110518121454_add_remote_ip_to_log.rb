@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddRemoteIpToLog < ActiveRecord::Migration
   def self.up
     add_column :logs,:remote_ip,:string

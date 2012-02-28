@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module LockersHelper
   def locker_type_in_words(type)
     CommonResourceDetail.find(type).detail_name rescue "未知"

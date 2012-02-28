@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class ChangeCardsTypeToCardType < ActiveRecord::Migration
   def self.up
     rename_column :cards, :type, :card_type

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class MemberCardGrantersController < ApplicationController
   def switch
     @mg = MemberCardGranter.find(params[:id])

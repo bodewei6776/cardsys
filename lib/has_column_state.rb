@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module HashColumnState
   def self.included(base)
     base.class_eval do

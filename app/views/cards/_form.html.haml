@@ -1,4 +1,4 @@
-- form_for @card  do |f|
+= form_for @card  do |f|
   .fform
     .fformbox
       = render :partial => "layouts/errors", :locals => {:target => @card}
@@ -63,16 +63,16 @@
       .table2
         %ul.bttitle.black.fb
           %li.w5 序号
-          %li.w20 时段
+          %li.w30 时段
           %li.w10 标准收费(/小时)
           %li.w10 可用
           %li.w15 折扣收费
-          %li.w27 说明
+          %li.w17 说明
         - @period_prices.each_with_index do |period_price,index|
           - available_period = @card.generate_card_period_price(period_price)
           %ul.table_items
             %li.w5= index + 1
-            %li.w20
+            %li.w30
               = period_price.name
               ：#{period_price.start_time}:00-#{period_price.end_time}:00
             %li.w10= period_price.price
@@ -83,7 +83,7 @@
               \/>
             %li.w15
               %input{:name => "time_discount_#{period_price.id}", :size => "4", :type => "text", :value => @card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price}/
-            %li.w27= period_price.description
+            %li.w17= period_price.description
     .h10
     .input_bd
       %button.submit1.hand{:type => "submit"}> 提交

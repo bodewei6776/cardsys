@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module CategoriesHelper
   def operation_of_category(category)
     html = ""

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddMemberNameToRent < ActiveRecord::Migration
   def self.up
     add_column :rents,:member_name,:string

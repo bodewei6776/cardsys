@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Department < ActiveRecord::Base
   validates :name, :presence => {:message => "名称不能为空！"}
   validates :name, :uniqueness => { :message => '名称已经存在了！'}

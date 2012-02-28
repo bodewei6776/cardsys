@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddVersionToMenu < ActiveRecord::Migration
   def self.up
     add_column :powers,:will_show,:boolean

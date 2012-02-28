@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 #本类实现汉字转拼音功能，由perl的Lingua::Han::PinYin包port而来(包括UniHan的数据)。
 #
 #由于实际需要只实现utf-8版本，需要gbk等转拼音的请使用Iconv自行转换。

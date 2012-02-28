@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class LockersController < ApplicationController
   # GET /lockers
   # GET /lockers.xml

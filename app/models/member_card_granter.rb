@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class MemberCardGranter < ActiveRecord::Base
   belongs_to :member
   belongs_to :granter,:class_name => "Member",:foreign_key => "granter_id"

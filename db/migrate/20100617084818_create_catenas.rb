@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateCatenas < ActiveRecord::Migration
   def self.up
     create_table :catenas , :options => ' DEFAULT CHARSET=utf8' do |t|

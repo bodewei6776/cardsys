@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class ChangeOrderItems < ActiveRecord::Migration
   def self.up
     remove_column :order_items, :price

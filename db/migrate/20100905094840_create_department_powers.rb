@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateDepartmentPowers < ActiveRecord::Migration
   def self.up
     create_table :department_powers  do |t|

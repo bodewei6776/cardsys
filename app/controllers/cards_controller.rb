@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CardsController < ApplicationController
   before_filter :load_card, :only => [:show, :edit, :update, :destroy]
 

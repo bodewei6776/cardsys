@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddCourtTypeToCourts < ActiveRecord::Migration
   def self.up
     add_column :courts, :court_type, :string

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CommonResource < ActiveRecord::Base
 
   has_many :common_resource_details,:dependent => :destroy

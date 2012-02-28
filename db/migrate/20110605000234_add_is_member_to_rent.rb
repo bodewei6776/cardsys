@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddIsMemberToRent < ActiveRecord::Migration
   def self.up
     add_column :rents,:is_member,:boolean

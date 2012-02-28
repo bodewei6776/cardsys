@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddUserIdToOrderAndOrderItem < ActiveRecord::Migration
   def self.up
     add_column :orders,:user_id,:integer

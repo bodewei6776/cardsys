@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CourtsController < ApplicationController
   before_filter :generate_period_prices, :only => [:show, :new, :edit, :create, :update]
 

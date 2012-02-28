@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Member < ActiveRecord::Base
   include HashColumnState
   include HasPinyinColumn

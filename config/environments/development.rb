@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 Cardsys::Application.configure do
   # Settings specified here will take precedence over those in config/environment.rb
 
@@ -11,7 +12,6 @@ Cardsys::Application.configure do
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
-  config.action_view.debug_rjs             = true
   config.action_controller.perform_caching = false
   config.active_support.deprecation = :log
 

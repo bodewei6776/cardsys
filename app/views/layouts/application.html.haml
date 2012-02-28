@@ -1,16 +1,12 @@
+-# encoding: utf-8
 !!!
 %html{:xmlns => "http://www.w3.org/1999/xhtml"}
   %head
-    %meta{:content => "text/html; charset=gb2312", "http-equiv" => "Content-Type"}/
+    %meta{"http-equiv" => "Content-Type"}/
     %title 管理系统
-    = stylesheet_link_tag 'main','jquery-ui-1.8.2.custom','colorbox'
-    = javascript_include_tag 'jquery.min','jquery.ui.core','jquery-ui-1.8.2.custom.min', 'rails'
-    = javascript_include_tag "jquery.colorbox-min.js"
-    = javascript_include_tag "jquery.popupWindow.js"
-    = javascript_include_tag "autocomplete-rails.js"
-    = javascript_include_tag "new_datepicker.js"
-    = javascript_include_tag "m97/WdatePicker.js"
 
+    = javascript_include_tag "application", "m97/WdatePicker", "new_datepicker"
+    = stylesheet_link_tag "application"
 
     = yield :head_content
 

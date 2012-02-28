@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module CourtsHelper
 
   def generate_coaches_options_for_courts(coaches,selected_value=nil)

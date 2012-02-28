@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddStateToVacation < ActiveRecord::Migration
   def self.up
     add_column :vacations, :state, :string

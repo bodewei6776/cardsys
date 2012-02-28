@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class ChangeColumnDatetimeToDate < ActiveRecord::Migration
   def self.up
     change_column :rents,:start_date,:date

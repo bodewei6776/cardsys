@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class BookRecord < ActiveRecord::Base
   Status_Default     = 0  #等待与等
   Status_Prearranged = 1  #已预定

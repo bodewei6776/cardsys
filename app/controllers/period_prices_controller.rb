@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class PeriodPricesController < ApplicationController
   before_filter :load_period_price, :only => [ :show, :edit, :update, :destroy]
 

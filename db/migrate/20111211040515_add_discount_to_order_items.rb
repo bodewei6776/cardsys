@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddDiscountToOrderItems < ActiveRecord::Migration
   def self.up
     add_column :order_items, :discount, :decimal, :scale => 1, :precision => 8

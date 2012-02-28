@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class RechargeRecord < ActiveRecord::Base
 
   belongs_to :member_card

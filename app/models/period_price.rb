@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class PeriodPrice < ActiveRecord::Base
 
   has_many :card_period_prices

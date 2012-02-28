@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module RentsHelper
 
   def rents_in_table(lockers,date = Date.today)

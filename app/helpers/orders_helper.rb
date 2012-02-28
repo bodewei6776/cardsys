@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module OrdersHelper
   def display_period_per_hour(daily_periods, court, date)
     info_htmls = []

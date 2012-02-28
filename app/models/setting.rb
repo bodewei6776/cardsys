@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Setting
   class << self
     include ActionView::Helpers::FormOptionsHelper

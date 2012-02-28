@@ -1,4 +1,5 @@
-Cardsys::Application.routes.draw do |map|
+# -*- encoding : utf-8 -*-
+Cardsys::Application.routes.draw do 
 
   get "common_resource_details/new"
 

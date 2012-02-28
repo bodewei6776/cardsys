@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateRechargeRecords < ActiveRecord::Migration
   def self.up
     create_table :recharge_records  do |t|

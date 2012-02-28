@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class RentsController < ApplicationController
   def index
     @rents = Rent.all

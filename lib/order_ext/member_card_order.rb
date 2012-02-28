@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module MemberCardOrder
   
   def order_errors

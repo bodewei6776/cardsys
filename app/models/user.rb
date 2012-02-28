@@ -1,9 +1,14 @@
+# -*- encoding : utf-8 -*-
 class User < ActiveRecord::Base
   include HasPinyinColumn
   set_pinyin_field :user_name_pinyin, :user_name
 
   has_many :department_users
   has_many :departments,:through => :department_users
+
+
+
+
   acts_as_authentic do |c|
     c.merge_validates_length_of_login_field_options(:allow_blank => true)
     c.merge_validates_format_of_login_field_options(:allow_blank => true)
@@ -12,7 +17,7 @@ class User < ActiveRecord::Base
   end
 
   has_many   :user_powers
-  has_many :powers,:through => :user_powers
+  has_many :powers, :through => :user_powers
 
   before_save :set_powers
 

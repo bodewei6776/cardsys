@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 
 class LI
   attr_accessor :product_id,:quantity,:real_total_price,:discount

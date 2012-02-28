@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Date
   def to_chinese_ymd
     self.strftime("%Y年%m月%d日")
@@ -37,3 +38,4 @@ end
 
 require 'has_column_state'
 require 'has_pinyin_column'
+

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Card < ActiveRecord::Base
   include HashColumnState
 
@@ -53,6 +54,12 @@ class Card < ActiveRecord::Base
     PeriodPrice.calculate_amount_in_time_spans(date, start_hour, end_hour) do |period_price|
       card_period_price = self.card_period_prices.first(:conditions => "period_price_id=#{period_price.id}")
       [!card_period_price.nil? ,card_period_price.card_price]
+    end
+  end
+  
+  def avaliable_in_time_span?(date, start_hour, end_hour)
+    PeriodPrice.all_periods_in_time_span(date, start_hour, end_hour).any? do |pp|
+      self.card_period_prices.first(:conditions => "period_price_id=#{pp.id}")
     end
   end
 

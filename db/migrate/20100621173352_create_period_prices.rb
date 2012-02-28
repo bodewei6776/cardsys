@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreatePeriodPrices < ActiveRecord::Migration
   def self.up
     create_table :period_prices do |t|

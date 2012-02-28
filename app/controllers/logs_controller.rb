@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class LogsController < ApplicationController
   def index
     @logs = Log.where("1=1")

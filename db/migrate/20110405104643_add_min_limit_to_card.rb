@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddMinLimitToCard < ActiveRecord::Migration
   def self.up
     add_column :cards,:min_amount,:integer

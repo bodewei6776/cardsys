@@ -24,14 +24,14 @@
         %table.index_order_table{:cellspacing=> 0}
           - @courts.select{|c| c.court_type == id.to_s }.each_slice(6) do |slice|  
             %tr.court_name
-              %td.tit.first 时段/场地
+              %td.tit.first_td 时段/场地
               - slice.each_with_index do |court, index|
                 %td
                   = court.name
 
               - (@daily_periods.first.start_time..(@daily_periods.last.end_time-1)).each do |hour_start|
                 %tr.period
-                  %td.hour_span.first
+                  %td.first_td
                     = "#{hour_start}:00-#{hour_start.next}:00"
                   - slice.each do |court|
                     = court_status_in_period(@date, hour_start, court)

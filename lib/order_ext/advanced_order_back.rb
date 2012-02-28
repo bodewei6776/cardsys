@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # class AdvancedOrder
 #   
 #   include ActiveModel::Validations

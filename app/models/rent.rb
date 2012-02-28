@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Rent < ActiveRecord::Base
   belongs_to :locker
   belongs_to :member_card,:foreign_key => :card_id

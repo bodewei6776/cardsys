@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Coach < ActiveRecord::Base
   include HashColumnState
   include HasPinyinColumn

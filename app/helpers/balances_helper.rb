@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module BalancesHelper
   
   def display_order_amount

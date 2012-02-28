@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateMemberCardGranters < ActiveRecord::Migration
   def self.up
     create_table :member_card_granters do |t|

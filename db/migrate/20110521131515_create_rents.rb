@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CreateRents < ActiveRecord::Migration
   def self.up
     create_table :rents, :options => ' DEFAULT CHARSET=utf8' do |t|

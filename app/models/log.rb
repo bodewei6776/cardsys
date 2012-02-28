@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Log < ActiveRecord::Base
 
   LOG_TYPE = {

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 # To change this template, choose Tools | Templates
 # and open the template in the editor.
 period_price1 = PeriodPrice.create(:name => '晨练时段', :start_time => '7', :end_time => '9', :price => '100', :period_type => CommonResource::PERIOD_TYPE_0, :catena_id => '1')

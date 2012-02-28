@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class BookRecordsController < ApplicationController
   NO_NEED_CHECK_USER_AND_RIGHTS_OPERATION = %w{active}
 

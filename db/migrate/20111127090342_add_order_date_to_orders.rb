@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddOrderDateToOrders < ActiveRecord::Migration
   def self.up
     add_column :orders, :order_date, :date

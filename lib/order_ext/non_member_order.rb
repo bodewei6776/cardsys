@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 module NonMemberOrder
 
   def order_errors

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class CommonResourcesController < ApplicationController
   before_filter :super_admin_required
 

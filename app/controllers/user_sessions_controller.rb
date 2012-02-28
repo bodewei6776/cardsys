@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class UserSessionsController < ApplicationController
   skip_before_filter :require_user
 

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Power < ActiveRecord::Base
   has_many   :user_powers,:dependent => :destroy
   has_many :users,:through => :user_powers

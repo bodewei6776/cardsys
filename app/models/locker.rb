@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Locker < ActiveRecord::Base
 
   LOCKER_STATE = {:empty => "未使用",:rented => "出租中"}

@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'order_ext/member_order'
 class OrderItem < ActiveRecord::Base
 

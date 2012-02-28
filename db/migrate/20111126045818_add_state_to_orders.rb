@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class AddStateToOrders < ActiveRecord::Migration
   def self.up
     add_column :orders, :state, :string

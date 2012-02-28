@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class NonMember < ActiveRecord::Base
   include HasPinyinColumn
   set_pinyin_field :name_pinyin, :name

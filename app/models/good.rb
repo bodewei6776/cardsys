@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 class Good < ActiveRecord::Base
   include HashColumnState
   include HasPinyinColumn
