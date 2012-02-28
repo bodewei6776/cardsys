@@ -41,8 +41,6 @@ end
 
 
 
-group :development do
-  gem 'haml-rails'
-  gem 'erb2haml'
-  gem 'magic_encoding'
-end
+gem 'haml-rails'
+gem 'erb2haml'
+gem 'magic_encoding'
