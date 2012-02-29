@@ -13,7 +13,7 @@
         会员卡号:
         %label
           %input#card_serial_num{:autocomplete => "/members/autocomplete_card_serial_num", :name => "card_serial_num", :onclick => "$(\"#name\").attr(\"value\",\"\");", :tabindex => "1", :type => "text", :value => params[:card_serial_num]}/
-        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "查询"}/
+        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "查询", :class => 'btn'}/
   .h10
   .r_bt
     .r_bt_l

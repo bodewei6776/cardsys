@@ -2,17 +2,10 @@
 module ReportsHelper
 
   def pay_way_checkboxes(checked = [])
-    #  Balance_Way_Use_Card  = 1
-    #  Balance_Way_Use_Cash  = 2
-    #  Balance_Way_Use_Post  = 3
-    #  Balance_Way_Use_Bank  = 4
-    #  Balance_Way_Use_Check = 5
-    #  Balance_Way_Use_Guazhang = 6
-    #  Balance_Way_Use_Counter  = 7
     map = [["记账", "card"],["计次", "counter"],["现金" , "cash"],["POS机" , "pos"],["支票" , "check"],["银行转账" , "bank"], ["挂账" , "guazhang"]]
     html = ""
     map.each do |way|
-      html << content_tag(:input,raw("<label>#{way[0]}</label>"),:type => "checkbox",:name => "way[]",:value => way[1],:checked => checked.include?(way[1].to_s),:onclick=> "recalculate();" ,:class=>"pay_ways")
+      html << content_tag(:input,raw("#{way[0]}"),:type => "checkbox",:name => "way[]",:value => way[1],:checked => checked.include?(way[1].to_s),:onclick=> "recalculate();" ,:class=>"pay_ways")
     end
 
     html
@@ -36,7 +29,7 @@ module ReportsHelper
     table <<("<caption><h1>#{current_catena_name}球馆#{date.to_s(:db)}收入日报表"+ "</h1></caption>")
     # first tr
     table <<("<tr class='head'>")
-    table <<("<td colspan=3>日期 #{ select_year(date,{:start_year => 2010,:end_year => 2016},:onchange => "recalculate();")} 年 " + 
+    table <<("<td colspan=3>日期 #{ select_year(date, {:start_year => 2010,:end_year => 2016},:onchange => "recalculate();")} 年 " + 
              "#{select_month(date,:use_month_numbers => true,:onchange => "recalculate();")}月　#{select_day(date,{},:onchange => "recalculate();")} 日</td>")
     table << "<td>支付方式：　</td>"
     table << "<td colspan=#{table_width - 5} style='width:450px;'>#{pay_way_checkboxes(pay_ways)}</td>"

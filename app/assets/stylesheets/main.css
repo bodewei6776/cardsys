@@ -398,8 +398,9 @@ td.color06 a {color: white;}
 .fformbox_nr{ width:99.8%; margin:0 auto; padding:20px 0; background:#f4f8f9;}
 .fformbox_nr ul{width:95%; height:25px; color:#000; margin:0 auto; border-bottom: 1px dotted black; padding-top: 8px;}
 .fformbox_nr ul li{ height:25px;line-height:25px;float:left; display:block;  }
-.fformbox_nr ul li select{ width: 120px;  }
 .fformbox_nr ul li input[type=text]{ width: 120px;  }
+
+.fform select { width: 60px; }
 /*<定义增加和修改表单等样式---结束>*/
 
 
@@ -464,6 +465,10 @@ table.report_table{
   border-collapse: collapse;
   width: 98%;
   
+}
+
+table.report_table select{
+  width: 60px;
 }
 
 table.report_table tr.head{
@@ -549,6 +554,5 @@ ul#court_menu li.active a { background: #ccf; }
 .court_content { float: left; clear: both; border: 1px solid #ccf; border-top: none; border-left: none; width: 100%; }
 
 
-.orders ul li select{ width: 80px;  }
 
 #link_box {display: block; text-align: center;}

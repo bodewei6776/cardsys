@@ -3,11 +3,8 @@
   %head
     %meta{:content => "text/html; charset=gb2312", "http-equiv" => "Content-Type"}/
     %title 博德维网球管理系统
-    = javascript_include_tag 'jquery.min','jquery.ui.core','jquery-ui-1.8.2.custom.min','rails'
-    = javascript_include_tag  "jquery.tokeninput.js"
-    = javascript_include_tag "autocomplete-rails.js"
-    = stylesheet_link_tag   'jquery-ui-1.8.2.custom',"main", "token-input"
-
+    = javascript_include_tag "application", "m97/WdatePicker", "new_datepicker"
+    = stylesheet_link_tag "application"
     %body
       - if flash[:notice]
         #flash_notice= flash[:notice] 

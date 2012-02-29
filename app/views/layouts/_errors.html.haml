@@ -1,8 +1,9 @@
 - if target.errors.any?
-  #errorExplanation
-    %h2.title
-      == #{target.errors.count}个错误发生，请检查
-    %ul
-      - target.errors.each do |node, msg|
-        %li=node.to_s +   msg
-    .bottom
+  .alert.alert-block
+    %a.close{ "data-dismiss" => "alert" }x
+    %h4.alert-heading 注意
+    - target.errors.each_with_index do |(node, msg), index|
+      %strong 
+        = "#{index + 1}. "
+        = msg
+      %br
