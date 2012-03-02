@@ -50,7 +50,6 @@
               %textarea{:cols => "45", :name => "coach[description]", :rows => "4"}= @coach.description
     .h10
     .input_bd
-      %button.submit1.hand{:type => "submit"}> 提交
-      \&nbsp;&nbsp;&nbsp;&nbsp;
-      %button.submit1.hand{:onclick => "window.location.href='/coaches'", :type => "button"} 返回
+      = f.submit "提交", :class => "btn btn-success"
+      = link_to "返回", coaches_path, :class => "btn btn-danger"
     .clear

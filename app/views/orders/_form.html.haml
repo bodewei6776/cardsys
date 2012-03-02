@@ -109,7 +109,7 @@
 
       %ul#link_box
         %li
-          = f.submit @order.new_record? ? "预订" : "变更", :class => "button_link"
+          = f.submit @order.new_record? ? "预订" : "变更", :class => "btn"
           = f.submit "代卖", :class => "button_link" if @order.can_sell?
           = display_enable_buttons(@order) if !@order.new_record?
 

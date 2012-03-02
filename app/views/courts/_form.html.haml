@@ -1,4 +1,4 @@
-- form_for @court  do |f|
+= form_for @court  do |f|
   .fform
     .fformbox
       =render :partial => "layouts/errors", :locals => {:target => @court}
@@ -54,8 +54,8 @@
                 checked
               class="inputtext" />
             %li.w20= period_price.description
-    .h10
-    .input_bd
-      = f.submit "提交", :class => "submit1 hand"
-      %button.submit1.hand{:onclick => "window.location.href='/courts'", :type => "button_link"} 返回
     .clear
+
+    .input_bd
+      = f.submit "提交", :class => "btn btn-success"
+      = link_to "返回", cards_path, :class => "btn btn-danger"

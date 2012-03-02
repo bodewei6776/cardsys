@@ -20,9 +20,8 @@
               %input#end_date{:name => "vacation[end_date]", :type => "text", :value => (@vacation.end_date.try(:to_chinese_ymd))}/
     .h10
     .input_bd
-      %button.submit1.hand{:type => "submit"}> 提交
-      \&nbsp;&nbsp;&nbsp;&nbsp;
-      %button.submit2.hand{:onclick => "window.location.href='/vacations'", :type => "button"} 返回
+      = f.submit "提交", :class => "btn btn-success"
+      = link_to "返回", vacations_path, :class => "btn btn-danger"
     .clear
 :javascript
   $(function() {

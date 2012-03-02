@@ -50,7 +50,7 @@ class Order < ActiveRecord::Base
 
   def card_avaliable_in_time_span
     return true unless self.members_card
-    self.errors.add(:members_card_id, "卡在此时段不可用") unless self.members_card.card.avaliable_in_time_span?(self.alloc_date, self.end_hour, self.start_hour)
+    self.errors.add(:members_card_id, "卡在此时段不可用") unless self.members_card.card.avaliable_in_time_span?(self.alloc_date, self.start_hour, self.end_hour)
   end
 
   def replace_by(order_attributes)

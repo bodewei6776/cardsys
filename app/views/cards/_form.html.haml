@@ -83,9 +83,7 @@
               \/>
             %li.w15
               %input{:name => "time_discount_#{period_price.id}", :size => "4", :type => "text", :value => @card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price}/
-            %li.w17= period_price.description
-    .h10
     .input_bd
-      %button.submit1.hand{:type => "submit"}> 提交
-      = link_to "返回", cards_path, :class => "button_link"
+      = f.submit "提交", :class => "btn btn-success"
+      = link_to "返回", cards_path, :class => "btn btn-danger"
     .clear

@@ -36,7 +36,7 @@
               %textarea{:cols => "45", :name => "period_price[description]", :rows => "4"}= @period_price.description
     .h10
     .input_bd
-      = f.submit "提交", :class => "submit1 hand"
-      %button.submit1.hand{:onclick => "window.location.href='#{period_prices_path}'", :type => "button"} 查看
+      = f.submit "提交", :class => "btn btn-success"
+      = link_to "返回", period_prices_path, :class => "btn btn-danger"
     .clear
 
