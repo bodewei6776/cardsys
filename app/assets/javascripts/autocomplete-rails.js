@@ -10,8 +10,7 @@
 */
 
 $(document).ready(function(){
-	console.log('11111111111111111111');
-  $('input[autocomplete],input[data-autocomplete]').each(function(i){
+  $('input[autocomplete], input[data-autocomplete]').each(function(i){
     $(this).autocomplete({
       source: $(this).attr('autocomplete'),
       select: function(ui, li){
