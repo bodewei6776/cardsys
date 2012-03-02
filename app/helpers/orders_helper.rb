@@ -85,7 +85,7 @@ module OrdersHelper
 
   def order_action_link(text, url,  method = :put, confirm_message = "", function = "")
     confirm_message = "确认要" + text + "?" if confirm_message.blank?
-    content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "button_link inline", :method => method))
+    content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "btn inline", :method => method))
    # if function.blank?
    #   content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "button_link inline", :method => method))
    # else

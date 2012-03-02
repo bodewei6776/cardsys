@@ -98,7 +98,6 @@ class Order < ActiveRecord::Base
     end
     end
 
-
     def coaches
       coach_book_records.collect(&:resource)
     end
@@ -109,15 +108,15 @@ class Order < ActiveRecord::Base
 
     def coach_ids=(ids)
       @coaches = Coach.find(ids.split(",").uniq)
-      #self.coach_book_records = @coaches.collect do |c|
-      #  cbr = CoachBookRecord.new
-      #  cbr.resource_type = "Coach"
-      #  cbr.resource_id =  c.id
-      #  cbr.start_hour = start_hour 
-      #  cbr.end_hour = end_hour
-      #  cbr.alloc_date = order_date
-      #  cbr
-      #end
+      self.coach_book_records = @coaches.collect do |c|
+        cbr = CoachBookRecord.new
+        cbr.resource_type = "Coach"
+        cbr.resource_id =  c.id
+        cbr.start_hour = start_hour 
+        cbr.end_hour = end_hour
+        cbr.alloc_date = order_date
+        cbr
+      end
     end
 
     def can_sell?

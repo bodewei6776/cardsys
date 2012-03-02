@@ -16,14 +16,14 @@ class OrdersController < ApplicationController
     @order.court_book_record.resource_type = 'Court'
     @order.member = Member.new
     @order.order_date = @order.court_book_record.alloc_date
-    @order.non_member = NonMember.new(:is_member => true)
+    @order.non_member = NonMember.new(:is_member => "1")
     @order.telephone = @order.member.telephone
     render :layout => "small_main"
   end
 
   def edit
     @order = Order.find(params[:id])
-    @order.non_member = NonMember.new(:is_member => true) if @order.is_member
+    @order.build_non_member(:is_member => "1") if @order.is_member
     render :layout => "small_main"
   end
 
@@ -39,7 +39,7 @@ class OrdersController < ApplicationController
     else # 常规更新
       if @order.update_attributes(params[:order])
         flash[:notice] = "场地修改成功"
-        render :action => "create"
+        render :action => "create", :layout => "small_main"
       else
         render :action => "edit", :layout => "small_main"
       end
@@ -48,8 +48,10 @@ class OrdersController < ApplicationController
 
   def create
     @order = Order.new(params[:order])
+    @order.state = "booked"
     if @order.save
       flash[:notice] = "场地预订成功"
+      render :layout => "small_main"
     else
       @order.non_member ||= NonMember.new(:is_member => @order.is_member)
       render :action => "new", :layout => "small_main"
