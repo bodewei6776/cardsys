@@ -48,7 +48,7 @@ class Balance < ActiveRecord::Base
       self.members_card.left_fee -= self.final_price
     end
 
-    self.members_card.save(false)
+    self.members_card.save(:validate => false)
 
     if self.order.reload.order_items.all?(&:balanced?)
       self.order.balance!

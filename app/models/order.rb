@@ -60,6 +60,9 @@ class Order < ActiveRecord::Base
   def coach_valid
     return true if coach_ids.blank?
     coach_book_records.each do |c|
+      c.start_hour = start_hour 
+      c.end_hour = end_hour
+      c.alloc_date = order_date
       errors.add(:base, c.conflict_book_record.to_s + "已经被预约") if c.conflict?
     end
   end
@@ -112,9 +115,6 @@ class Order < ActiveRecord::Base
         cbr = CoachBookRecord.new
         cbr.resource_type = "Coach"
         cbr.resource_id =  c.id
-        cbr.start_hour = start_hour 
-        cbr.end_hour = end_hour
-        cbr.alloc_date = order_date
         cbr
       end
     end

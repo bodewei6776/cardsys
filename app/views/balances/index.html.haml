@@ -55,11 +55,11 @@
           %li.w10= item.final_price
           %li.w10= item.created_at
           %li.w10= item.user.try(:name)
-          %li.w10= link_to "打印", print_balance_path(item)
+          %li.w10=# link_to "打印", print_balance_path(item)
 
       %ul.table_items
         %li.w5= @balances.count + 1
-        %li.w10= f.select :balance_way, options_for_select(@order.possible_balance_ways, @balance.balance_way)
+        %li.w10= f.select :balance_way, options_for_select(@order.possible_balance_ways, @balance.balance_way), :class => "span1"
         %li.w10= f.text_field :price, :id => "new_price_node"
         %li.w10= f.text_field :final_price, :id => "new_total_price_node"
         %li.w10 

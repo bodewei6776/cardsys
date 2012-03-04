@@ -6,15 +6,14 @@
       .r_bt_l_a
       .r_bt_l_c.fb.white 商品查询
     .r_bt_r
-      =link_to "返回", edit_order_path(@order) 
+      =link_to "返回", edit_order_path(@order), :class => "btn btn-success"
   .soso
-    - form_tag "/goods/goods",{:id => "search-goods-form", :method => :get} do |f|
+    = form_tag "/goods/goods",{:id => "search-goods-form", :method => :get} do |f|
       = hidden_field_tag :order_id, params[:order_id]
       .w95
         照商品类别：
         %label
           = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
-        \&nbsp;&nbsp;&nbsp;&nbsp;
         按照商品名称：
         %label
           %input#name.inputtext{:autocomplete => "/goods/autocomplete_name", :name => "name", :type => "text", :value => params[:name]}/

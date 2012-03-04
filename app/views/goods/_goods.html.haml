@@ -23,8 +23,8 @@
           = f.hidden_field :item_id
           = f.hidden_field :item_type
           = f.hidden_field :order_id
-          = f.text_field :quantity, :size => 5, :class => "quantity"
           = link_to "<<", "#", :class => "remove"
+          = f.text_field :quantity, :class => "quantity span1"
           = link_to ">>", "#", :class => "add"
           = f.submit "购买"
 

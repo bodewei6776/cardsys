@@ -20,7 +20,6 @@ gem 'will_paginate', '~> 3.0'
 
 
 group :test do
-  gem 'factory_girl_rails'
   gem 'rails3-generators'
   gem 'rspec-rails'
   gem "shoulda-matchers"
