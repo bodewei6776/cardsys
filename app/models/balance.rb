@@ -59,7 +59,7 @@ class Balance < ActiveRecord::Base
 
   def order_items_attributes=(attrs)
     attrs.each do |key, element|
-      next if element["checked"] == "0"
+      next if   element["checked"].nil? or element["checked"] == "0"
       oi = OrderItem.find(element["id"])
       oi.discount = element["discount"]
       oi.price_after_discount = element["price_after_discount"]

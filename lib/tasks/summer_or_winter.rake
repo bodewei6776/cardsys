@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 require 'highline/import'
 
 task :summer_or_winter => :environment do

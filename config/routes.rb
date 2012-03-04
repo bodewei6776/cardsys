@@ -62,10 +62,6 @@ Cardsys::Application.routes.draw do
       collection do 
         get :balanced
       end
-
-      member do
-        get :print
-      end
     end
 
     resources :goods do
@@ -86,6 +82,7 @@ Cardsys::Application.routes.draw do
     member do 
       get :print
     end
+
     collection do
       delete :destroy_good
       get :balanced

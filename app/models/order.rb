@@ -208,7 +208,8 @@ class Order < ActiveRecord::Base
 
     def split(order_attributes)
       new_order = Order.new(order_attributes.deep_except('id'))
-      begin
+      new_order.state = "booked"
+    #  begin
         Order.transaction do
           # 无重叠
           if new_order.hour_range.overlap_window_size(self.hour_range).zero?
@@ -239,10 +240,12 @@ class Order < ActiveRecord::Base
         end
 
         true
-      rescue Exception => e
-        puts e
-        return false
-      end
+    #  rescue Exception => e
+    #    puts e
+    #    return false
+    #  end
+
+      new_order
     end
 
     def change_start_hour_to(new_start_hour)

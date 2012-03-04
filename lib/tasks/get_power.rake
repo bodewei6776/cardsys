@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 task :get_power_back => :environment do
 
   def t(s,scope)

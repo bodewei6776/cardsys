@@ -1,3 +1,4 @@
+-# -*- encoding : utf-8 -*-
 !!!
 %html{:lang => "zh-CN", "xml:lang" => "zh-CH", :xmlns => "http://www.w3.org/1999/xhtml"}
   %head
@@ -36,56 +37,56 @@
         %td 单价
         %td 数量
         %td.right 小计
-      - if @balance.order.court_book_record
-        %tr.goods
-          %td.left 场地预定费
-          - if @balance.balance_way == "counter"
-            %td= 1
-            %td= @balance.order.court_book_record.end_hour - @balance.order.court_book_record.start_hour
-            %td.right
-              = @balance.count_amount
-              次
-          - else
-            %td --
-            %td 1
-            %td.right= @balance.order.court_book_record.price
+      - @balance.order_items.each do |oi|
+        - case oi.item
+        - when CourtBookRecord
+          %tr.goods
+            %td.left 场地预定费
+            - if @balance.balance_way == "counter"
+              %td= 1
+              %td= @balance.order.court_book_record.end_hour - @balance.order.court_book_record.start_hour
+              %td.right
+                = @balance.final_price
+                次
+            - else
+              %td --
+              %td 1
+              %td.right= @balance.order.court_book_record.price
+        - when CoachBookRecord
+          %tr.goods
+            %td.left
+              教练(#{oi.item.coach.name})
+            %td
+              = oi.item.coach.fee
+            %td
+              = oi.item.hours
+            %td.right= oi.item.hours * oi.item.coach.fee
+        - when Good
+          - good = oi.item
+          %tr.goods
+            %td.left
+              = good.name
+            %td= good.price
+            %td= oi.quantity
+            %td.right= oi.total_money_price
 
-        - unless (coach_book_records = @balance.order.coach_book_records).blank?
-          - coach_book_records.each do |coach_order_item|
-            - coach = coach_order_item.coach
-            %tr.goods
-              %td.left
-                教练(#{coach.name})
-              %td
-                = coach.fee
-              %td
-                = coach_order_item.hours
-              %td.right= coach_order_item.hours * coach.fee
-      - for good_item in @balance.order.order_items.good_records
-        - next if (good = good_item.item).blank?
-        %tr.goods
-          %td.left
-            = good.name
-          %td= good.price
-          %td= good_item.quantity
-          %td.right= good_item.total_money_price
       %tr.total
         %td{:colspan => "1"}
-        %td{:colspan => "1"} 合计:
+          %td{:colspan => "1"} 合计:
         %td.amount{:colspan => "2"}
           %span
             = @balance.balance_real_amount_desc
       - if @balance.order.is_member?
         %tr.total_remain
           %td{:colspan => "1"}
-          %td  剩余金额:
+            %td  剩余金额:
           %td.amount{:colspan => "2"}
             %span>
               = @balance.order.members_card.left_fee
             元
         %tr.total_remain
           %td{:colspan => "1"}
-          %td  剩余次数:
+            %td  剩余次数:
           %td.amount{:colspan => "2"}
             %span>
               = @balance.order.members_card.left_times
@@ -108,4 +109,4 @@
           = @balance.balance_way_desc
     .noprint
       %form
-        %input.submit{:onclick => "window.print()", :style => "margin-top:20px; margin-left:130px;padding:3px 7px;border:1px solid black;", :type => "button", :value => "\346\211\223\345\215\260"}/
+        %input.submit{:onclick => "window.print()", :style => "margin-top:20px; margin-left:130px;padding:3px 7px;border:1px solid black;", :type => "button", :value => "打印"}/

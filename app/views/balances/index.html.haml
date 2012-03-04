@@ -13,7 +13,7 @@
       %ul
         %li
           %w1= @order.is_member? ? "会员:" : "非会员:" 
-          %w2= @order.is_member? ? @order.member.name : @order.non_member.name 
+          %w2= @order.member_name
 
 
       - if @order.court_book_record
@@ -55,7 +55,7 @@
           %li.w10= item.final_price
           %li.w10= item.created_at
           %li.w10= item.user.try(:name)
-          %li.w10=# link_to "打印", print_balance_path(item)
+          %li.w10= link_to "打印", print_balance_path(item)
 
       %ul.table_items
         %li.w5= @balances.count + 1

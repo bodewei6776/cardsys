@@ -4,7 +4,7 @@ class BalancesController < ApplicationController
   def index
     @order = Order.find(params[:order_id])
     @balances = @order.balances
-    @balance = @order.balances.new
+    @balance = Balance.new(:order_id => params[:order_id])
     @balance.order_items = @order.order_items
     render :layout => "small_main"
   end
@@ -25,14 +25,8 @@ class BalancesController < ApplicationController
       flash[:notice] = "结算成功"
     else
       flash[:notice] = "结算失败"
-      render :action => "index", :layout => "small_main" and return
     end
-
-    #@balance.order_items = @order.order_items.collect do |oi|
-    #  oi.discount = params[:balance][:order_items_attributes].values.find{|v| v["id"] == oi.id.to_s}["discount"]
-    #  oi
-    #end
-    render :action => "index", :layout => "small_main"
+    redirect_to :action => "index", :order_id => @order.id
   end
 
   def print 
@@ -99,8 +93,8 @@ class BalancesController < ApplicationController
     balance.do_balance!
     cart.empty!
     redirect_to new_good_buy_balances_path(:popup => true, :id => balance.id), :notice => "支付成功"
-    rescue Exception => e
-      redirect_to new_good_buy_balances_path, :notice => e.message
+  rescue Exception => e
+    redirect_to new_good_buy_balances_path, :notice => e.message
   end
 
   def destroy

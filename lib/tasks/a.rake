@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 task :data_d => :environment do
 
 agent_to_buy_time = CommonResource.create(:name => "agent_to_buy_time", :description => "申请代卖提前时间(小时)", :detail_str => "1")
