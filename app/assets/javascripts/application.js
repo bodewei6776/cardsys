@@ -5,3 +5,4 @@
 //= require jquery.tokeninput
 //= require rails
 //= require bootstrap-alert
+//= require bootstrap-tab

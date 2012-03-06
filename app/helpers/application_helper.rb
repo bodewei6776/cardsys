@@ -259,4 +259,9 @@ module ApplicationHelper
   def current_catena_name
     "博德维"
   end
+
+  def icon_helper(icon)
+    content_tag(:l, :class => icon)
+    
+  end
 end
