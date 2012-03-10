@@ -59,7 +59,7 @@ class MembersCardsController < ApplicationController
 
   def update
     @members_card = MembersCard.find(params[:id])
-    if @members_card.recharge_with(params[:members_card])
+    if @members_card.update_attributes(params[:members_card])
       redirect_to recharge_members_cards_path(:card_serial_num => @members_card.card_serial_num)
     else
       params[:member_name] = @members_card.member.name

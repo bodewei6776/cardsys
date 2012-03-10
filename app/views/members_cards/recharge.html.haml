@@ -5,9 +5,9 @@
       .r_bt_l_c.fb.white 会员卡充值
     .r_bt_r
 
-  =render :partial => "soso"
+  = render :partial => "layouts/errors", :locals => { :target => @members_card }  if @members_card
+  = render :partial => "soso"
 
-  =render :partial => "layouts/errors", :locals => { :target => @members_card }  if @members_card
 #recharge_form_div
 
 

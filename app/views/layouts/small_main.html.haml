@@ -7,7 +7,9 @@
     = stylesheet_link_tag "application"
     %body
       - if flash[:notice]
-        #flash_notice= flash[:notice] 
+        .alert
+          %a{:class => "close", "data-dismiss" => "alert"} x
+          %strong= flash[:notice]
       = yield
 
   :javascript

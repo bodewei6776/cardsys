@@ -83,26 +83,26 @@ module OrdersHelper
   end
 
 
+  def order_action_button(text, confirm_message = "", be_action = "")
+    confirm_message = "确认要" + text + "?" if confirm_message.blank?
+    content_tag(:li, submit_tag(text, :confirm_message => confirm_message, :class => "btn inline"))
+  end
+
   def order_action_link(text, url,  method = :put, confirm_message = "", function = "")
     confirm_message = "确认要" + text + "?" if confirm_message.blank?
     content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "btn inline", :method => method))
-   # if function.blank?
-   #   content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "button_link inline", :method => method))
-   # else
-   #   content_tag(:li, link_to_function(text, function), :class => "button_link inline", :confirm_message => confirm_message)
-   # end
   end
 
-  def display_enable_buttons(order)
+  def display_enable_buttons(order, f = nil)
     htmls = []
-    htmls << order_action_link("申请代卖", change_state_order_path(order, :be_action => "want_sell")) if order.can_want_sell?
-    htmls << order_action_link("取消代卖", change_state_order_path(order, :be_action => "cancel_want_sell")) if order.can_cancel_want_sell?
-    htmls << order_action_link("取消预订", change_state_order_path(order, :be_action => "cancel")) if order.can_cancel?
-    htmls << order_action_link("连续取消", change_state_order_path(order, :be_action => "cancel_all")) if order.can_cancel_all?
-    htmls << order_action_link("连续变更", order_path(order, :be_action => "update_all")) if order.can_update_all?
+    htmls << order_action_button("申请代卖", "", "want_sell") if order.can_want_sell?
+    htmls << order_action_button("取消代卖", "", "cancel_want_sell") if order.can_cancel_want_sell?
+    htmls << order_action_button("取消预订", "", "cancel") if order.can_cancel?
+    htmls << order_action_button("连续取消", "", "cancel_all") if order.can_cancel_all?
+    htmls << order_action_button("连续变更", "", "update_all") if order.can_update_all?
+    htmls << order_action_button("开场", "", "activate") if order.can_activate?
     htmls << order_action_link("预订已过期，请结算", order_balances_path(order), :method => :get) if order.book_time_due?
     htmls << order_action_link("代卖已过期，请结算", order_balances_path(order), :method => :get) if order.to_be_sold_time_due?
-    htmls << order_action_link("开场", change_state_order_path(order, :be_action => "activate")) if order.can_activate?
     htmls << order_action_link("结算", order_balances_path(order), :get) if order.can_balance?
     htmls << order_action_link("添加消费", goods_order_goods_path(order), :get) if order.can_order_goods?
     htmls << order_action_link("打印消费记录", order_balances_path(order), :get) if order.can_print_order_balance?

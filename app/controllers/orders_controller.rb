@@ -29,16 +29,24 @@ class OrdersController < ApplicationController
 
   def update
     @order = Order.find(params[:id])
-    if params[:commit] == "代卖"
-      # 代卖
+    case params[:commit]
+    when "代卖"
       if @order.split params[:order]
         render :action => "create"
       else
         render :action => "edit", :layout => "small_main"
       end
-    else # 常规更新
+    when "变更"
       if @order.update_attributes(params[:order])
         flash[:notice] = "场地修改成功"
+        render :action => "create", :layout => "small_main"
+      else
+        render :action => "edit", :layout => "small_main"
+      end
+    when "开场", "申请代卖", "取消代卖", "取消预订", "连续取消", "连续变更"
+      be_action = Order::OPMAP.invert[params[:commit]]
+      if @order.update_attributes(params[:order].slice(:login, :password)) && @order.send(be_action)
+        flash[:notice] = "场地#{params[:commit]}成功"
         render :action => "create", :layout => "small_main"
       else
         render :action => "edit", :layout => "small_main"

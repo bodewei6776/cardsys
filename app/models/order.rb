@@ -1,5 +1,10 @@
 # -*- encoding : utf-8 -*-
 class Order < ActiveRecord::Base
+  OPMAP = { "activate"         => "开场",
+            "want_sell"        => "申请代卖",
+            "cancel_want_sell" => "取消代卖",
+            "cancel"           => "取消预订" }
+  include Authenticateable
   belongs_to  :user
   belongs_to  :members_card
   belongs_to  :advanced_order
@@ -19,10 +24,13 @@ class Order < ActiveRecord::Base
   accepts_nested_attributes_for :court_book_record
   accepts_nested_attributes_for :coach_book_records
   accepts_nested_attributes_for :non_member, :reject_if => proc { |non_member| non_member[:is_member] == "1" }
-  attr_accessor :coach_ids
+  attr_accessor :coach_ids, :split_from_other
   after_save :save_order_items_for_court_and_coaches
 
   delegate :alloc_date, :end_hour, :start_hour, :hours, :to => :court_book_record
+
+  validation_conditions << proc {|obj|  obj.new_record? && !obj.split_from_other }
+  validation_conditions << proc {|obj|  obj.state == "to_be_sold" && obj.state_was == "booked" }
 
   def save_order_items_for_court_and_coaches
     court_book_record_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CourtBookRecord", court_book_record.id)
@@ -209,41 +217,42 @@ class Order < ActiveRecord::Base
     def split(order_attributes)
       new_order = Order.new(order_attributes.deep_except('id'))
       new_order.state = "booked"
-    #  begin
-        Order.transaction do
-          # 无重叠
-          if new_order.hour_range.overlap_window_size(self.hour_range).zero?
-            new_order.errors.add(:base, "时间段与当前预订没有重叠")
-            raise Exception
-            # 新订单时间覆盖当前时间段
-          elsif new_order.hour_range.overlap_window_size(self.hour_range) == self.hours
-            self.destroy
-            new_order.save!
-            # 小于当前时间段
-          elsif self.hour_range.include? new_order.hour_range
-            if self.start_hour == new_order.start_hour
-              self.change_start_hour_to(new_order.end_hour)
-            elsif self.end_hour == new_order.end_hour
-              self.change_end_hour_to(new_order.start_hour)
-            else
-              self.change_end_hour_to(new_order.start_hour)
-              cloned_order = clone_new_order
-              cloned_order.change_start_hour_to(new_order.end_hour)
-            end
-
-            new_order.save!
-            # 部分重叠
-          elsif new_order.hour_range.overlap_window_size(self.hour_range) < self.hours
-            self.start_hour < new_order.start_hour ? self.change_end_hour_to(new_order.start_hour) : self.change_start_hour_to(new_order.end_hour) 
-            new_order.save!
+      new_order.split_from_other = true
+      #  begin
+      Order.transaction do
+        # 无重叠
+        if new_order.hour_range.overlap_window_size(self.hour_range).zero?
+          new_order.errors.add(:base, "时间段与当前预订没有重叠")
+          raise Exception
+          # 新订单时间覆盖当前时间段
+        elsif new_order.hour_range.overlap_window_size(self.hour_range) == self.hours
+          self.destroy
+          new_order.save!
+          # 小于当前时间段
+        elsif self.hour_range.include? new_order.hour_range
+          if self.start_hour == new_order.start_hour
+            self.change_start_hour_to(new_order.end_hour)
+          elsif self.end_hour == new_order.end_hour
+            self.change_end_hour_to(new_order.start_hour)
+          else
+            self.change_end_hour_to(new_order.start_hour)
+            cloned_order = clone_new_order
+            cloned_order.change_start_hour_to(new_order.end_hour)
           end
-        end
 
-        true
-    #  rescue Exception => e
-    #    puts e
-    #    return false
-    #  end
+          new_order.save!
+          # 部分重叠
+        elsif new_order.hour_range.overlap_window_size(self.hour_range) < self.hours
+          self.start_hour < new_order.start_hour ? self.change_end_hour_to(new_order.start_hour) : self.change_start_hour_to(new_order.end_hour) 
+          new_order.save!
+        end
+      end
+
+      true
+      #  rescue Exception => e
+      #    puts e
+      #    return false
+      #  end
 
       new_order
     end
