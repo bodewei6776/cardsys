@@ -173,12 +173,12 @@ class Order < ActiveRecord::Base
 
     def possible_balance_ways
       if self.is_member?
+        possible_ways = []
         if members_card.left_times > 0
-          possible_ways = ["counter"]
-        elsif members_card.left_fee > 0
-          possible_ways = ["card"]
-        else
-          possible_ways = []
+          possible_ways << "counter"
+        end
+        if members_card.left_fee > 0
+          possible_ways << "card"
         end
       else
         possible_ways = []

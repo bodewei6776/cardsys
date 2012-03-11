@@ -6,7 +6,7 @@
     .r_bt_r
   .fform
     .fformbox
-      = form_for :good, @good,:url => {:action => "store_manage_update", :id => @good.id, :p => @p}, :html => {:id => 'goods_stock_form'} do |f|
+      = form_for @good, :url => store_manage_update_good_path(@good), :html => {:id => 'goods_stock_form'} do |f|
         .fformbox_bt
           %p 入库等级
         .fformbox_nr

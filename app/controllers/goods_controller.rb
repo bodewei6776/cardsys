@@ -67,6 +67,7 @@ class GoodsController < ApplicationController
 
   def store_manage_index
     @p = params[:p]
+    @good = Good.find params[:id]
     render :layout => false
   end
 

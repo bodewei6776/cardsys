@@ -211,9 +211,11 @@ Cardsys::Application.routes.draw do
   end
 
   resources :goods do
+    member do
+      put :store_manage_update
+    end
     collection do
       get :store_manage_index
-      get :store_manage_update
       get :change_status
       get :autocomplete_name
       get :autocomplete_good
