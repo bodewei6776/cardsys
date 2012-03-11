@@ -1,26 +1,4 @@
-.w96
-
-  = table_header(:title => "教练列表", :link => new_coach_path, :link_text => "创建教练")
-  .table
-    %ul.bttitle.black.fb
-      %li.w5 编号
-      %li.w10 教练名称
-      %li.w10 性别
-      %li.w10 教练类型
-      %li.w10 联系电话
-      %li.w10 费用（￥/小时）
-      %li.w15 状态
-      %li.w15 操作
-    - @coaches.each_with_index do |coach,index|
-      %ul.table_items
-        %li.w5= index + 1
-        %li.w10= coach.name
-        %li.w10= gender_desc(coach.gender)
-        %li.w10= coach.coach_type
-        %li.w10= coach.telephone
-        %li.w10= coach.fee
-        %li.w15.red= coach.state_desc
-        %li.w15
-          = operations_panel(coach)
-
-  =render :partial => "layouts/page_nav", :locals => {:objs => @coachs}
+= table_header(:title => "教练列表", :link => new_coach_path)
+- columns = {:name => "名称", :gender_desc => "性别", :coach_type => "教练类型", :telephone => "联系电话", :fee => "费用", :state_desc => "状态" }
+= render :partial => "layouts/table", :locals => {:collection => @coaches, :columns => columns}
+= render :partial => "layouts/page_nav", :locals => {:objs => @coachs}

@@ -1,8 +1,4 @@
-.menu
-  %ul#menu
-    - user_menus.each do |menu|
-      %li
-        %a#a.header_menu{:href => menu[:link], :sub_menu => menu[:sub_menu]}
-          %p
-            %img{:alt => "", :src => "/images/new/tb_0#{menu[:image_offset]}.gif"}>/
-          = menu[:display]
+- user_menus.each do |menu|
+  %li{:class => current_menu == menu[:sub_menu] ? "active" : ""}
+    %a{:href => menu[:link], :sub_menu => menu[:sub_menu]}
+      = menu[:display]

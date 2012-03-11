@@ -6,18 +6,27 @@ module ApplicationHelper
      session[:current_active_courts_tab]
   end
 
+  def form_header locals
+    render :partial => "layouts/form_header", :locals => locals
+  end
+
   def table_header locals
     render :partial => "layouts/table_header", :locals => locals
   end
 
+
+  def table_helper locals
+    render :partial => "layouts/table", :locals => locals
+  end
+
   def operations_panel(object, operations = [:show, :edit, :destroy, :switch_state])
    array = []
-   (array << (link_to "查看", object)) if operations.include?(:show) 
-   (array << (link_to "编辑", send("edit_#{object.class.name.underscore}_path", object))) if operations.include?(:edit) 
-   (array << (link_to "删除", send("#{object.class.name.underscore}_path", object), :confirm => "确认要删除么？", :method => :delete)) if operations.include?(:destroy) 
-   (array << (link_to "启用", send("switch_state_#{object.class.name.underscore}_path", object), :confirm => "确认要启用么？", :method => :put)) if operations.include?(:switch_state) && object.disabled? 
-   (array << (link_to "禁用", send("switch_state_#{object.class.name.underscore}_path", object), :confirm => "确认要禁用么？", :method => :put)) if operations.include?(:switch_state) && object.enabled? 
-   raw array.join(" | ")
+   (array << (link_to raw("<i class = 'icon-search'></i>"), object)) if operations.include?(:show) 
+   (array << (link_to raw("<i class = 'icon-edit'></i>"), send("edit_#{object.class.name.underscore}_path", object))) if operations.include?(:edit) 
+   (array << (link_to raw("<i class = 'icon-trash'></i>"), send("#{object.class.name.underscore}_path", object), :confirm => "确认要删除么？", :method => :delete)) if operations.include?(:destroy) 
+   (array << (link_to raw("<i class = 'icon-folder-open'></i>"), send("switch_state_#{object.class.name.underscore}_path", object), :confirm => "确认要启用么？", :method => :put)) if operations.include?(:switch_state) && object.disabled? 
+   (array << (link_to raw("<i class = 'icon-lock'></i>"), send("switch_state_#{object.class.name.underscore}_path", object), :confirm => "确认要禁用么？", :method => :put)) if operations.include?(:switch_state) && object.enabled? 
+   raw array.join(" ")
   end
 
   def user_menus
@@ -149,9 +158,6 @@ module ApplicationHelper
     return time.strftime("%Y年%m月%d日 %H点%M分")
   end
 
-  def gender_desc(gender)
-    gender == "1" ? '男' : '女'
-  end
 
   def get_coach_avater
     image = MiniMagick::Image.from_file("/coach/william.jpg")

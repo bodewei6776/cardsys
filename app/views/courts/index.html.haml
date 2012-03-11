@@ -1,23 +1,4 @@
-.w96
-  = table_header(:title => "场地列表", :link => new_court_path, :link_text => "创建场地")
-  .table
-    %ul.bttitle.black.fb
-      %li.w5 编号
-      %li.w10 名称
-      %li.w10 开始时间
-      %li.w10 结束时间
-      %li.w10 状态
-      %li.w15 说明
-      %li.w20 操作
-    - @courts.each_with_index do |court,index|
-      %ul.table_items
-        %li.w5= index + 1
-        %li.w10= court.name
-        %li.w10= court.start_time
-        %li.w10= court.end_time
-        %li.w10= court.state_desc
-        %li.w15= court.description
-        %li.w20
-          = operations_panel(court)
-
-    =render :partial => "layouts/page_nav", :locals => {:objs => @courts}
+= table_header(:title => "场地列表", :link => new_court_path)
+- columns = {:name => "名称", :start_time => "开始时间", :end_time => "结束时间", :state_desc => "状态", :description => "说明" }
+= render :partial => "layouts/table", :locals => {:collection => @courts, :columns => columns}
+= render :partial => "layouts/page_nav", :locals => {:objs => @courts}

@@ -6,7 +6,6 @@ gem 'mysql2'
 
 
 gem 'rails3-jquery-autocomplete', '>= 0.2.0'
-gem 'will_paginate', '~> 3.0'
 gem 'acts_as_tree'
 gem 'state_machine', '1.1.0'
 gem 'jquery-rails'
@@ -15,7 +14,7 @@ gem 'awesome_print', :require => 'ap'
 gem 'authlogic', '3.1.0'
 
 
-gem 'will_paginate', '~> 3.0'
+gem 'bootstrap-will_paginate'
 
 
 

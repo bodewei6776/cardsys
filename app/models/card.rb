@@ -109,5 +109,9 @@ class Card < ActiveRecord::Base
   def card_type_in_chinese
     CARD_TYPE[card_type] 
   end
+
+  def can_destroy?
+    true
+  end
 end
 

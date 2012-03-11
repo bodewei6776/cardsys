@@ -1,25 +1,5 @@
-.w96
+= table_header(:title => "节假日列表", :link => new_vacation_path)
+- columns = {:name => "名称", :start_date => "开始时间", :end_date => "结束时间", :state_desc => "类型" }
+= render :partial => "layouts/table", :locals => {:collection => @vacations, :columns => columns}
+= render :partial => "layouts/page_nav", :locals => { :objs => @vacations }
 
-  = table_header(:title => "节假日列表", :link => new_vacation_path, :link_text => "创建节假日")
-  .table
-    %ul.bttitle.black.fb
-      %li.w5 序号
-      %li.w30 名称
-      %li.w10 开始日期
-      %li.w10 结束日期
-      %li.w10 节假日类型
-      %li.w10 操作
-    - @vacations.each_with_index do |vacation,index|
-      %ul.table_items
-        %li.w5= index + 1
-        %li.w30.overflow_hidden= vacation.name
-        %li.w10= (vacation.start_date.to_chinese_ymd)
-        %li.w10= (vacation.end_date.to_chinese_ymd)
-        %li.w10= vacation.state_desc
-        %li.w10
-          - operations = []
-          - operations << :edit if vacation.can_edit?
-          - operations << :destroy if vacation.can_edit?
-          = operations_panel(vacation, operations)
-
-    =render :partial => "layouts/page_nav", :locals => { :objs => @vacations }

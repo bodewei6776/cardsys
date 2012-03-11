@@ -1,33 +1,4 @@
-:css
-  ul.red {background-color: red!important;}
-.w96
-  = table_header(:title => "时段价格列表", :link => new_period_price_path, :link_text => "创建时段")
-  .table
-    %ul.bttitle.black.fb
-      %li.w5 编号
-      %li.w10 名称
-      %li.w10 时段类型
-      %li.w10 开始时间
-      %li.w10 结束时间
-      %li.w10 价格
-      %li.w15 说明
-      %li.w15 操作
-    - @period_prices.each_with_index do |period_price,index|
-      %ul.table_items{:class => period_price.period_type == @date_type.id.to_s ?  "special" : "" }
-        %li.w5= index + 1
-        %li.w10= period_price.name
-        %li.w10= period_price.period_type_in_chinese
-        %li.w10
-          = period_price.start_time
-          \:00
-        %li.w10
-          = period_price.end_time
-          \:00
-        %li.w10= period_price.price
-        %li.w15= period_price.description
-        %li.w15
-          - operations = [:show, :edit]
-          - operations << :destroy if period_price.card_period_prices.blank?
-          = operations_panel(period_price, operations)
-
-  = render :partial => "layouts/page_nav", :locals => { :objs => @period_prices }
+= table_header(:title => "时段价格列表", :link => new_period_price_path, :link_text => "创建时段")
+- columns = {:name => "名称", :period_type_in_chinese => "时段类型", :start_time => "开始时间", :end_time => "结束时间", :price => "价格", :description => "说明" }
+= render :partial => "layouts/table", :locals => {:collection => @period_prices, :columns => columns}
+= render :partial => "layouts/page_nav", :locals => { :objs => @period_prices }

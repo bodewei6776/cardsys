@@ -17,13 +17,13 @@
           %input#num.inputtext{:autocomplete => "/lockers/autocomplete_num", :num => "num", :type => "text", :value => params[:num]}/
         \&nbsp;&nbsp;&nbsp;&nbsp;
         %input#search_member.inputsubmit{:num => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
-  .h10
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 储物柜列表
-    .r_bt_r
-  .table
+
+
+
+= table_header(:title => "储物柜列表", :link => new_locker_path)
+- columns = {:locker_type_in_word => "类型", :num => "储物柜编号", :state_desc => "租用状态", :telephone => "联系电话", :fee => "费用", :state_desc => "状态" }
+= render :partial => "layouts/table", :locals => {:collection => @coaches, :columns => columns}
+= render :partial => "layouts/page_nav", :locals => {:objs => @coachs}
     %ul.bttitle.black.fb
       %li.w5 编号
       %li.w10 类型

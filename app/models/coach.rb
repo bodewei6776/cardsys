@@ -19,6 +19,10 @@ class Coach < ActiveRecord::Base
     fee * order_item.quantity
   end
 
+  def gender_desc
+    gender == "1" ? '男' : '女'
+  end
+
   private
   def coache_items_in_time_span(order)
     OrderItem.coache_items_in_time_span(order)

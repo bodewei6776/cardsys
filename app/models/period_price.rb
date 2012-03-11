@@ -70,5 +70,9 @@ class PeriodPrice < ActiveRecord::Base
     amount
   end
 
+  def can_destroy?
+    self.card_period_prices.blank?
+  end
+
 end
-  
+

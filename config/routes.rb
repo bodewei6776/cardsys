@@ -292,5 +292,6 @@ Cardsys::Application.routes.draw do
   match 'backup' =>"welcome#backup"
   match 'change_catena' =>"base#change_catena"
   match ':controller(/:action(/:id(.:format)))'
+  match 'account' => "user#show"
   root :to => "orders#index"
 end

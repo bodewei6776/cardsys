@@ -39,4 +39,5 @@ end
 require 'has_column_state'
 require 'has_pinyin_column'
 require 'authenticateable'
+require 'can_destroy'
 

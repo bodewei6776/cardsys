@@ -1,23 +1,4 @@
-.w96
-  = table_header(:title => "卡模版列表", :link => new_card_path, :link_text => "创建卡模版")
-  .table
-    %ul.bttitle.black.fb
-      %li.w5 编号
-      %li.w10 名称
-      %li.w10 类型
-      %li.w10 前缀
-      %li.w10 状态
-      %li.w20 说明
-      %li.w20 操作
-    - @cards.each_with_index do |card,index|
-      %ul.table_items
-        %li.w5= index.succ
-        %li.w10= card.name
-        %li.w10= Card::CARD_TYPE[card.card_type]
-        %li.w10= card.card_prefix
-        %li.w10.red= card.state_desc
-        %li.w20= card.description
-        %li.w20
-          = operations_panel(card)
-  
-  =render :partial => "layouts/page_nav", :locals => {:objs => @cards}
+= table_header(:title => "卡模版列表", :link => new_card_path)
+- columns = {:name => "名称", :card_type_in_chinese => "类型", :card_prefix=> "前缀", :state_desc => "状态", :description => "说明" }
+= render :partial => "layouts/table", :locals => {:collection => @cards, :columns => columns}
+= render :partial => "layouts/page_nav", :locals => {:objs => @cards}

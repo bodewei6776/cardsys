@@ -1,61 +1,58 @@
-= form_for @card  do |f|
-  .fform
-    .fformbox
-      = render :partial => "layouts/errors", :locals => {:target => @card}
-      .fformbox_bt
-        %p 基本属性
-      .fformbox_nr
-        %ul
-          %li
-            .w1 卡名：
-            .w2
-              = f.text_field :name
-            .w1 基础类型：
-            .w2
-              = f.select :card_type, options_for_select(Card::CARD_TYPE.invert,  @card.card_type)
-        %ul
-          %li
-            .w1 卡前缀：
-            .w2
-              = f.text_field :card_prefix
-            .w1 有效期：
-            .w2
-              = f.text_field :expired
-              个月
-        %ul
-          %li
-            .w1 可消费类型：
-            .w2
-              = f.radio_button :consume_type,1
-              仅限场地消费
-              \#{f.radio_button :consume_type,2}所有消费
-          %li
-            .w1 签字权：
-            .w2
-              = f.text_field :max_shared_count
-        %ul
-          %li
-            .w1 提醒金额：
-            .w2
-              = f.text_field :min_amount
-              元
-            .w1 提醒次数：
-            .w2
-              = f.text_field :min_count
-              次
-        %ul
-          %li
-            .w1 预期提醒：
-            .w2
-              = f.text_field :min_time
-              天
-        %ul{:style => "height:80px;"}
-          %li
-            .w1 说明：
-            .ww2
-              = f.text_area :description, :cols => "45", :rows => "4"
-              .clear
-        .clear
+= form_header(:title => "卡模版", :link => cards_path)
+= render :partial => "layouts/errors", :locals => {:target => @card}
+= form_for @card, :class => "form-horizontal"  do |f|
+  .control-group
+    %label.control-label 卡名：
+    .controls
+      = f.text_field :name
+
+  .control-group
+    = f.label :name, "基础类型：", :class => "control-label"
+    .controls
+      = f.select :card_type, options_for_select(Card::CARD_TYPE.invert,  @card.card_type)
+    %ul
+      %li
+        .w1 卡前缀：
+        .w2
+          = f.text_field :card_prefix
+        .w1 有效期：
+        .w2
+          = f.text_field :expired
+          个月
+    %ul
+      %li
+        .w1 可消费类型：
+        .w2
+          = f.radio_button :consume_type,1
+          仅限场地消费
+          \#{f.radio_button :consume_type,2}所有消费
+      %li
+        .w1 签字权：
+        .w2
+          = f.text_field :max_shared_count
+    %ul
+      %li
+        .w1 提醒金额：
+        .w2
+          = f.text_field :min_amount
+          元
+        .w1 提醒次数：
+        .w2
+          = f.text_field :min_count
+          次
+    %ul
+      %li
+        .w1 预期提醒：
+        .w2
+          = f.text_field :min_time
+          天
+    %ul{:style => "height:80px;"}
+      %li
+        .w1 说明：
+        .ww2
+          = f.text_area :description, :cols => "45", :rows => "4"
+          .clear
+    .clear
     .h10
     .fformbox
       .fformbox_bt

@@ -1,0 +1,23 @@
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %td 编号
+      - columns.each_value do |v|
+        %td= v
+      %td 操作
+
+  %tbody
+    - collection.each_with_index do |e, index|
+      %tr
+        %td= index + 1
+        - columns.each_key do |k|
+          %td
+            - if k.to_s == "start_date" || k.to_s == "end_date"
+              = (e.send k).to_chinese_ymd
+            - else
+              =e.send k
+        %td
+          - operations = [:show]
+          - operations << :destroy if e.can_destroy?
+          - operations << :edit if e.can_edit?
+          = operations_panel(e, operations)
