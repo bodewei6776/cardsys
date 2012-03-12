@@ -213,6 +213,7 @@ Cardsys::Application.routes.draw do
   resources :goods do
     member do
       put :store_manage_update
+      put :switch_state
     end
     collection do
       get :store_manage_index
@@ -222,6 +223,8 @@ Cardsys::Application.routes.draw do
       get :goods
       get :find_goods
       get :add_to_cart
+      get :front
+      get :back
     end
   end
 

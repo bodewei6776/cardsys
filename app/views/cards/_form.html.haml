@@ -1,86 +1,83 @@
 = form_header(:title => "卡模版", :link => cards_path)
+
 = render :partial => "layouts/errors", :locals => {:target => @card}
-= form_for @card, :class => "form-horizontal"  do |f|
-  .control-group
-    %label.control-label 卡名：
-    .controls
-      = f.text_field :name
+= form_for @card, :html => {:class => "form-horizontal well"}  do |f|
+
+  - control_helper(:name, "卡名") do 
+    - f.text_field :name
+
+  - control_helper(:card_type, "基础类型") do 
+    - f.select :card_type, options_for_select(Card::CARD_TYPE.invert,  @card.card_type)
+
+  - control_helper(:card_prefix, "卡前缀") do 
+    - f.text_field :card_prefix
+
+  - control_helper(:expired, "有效期") do 
+    - f.text_field(:expired) + "  个月"
 
   .control-group
-    = f.label :name, "基础类型：", :class => "control-label"
+    %label.control-label{:for => "consume_type"} 可消费类型
     .controls
-      = f.select :card_type, options_for_select(Card::CARD_TYPE.invert,  @card.card_type)
-    %ul
-      %li
-        .w1 卡前缀：
-        .w2
-          = f.text_field :card_prefix
-        .w1 有效期：
-        .w2
-          = f.text_field :expired
-          个月
-    %ul
-      %li
-        .w1 可消费类型：
-        .w2
-          = f.radio_button :consume_type,1
-          仅限场地消费
-          \#{f.radio_button :consume_type,2}所有消费
-      %li
-        .w1 签字权：
-        .w2
-          = f.text_field :max_shared_count
-    %ul
-      %li
-        .w1 提醒金额：
-        .w2
-          = f.text_field :min_amount
-          元
-        .w1 提醒次数：
-        .w2
-          = f.text_field :min_count
-          次
-    %ul
-      %li
-        .w1 预期提醒：
-        .w2
-          = f.text_field :min_time
-          天
-    %ul{:style => "height:80px;"}
-      %li
-        .w1 说明：
-        .ww2
-          = f.text_area :description, :cols => "45", :rows => "4"
-          .clear
-    .clear
-    .h10
-    .fformbox
-      .fformbox_bt
-        %p 时段折扣价
-      .table2
-        %ul.bttitle.black.fb
-          %li.w5 序号
-          %li.w30 时段
-          %li.w10 标准收费(/小时)
-          %li.w10 可用
-          %li.w15 折扣收费
-          %li.w17 说明
-        - @period_prices.each_with_index do |period_price,index|
-          - available_period = @card.generate_card_period_price(period_price)
-          %ul.table_items
-            %li.w5= index + 1
-            %li.w30
-              = period_price.name
-              ：#{period_price.start_time}:00-#{period_price.end_time}:00
-            %li.w10= period_price.price
-            %li.w10
-              <input type="checkbox" name="time_available_#{period_price.id}"  value="1"
-              - if available_period
-                checked
-              \/>
-            %li.w15
-              %input{:name => "time_discount_#{period_price.id}", :size => "4", :type => "text", :value => @card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price}/
-    .input_bd
-      = f.submit "提交", :class => "btn btn-success"
-      = link_to "返回", cards_path, :class => "btn btn-danger"
-    .clear
+      = f.radio_button :consume_type, 1
+      仅限场地消费
+      = f.radio_button :consume_type, 2
+      所有消费
+
+
+  - control_helper(:max_shared_count, "签字权") do 
+    - f.text_field :max_shared_count
+
+  - control_helper(:min_amount, "提醒金额") do 
+    - f.text_field :min_amount
+
+
+  - control_helper(:min_count, "提醒次数") do 
+    - f.text_field(:min_count) + "次"
+
+
+  - control_helper(:min_time, "预期提醒") do 
+    - f.text_field(:min_time) 
+
+
+  - control_helper(:description, "说明") do 
+    - f.text_area :description, :cols => "45", :rows => "4"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  = table_header(:title => "时段折扣价", :link => "")
+  
+  %table.table.table-striped.table-bordered.table-condensed
+    %thead
+      %tr
+        %th 编号
+        %th 时段
+        %th 收费标准/小时
+        %th 可用
+        %th 折扣收费
+        %th 说明
+    %tbody
+      - @period_prices.each_with_index do |period_price,index|
+        - available_period = @card.generate_card_period_price(period_price)
+        %tr
+          %td= index.succ
+          %td= period_price.name + "#{period_price.start_time}:00-#{period_price.end_time}:00"
+          %td= period_price.price
+          %td= check_box_tag("time_available_#{period_price.id}", "1", available_period.present?)
+          %td= text_field_tag("time_discount_#{period_price.id}", @card.generate_card_period_price(period_price).nil? ? period_price.price : card.generate_card_period_price(period_price).card_price)
+          %td= period_price.description
+  
+  .form-actions
+    = f.submit "提交", :class => "btn btn-success"
+    = link_to "返回", cards_path, :class => "btn btn-danger"

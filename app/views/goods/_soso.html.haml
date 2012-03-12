@@ -1,0 +1,11 @@
+.soso
+  %form#search_form.form-profile{:action => "/goods/index?p=#{@p}", :method => "post"}
+    .w95
+      照商品类别：
+      %label
+        = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
+      按照商品名称：
+      %label
+        %input#name.inputtext{:autocomplete => "/goods/autocomplete_name", :name => "name", :type => "text", :value => params[:name]}/
+
+      %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "查询", :class => "btn" }/

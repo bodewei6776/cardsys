@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => '8ec6935fe52d16c7a633b948c07815f1'
-  helper_method :cart
+  helper_method :cart, :current_active_left_tab
 
   layout  "application"
 
@@ -24,6 +24,10 @@ class ApplicationController < ActionController::Base
 
   def set_date
     @date ||= DateTime.now
+  end
+
+  def current_active_left_tab
+    controller_name
   end
 
   def authorize
@@ -82,8 +86,9 @@ class ApplicationController < ActionController::Base
   end
 
   def default_paginate_options
-    {:page => params[:page] || 1,:per_page => 2,:order => "created_at DESC"}
+    {:page => params[:page] || 1,:per_page => 20,:order => "created_at DESC"}
   end
+
   def default_paginate_options_without_created_at
     {:page => params[:page] || 1,:per_page => 20}
   end

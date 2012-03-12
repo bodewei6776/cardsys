@@ -1,8 +1,7 @@
 = table_header(:title => "商品查询", :link => "")
 
-= render :partial => "soso"
-
 = table_header(:title => "商品列表", :link => new_good_path)
+= render :partial => "soso"
 
 - columns = {:name => "名称", :good_type_in_chinese => "类型", :price => "价格", :count_total_now => "商品总数", :count_back_stock => "库存数", :count_front_stock => "前台数" }
 - collection = @goods
@@ -27,12 +26,13 @@
             - else
               =e.send k
         %td
-          - operations = [:show]
+          - operations = [:show, :destroy, :switch_state]
           = operations_panel(e, operations)
-
-
+          = link_to raw("<i class='icon-edit'></i>"), edit_good_path(e), :class => "store_manage_index"
 
 = render :partial => "layouts/page_nav", :locals => {:objs => @goods}
 
 :javascript
-  $(".store_manage_index").colorbox({width:"80%", height:"70%", iframe:false});
+  $(document).ready(function(){
+    $(".store_manage_index").colorbox({width:"80%", height:"70%", iframe:false});
+  });

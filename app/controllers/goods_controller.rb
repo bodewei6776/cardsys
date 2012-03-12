@@ -20,8 +20,28 @@ class GoodsController < ApplicationController
     @good_type = params[:good_type]
     @name = params[:name]
     @category = Category.find_by_id(@good_type)
-    @goods = @category.nil? ? Good.order("id desc") :  @category.all_goods.order("id desc")
-    @goods = @goods.where(["pinyin_abbr like ? or name like ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
+    @goods = @category.nil? ? Good.order("id DESC") :  @category.all_goods.order("id DESC")
+    @goods = @goods.where(["pinyin_abbr LIKE ? OR name LIKE ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
+    @goods = @goods.paginate(default_paginate_options)
+  end
+
+  def back
+    @p = params[:p]
+    @good_type = params[:good_type]
+    @name = params[:name]
+    @category = Category.find_by_id(@good_type)
+    @goods = @category.nil? ? Good.order("id DESC") :  @category.all_goods.order("id DESC")
+    @goods = @goods.where(["pinyin_abbr LIKE ? OR name LIKE ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
+    @goods = @goods.paginate(default_paginate_options)
+  end
+
+  def front
+    @p = params[:p]
+    @good_type = params[:good_type]
+    @name = params[:name]
+    @category = Category.find_by_id(@good_type)
+    @goods = @category.nil? ? Good.order("id DESC") :  @category.all_goods.order("id DESC")
+    @goods = @goods.where(["pinyin_abbr LIKE ? OR name LIKE ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
     @goods = @goods.paginate(default_paginate_options)
   end
 

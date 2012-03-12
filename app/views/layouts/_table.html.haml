@@ -1,10 +1,10 @@
 %table.table.table-striped.table-bordered.table-condensed
   %thead
     %tr
-      %td 编号
+      %th 编号
       - columns.each_value do |v|
-        %td= v
-      %td 操作
+        %th= v
+      %th 操作
 
   %tbody
     - collection.each_with_index do |e, index|
@@ -21,3 +21,14 @@
           - operations << :destroy if e.can_destroy?
           - operations << :edit if e.can_edit?
           = operations_panel(e, operations)
+
+
+
+        - if @p =='back'
+          = link_to '库存管理', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index'
+          - if good.state == "disabled"
+            | #{link_to '启用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_ON, :id => good.id}, {:confirm => '确定重新使用该商品吗?', :style => "color:green;"}}
+          - if good.state == "enable"
+            | #{link_to '停用', {:controller => :goods, :action => :change_status, :status => CommonResource::GOOD_OFF, :id => good.id}, {:confirm => '确定停用该商品吗?', :style => "color:red;"}}
+        - elsif @p == 'front'
+          = link_to '商品出库', {:action => :store_manage_index, :id => good.id, :p => @p}, :class => 'store_manage_index'

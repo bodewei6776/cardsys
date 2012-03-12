@@ -1,43 +1,40 @@
-.w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white
-        = @date.to_chinese_ymd
-        的场地预定
-    .r_bt_r
-      =link_to raw("<i class='icon-arrow-left'> </i>  ") ,  orders_path(:date => @predate) , :class => "btn btn-mini"
-      =link_to raw("<i class='icon-refresh'> </i>  ") , orders_path(:date => @predate),  :class => "btn btn-mini"
-      =link_to raw("<i class='icon-arrow-right'> </i>  ") , orders_path(:date => @nextdate),  :class => "btn btn-mini"
-  .content
-    %ul.nav.nav-tabs#tab
-      - Setting.court_types.each_with_index do |(id, court_type), index|
-        %li{:class => index == 0 ? "active" : ""}
-          %a{:href => "##{id}", "data-toggle" => "tab"}
-            = court_type
+%p
+  %span= "#{@date.to_chinese_ymd} 的场地预定"
+  %span.pull-right
+    =link_to raw("<i class='icon-arrow-left'> </i>  ") ,  orders_path(:date => @predate) , :class => "btn btn-mini"
+    =link_to raw("<i class='icon-refresh'> </i>  ") , orders_path(:date => @predate),  :class => "btn btn-mini"
+    =link_to raw("<i class='icon-arrow-right'> </i>  ") , orders_path(:date => @nextdate),  :class => "btn btn-mini"
 
-    .clear
+%div{:style => "height:3px;"}
+.content.well
+  %ul.nav.nav-tabs#tab
+    - Setting.court_types.each_with_index do |(id, court_type), index|
+      %li{:class => index == 0 ? "active" : ""}
+        %a{:href => "##{id}", "data-toggle" => "tab"}
+          = court_type
 
-    .tab-content
-      - Setting.court_types.each_with_index do |(id, court_type), index|
-        %div{:id => id, :class => index == 0 ? "active tab-pane" : "tab-pane"}
-          %table.index_order_table{:cellspacing=> 0}
-            - @courts.select{|c| c.court_type == id.to_s }.each_slice(6) do |slice|  
-              %tr.court_name
-                %td.tit.first_td 时段/场地
-                - slice.each_with_index do |court, index|
-                  %td
-                    = court.name
+  .clear
 
-                - (@daily_periods.first.start_time..(@daily_periods.last.end_time-1)).each do |hour_start|
-                  %tr.period
-                    %td.first_td
-                      = "#{hour_start}:00-#{hour_start.next}:00"
-                    - slice.each do |court|
-                      = court_status_in_period(@date, hour_start, court)
+  .tab-content
+    - Setting.court_types.each_with_index do |(id, court_type), index|
+      %div{:id => id, :class => index == 0 ? "active tab-pane" : "tab-pane"}
+        %table.index_order_table{:cellspacing=> 0}
+          - @courts.select{|c| c.court_type == id.to_s }.each_slice(6) do |slice|  
+            %tr.court_name
+              %td.tit.first_td 时段/场地
+              - slice.each_with_index do |court, index|
+                %td
+                  = court.name
+
+              - (@daily_periods.first.start_time..(@daily_periods.last.end_time-1)).each do |hour_start|
+                %tr.period
+                  %td.first_td
+                    = "#{hour_start}:00-#{hour_start.next}:00"
+                  - slice.each do |court|
+                    = court_status_in_period(@date, hour_start, court)
 
 
-              %div{:style => "clear:both;"}
+            %div{:style => "clear:both;"}
   .h10
   .color
     %span.color01 红色-已预定
@@ -49,11 +46,5 @@
 
 :javascript
   $(document).ready(function(){
-    $("table.index_order_table tr").mouseover(function(){
-      $(this).addClass("orders_mousehover");
-    }).mouseout(function(){
-      $(this).removeClass("orders_mousehover");
-    });
-
     $("#tab").tab();
   })

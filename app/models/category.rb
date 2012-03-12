@@ -22,6 +22,10 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def can_destroy?
+    !self.children.present?
+  end
+
   class << self
     def roots_b
       find(:all,:conditions => {:parent_id => 0},:order => "position")

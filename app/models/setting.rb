@@ -12,7 +12,7 @@ class Setting
     end
 
     def site_name
-     "博德维"
+     "Kevin测试" || "博德维"
     end
 
     def coach_types

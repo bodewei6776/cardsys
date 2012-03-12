@@ -1,8 +1,5 @@
-%li
-  %a{:href => "/goods"} 基本信息管理
-%li
-  %a{:href => "/goods?p=back"} 后台库存管理
-%li
-  %a{:href => "/goods?p=front"} 前台出库管理
-%li
-  %a{:href => "/categories"} 分类管理
+- url_text_map = { goods_path => "商品管理", back_goods_path => "库存管理", front_goods_path => "前台出库管理", categories_path => "分类管理"}
+
+- url_text_map.each_pair do |k, v|
+  %li{:class => left_nav_active?(k)}
+    = link_to v, k
