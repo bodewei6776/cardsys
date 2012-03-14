@@ -35,4 +35,9 @@ class CategoriesController < ApplicationController
     @category.destroy
     redirect_to categories_url
   end
+
+  def load_category
+    @category = Category.find(params[:id])
+    
+  end
 end

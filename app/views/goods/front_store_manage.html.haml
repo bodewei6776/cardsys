@@ -1,11 +1,11 @@
-%span.btn.btn-primary.disabled 入库管理
+%span.btn.btn-primary.disabled 前台出库管理
 %span.pull-right
   =link_to raw("<i class='icon-arrow-left'></i>"), '', :class => "btn"
 
 %div{:style => "height: 3px;"}
 
-商品出入库登记
-= form_for @good, :url => store_manage_update_good_path(@good), :html => { :class => "form-horizontal well" } do |f|
+出库登记
+= form_for @good, :url => front_store_update_good_path(@good), :html => { :class => "form-horizontal well" } do |f|
   - control_helper("name", "商品名称") do
     = @good.name
 
@@ -13,11 +13,8 @@
     = "前台:#{@good.count_front_stock};后台:#{@good.count_back_stock}"
 
 
-  - control_helper("count_back_stock_in", "新入库数") do
-    = f.text_field :count_back_stock_in
-
-  - control_helper("count_back_stock_out", "退货") do
-    = f.text_field :count_back_stock_out
+  - control_helper("count_front_stock_in", "前台出库") do
+    = f.text_field :count_front_stock_in
 
 
   .form-actions

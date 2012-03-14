@@ -1,42 +1,27 @@
-=render :partial => "layouts/errors", :locals => { :target => @period_price }
-= form_for(@period_price) do |f|
-  .fform
-    .fformbox
-      .fformbox_bt
-        %p 请填写时段信息
-      .fformbox_nr
-        =render :partial => "layouts/errors", :locals => {:target => @period_price}
-        %ul
-          %li
-            .w1 时段名称：
-            .w2
-              = f.text_field :name
-            .w1 时段类型：
-            .w2
-              = f.select :period_type, options_for_select(CommonResource.options_by_identifier("period_type").collect{|a| [a.detail_name, a.id]}, @period_price.period_type)
-        %ul
-          %li
-            .w1 开始时间：
-            .w2
-              = f.select :start_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @period_price.start_time)
-            .w1 结束时间：
-            .w2
-              = f.select :end_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @period_price.end_time)
-          %li
-            .w1 时段价格：
-            .w2
-              = f.text_field :price
-            .w1 创建时间：
-            .w2
-              = @period_price.new_record? ? DateTime.now.to_s(:db) : @period_price.created_at.to_s(:db)
-        %ul{:style => "height:80px;"}
-          %li
-            .w1 备注：
-            .ww2
-              %textarea{:cols => "45", :name => "period_price[description]", :rows => "4"}= @period_price.description
-    .h10
-    .input_bd
-      = f.submit "提交", :class => "btn btn-success"
-      = link_to "返回", period_prices_path, :class => "btn btn-danger"
-    .clear
+= form_header(:title => "时段信息", :link => period_prices_path)
+= render :partial => "layouts/errors", :locals => { :target => @period_price }
+= form_for(@period_price, :html => { :class => "form-horizontal well" } ) do |f|
+  - control_helper("name", "时段") do
+    = f.text_field :name
+
+  - control_helper("period_type", "时段类型") do
+    = f.select :period_type, options_for_select(CommonResource.options_by_identifier("period_type").collect{|a| [a.detail_name, a.id]}, @period_price.period_type)
+
+
+  - control_helper("start_time", "开始时间") do
+    = f.select :start_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @period_price.start_time)
+
+  - control_helper("end_time", "结束时间") do
+    = f.select :end_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @period_price.end_time)
+
+  - control_helper("price", "时段价格") do
+    = f.text_field :price
+  
+  - control_helper("description", "说明") do
+    = f.text_area :description
+
+
+  .form-actions
+    = f.submit "提交", :class => "btn btn-success"
+    = link_to "返回", period_prices_path, :class => "btn btn-danger"
 

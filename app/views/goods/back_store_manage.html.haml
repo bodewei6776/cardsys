@@ -5,7 +5,7 @@
 %div{:style => "height: 3px;"}
 
 商品出入库登记
-= form_for @good, :url => store_manage_update_good_path(@good), :html => { :class => "form-horizontal well" } do |f|
+= form_for @good, :url => back_store_update_good_path(@good), :html => { :class => "form-horizontal well" } do |f|
   - control_helper("name", "商品名称") do
     = @good.name
 

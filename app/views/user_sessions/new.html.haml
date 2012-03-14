@@ -1,38 +1,58 @@
-!!!
-%html{:xmlns => "http://www.w3.org/1999/xhtml"}
+-# encoding: utf-8
+!!! 5
+%html{:lang => "en"}
   %head
-    %meta{:content => "text/html; charset=gb2312", "http-equiv" => "Content-Type"}
-    %title 博德维网球管理系统
-    = stylesheet_link_tag 'application'
-    = javascript_include_tag 'application'
-    :javascript
-      $(document).ready(function(){
-          $('body').keypress(function(event) {
-            if (event.which == '13') {
-            $("#new_user_action").submit();
-            event.preventDefault();
-            }
-       });
+    %meta{:charset => "utf-8"}/
+    %title= content_for?(:title) ? yield(:title) : Setting.site_name
+    = csrf_meta_tags
+    / Le HTML5 shim, for IE6-8 support of HTML elements
+    /[if lt IE 9]
+      = javascript_include_tag "http://html5shim.googlecode.com/svn/trunk/html5.js"
+    / Le styles
+    :css
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    = stylesheet_link_tag "application", :media => "all"
+    / Le fav and touch icons
+    %link{:href => "images/favicon.ico", :rel => "shortcut icon"}/
+    %link{:href => "images/apple-touch-icon.png", :rel => "apple-touch-icon"}/
+    %link{:href => "images/apple-touch-icon-72x72.png", :rel => "apple-touch-icon", :sizes => "72x72"}/
+    %link{:href => "images/apple-touch-icon-114x114.png", :rel => "apple-touch-icon", :sizes => "114x114"}/
 
-          });
   %body
-    .login
-      = render :partial => "layouts/errors", :locals => { :target => @user_session }
-      .login_bt.white.fmic30
-        博德维 管理系统
-      .login_tu
-      = form_for @user_session, :url => user_session_path,:html => {:id => 'new_user_action'} do |f|
-        .login_bd
-          %ul
-            %li.w25.tright 用户名：
-            %li
-              %label
-                = f.text_field :login, :style => "height:20px; line-height:20px;"
-          %ul
-            %li.w25.tright 密码：
-            %li
-              %label
-                = f.password_field :password,:style => "height:20px; line-height:20px;"
-        .login_bb
-          %a{:href => "#", :onclick => "$('#new_user_action').submit();return false;", :title => "\347\231\273\345\275\225"}
-            %img{:alt => "", :src => "/images/new/login_dl.gif"}/
+    .navbar.navbar-fixed-top
+      .navbar-inner
+        .container
+          =link_to "测试", root_path, :class => "brand"
+    
+    .container
+      - if flash[:notice]
+        .alert
+          %a{:class => "close", "data-dismiss" => "alert"} x
+          %strong= flash[:notice]
+      .row
+        .span5
+          .well
+ 
+            %h3 企业介绍：
+            %p
+              = "博德维网球俱乐部是中国首个采用全进口智能化充气膜建筑建造的高档室内网球馆。网球馆以其新颖的造型，独特的建筑理念，舒适的球馆享受载誉业界。俱乐部位于朝阳公园网球中心，周边环境优美，运动气氛浓厚，拥有6片符合国际顶级硬场地赛事标准的网球场地，对球馆内部的灯光、温度、湿度、通风采用全电脑控制，四季恒温，给会员带来最高档的运动享受。 同时，俱乐部还配备欧式高尚会所，提供最温馨的休息场所和配餐饮食；俱乐部所属的多名专业外籍教练，多年经验，为会员提供个性化教学和培训服务。舒适的环境、贴心的服务，让会员真正获得运动的乐趣与身心的愉悦。 "
+
+
+        .span1{:style => "border-right: 2px solid black;"}
+        .span1
+        .span5
+          =render :partial => "layouts/errors", :locals => {:target => @user_session}
+          = form_for @user_session, :url => user_session_path, :class => "form-horizontal" do|f|
+            - control_helper("login", "用户名") do
+              - f.text_field :login
+
+            - control_helper("password", "密码") do
+              - f.password_field :password
+
+            = f.submit "登陆", :class => "btn btn-primary"
+  %hr
+  %footer
+    %p &copy; Broadwell Club Mangement System  #{ Setting.site_name }#{link_to Setting.site_url, Setting.site_url}
+  

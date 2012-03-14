@@ -1,31 +1,20 @@
+= form_header(:title => "节假日", :link => vacations_path)
 =render :partial => "layouts/errors", :locals => { :target => @vacation }
-= form_for(@vacation) do |f|
-  .fform
-    .fformbox
-      .fformbox_bt
-        %p 填写节假日信息
-      .fformbox_nr
-        %ul
-          %li
-            .w1 假日名称：
-            .w2
-              = f.text_field :name
-        %ul
-          %li
-            .w1 开始时间：
-            .w2
-              %input#start_date{:name => "vacation[start_date]", :type => "text", :value => (@vacation.start_date.try(:to_chinese_ymd))}/
-            .w1 结束时间：
-            .w2
-              %input#end_date{:name => "vacation[end_date]", :type => "text", :value => (@vacation.end_date.try(:to_chinese_ymd))}/
-    .h10
-    .input_bd
-      = f.submit "提交", :class => "btn btn-success"
-      = link_to "返回", vacations_path, :class => "btn btn-danger"
-    .clear
-:javascript
-  $(function() {
-    $("#start_date").new_datepicker({dateFormat: 'yy-mm-dd'});
-    $("#end_date").new_datepicker({dateFormat: 'yy-mm-dd'});
-  });
+= form_for(@vacation, :html => { :class => "form-horizontal well"}) do |f|
+  - control_helper("name", "名称") do
+    = f.text_field :name
+
+  - control_helper("start_date", "开始时间") do
+    = f.text_field :start_date, :value => @vacation.start_date.try(:to_chinese_ymd)
+
+  - control_helper("end_date", "结束时间") do
+    = f.text_field :end_date, :value => @vacation.end_date.try(:to_chinese_ymd)
+
+  .form-actions
+    = f.submit "提交", :class => "btn btn-success"
+    = link_to "返回", vacations_path, :class => "btn btn-danger"
+
+= content_for :javascripts do
+  $("#start_date").new_datepicker({dateFormat: 'yy-mm-dd'});
+  $("#end_date").new_datepicker({dateFormat: 'yy-mm-dd'});
 

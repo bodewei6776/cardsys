@@ -23,6 +23,6 @@ module HashColumnState
 
   def switch_state!
     self.state = (disabled? ? "enabled" : "disabled")
-    self.save(false)
+    self.save(:validate => false)
   end
 end

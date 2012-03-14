@@ -63,7 +63,7 @@ class GoodsController < ApplicationController
     @good.count_total_now = @good.count_back_stock
     @good.count_front_stock = 0
     if @good.save
-      redirect_to(@good, :notice => '商品信息添加成功！') 
+      redirect_to(edit_good_path(@good), :notice => '商品信息添加成功！') 
     else
       render :action => "new" 
     end
@@ -81,26 +81,39 @@ class GoodsController < ApplicationController
 
   def destroy
     @good.destroy
-
-    redirect_to goods_url
+    redirect_to back_goods_url
   end
 
-  def store_manage_index
-    @p = params[:p]
+
+  def back_store_manage
     @good = Good.find params[:id]
     render :layout => false
   end
 
-  def store_manage_update
-    @p = params[:p]
+  def front_store_manage
+    @good = Good.find params[:id]
+    render :layout => false
+  end
+
+  def back_store_update
+    @good = Good.find params[:id]
+    count_back_stock_in = params[:good][:count_back_stock_in].to_i
     count_back_stock_out = params[:good][:count_back_stock_out].to_i
-    count_back_stock_in  = params[:good][:count_back_stock_in].to_i
+    @good.count_back_stock  += count_back_stock_in 
+    @good.count_back_stock  -= count_back_stock_out
+    @good.count_total_now += count_back_stock_in 
+    @good.count_total_now -= count_back_stock_out
+    @good.save
+    redirect_to back_goods_path
+  end
+
+  def front_store_update
+    @good = Good.find params[:id]
     count_front_stock_in = params[:good][:count_front_stock_in].to_i
-    @good.count_back_stock  += (count_back_stock_in - count_back_stock_out - count_front_stock_in )
+    @good.count_back_stock  -= count_front_stock_in
     @good.count_front_stock += count_front_stock_in
-    @good.count_total_now   = @good.count_back_stock + @good.count_front_stock
-    msg = @good.save ? 'yes' : 'no'
-    render :text => msg
+    @good.save
+    redirect_to front_goods_path
   end
 
   def goods
@@ -139,6 +152,14 @@ class GoodsController < ApplicationController
   def load_good
     @good = Good.find params[:id]
     
+  end
+
+
+  def switch_state
+    @good = Good.find(params[:id])
+    @good.switch_state!
+    @good.state
+    redirect_to(back_goods_url) 
   end
 
 end

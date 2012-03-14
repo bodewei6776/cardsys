@@ -15,6 +15,10 @@ class Setting
      "Kevin测试" || "博德维"
     end
 
+
+    def site_url
+      "www.localhost:300"
+    end
     def coach_types
      ["全职教练", "客人自带"] 
     end

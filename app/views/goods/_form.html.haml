@@ -1,51 +1,33 @@
-= form_for(@good,:html  => {:id => 'member_form'}) do |f|
-  .fform
-    =render :partial => "layouts/errors", :locals => { :target => @good }
-    .fformbox
-      .fformbox_bt
-        %p 填写商品信息
-      .fformbox_nr
-        %ul
-          %li
-            .w1 商品名称：
-            .w2
-              = f.text_field :name
-            .w1 商品类别：
-            .w2
-              = f.select :good_type, option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,@good.good_type),:id => "good_type",:class=> "select"
-        %ul
-          %li
+= form_header(:title => "创建商品", :link => goods_path)
+= render :partial => "layouts/errors", :locals => { :target => @good }
+= form_for(@good, :html => {:class => "form-horizontal well"}) do |f|
+  - control_helper("name", "商品名称") do
+    = f.text_field :name
 
-            .w1 入库价格：
-            .w2
-              = f.text_field :purchasing_price
-            .w1 入库数量：
-            .w2
-              - if f.object.new_record?
-                = f.text_field :count_back_stock
-              - else
-                = f.object.count_back_stock
 
-        %ul
-          %li
-            .w1 零售价格：
-            .w2
-              = f.text_field :price
-            .w1 商品来源：
-            .w2
-              = f.select :good_source, Setting.good_source_options(@good.good_source)
-    .h10
-    .input_bd
-      = f.submit "提交", :class => "btn btn-success"
-      = link_to "返回", goods_path, :class => "btn btn-danger"
+  - control_helper("good_type", "商品类型") do
+    = f.select :good_type, option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,@good.good_type)
 
-    .clear
-:javascript
-  function fsubmit(){
-    var form = $("form[0]");
-    if($("#good_type")[0].value == ""){
-      alert("请选择商品类型！");
-    }else{
-      form.submit();
-    }
-  }
+
+  - control_helper("purchasing_price", "入库价格") do
+    = f.text_field :purchasing_price
+
+
+  - control_helper("count_back_stock", "入库数量") do
+    - if f.object.new_record?
+      = f.text_field :count_back_stock
+    - else
+      = f.object.count_back_stock
+
+
+  - control_helper("price", "零售价格") do
+    = f.text_field :price
+
+
+  - control_helper("good_source", "商品来源") do
+    = f.select :good_source, Setting.good_source_options(@good.good_source)
+
+
+  .form-actions
+    = f.submit "提交", :class => "btn btn-success"
+    = link_to "返回", goods_path, :class => "btn btn-danger"

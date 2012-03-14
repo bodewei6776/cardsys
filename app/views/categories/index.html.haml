@@ -20,7 +20,7 @@
           = e.parent.name + " >> " if e.parent
           = e.name
         %td
-          - operations = [:show, :edit]
+          - operations = [ :edit]
           - operations << :destroy if e.can_destroy?
           = operations_panel(e, operations)
 

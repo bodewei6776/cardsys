@@ -1,6 +1,6 @@
 = table_header(:title => "商品查询", :link => "")
 
-= render :partial => "soso"
+= render :partial => "soso", :locals => { :form_url => goods_path }
 
 = table_header(:title => "商品列表", :link => new_good_path)
 
@@ -34,5 +34,6 @@
 
 = render :partial => "layouts/page_nav", :locals => {:objs => @goods}
 
-:javascript
+= content_for :javascripts  do
   $(".store_manage_index").colorbox({width:"80%", height:"70%", iframe:false});
+  

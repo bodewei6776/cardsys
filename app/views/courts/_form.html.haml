@@ -1,61 +1,45 @@
-= form_for @court  do |f|
-  .fform
-    .fformbox
-      =render :partial => "layouts/errors", :locals => {:target => @court}
-      .fformbox_bt
-        %p 基本属性
-      .fformbox_nr
-        %ul
-          %li
-            .w1 场地名称：
-            .w2
-              = f.text_field :name
+= form_header(:title => "场地", :link => courts_path)
+= render :partial => "layouts/errors", :locals => { :target => @court }
+= form_for(@court, :html => { :class => "form-horizontal well" } ) do |f|
+  - control_helper("name", "名称") do
+    = f.text_field :name
 
-            .w1 场地类型：
-            .w2
-              = f.select :court_type, Setting.court_type_options(@court.court_type)
-        %ul
-          %li
-            .w1 开始时间：
-            .w2
-              = f.select :start_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @court.start_time)
-            .w1 结束时间：
-            .w2
-              = f.select :end_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @court.end_time)
-        %ul{:style => "height:80px;"}
-          %li
-            .w1 说明：
-            .ww2
-              %textarea{:cols => "45", :name => "court[description]", :rows => "4"}= @court.description
-              .clear
-        .clear
-    .h10
-    .fformbox
-      .fformbox_bt
-        %p 时段价格
-      .table2
-        %ul.bttitle.black.fb
-          %li.w5 序号
-          %li.w30 时段
-          %li.w15 标准收费(/小时)
-          %li.w20 可用
-          %li.w20 说明
-        - @period_prices.each_with_index do |period_price,index|
-          - available_period = @court.generate_court_period_price(period_price)
-          %ul.table_items
-            %li.w5= index + 1
-            %li.w30
-              = period_price.name
-              ：#{period_price.start_time}:00-#{period_price.end_time}:00
-            %li.w15= period_price.price
-            %li.w20
-              <input type="checkbox" name="time_available_#{period_price.id}"  value="1"
-              - if available_period
-                checked
-              class="inputtext" />
-            %li.w20= period_price.description
-    .clear
+  - control_helper("court_type", "场地类型") do
+    = f.select :court_type, Setting.court_type_options(@court.court_type)
 
-    .input_bd
-      = f.submit "提交", :class => "btn btn-success"
-      = link_to "返回", cards_path, :class => "btn btn-danger"
+
+  - control_helper("start_time", "开始时间") do
+    = f.select :start_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @court.start_time)
+
+
+  - control_helper("end_time", "结束时间") do
+    = f.select :end_time, options_for_select((1..24).to_a.collect{|t| ["#{t}:00", t]}, @court.end_time)
+
+
+  - control_helper("description", "说明") do
+    = f.text_area :description
+
+
+  = table_header(:title => "时段折扣价", :link => "")
+  
+  %table.table.table-striped.table-bordered.table-condensed
+    %thead
+      %tr
+        %th 编号
+        %th 时段
+        %th 收费标准/小时
+        %th 可用
+        %th 说明
+    %tbody
+      - PeriodPrice.all.each_with_index do |pp,index|
+        - available_period = @court.period_prices
+        %tr
+          %td= index.succ
+          %td= pp.name + "#{pp.start_time}:00-#{pp.end_time}:00"
+          %td= pp.price
+          %td= check_box_tag("time_available_#{pp.id}", "1", available_period.present?)
+          %td= pp.description
+  
+  .form-actions
+    = f.submit "提交", :class => "btn btn-success"
+    = link_to "返回", cards_path, :class => "btn btn-danger"

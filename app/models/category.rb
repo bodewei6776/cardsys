@@ -23,7 +23,7 @@ class Category < ActiveRecord::Base
   end
 
   def can_destroy?
-    !self.children.present?
+    !self.children.present? && !self.goods.present?
   end
 
   class << self

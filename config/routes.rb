@@ -212,11 +212,13 @@ Cardsys::Application.routes.draw do
 
   resources :goods do
     member do
-      put :store_manage_update
+      put :front_store_update
+      get :front_store_manage
+      put :back_store_update
+      get :back_store_manage
       put :switch_state
     end
     collection do
-      get :store_manage_index
       get :change_status
       get :autocomplete_name
       get :autocomplete_good
