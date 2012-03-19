@@ -196,6 +196,10 @@ class MembersCard < ActiveRecord::Base
     should_order_in_time_span?(order)
     is_status_ready_to_order?
   end
+  
+  def granter_names
+    granters.collect(&:name).join(" ,")
+  end
 
   private
   def has_enough_amount_to_order?(order)

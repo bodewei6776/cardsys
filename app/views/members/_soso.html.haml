@@ -1,0 +1,14 @@
+= form_tag members_path, :class => "form-horizontal", :method => :get  do
+  .control-group
+    %label.control-label 会员名称
+    .controls
+      = text_field_tag :name, "", :onclick => "$('#card_serial_num').attr('value','');", :autocomplete => "/members/autocomplete_name", :value => params[:name]
+
+  .control-group
+    %label.control-label 会员卡号
+    .controls
+      = text_field_tag :card_serial_num, "", :autocomplete => "/members/autocomplete_card_serial_num", :onclick => '$("#name").attr("value","");', :value => params[:card_serial_num], :id => "card_serial_num"
+  .control-group
+    .controls
+      = submit_tag "查询", :class => "btn btn-primary"
+ 

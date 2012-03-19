@@ -1,88 +1,73 @@
-= form_for @member do |f|
-  .fform
-    .fformbox
-      = render :partial => "layouts/errors", :locals => {:target => @member}
-    .fformbox_nr
-      - if params[:members_card_id]
-        %ul
-          %li
-            .w1 会员类型：
-            .w2
-              授权人
-              = f.hidden_field :granter
-
-          %li
-            .w1 会员卡号：
-            .w2 
-              = MembersCard.find(params[:members_card_id]).card_serial_num
-              = f.hidden_field :members_card_id
-      %ul
-        %li
-          .w1 会员名称：
-          .w2
-            = f.text_field :name
-            %span{:style => "color:red;"} *
-          .w1 注册日期：
-          .w2
-            = DateTime.now.to_chinese_ymd
-      %ul
-        %li
-          .w1 会员昵称：
-          .w2
-            = f.text_field :nickname
-          .w1 性别：
-          .w2
-            = f.radio_button :gender, CommonResource::Gender_Man
-            男
-            = f.radio_button :gender, CommonResource::Gender_Woman
-            女
-      %ul
-        %li
-          .w1 移动电话：
-          .w2
-            = f.text_field :mobile
-            %span{:style => "color:red;"} *
-          .w1 固定电话：
-          .w2
-            = f.text_field :telephone
-      %ul
-        %li
-          .w1 会员生日：
-          .w2
-            = f.text_field :birthday
-          .w1 电子邮箱：
-          .w2
-            = f.text_field :email
-      %ul
-        %li
-          .w1 证件类型：
-          .w2
-            = f.select :cert_type, Setting.cert_type_options(@member.cert_type)
-          .w1 证件号码：
-          .w2
-            = f.text_field :cert_num
-      %ul
-        %li
-          .w1 备用电话：
-          .w2
-            = f.text_field :standby_phone
-          .w1 介绍人：
-          .w2
-            = f.text_field :mentor
-      %ul{:style => "height:60px;"}
-        %li
-          .w1 联系地址：
-          .w2
-            = f.text_area :address, :cols => "45", :rows => 2
-
-      %ul{:style => "height:60px;"}
-        %li
-          .w1 备注：
-          .w2
-            = f.text_area :description, :cols => "45", :rows => 2
+= form_header(:title => "会员", :link => members_path)
+= render :partial => "layouts/errors", :locals => { :target => @member }
+= form_for @member, :html => { :class => "form-horizontal" } do |f|
+  - if params[:members_card_id]
+    - control_helper("granter", "会员类型") do
+      = "授权人"
+      = f.hidden_field :granter
 
 
-      .input_bd
-        = f.submit "提交", :class => "btn btn-success"
-        = link_to "返回", cards_path, :class => "btn btn-danger"
-      .clear
+    - control_helper("members_card_id", "会员卡号") do
+      = MembersCard.find(params[:members_card_id]).card_serial_num
+      = f.hidden_field :members_card_id
+
+
+  - control_helper("name", "会员名称") do
+    = f.text_field :name
+
+
+  - control_helper("name", "注册日期") do
+    = DateTime.now.to_chinese_ymd
+
+
+  - control_helper("nickname", "会员昵称") do
+    = f.text_field :nickname
+
+
+  - control_helper("gender", "性别") do
+    = f.radio_button :gender, CommonResource::Gender_Man
+    = "男"
+    = f.radio_button :gender, CommonResource::Gender_Woman
+    = "女"
+
+  - control_helper("mobile", "移动电话") do
+    = f.text_field :mobile
+
+
+  - control_helper("telephone", "固定电话") do
+    = f.text_field :telephone
+
+  - control_helper("birthday", "会员生日") do
+    = f.text_field :birthday
+
+
+  - control_helper("email", "电子邮件") do
+    = f.text_field :email
+
+
+  - control_helper("cert_type", "证件类型") do
+    = f.select :cert_type, Setting.cert_type_options(@member.cert_type)
+
+
+  - control_helper("cert_num", "证件号码") do
+    = f.text_field :cert_num
+
+
+  - control_helper("standby_phone", "备用电话") do
+    = f.text_field :standby_phone
+
+
+  - control_helper("mentor", "介绍人") do
+    = f.text_field :mentor
+
+
+  - control_helper("address", "联系地址") do
+    = f.text_area :address
+
+
+  - control_helper("description", "备注") do
+    = f.text_area :description
+
+  .form-actions
+    = f.submit "提交", :class => "btn btn-success"
+    = link_to "返回", cards_path, :class => "btn btn-danger"

@@ -1,16 +1,10 @@
-.soso
-  .fform
-    .fformbox
-      .fformbox_nr
-        %ul
-          %li
-            .w1 会员姓名：
-            .w2
-              = text_field_tag :member_name, params[:member_name], :id => "member_name"
-          %li
-            .w1 卡号：
-            .w2#cards
-              = text_field_tag :card_serial_num, params[:card_serial_num], :id => "member_card_serial_num"
+= form_tag "", :class =>  "form-horizontal well"  do
+  - control_helper("member_name", "会员姓名") do
+    = text_field_tag :member_name, params[:member_name], :id => "member_name"
+
+  - control_helper("card_serial_num", "卡号") do
+    #cards
+      = text_field_tag :card_serial_num, params[:card_serial_num], :id => "member_card_serial_num"
 
 :javascript
   $(document).ready(function(){

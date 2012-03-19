@@ -1,17 +1,6 @@
-= table_helper(:title => "会员查询", :link => "")
-.soso
-  %form#search_form.form-profile{:action => "/members", :method => "get"}
-    .w95
-      会员名称:
-      %label
-        %input#name{:autocomplete => "/members/autocomplete_name", :name => "name", :onclick => "$('#card_serial_num').attr('value','');", :type => "text", :value => params[:name]}/
-      会员卡号:
-      %label
-        %input#card_serial_num{:autocomplete => "/members/autocomplete_card_serial_num", :name => "card_serial_num", :onclick => "$(\"#name\").attr(\"value\",\"\");", :tabindex => "1", :type => "text", :value => params[:card_serial_num]}/
-      %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "查询", :class => 'btn'}/
-
-
-= table_helper(:title => "会员列表", :link => "")
-- columns = {:name => "名称", :card_serial_nums => "会员卡", :mobile => "电话", :created_at => "注册时间", :member_card_left_fees=> "现有金额", :member_card_left_times => "现有次数", :member_consume_amounts => "消费金额", :member_consume_times => "消费次数", :birthday => "生日"}
+= table_header(:title => "会员查询", :link => new_member_path)
+= render :partial => "soso", :locals => { :form_url => members_path }
+- columns = {:name => "名称"}#, :card_serial_nums => "会员卡", :mobile => "电话", :created_at => "注册时间", :member_card_left_fees=> "现有金额", :member_card_left_times => "现有次数", :member_consume_amounts => "消费金额", :member_consume_times => "消费次数", :birthday => "生日"}
+= table_header(:title => "会员列表", :link => "")
 = render :partial => "layouts/table", :locals => {:collection => @members, :columns => columns}
 = render :partial => "layouts/page_nav", :locals => { :objs => @members }
