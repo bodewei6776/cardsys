@@ -1,19 +1,2 @@
-.table{:style => "padding-top: 3px;"}
-  %ul.bttitle.black.fb
-    %li.w5 编号
-    %li.w10 名称
-    %li.w10 类型
-    %li.w10 数量/时间段
-    %li.w10 单价
-    %li.w10 总价
-    %li.w15 操作
-  - @order.order_items.each_with_index do |item ,index|
-    %ul.table_items
-      %li.w5= index.succ
-      %li.w10= item.name
-      %li.w10= item.type_name
-      %li.w10= item.quantity_or_time
-      %li.w10= item.unit_money_price || "无"
-      %li.w10= item.total_cost
-      %li.w15= item.total_cost
-
+- columns = {:name => "名称", :type_name => "类型", :quantity_or_time => "数量/时间段", :unit_money_price => "单价", :total_cost => "总价"}
+= render :partial => "layouts/table", :locals => {:collection => @order.order_items, :columns => columns, :no_operation => true}

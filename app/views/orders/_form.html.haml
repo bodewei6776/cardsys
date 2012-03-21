@@ -1,117 +1,84 @@
-= form_helper(:title => "预订", :link => "" )
+= form_header(:title => "预订#{@order.court_book_record.alloc_date.to_chinese_ymd}(#{chinese_week_day(Time.parse(@order.court_book_record.alloc_date.to_s).wday)})", :link => "" )
 =render :partial => "layouts/errors", :locals => {:target => @order}
-= form_for @order do |f|
+= form_for @order, :html => {:class => "form-horizontal well order_form"} do |f|
   = f.hidden_field :order_date
-  .fformbox_bt
-    %p 请填写预定信息
-  .fformbox_nr.orders
-    %ul
-      %li.orders
-        .w1 预订：
-        .w2{:style => "width: 380px;"}
-          = @order.court_book_record.alloc_date.to_chinese_ymd
-          = chinese_week_day(Time.parse(@order.court_book_record.alloc_date.to_s).wday)
-          = f.fields_for :court_book_record do |cbr|
-            = cbr.select :start_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.start_hour)
-            = cbr.select :end_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.end_hour)
-            = "(周期性预定)" if @order.advanced_order?
-            = cbr.select :resource_id, options_for_select(Court.enabled.collect{|c| [c.name, c.id]}, @order.court_book_record.resource_id)
-            = cbr.hidden_field :alloc_date
-            = cbr.hidden_field :resource_type 
+  - control_helper("start_hour", "预订") do
+    = f.fields_for :court_book_record do |cbr|
+      = cbr.select :start_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.start_hour), {}, { :class => "span2" }
+      = cbr.select :end_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.end_hour),{}, {:class => "span2"}
+      = "(周期性预定)" if @order.advanced_order?
+      = cbr.select :resource_id, options_for_select(Court.enabled.collect{|c| [c.name, c.id]}, @order.court_book_record.resource_id), {}, { :class => "span2" }
+      = cbr.hidden_field :alloc_date
+      = cbr.hidden_field :resource_type 
 
-      %li
-        .w1 会员：
-        = f.check_box :is_member
+  - control_helper("is_member", "会员") do
+    = f.check_box :is_member
 
-    #is_member{:style => "display:#{@order.is_member? ? 'block;' : 'none;'}"}
-      %ul
-        %li
-          .w1 会员姓名：
-          .w2
-            = text_field_tag :member_name, @order.member.try(:name), :id => "order_member_name"
-            = f.hidden_field :member_id
-        %li
-          .w1 卡号：
-          .w2#cards
-            = text_field_tag :card_serial_num, @order.members_card.try(:card_serial_num), :id => "order_member_card_serial_num"
-            = f.hidden_field :members_card_id
+  #is_member{:style => "display:#{@order.is_member? ? 'block;' : 'none;'}"}
+    - control_helper("member_name", "会员姓名") do
+      = text_field_tag :member_name, @order.member.try(:name), :id => "order_member_name"
+      = f.hidden_field :member_id
 
-      %ul
-        %li
-          .w1 卡类型：
-          .w2
-            #card_type
-              = @order.members_card.try(:card_type_in_chinese)
-        %li
-          .w1 余额（次）：
-          .w2
-            #remaining
-              = @order.members_card.try(:remaining_money_and_amount_in_chinese)
 
-      %ul
-        %li
-          .w1 卡状态：
-          .w2
-            #members_card_info
-              = @order.members_card.try(:members_card_info)
-        %li
-          .w1 联系电话：
-          .w2
-            = f.text_field :telephone, :id => "mobile"
+    - control_helper("card_serial_num", "卡号") do
+      #cards
+        = text_field_tag :card_serial_num, @order.members_card.try(:card_serial_num), :id => "order_member_card_serial_num"
+        = f.hidden_field :members_card_id
 
-    #is_non_member{:style => "display:#{!@order.is_member? ? 'block;' : 'none;'}"}
-      = f.fields_for :non_member do |nm|
-        %ul
-          %li
-            .w1 散客姓名：
-            .w2 
-              = nm.text_field :name
-              = nm.hidden_field :is_member
 
-            .w1 标准收费：
-            .w2#non_member_price
-              = @order.court_book_record.price
+    - control_helper("is_member", "卡类型") do
+      #card_type
+        = @order.members_card.try(:card_type_in_chinese)
 
-        %ul
-          %li
-            .w1 手机/座机：
-            .w2 
-              = nm.text_field :telephone
 
-            .w1 定金：
-            .w2 
-              = nm.text_field :earnest
+    - control_helper("is_member", "余额(次)") do
+      #remaining
+        = @order.members_card.try(:remaining_money_and_amount_in_chinese)
 
-    %ul
-      %li
-        .w1 教练：
-        .w2
-          = f.text_field :coach_ids
+    - control_helper("is_member", "卡状态") do
+      #members_card_info
+        = @order.members_card.try(:members_card_info)
+
+
+    - control_helper("telephone", "联系电话") do
+      = f.text_field :telephone, :id => "mobile"
+
+  #is_non_member{:style => "display:#{!@order.is_member? ? 'block;' : 'none;'}"}
+    = f.fields_for :non_member do |nm|
+      - control_helper("name", "散客姓名") do
+        = nm.text_field :name
+        = nm.hidden_field :is_member
+
+      - control_helper("name", "标准收费") do
+        #non_member_price
+          = @order.court_book_record.price
+
+      - control_helper("telephone", "手机/座机") do
+        = nm.text_field :telephone
+
+      - control_helper("earnest", "定金") do
+        = nm.text_field :earnest
+
+
+  - control_helper("coach_ids", "教练") do
+    = f.text_field :coach_ids
 
 
 
+  - control_helper("memo", "备注") do
+    = f.text_area :memo, :rows => 2, :style => "width:457px;"
 
-    %ul{:style => "height: 45px;"}
-      %li
-        .w1 备注：
-        .w2
-          = f.text_area :memo, :rows => 2, :style => "width:457px;"
 
-    %ul
-      %li
-        .w1 操作人：
-        .w2
-          = f.text_field :login
+  - control_helper("login", "操作人") do
+    = f.text_field :login
 
-        .w1 密码：
-        .w2
-          = f.password_field :password
+  - control_helper("password", "密码") do
+    = f.password_field :password
 
-    %ul#link_box
-      %li
-        = f.submit @order.new_record? ? "预订" : "变更", :class => "btn"
-        = f.submit "代卖", :class => "btn" if @order.can_sell?
-        = display_enable_buttons(@order) if !@order.new_record?
+  .form-actions
+    = f.submit @order.new_record? ? "预订" : "变更", :class => "btn"
+    = f.submit "代卖", :class => "btn" if @order.can_sell?
+    = display_enable_buttons(@order) if !@order.new_record?
 
 
     :javascript

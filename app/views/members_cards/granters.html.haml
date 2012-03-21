@@ -22,40 +22,27 @@
 
 
 = table_header(:title => "授权人列表", :link => "")
-  - if @members_card
-    = link_to '添加授权人', new_member_path(:members_card_id => @members_card.id), :class => "granter_new submit2 hand", :target => "_blank"                                           
+- if @members_card
+  = link_to '添加授权人', new_member_path(:members_card_id => @members_card.id), :class => "granter_new submit2 hand", :target => "_blank"                                           
 
-  .table
-    %ul.bttitle.black.fb
-      %li.w5 编号
-      %li.w10 会员名称
-      %li.w15 会员卡信息
-      %li.w10 移动电话
-      %li.w8 注册日期
-      %li.w8 会员生日
-      %li.w12 操作
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %th 编号
+      %th 会员姓名
+      %th 会员卡信息
+      %th 移动电话
+      %th 注册日期
+      %th 会员生日
+      %th 操作
+
+  %tbody
     - (@members_card.try(:granters) || []).each_with_index do |member,index|
-      %ul.member_items.table_items
-        %li.w5= index + 1
-        %li.w10= link_to member.name,member
-        %li.w15{:style => "overflow:hidden;"}
-          = raw member.card_serial_nums
-        %li.w10= member.mobile
-        %li.w8= member.created_at.to_chinese_mdh
-        %li.w8
-          = member.birthday.try(:to_chinese_mdh)
-  .h10
-  .h10
-:javascript
-  $(document).ready(function(){
-      $(":radio").click(function(){
-        var form = $("form[0]");
-        form.attr("action", "/members_cards/granters?p=num");
-        form.submit();
-        });
-      });
-    
-:javascript
-  function jump(card_serial_num){
-    window.location.href = ("#{granters_members_cards_path}" +"?card_serial_num=" + card_serial_num);
-  }
+      %tr
+        %td= index + 1
+        %td= link_to member.name, member
+        %td= raw member.card_serial_nums
+        %td= member.mobile
+        %td= member.created_at.to_chinese_mdh
+        %td= member.birthday.try(:to_chinese_mdh)
+

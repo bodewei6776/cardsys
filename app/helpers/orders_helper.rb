@@ -85,12 +85,12 @@ module OrdersHelper
 
   def order_action_button(text, confirm_message = "", be_action = "")
     confirm_message = "确认要" + text + "?" if confirm_message.blank?
-    content_tag(:li, submit_tag(text, :confirm_message => confirm_message, :class => "btn inline"))
+    submit_tag(text, :confirm_message => confirm_message, :class => "btn inline")
   end
 
   def order_action_link(text, url,  method = :put, confirm_message = "", function = "")
     confirm_message = "确认要" + text + "?" if confirm_message.blank?
-    content_tag(:li, link_to(text, url, :confirm_message => confirm_message, :class => "btn inline", :method => method))
+    link_to(text, url, :confirm_message => confirm_message, :class => "btn inline", :method => method)
   end
 
   def display_enable_buttons(order, f = nil)

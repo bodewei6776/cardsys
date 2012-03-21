@@ -4,7 +4,8 @@
       %th 编号
       - columns.each_value do |v|
         %th= v
-      %th 操作
+      - if !defined?no_operation
+        %th 操作
 
   %tbody
     - collection.each_with_index do |e, index|
@@ -16,11 +17,13 @@
               = (e.send k).to_chinese_ymd
             - else
               =e.send k
-        %td
-          - operations = e.can_view? ? [:show]  : []
-          - operations << :destroy if e.can_destroy?
-          - operations << :edit if e.can_edit?
-          = operations_panel(e, operations)
+
+        - if !defined?no_operation
+          %td
+            - operations = e.can_view? ? [:show]  : []
+            - operations << :destroy if e.can_destroy?
+            - operations << :edit if e.can_edit?
+            = operations_panel(e, operations)
 
 
 

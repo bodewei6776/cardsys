@@ -1,44 +1,32 @@
-.w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 订单详情
-    .r_bt_r
-      =link_to "返回", edit_order_path(@order)
+= form_header(:title => "结算", :link => edit_order_path(@order))
+= render :partial => "layouts/errors", :locals => { :target => @balance }
 
+.form-horizontal.well
+  .control-group
+    %label.control-label 是否会员
+    .controls
+      = @order.is_member? ? "是" : "否" 
+      = @order.member_name
 
-  .fformbox{:style => "width:100%;"}
-    = render :partial => "layouts/errors", :locals => { :target => @balance }
-    .fformbox_nr
-      %ul
-        %li
-          %w1= @order.is_member? ? "会员:" : "非会员:" 
-          %w2= @order.member_name
-
-
-      - if @order.court_book_record
-        %ul
-          %li
-            %w1 场地:
-            %w2= @order.court_book_record.description
+  - if @order.court_book_record
+    .control-group
+      %label.control-label 场地
+      .controls
+        = @order.court_book_record.description
   
-      - if @order.members_card
-        %ul
-          %li
-            %w1 会员卡:
-            %w2= @order.members_card.long_description
+  - if @order.members_card
+    .control-group
+      %label.control-label 会员卡
+      .controls
+        = @order.members_card.long_description
   
 
-  = form_for @balance, :url => balances_path, :method => :post do |f|
+  = form_for @balance, :url => balances_path, :method => :post, :html => { :class => "form-horizontal well" } do |f|
     = f.hidden_field :order_id
     = hidden_field_tag :order_id, @order.id
-    .h10
-    .r_bt
-      .r_bt_l
-        .r_bt_l_a
-        .r_bt_l_c.fb.white 结算记录
-      .r_bt_r
-    .table
+
+    = table_header(:title => "结算记录", :link => "")
+    %table
       %ul.bttitle.black.fb
         %li.w5 编号
         %li.w10 结算方式
