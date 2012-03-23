@@ -26,66 +26,70 @@
     = hidden_field_tag :order_id, @order.id
 
     = table_header(:title => "结算记录", :link => "")
-    %table
-      %ul.bttitle.black.fb
-        %li.w5 编号
-        %li.w10 结算方式
-        %li.w10 原价
-        %li.w10 折后价格
-        %li.w10 结算时间
-        %li.w10 结算人
-        %li.w10 
-      - @balances.each_with_index do |item ,index|
-        %ul.table_items
-          %li.w5= index.succ
-          %li.w10= item.balance_way_desc
-          %li.w10= item.price
-          %li.w10= item.final_price
-          %li.w10= item.created_at
-          %li.w10= item.user.try(:name)
-          %li.w10= link_to "打印", print_balance_path(item)
-
-      %ul.table_items
-        %li.w5= @balances.count + 1
-        %li.w10= f.select :balance_way, options_for_select(@order.possible_balance_ways, @balance.balance_way), :class => "span1"
-        %li.w10= f.text_field :price, :id => "new_price_node"
-        %li.w10= f.text_field :final_price, :id => "new_total_price_node"
-        %li.w10 
-        %li.w10 
-        %li.w10= f.submit "结算"
+    %table.table.table-striped.table-bordered.table-condensed
+      %thead
+        %tr
+          %th 编号
+          %th 结算方式
+          %th 原价
+          %th 折后价格
+          %th 结算时间
+          %th 结算人
+          %th 
     
-    .h10
-    .r_bt
-      .r_bt_l
-        .r_bt_l_a
-        .r_bt_l_c.fb.white 商品列表
-      .r_bt_r
-    .table
-      %ul.bttitle.black.fb
-        %li.w5= check_box_tag "select_deselect_all", :id => "select_deselect_all"
-        %li.w10 名称
-        %li.w10 类型
-        %li.w10 数量/时间段
-        %li.w10 单价
-        %li.w10 总价
-        %li.w15 折扣
-        %li.w15 折后价格
-        %li.w10 是否结算
-      = f.fields_for :order_items do |oi|
-        %ul.table_items{:class => (oi.object.item.is_a? CourtBookRecord) ? "court" : "other_product"}
-          %li.w5= oi.check_box :checked, :class => "checkbox_marker" unless oi.object.balanced?
-          %li.w10= oi.object.name
-          %li.w10= oi.object.type_name
-          %li.w10= oi.object.quantity_or_time
-          %li.w10= oi.object.unit_money_price || "无"
-          %li.w10.total_cost
-            %span
-              = oi.object.total_cost
-            = hidden_field_tag "total_count", oi.object.total_count, :class => "total_count_hidden" if oi.object.item.is_a?CourtBookRecord
-            = hidden_field_tag "total_cost", oi.object.total_cost, :class => "total_cost_hidden"
-          %li.w15= oi.object.balanced? ? oi.object.discount : (oi.text_field :discount, :class => "discount")
-          %li.w15= oi.object.balanced? ? oi.object.price_after_discount : (oi.text_field :price_after_discount, :class => "price_after_discount")
-          %li.w10= oi.object.balanced? ? "已结算" : "未结算"
+      %tbody
+        - @balances.each_with_index do |item ,index|
+          %tr
+            %td= index + 1
+            %td= item.balance_balance_way
+            %td= item.prirce
+            %td= item.final_price
+            %td= item.created_at
+            %td= item.user.try(:name)
+            %td= link_to "打印", print_balance_path(item)
+    
+
+        %tr
+          %td= @balances.count + 1
+          %td= f.select :balance_way, options_for_select(@order.possible_balance_ways, @balance.balance_way), {}, :class => "span1"
+          %td= f.text_field :price, :id => "new_price_node", :class => "span1"
+          %td= f.text_field :final_price, :id => "new_total_price_node", :class => "span1"
+          %td 
+          %td 
+          %td= f.submit "结算"
+
+    
+    = table_header(:title => "商品列表", :link => "")
+
+    %table.table.table-striped.table-bordered.table-condensed
+      %thead
+        %tr
+          %th= check_box_tag "select_deselect_all", :id => "select_deselect_all"
+          %th 名称
+          %th 类型
+          %th 数量/时间段
+          %th 单价
+          %th 总价
+          %th 折扣
+          %th 折后价格
+          %th 受否结算
+    
+      %tbody
+        = f.fields_for :order_items do |oi|
+          %tr.table_items{:class => (oi.object.item.is_a? CourtBookRecord) ? "court" : "other_product"}
+            %td= oi.check_box :checked, :class => "checkbox_marker" unless oi.object.balanced?
+            %td= oi.object.name
+            %td= oi.object.type_name
+            %td= oi.object.quantity_or_time
+            %td= oi.object.unit_money_price || "无"
+            %td.total_cost
+              %span= oi.object.total_cost
+              = hidden_field_tag "total_count", oi.object.total_count, :class => "total_count_hidden" if oi.object.item.is_a?CourtBookRecord
+              = hidden_field_tag "total_cost", oi.object.total_cost, :class => "total_cost_hidden"
+            %td= oi.object.balanced? ? oi.object.discount : (oi.text_field :discount, :class => "discount span1")
+            %td= oi.object.balanced? ? oi.object.price_after_discount : (oi.text_field :price_after_discount, :class => "price_after_discount span1" )
+            %td= oi.object.balanced? ? "已结算" : "未结算"
+    
 
 :javascript
   function update_discount_value(field, price_node){
@@ -134,6 +138,7 @@
     new_total_price_node.attr('value',total_money);
     new_price_node.attr('value', original_total_money);
   }
+
   $(document).ready(function(){
     $("#new_total_price_node, #new_price_node").focus(function(){ $(this).blur() });
     $("#select_deselect_all").change(function(){

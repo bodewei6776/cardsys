@@ -67,6 +67,10 @@ class Member < ActiveRecord::Base
     self.balances.sum("final_price")
   end
 
+  def member_consume_times
+    0
+  end
+
   def latest_comer_date
     self.orders.last.try(:created_at).try(:to_chinese_ymd) || "无"
   end

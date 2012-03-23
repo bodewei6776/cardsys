@@ -16,6 +16,38 @@
     = stylesheet_link_tag "application", :media => "all"
     / Le fav and touch icons
 
+    = javascript_include_tag "application", "m97/WdatePicker", "new_datepicker"
+    :javascript
+      function jump_to_somewhere(dp){
+        var dateText = dp.cal.getDateStr();
+          $("#calendar_con").val(dateText);
+            var domain = document.domain;
+            var port = window.location.port;
+            var urls = ["http://",domain];
+            if(port && port != ''){
+              urls.push(":" + port)
+            }
+            if(window.location.pathname.match(/rents/))
+            { 
+              urls.push("/rents?date=" + dateText)
+            }
+            else{
+              urls.push("/orders?date=" + dateText)
+            }
+            window.location.href=urls.join('');
+        }
+    
+      $(document).ready(function() {
+        WdatePicker({startDate:'#{Date.today.strftime("%Y-%m-%d")}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
+        $(".popup-new-window").colorbox({width:"900", height:"600", iframe:true});
+        $(".date-type-input").new_datepicker();
+        $(".select-date").new_datepicker();})
+    
+
+      $(document).ready(function() {
+        #{ yield :javascripts }
+      });
+
   %body
     .navbar.navbar-fixed-top
       .navbar-inner
@@ -56,34 +88,3 @@
       Le javascript
       \==================================================
     / Placed at the end of the document so the pages load faster
-    = javascript_include_tag "application", "m97/WdatePicker", "new_datepicker"
-    :javascript
-      function jump_to_somewhere(dp){
-        var dateText = dp.cal.getDateStr();
-          $("#calendar_con").val(dateText);
-            var domain = document.domain;
-            var port = window.location.port;
-            var urls = ["http://",domain];
-            if(port && port != ''){
-              urls.push(":" + port)
-            }
-            if(window.location.pathname.match(/rents/))
-            { 
-              urls.push("/rents?date=" + dateText)
-            }
-            else{
-              urls.push("/orders?date=" + dateText)
-            }
-            window.location.href=urls.join('');
-        }
-    
-      $(document).ready(function() {
-        WdatePicker({startDate:'#{Date.today.strftime("%Y-%m-%d")}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
-        $(".popup-new-window").colorbox({width:"900", height:"600", iframe:true});
-        $(".date-type-input").new_datepicker();
-        $(".select-date").new_datepicker();})
-    
-
-      $(document).ready(function() {
-        #{ yield :javascripts }
-      });

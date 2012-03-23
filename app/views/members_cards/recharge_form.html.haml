@@ -1,55 +1,41 @@
-.w96
-  .fform
-    .fformbox
-      = form_for @members_card do |f|
-        .fformbox_bt
-          %p 会员卡充值
-        .fformbox_nr
-          %ul
-            %li
-              .w1 所属会员：
-              .w2
-                = @members_card.member.name
-              .w1 卡类型：
-              .w2
-                = @members_card.card_type_in_chinese
-          %ul
-            %li
-              .w1 卡内金额：
-              .w2
-                = @members_card.left_fee
-                　元
-              .w1 充金额：
-              .w2
-                = f.text_field :recharge_fee, :value => "0"
-          %ul
-            %li
-              .w1 有效期：
-              .w2
-                - time = @members_card.expire_date
-                = time.blank? ? "未知" : time.strftime("%Y-%m-%d")
-              .w1 修改有效期：
-              .w2
-                = f.text_field :recharge_expire_date, :class => "date-input-type", :value => @members_card.expire_date.strftime("%Y-%m-%d")
-          %ul
-            %li
-              .w1 卡内次数：
-              .w2
-                = @members_card.left_times
-                次
-              .w1 充次数：
-              .w2
-                = f.text_field :recharge_times, :value => "0"
-          %ul
-            %li
-              .w1 充值人：
-              .w2
-                = f.text_field :login
-              .w1 密码：
-              .w2
-                = f.password_field :password
-      
-          %ul
-            %li{:style => "text-align:center"}
-              = f.submit "充值", :class => "btn"
-      
+= form_header(:title => "会员卡充值", :link => "")
+= form_for @members_card, :html => {:class => "form-horizontal well"} do |f|
+  - control_helper("card_type_in_chinese", "所属会员") do
+    = @members_card.member.name
+            
+
+  - control_helper("card_type_in_chinese", "卡类型") do
+    = @members_card.card_type_in_chinese
+
+
+  - control_helper("left_fee", "卡内金额") do
+    = @members_card.left_fee
+    = "￥"
+
+  - control_helper("recharge_fee", "充金额") do
+    = f.text_field :recharge_fee, :value => "0"
+
+  - control_helper("recharge_expire_date", "有效期") do
+    - time = @members_card.expire_date
+    = time.blank? ? "未知" : time.strftime("%Y-%m-%d")
+
+  - control_helper("recharge_expire_date", "修改有效期") do
+    = f.text_field :recharge_expire_date, :class => "date-input-type", :value => @members_card.expire_date.strftime("%Y-%m-%d")
+
+
+  - control_helper("recharge_times", "卡内次数") do
+    = @members_card.left_times
+
+
+  - control_helper("recharge_times", "充值次数") do
+    = f.text_field :recharge_times
+
+  - control_helper("login", "充值人") do
+    = f.text_field :login
+
+  - control_helper("password", "密码") do
+    = f.text_field :password
+
+  .form-actions
+    = f.submit "充值", :class => "btn btn-primary"
+
