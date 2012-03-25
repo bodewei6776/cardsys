@@ -1,69 +1,55 @@
-- if flash[:notice]
-  #errorExplanation
-    %h2 提示
-    %p
-      = flash[:notice]
-.w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 购买商品
-    .r_bt_r
-  .fformbox_nr
-    = form_tag  create_good_buy_balances_path ,:id => "balance_form"  do |f|
-      %ul
-        %li
-          .w1
-            %button#goods-list.submit2.hand{:href => "/goods/goods", :value => ""} 添加商品
-      %ul
-        %li
-          .w1 是否是会员：
-          .w1
-            = radio_button_tag "","",false,:onclick => "show_div($(this),'member')",:id => "radio_yes"
-            是
-            \#{radio_button_tag "","",false,:onclick => "show_div($(this),'sanke')",:id => "radio_no"}否
-            \#{hidden_field_tag "member","member",:id=> "member_or_not"}
-      #member
-        %ul
-          %li
-            .w1
-              会员姓名：
-            .w2
-              %input#member_name{:name => "member_name", :type => "text", :user_autocomplete => "/book_records/complete_for_members"}/
-              %input#member_id{:name => "member_id", :type => "hidden"}/
-            .w1
-              会员卡号：
-            .w2
-              %p#cards
-                %input#member_card_name_field{:member_card_autocomplete => "/member_cards/autocomplete_card_serial_num", :name => "member_card", :type => "field"}/
-                %input#member_card_hidden_id{:name => "member_card_id", :type => "hidden"}/
-              %p#notice{:style => "color:red;display:inline;"}
-        %ul
-          %li
-            .w1
-              卡主信息：
-            .w2
-              %p#member_info{:style => "color:red;"} 未知
-            .w1
-              卡信息
-            .w2{:style => "width:300px;"}
-              %p#member_card_info{:style => "color:red"} 未知
-        %ul
-          %li
-            .w1 支付方式:
-            .w2{:style => "width:500px;"}
-      #sanke
-        %ul
-          %li
-            .w1
-              散客姓名：
-            .w2
-              %input#sanke_name.inputtext{:name => "sanke_name", :type => "text", :value => "散客"}/
-        %ul
-          %li
-            .w1
-              支付方式:
-            .w2
+= form_header(:title => "购买商品", :link => goods_goods_path)
+
+= form_tag  create_good_buy_balances_path ,:id => "balance_form", :class => "form-horizontal well"  do |f|
+  %ul
+    %li
+      .w1 是否是会员：
+      .w1
+        = radio_button_tag "","",false,:onclick => "show_div($(this),'member')",:id => "radio_yes"
+        是
+        \#{radio_button_tag "","",false,:onclick => "show_div($(this),'sanke')",:id => "radio_no"}否
+        \#{hidden_field_tag "member","member",:id=> "member_or_not"}
+  #member
+    %ul
+      %li
+        .w1
+          会员姓名：
+        .w2
+          %input#member_name{:name => "member_name", :type => "text", :user_autocomplete => "/book_records/complete_for_members"}/
+          %input#member_id{:name => "member_id", :type => "hidden"}/
+        .w1
+          会员卡号：
+        .w2
+          %p#cards
+            %input#member_card_name_field{:member_card_autocomplete => "/member_cards/autocomplete_card_serial_num", :name => "member_card", :type => "field"}/
+            %input#member_card_hidden_id{:name => "member_card_id", :type => "hidden"}/
+          %p#notice{:style => "color:red;display:inline;"}
+    %ul
+      %li
+        .w1
+          卡主信息：
+        .w2
+          %p#member_info{:style => "color:red;"} 未知
+        .w1
+          卡信息
+        .w2{:style => "width:300px;"}
+          %p#member_card_info{:style => "color:red"} 未知
+    %ul
+      %li
+        .w1 支付方式:
+        .w2{:style => "width:500px;"}
+  #sanke
+    %ul
+      %li
+        .w1
+          散客姓名：
+        .w2
+          %input#sanke_name.inputtext{:name => "sanke_name", :type => "text", :value => "散客"}/
+    %ul
+      %li
+        .w1
+          支付方式:
+        .w2
   .h10
   .infobox_bt
     %p 商品消费列表

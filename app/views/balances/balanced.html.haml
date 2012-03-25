@@ -1,53 +1,39 @@
-.w96
-  - if flash[:notice]
-    #errorExplanation
-      %h2 提示
-      %p= flash[:notice]
-  .soso
-    %form.form-profile{:action => "/balances/balance", :method => "post"}
-      %label{:for => "name"} 卡号：
-      %input.inputtext{:maxlength => "30", :name => "id", :tabindex => "1", :type => "text", :value => ""}/
-      %label{:for => "name"} 场地：
-      %input.inputtext{:maxlength => "30", :name => "court_id", :tabindex => "1", :type => "text", :value => ""}/
-      %label{:for => "name"} 日期：
-      %input.date-type-input{:name => "record_date", :type => "text"}/
-      - if !@member.nil?
-        %fieldset.hidden
-          %label{:for => "name"} 会员姓名：
-          = h @member.name
-          %label 日期：
-          = @date
-      %input.submit2.hand{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 已结算列表
-  .h10
-  .table
-    %ul.bttitle.black.fb
-      %li.w5 编号
-      %li.w10 预定人姓名
-      %li.w10 卡号
-      %li.w10 场地号
-      %li.w10 日期
-      %li.w15 时段
-      %li.w10 场地费
-      %li.w5 结算人
+=render :partial => "soso", :locals => {:path => balanced_balances_path}
+= table_header(:title => "已结算列表", :link => "")
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %th 编号
+      %th 预订人姓名
+      %th 卡号
+      %th 场地号
+      %th 日期
+      %th 时段
+      %th 场地费
+      %th 结算人
+
+  %tbody
     - @balances.each_with_index do |record,index|
-      %ul.table_items
-        %li.w5= index + 1
-        %li.w10= h record.order.member_name
-        %li.w10= h record.members_card.card_serial_num
-        %li.w10= h record.order.court_book_record.court.name
-        %li.w10= record.created_at.to_chinese_ymd
-        %li.w15
+      %tr
+        %td= index + 1
+        %td= h record.order.member_name
+        %td= h record.members_card.card_serial_num
+        %td= h record.order.court_book_record.court.name
+        %td= record.created_at.to_chinese_ymd
+        %td
           = record.order.court_book_record.start_hour
           \:00-#{h record.order.court_book_record.end_hour}:00
-        %li.w10
+        %td
           = record.balance_real_amount_desc
           (#{record.balance_way_desc})
-        %li.w5= record.order.balance_record.user.login rescue ""
-  .h10
-  .pages
-    = will_paginate @balances, :sp => 1
-  .h10
+        %td= record.order.balance_record.user.login rescue ""
+        - if !defined?no_operation
+          %td
+            - operations = record.can_view? ? [:show]  : []
+            - operations << :destroy if record.can_destroy?
+            - operations << :edit if record.can_edit?
+            = operations_panel(record, operations)
+
+
+
+=render :partial => "layouts/page_nav", :locals => {:objs => @balances }

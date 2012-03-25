@@ -1,15 +1,3 @@
-= link_to "添加部门", new_department_path, :class => "button_link float_right"
-
-.clear
-
-.table
-  %ul.bttitle.black.fb
-    %li.w15 部门名称
-    %li.w30 操作
-  - @departments.each do |department|
-    %ul.table_items
-      %li.w15= department.name
-      %li.w30
-        = link_to '修改', edit_department_path(department)
-        = link_to '删除', department, :confirm => '确定删除?', :method => :delete
-        = link_to '设置权限', department_power_index_department_path(department)
+= table_header(:title => "部门管理", :link => new_department_path)
+- columns = {:name => "部门名称"}
+= table_helper(:columns => columns, :collection => @departments)

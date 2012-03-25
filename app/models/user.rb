@@ -39,4 +39,8 @@ class User < ActiveRecord::Base
     self.menus.include?(action)
   end
 
+
+  def departments_names
+    self.departments.collect(&:name).join(", ")
+  end
 end

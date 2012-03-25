@@ -1,21 +1,5 @@
-= link_to "添加用户", new_user_path, :class => "button_link float_right"
-.clear
+= table_header(:title => "用户管理", :link => new_user_path)
 
-.table
-  %ul.bttitle.black.fb
-    %li.w10 用户名
-    %li.w10 昵称
-    %li.w10 部门
-    %li.w35 操作
-  - for user in @users
-    %ul.member_items.table_items
-      %li.w10= user.login
-      %li.w10= user.user_name
-      %li.w10= user.departments.collect(&:name).join(",") if user.departments
-      %li.w35
-        = link_to '查看', edit_user_path(user),:class => "hand"
-        = link_to '删除', user, :confirm => '确定删除吗?', :method => :delete ,:class => "hand"
-.h10
-.pages
-  = will_paginate @users, :sp => 1
-.h10
+- columns = {:login => "用户名", :user_name => "昵称", :departments_names => "部门"}
+= table_helper(:columns => columns, :collection => @users)
+= render :partial => "layouts/page_nav", :locals => {:objs => @users}

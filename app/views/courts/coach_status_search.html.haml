@@ -1,71 +1,55 @@
-.w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 教练预定信息查询
-    .r_bt_r
-  .soso
-    %form#search_form.form-profile{:action => "/courts/coach_status_search", :method => "post"}
-      .w95
-        教练：
-        %label
-          %select#good_type.select{:name => "name"}
-            = options_for_select(Setting.coach_types)
-        \&nbsp;&nbsp;&nbsp;&nbsp;
-        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
-        :css
-          #adv_search div{width:750px;padding: 5px;margin-left:-30px }
-          #adv_search div label{width: 80px;text-align: right;}
-                #adv_search.w95
-          %div
-            %label{:for => "card_id"} 开始日期：
-            %input.search_date{:name => "start_date", :onblur => "return;", :type => "text", :value => params[:start_date]}/
-            %label{:for => "card_id"} 结束日期：
-            %input.search_date{:name => "end_date", :onblur => "return;", :type => "text", :value => params[:end_date]}/
-          %div
-            %label{:for => "card_id"} 预定会员：
-            %input{:autocomplete => "/members/autocomplete_name", :maxlength => "30", :name => "member_name", :type => "text", :value => params[:member_name]}/
-            %label{:for => "card_id"} 预定时段：
-            = succeed "-" do
-              %select#start_hour.select{:name => "start_hour", :onchange => "check_time();"}
-                = generate_time_options(params[:start_hour] || 7)
-            %select#end_hour.select{:name => "end_hour", :onchange => "check_time();"}
-              = generate_time_options(params[:end_hour] || 24)
-  .h10
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 教练预定列表
-    .r_bt_r
-  .table
-    %ul.bttitle.black.fb
-      %li.w5 序号
-      %li.w10 教练
-      %li.w10 会员姓名
-      %li.w15 日期
-      %li.w10 场地
-      %li.w10 时段
+# -*- encoding : utf-8 -*-
+= form_header(:title => "教练预订信息查询", :link => "")
+.soso
+  %form#search_form.form-profile{:action => "/courts/coach_status_search", :method => "post"}
+    .w95
+      教练：
+      %label
+        %select#good_type.select{:name => "name"}
+          = options_for_select(Setting.coach_types)
+      \&nbsp;&nbsp;&nbsp;&nbsp;
+      %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit"}/
+      :css
+        #adv_search div{width:750px;padding: 5px;margin-left:-30px }
+        #adv_search div label{width: 80px;text-align: right;}
+              #adv_search.w95
+        %div
+          %label{:for => "card_id"} 开始日期：
+          %input.search_date{:name => "start_date", :onblur => "return;", :type => "text", :value => params[:start_date]}/
+          %label{:for => "card_id"} 结束日期：
+          %input.search_date{:name => "end_date", :onblur => "return;", :type => "text", :value => params[:end_date]}/
+        %div
+          %label{:for => "card_id"} 预定会员：
+          %input{:autocomplete => "/members/autocomplete_name", :maxlength => "30", :name => "member_name", :type => "text", :value => params[:member_name]}/
+          %label{:for => "card_id"} 预定时段：
+          = succeed "-" do
+            %select#start_hour.select{:name => "start_hour", :onchange => "check_time();"}
+              = generate_time_options(params[:start_hour] || 7)
+          %select#end_hour.select{:name => "end_hour", :onchange => "check_time();"}
+            = generate_time_options(params[:end_hour] || 24)
+
+
+= form_header(:title => "教练预订列表", :link => "")
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %th 编号
+      %th 教练
+      %th 会员名称
+      %th 日期
+      %th 场地
+      %th 时段
+
+  %tbody
     - @coach_book_records.each_with_index do |coach_book_record,index|
-      %ul.table_items
-        %li.w5= index + 1
-        %li.w10= coach_book_record.coach.name
-        %li.w10= coach_book_record.order.member.name
-        %li.w15= coach_book_record.start_time.to_chinese_mdh
-        %li.w10= coach_book_record.order.court_book_record.court.name
-        %li.w10
+      %tr
+        %td= index + 1
+        %td= coach_book_record.coach.name
+        %td= coach_book_record.order.member.name
+        %td= coach_book_record.start_time.to_chinese_mdh
+        %td= coach_book_record.order.court_book_record.court.name
+        %td
           = coach_book_record.start_hour
           点 - #{coach_book_record.end_hour}点
-        %li.w10 
-  .h10
-  .pages
-    = will_paginate @coach_book_records, :sp => 1
-  .h10
-:javascript
-  $(function() {
-    $(".search_date").new_datepicker({dateFormat: 'yy-mm-dd'});
-  });
 
-  function fsubmit(){
-    var form = $("form[0]");
-    form.submit();
-  }
+

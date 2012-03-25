@@ -1,0 +1,14 @@
+= form_tag(path,  :class => "form-horizontal well" ) do
+  - control_helper("name", "卡号") do
+    = text_field_tag(:id)
+
+
+  - control_helper("name", "场地") do
+    = text_field_tag(:court_id)
+
+  - control_helper("name", "日期") do
+    = text_field_tag(:record_date)
+  
+  .form-actions
+    = submit_tag("查询", :class => "btn btn-primary")
+
