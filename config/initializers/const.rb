@@ -41,3 +41,4 @@ require 'has_pinyin_column'
 require 'authenticateable'
 require 'can_destroy'
 
+require 'will_paginate/array'

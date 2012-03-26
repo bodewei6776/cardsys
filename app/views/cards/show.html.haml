@@ -1,41 +1,40 @@
 = table_header(:title => "卡模版信息", :link => new_card_path)
 
-
 .form-horizontal.well
   - control_helper(:name, "卡名") do 
-    - @card.name
+    = @card.name
 
   - control_helper(:card_type, "基础类型") do 
-    - @card.card_type_in_chinese
+    = @card.card_type_in_chinese
 
   - control_helper(:card_prefix, "卡前缀") do 
-    - @card.card_prefix
+    = @card.card_prefix
 
   - control_helper(:expired, "有效期") do 
-    - @card.card_prefix + "  个月"
+    = @card.expired.to_s + "  个月"
 
 
   - control_helper(:consume_type, "可消费类型") do 
-    - @card.consume_type
+    = @card.consume_type
 
 
   - control_helper(:max_shared_count, "签字权") do 
-    - @card.max_shared_count
+    = @card.max_shared_count
 
   - control_helper(:min_amount, "提醒金额") do 
-    - @card.min_amount
+    = @card.min_amount
 
 
   - control_helper(:min_count, "提醒次数") do 
-    - "#{@card.min_count} 次"
+    = "#{@card.min_count} 次"
 
 
   - control_helper(:min_time, "预期提醒") do 
-    - @card.min_time
+    = @card.min_time
 
 
   - control_helper(:description, "说明") do 
-    - @card.description
+    = @card.description
 
 
 

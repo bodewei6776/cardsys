@@ -22,7 +22,7 @@ class MembersController < ApplicationController
   def index
     @members = Member.scoped
     @members = @members.where(:name => params[:name]) if params[:name].present?
-    @members = @members.where("members_cards.card_serial_num = '#{params[:card_serial_num]}'").joins(:members_cards) if params[:card_serial_num].present?
+    @members = @members.where("member_cards.card_serial_num = '#{params[:card_serial_num]}'").joins(:members_cards) if params[:card_serial_num].present?
     @members = @members.paginate(default_paginate_options)
   end
 
@@ -169,7 +169,7 @@ class MembersController < ApplicationController
           @member_base = Member.find(params[:member_id])
           format.html { redirect_to :action => "granter_index", :member_id => params[:member_id], :notice => '授权人信息修改成功！'}
         else
-          format.html { redirect_to @member, :notice => '会员信息修改成功！' }
+          format.html { redirect_to edit_member_path(@member), :notice => '会员信息修改成功！' }
         end
       else
         if CommonResource::IS_GRANTER.to_s.eql?(is_member)
@@ -184,8 +184,7 @@ class MembersController < ApplicationController
 
   def destroy
     @member = Member.find(params[:id])
-    @member.members_cards.update_all("status=1")
-    @member.save
+    @member.destroy
     redirect_to(members_url) 
   end
 
@@ -322,6 +321,12 @@ class MembersController < ApplicationController
     render :json => @card_list.to_json(:only => [:id, :card_serial_num])
   end
 
+  def switch_state
+    @member = Member.find(params[:id])
+    @member.switch_state!
+    @member.state
+    redirect_to(members_path) 
+  end
 
 
   private

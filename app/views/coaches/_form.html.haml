@@ -1,55 +1,41 @@
+= form_header(:title => "教练信息", :link => coaches_path)
 =render :partial => "layouts/errors", :locals => {:target => @coach}
-= form_for(@coach) do |f|
-  .fform
-    .fformbox
-      .fformbox_bt
-        %p 填写教练信息
-      .fformbox_nr
-        %ul
-          %li
-            .w1 名称：
-            .w2
-              = f.text_field :name
-            .w1 性别：
-            .w2
-              = f.radio_button(:gender,CommonResource::Gender_Man)
-              男
-              = f.radio_button(:gender,CommonResource::Gender_Woman)
-              女
-        %ul
-          %li
-            .w1 类型：
-            .w2
-              = f.select :coach_type, Setting.coach_types
-        %ul
-          %li
-            .w1 电话：
-            .w2
-              = f.text_field :telephone
-            .w1 email：
-            .w2
-              = f.text_field :email
-        %ul
-          %li
-            .w1 证件类型：
-            .w2
-              %select#cert_type.select{:name => "coach[cert_type]"}
-                = Setting.cert_type_options(@coach.cert_type)
-            .w1 证件号码：
-            .w2
-              = f.text_field :cert_num
-        %ul
-          %li
-            .w1 费用：
-            .w2
-              = f.text_field :fee
-        %ul{:style => "height:80px;"}
-          %li
-            .w1 描述：
-            .ww2
-              %textarea{:cols => "45", :name => "coach[description]", :rows => "4"}= @coach.description
-    .h10
-    .input_bd
-      = f.submit "提交", :class => "btn btn-success"
-      = link_to "返回", coaches_path, :class => "btn btn-danger"
-    .clear
+= form_for(@coach, :html => { :class => "form-horizontal well"}) do |f|
+  - control_helper("name", "名称") do
+    = f.text_field :name
+
+
+  - control_helper("gender", "性别") do
+    = f.radio_button(:gender,CommonResource::Gender_Man)
+    = "男"
+    = f.radio_button(:gender,CommonResource::Gender_Woman)
+    = "女"
+
+
+  - control_helper("coach_type", "类型") do
+    = f.select :coach_type, Setting.coach_types
+
+  - control_helper("telephone", "电话") do
+    = f.text_field :telephone
+
+  - control_helper("email", "email") do
+    = f.text_field :email
+
+  - control_helper("cert_type", "证件类型") do
+    = f.select :cert_type, Setting.cert_type_options(@coach.cert_type), :id => "cert_type"
+
+
+  - control_helper("cert_num", "证件号码") do
+    = f.text_field :cert_num
+
+
+  - control_helper("fee", "费用") do
+    = f.text_field :fee
+
+
+  - control_helper("description", "描述") do
+    = f.text_area :description
+
+  .form-actions
+    = f.submit "提交", :class => "btn btn-success"
+    = link_to "返回", coaches_path, :class => "btn btn-danger"

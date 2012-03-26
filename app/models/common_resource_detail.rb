@@ -18,4 +18,12 @@ class CommonResourceDetail < ActiveRecord::Base
     common_resource.is_card_type? && detail_name == CommonResource::Type_Zige_Name
   end
 
+  def can_edit?
+    false
+  end
+
+  def can_view?
+    false
+  end
+
 end

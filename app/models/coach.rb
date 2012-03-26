@@ -13,8 +13,6 @@ class Coach < ActiveRecord::Base
 
   has_many :book_records, :as => :resource
 
-  before_save :geneate_pinyin_name
-
   def amount(order_item)
     fee * order_item.quantity
   end

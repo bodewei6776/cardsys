@@ -36,7 +36,7 @@ class CardsController < ApplicationController
   end
 
   def destroy
-    if @card.member_cards.first
+    if @card.members_cards.first
       flash[:notice] = "此类型的卡已经有绑定，不能删除！"
     else
       @card.destroy

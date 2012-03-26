@@ -6,12 +6,11 @@ class Member < ActiveRecord::Base
   scope :autocomplete_for, lambda {|name| 
     where("state= 'enabled' and (LOWER(name_pinyin) LIKE :member_name or LOWER(name) like :member_name or LOWER(pinyin_abbr) like :member_name)", {:member_name => "#{name.downcase}%"}).limit(10).order("pinyin_abbr ASC") }
 
-
   set_pinyin_field :name_pinyin, :name
   set_abbr_field :pinyin_abbr, :name
 
   has_many :orders
-  has_many :members_cards
+  has_many :members_cards, :dependent => :destroy
   has_many :balances, :through => :orders
   has_many :member_card_granters, :foreign_key => "granter_id"
   has_many :granted_member_cards, :class_name => "MembersCard", :through => :member_card_granters, :source => :members_card, :uniq => true
@@ -68,7 +67,7 @@ class Member < ActiveRecord::Base
   end
 
   def member_consume_times
-    0
+   self.balances.count
   end
 
   def latest_comer_date
@@ -86,6 +85,8 @@ class Member < ActiveRecord::Base
   def balance_times
    self.balances.count
   end
+
+  alias use_card_times balance_times
 
   def use_card_price_amount
     self.balances.with_balance_way("card").count

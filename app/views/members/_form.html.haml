@@ -1,6 +1,6 @@
 = form_header(:title => "会员", :link => members_path)
 = render :partial => "layouts/errors", :locals => { :target => @member }
-= form_for @member, :html => { :class => "form-horizontal" } do |f|
+= form_for @member, :html => { :class => "form-horizontal well" } do |f|
   - if params[:members_card_id]
     - control_helper("granter", "会员类型") do
       = "授权人"

@@ -1,11 +1,7 @@
 # -*- encoding : utf-8 -*-
 Cardsys::Application.routes.draw do 
 
-  get "common_resource_details/new"
-
-  get "common_resource_details/edit"
-
-  get "common_resource_details/index"
+  resources :common_resource_details
 
   resources :rents do
     collection do
@@ -154,6 +150,7 @@ Cardsys::Application.routes.draw do
 
     member do
       get :member_cards_list
+      put :switch_state
     end
   end
 

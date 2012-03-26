@@ -1,6 +1,5 @@
-%li
-  %a{:href => "/members"} 会员列表
-%li
-  %a{:href => "/members/new"} 添加会员
-%li
-  %a{:href => "/members/advanced_search"} 高级查询
+- url_text_map = { members_path => "会员列表", new_member_path => "添加会员", advanced_search_members_path => "高级查询"}
+
+- url_text_map.each_pair do |k, v|
+  %li{:class => left_nav_active?(k)}
+    = link_to v, k
