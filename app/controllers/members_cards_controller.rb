@@ -38,7 +38,12 @@ class MembersCardsController < ApplicationController
   end
 
   def new
-    @member = Member.find_by_name(params[:member_name])
+    if params[:card_serial_num]
+      @member_card = MembersCard.find_by_card_serial_num(params[:card_serial_num])
+      @member = @member_card.member
+    elsif params[:member_name]
+      @member = Member.find_by_name(params[:member_name])
+    end
     @cards = Card.enabled
     @members_card = MembersCard.new(:member_id => @member.try(:id), 
                                     :expire_date => 6.month.from_now,
@@ -97,6 +102,7 @@ class MembersCardsController < ApplicationController
     if params[:card_serial_num].present?
       conditions.merge!(:card_serial_num => params[:card_serial_num])
     end
+
     @members_cards = MembersCard.where(conditions).paginate(default_paginate_options)
   end
 

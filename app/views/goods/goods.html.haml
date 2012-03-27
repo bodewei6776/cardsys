@@ -1,31 +1,20 @@
 = javascript_include_tag "autocomplete-rails"
 = render :partial => "layouts/errors", :locals => {:target => @order_item} if @order_item && @order_item.errors
-.w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 商品查询
-    .r_bt_r
-      =link_to "返回", edit_order_path(@order), :class => "btn btn-success"
-  .soso
-    = form_tag "/goods/goods",{:id => "search-goods-form", :method => :get} do |f|
-      = hidden_field_tag :order_id, params[:order_id]
-      .w95
-        照商品类别：
-        %label
-          = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
-        按照商品名称：
-        %label
-          %input#name.inputtext{:autocomplete => "/goods/autocomplete_name", :name => "name", :type => "text", :value => params[:name]}/
-  .h10
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 商品列表
-    .r_bt_r
-  #goods
-    = render :partial => "goods", :locals => { :goods => @goods }
-  .h10
+
+= table_header(:title => "商品查询", :link => edit_order_path(@order))
+= form_tag "/goods/goods",{:id => "search-goods-form", :class => "well form-horizontal", :method => :get} do |f|
+  = hidden_field_tag :order_id, params[:order_id]
+  - control_helper("good_type", "商品类型") do
+    = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
+
+
+  - control_helper("name", "商品名称") do
+    = text_field_tag :name, params[:name], :autocomplete => "/goods/autocomplete_name"
+
+
+= table_header(:title => "商品列表", :link => edit_order_path(@order))
+#goods
+  = render :partial => "goods", :locals => { :goods => @goods }
 %script{:charset => "utf-8", :type => "text/javascript"}
   $(document).ready(function(){
   $('#name').autocomplete({

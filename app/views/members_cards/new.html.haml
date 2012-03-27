@@ -24,15 +24,46 @@
   - control_helper("description", "描述") do
     = f.text_area :description
 
+
   .form-actions
     = f.submit "提交", :class => "btn btn-success"
     = link_to "返回", members_cards_path, :class => "btn btn-danger"
-= table_header(:title => "会员卡列表", :link => "")
-- columns = {"card_serial_num" => "名称", "card_type_in_chinese" => "卡类型", "left_fee_value" => "余额/余次", "expire_date" => "有效期", "granter_names" => "授权人"}
 
-- table_helper(:collection => @members_cards, :columns => columns)
-=# link_to '添加授权人', new_member_path(:members_card_id => member_card.id), :class => "granter_new"
-=# link_to '注销此卡', switch_state_members_card_path(member_card), :confirm => "确定要进行此操作？", :method => :put
+
+= table_header(:title => "会员卡列表", :link => "")
+
+
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %th 编号
+      %th 名称
+      %th 卡类型
+      %th 余额/余次
+      %th 有效期
+      %th 授权人
+      %th 操作
+
+  %tbody
+    - @members_cards.each_with_index do |e, index|
+      %tr
+        %td= index + 1
+        %td= e.card_serial_num
+        %td= e.card_type_in_chinese
+        %td= e.left_fee_value
+        %td= e.expire_date
+        %td= e.granter_names
+        %td
+          - operations = e.can_view? ? [:show]  : []
+          - operations << :destroy if e.can_destroy?
+          - operations << :edit if e.can_edit?
+          - operations << :switch_state if e.respond_to?:state
+          = operations_panel(e, operations)
+          = link_to '添加授权人', new_member_path(:members_card_id => e.id), :class => "granter_new"
+          = link_to '注销此卡', switch_state_members_card_path(e), :confirm => "确定要进行此操作？", :method => :put
+
+
+
 
 :javascript
   $(document).ready(function(){

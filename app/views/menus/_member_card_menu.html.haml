@@ -1,8 +1,6 @@
-%li
-  %a{:href => "/members_cards/new"} 会员卡绑定
-%li
-  %a{:href => "/members_cards/recharge"} 会员卡充值
-%li
-  %a{:href => "/members_cards/granters"} 授权人管理
-%li
-  %a{:href => "/members_cards/status"} 停卡激活管理
+- url_text_map = { new_members_card_path => "会员卡绑定",  recharge_members_cards_path => "会员卡充值",
+  granters_members_cards_path => "授权人管理", status_members_cards_path => "停卡激活管理"}
+
+- url_text_map.each_pair do |k, v|
+  %li{:class => left_nav_active?(k)}
+    = link_to v, k

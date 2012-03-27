@@ -21,9 +21,11 @@
       = @members_card.max_shared_count
 
 
-= table_header(:title => "授权人列表", :link => "")
 - if @members_card
-  = link_to '添加授权人', new_member_path(:members_card_id => @members_card.id), :class => "granter_new submit2 hand", :target => "_blank"                                           
+  = table_header(:title => "授权人列表", :link => new_member_path(:members_card_id => @members_card.id))
+- else
+  = table_header(:title => "授权人列表", :link => "")
+
 
 %table.table.table-striped.table-bordered.table-condensed
   %thead
@@ -46,3 +48,8 @@
         %td= member.created_at.to_chinese_mdh
         %td= member.birthday.try(:to_chinese_mdh)
 
+
+:javascript 
+  function jump(card_serial_num){
+    window.location.href = ("#{granters_members_cards_path}" +"?card_serial_num=" + card_serial_num);
+  }
