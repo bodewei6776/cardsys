@@ -47,7 +47,7 @@
     = f.fields_for :non_member do |nm|
       - control_helper("name", "散客姓名") do
         = nm.text_field :name
-        = nm.hidden_field :is_member
+        = nm.hidden_field :is_member, :id => "order_non_member_attributes_is_member"
 
       - control_helper("name", "标准收费") do
         #non_member_price
@@ -87,12 +87,12 @@
           if($("#order_is_member").attr("checked")){
             $("#is_member").show();
             $("#is_non_member").hide();
-            $("#order_non_member_attributes_is_member").val(1);
+            $("#order_non_member_attributes_is_member").val("1");
           }
           else{
             $("#is_member").hide();
             $("#is_non_member").show();
-            $("#order_non_member_attributes_is_member").val(0);
+            $("#order_non_member_attributes_is_member").val("0");
         }
         });
 
@@ -139,7 +139,7 @@
                      "'>" + node.members_card.card_serial_num + "</option>") 
                   });
 
-                  $('#cards').html( "<select name='order[members_card_id]' style='width: 60px;'>" + options + "</select>");
+                  $('#cards').html( "<select name='order[members_card_id]' class='span2'>" + options + "</select>");
                   $('#cards select').trigger("change");
                });
              }			

@@ -88,7 +88,7 @@ class Order < ActiveRecord::Base
     end
 
     event :want_sell do
-      transition :booked => :to_be_sold
+      transition :booked => :to_be_sold, :if => lambda { |o| o.is_member? }
     end
 
 
