@@ -67,10 +67,6 @@
 
     .container
       .content
-        - if flash[:notice]
-          .alert
-            %a{:class => "close", "data-dismiss" => "alert"} x
-            %strong= flash[:notice]
         .row
           .span2
             #datepicker
@@ -79,6 +75,10 @@
                 %li.nav
                 =render :partial => "layouts/menu"
           .span10
+            - if flash[:notice]
+              .alert
+                %a{:class => "close", "data-dismiss" => "alert"} x
+                %strong= flash[:notice]
             = yield
     
       %hr
