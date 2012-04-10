@@ -1,9 +1,9 @@
 %p
   %span= "#{@date.to_chinese_ymd} 的场地预定"
   %span.pull-right
-    =link_to raw("<i class='icon-arrow-left'> </i>  ") ,  orders_path(:date => @predate) , :class => "btn btn-mini"
-    =link_to raw("<i class='icon-refresh'> </i>  ") , orders_path(:date => @predate),  :class => "btn btn-mini"
-    =link_to raw("<i class='icon-arrow-right'> </i>  ") , orders_path(:date => @nextdate),  :class => "btn btn-mini"
+    =link_to raw("<i class='icon-arrow-left'> </i>  ") ,  orders_path(:date => @predate) , :class => "btn btn-mini", :title => "前一天"
+    =link_to raw("<i class='icon-refresh'> </i>  ") , orders_path(:date => @predate),  :class => "btn btn-mini", :title => "今天"
+    =link_to raw("<i class='icon-arrow-right'> </i>  ") , orders_path(:date => @nextdate),  :class => "btn btn-mini", :title => "后一天"
 
 %div{:style => "height:3px;"}
 .content
