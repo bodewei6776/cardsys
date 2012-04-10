@@ -12,7 +12,7 @@ class Setting
     end
 
     def site_name
-     "Kevin测试" || "博德维"
+     "博德维"
     end
 
 
