@@ -40,7 +40,7 @@
 
     
       $(document).ready(function() {
-        WdatePicker({startDate:'#{Date.today.strftime("%Y-%m-%d")}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
+        WdatePicker({startDate:'#{Date.today.strftime("%Y-%m-%d")}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true, specialDates:['#{@date.strftime("%Y-%m-%d")}']})
         $(".popup-new-window").colorbox({width:"900", height:"600", iframe:true});
         $(".date-type-input").new_datepicker();
         $(".select-date").new_datepicker();})
