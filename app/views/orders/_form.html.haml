@@ -70,7 +70,7 @@
 
 
   - control_helper("login", "操作人") do
-    = f.text_field :login
+    = f.text_field :login, :value => current_user.login
 
   - control_helper("password", "密码") do
     = f.password_field :password
