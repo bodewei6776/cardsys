@@ -1,72 +1,57 @@
-.w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 场地信息查询
-    .r_bt_r
-  .soso
-    %form#search_form.form-profile{:action => "/courts/court_status_search", :method => "post"}
-      .w95
-        场地名称：
-        %label
-          %input.inputtext{:maxlength => "30", :name => "name", :tabindex => "1", :type => "text", :value => params[:name]}/
-        \&nbsp;&nbsp;&nbsp;&nbsp;
-        预定会员：
-        %label
-          %input{:autocomplete => "/members/autocomplete_name", :name => "member_name", :type => "text", :value => params[:member_name]}/
-        \&nbsp;&nbsp;&nbsp;&nbsp;
-        %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit", :value => "\346\237\245\350\257\242"}/
-        :css
-          #adv_search div{width:750px;padding: 5px;margin-left:-30px }
-          #adv_search div label{width: 80px;text-align: right;}
-                #adv_search.w95
-          %div
-            %label{:for => "card_id"} 预定日期：
-            %input#search_date.inputtext{:name => "search_date", :onblur => "return;", :type => "text", :value => params[:search_date]}/
-            %label{:for => "card_id"} 预定时段：
-            = succeed "-" do
-              %select#start_hour.select{:name => "start_hour", :onchange => "check_time();"}
-                = generate_time_options(0)
-            %select#end_hour.select{:name => "end_hour", :onchange => "check_time();"}
-              = generate_time_options(24)
-  .h10
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 场地预定列表
-    .r_bt_r
-  .table
-    %ul.bttitle.black.fb
-      %li.w5 序号
-      %li.w10 场地
-      %li.w10 会员姓名
-      %li.w10 日期
-      %li.w10 时段
-      %li.w10 操作人
-      %li.w10 详情
+= form_header(:title => "场地信息查询", :link => "")
+
+= form_tag("/courts/court_status_search", :class => "form-horizontal") do
+  - control_helper("name", "场地名称") do
+    = text_field_tag :name, params[:name]
+
+
+  - control_helper("member_name", "预订会员") do
+    = text_field_tag :member_name, params[:member_name], :autocomplete => "/members/autocomplete_name"
+
+
+  - control_helper("search_date", "预订日期") do
+    = text_field_tag :search_date, params[:search_date], :class => "select-date"
+
+
+  - control_helper("start_hour", "预订时段") do
+    = select_tag :start_hour, options_for_select((0..23).to_a), :onchange => "check_time();"
+    = select_tag :end_hour, options_for_select((0..23).to_a), :onchange => "check_time();"
+
+  .form-actions
+    = submit_tag "搜索", :class => "btn btn-primary"
+
+
+
+= table_header(:title => "场地预定列表", :link => "")
+
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %td 序号
+      %td 场地
+      %td 会员姓名
+      %td 日期
+      %td 时段
+      %td 详情
+
+  %tbody
     - @court_book_records.each_with_index do |court_book_record,index|
-      %ul.table_items
-        %li.w5= index + 1
-        %li.w10= court_book_record.court.name
-        %li.w10= court_book_record.order.member_name
-        %li.w10= court_book_record.alloc_date.to_chinese_ymd
-        %li.w10
+      %tr
+        %td= index + 1
+        %td= court_book_record.court.name
+        %td= court_book_record.order.member_name
+        %td= court_book_record.alloc_date.to_chinese_ymd
+        %td
           = court_book_record.start_hour
           \- #{court_book_record.end_hour}
-        %li.w10= court_book_record.order.user.login rescue "未知"
-        %li.w10
-  .h10
-  .pages
-    = will_paginate @court_book_records, :sp => 1
-  .h10
+        %td= court_book_record.order.user.login rescue "未知"
+
+%td
+
+
+=# render :partial => "layouts/page_nav", :locals => {:objs => @court_book_records}
+
 :javascript
-  $(function() {
-    $("#search_date").new_datepicker({dateFormat: 'yy-mm-dd'});
-  });
-  function fsubmit(){
-    var form = $("form[0]");
-    form.submit();
-  }
   $(".record_detail").colorbox({width:"80%", height:"80%", iframe:false});
   function check_time(){
     var start_time = $("#start_hour")[0].value;

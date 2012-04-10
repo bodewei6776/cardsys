@@ -1,33 +1,28 @@
-# -*- encoding : utf-8 -*-
 = form_header(:title => "教练预订信息查询", :link => "")
-.soso
-  %form#search_form.form-profile{:action => "/courts/coach_status_search", :method => "post"}
-    .w95
-      教练：
-      %label
-        %select#good_type.select{:name => "name"}
-          = options_for_select(Setting.coach_types)
-      \&nbsp;&nbsp;&nbsp;&nbsp;
-      %input#search_member.inputsubmit{:name => "search", :tabindex => "10", :type => "submit"}/
-      :css
-        #adv_search div{width:750px;padding: 5px;margin-left:-30px }
-        #adv_search div label{width: 80px;text-align: right;}
-              #adv_search.w95
-        %div
-          %label{:for => "card_id"} 开始日期：
-          %input.search_date{:name => "start_date", :onblur => "return;", :type => "text", :value => params[:start_date]}/
-          %label{:for => "card_id"} 结束日期：
-          %input.search_date{:name => "end_date", :onblur => "return;", :type => "text", :value => params[:end_date]}/
-        %div
-          %label{:for => "card_id"} 预定会员：
-          %input{:autocomplete => "/members/autocomplete_name", :maxlength => "30", :name => "member_name", :type => "text", :value => params[:member_name]}/
-          %label{:for => "card_id"} 预定时段：
-          = succeed "-" do
-            %select#start_hour.select{:name => "start_hour", :onchange => "check_time();"}
-              = generate_time_options(params[:start_hour] || 7)
-          %select#end_hour.select{:name => "end_hour", :onchange => "check_time();"}
-            = generate_time_options(params[:end_hour] || 24)
 
+= form_tag("/courts/coach_status_search", :class => "form-horizontal") do
+  - control_helper(:name, "教练") do
+    = select_tag :name, options_for_select(Setting.coach_types), :id => "good_type"
+
+  - control_helper("start_date", "开始日期") do
+    = text_field_tag :start_date, params[:start_date], :class => "select-date"
+
+
+  - control_helper("end_date", "结束日期") do
+    = text_field_tag :end_date, params[:end_date], :class => "select-date"
+
+
+  - control_helper("member_name", "预订会员") do
+    = text_field_tag :member_name, params[:member_name], :autocomplete => "/members/autocomplete_name"
+
+
+  - control_helper("start_hour", "预订时段") do
+    = select_tag :start_hour, options_for_select((0..23).to_a), :onchange => "check_time();"
+    = select_tag :end_hour, options_for_select((0..23).to_a), :onchange => "check_time();"
+
+
+  .form-actions
+    = submit_tag "搜索", :class => "btn btn-primary"
 
 = form_header(:title => "教练预订列表", :link => "")
 %table.table.table-striped.table-bordered.table-condensed
@@ -41,7 +36,7 @@
       %th 时段
 
   %tbody
-    - @coach_book_records.each_with_index do |coach_book_record,index|
+    - @coach_book_records.each_with_index do |coach_book_record, index|
       %tr
         %td= index + 1
         %td= coach_book_record.coach.name
