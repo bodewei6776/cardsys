@@ -1,0 +1,27 @@
+zh:
+  session_user:
+    require_login: "请登陆后查看"
+
+  authlogic:
+    error_messages:
+      login_blank: "用户名不能空"
+      login_not_found: "用户不存在"
+      login_invalid: "用户不正确"
+      consecutive_failed_logins_limit_exceeded: "太频繁"
+      email_invalid: "Email不正确"
+      password_blank: "密码不能空"
+      password_invalid: "密码不正确"
+      not_active:
+      not_confirmed: 
+      not_approved: 
+      no_authentication_details: "请填写用户名/密码"
+      general_credentials_error: 
+    models:
+      user_session: 
+    attributes:
+      user_session: 
+        login: ""
+        email:
+        password: 
+        remember_me: 
+  

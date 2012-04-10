@@ -20,7 +20,7 @@
     .navbar.navbar-fixed-top
       .navbar-inner
         .container
-          =link_to "测试", root_path, :class => "brand"
+          =link_to Setting.site_name, root_path, :class => "brand"
     
     .container
       - if flash[:notice]
