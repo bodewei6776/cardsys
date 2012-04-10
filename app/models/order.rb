@@ -33,6 +33,7 @@ class Order < ActiveRecord::Base
   validation_conditions << proc {|obj|  obj.state == "to_be_sold" && obj.state_was == "booked" }
 
   def save_order_items_for_court_and_coaches
+    return unless court_book_record
     court_book_record_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CourtBookRecord", court_book_record.id)
     court_book_record_order_item.update_attributes(:quantity => court_book_record.hours,
                                                    :total_count => court_book_record.hours,
@@ -58,6 +59,7 @@ class Order < ActiveRecord::Base
 
   def card_avaliable_in_time_span
     return true unless self.members_card
+    return true unless self.court_book_record
     self.errors.add(:members_card_id, "卡在此时段不可用") unless self.members_card.card.avaliable_in_time_span?(self.alloc_date, self.start_hour, self.end_hour)
   end
 
@@ -105,7 +107,7 @@ class Order < ActiveRecord::Base
     end
 
     event :balance do
-      transition :activated => :balanced
+      transition [:cart_loaded, :activated] => :balanced
     end
     end
 
@@ -200,14 +202,7 @@ class Order < ActiveRecord::Base
     #add to cart
     def order_goods(goods)
       goods = [goods] unless goods.is_a?(Array)
-      if (invalid_goods = goods.select{|good| !good.should_add_to_cart?(self) }).blank?
-        goods.map { |good| OrderItem.order_good(self, good)  }
-      else
-        invalid_goods.each do |good|
-          good.errors.each do |attribute, message| errors["Good.#{attribute}"] << message end
-        end
-        []
-      end
+      goods.map { |good| self.order_items.build({:item_type => Good, :item_id => good.id})  }
     end
 
     def hour_range

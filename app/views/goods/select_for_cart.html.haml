@@ -1,0 +1,32 @@
+= javascript_include_tag "autocomplete-rails"
+
+= table_header(:title => "商品查询", :link => new_good_buy_balances_path)
+= form_tag select_for_cart_goods_path, {:id => "search-goods-form", :class => "well form-horizontal", :method => :get} do |f|
+  - control_helper("good_type", "商品类型") do
+    = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
+
+
+  - control_helper("name", "商品名称") do
+    = text_field_tag :name, params[:name], :autocomplete => "/goods/autocomplete_name"
+
+
+= table_header(:title => "商品列表", :link => "")
+#goods
+  = render :partial => "select_for_cart", :locals => { :goods => @goods }
+
+:javascript
+  $(document).ready(function(){
+    $('#name').autocomplete({
+      source: "/goods/autocomplete_name",
+      select: function(ui, li){
+        var item = li.item;
+        $(this).val(item.value);
+        $('#search-goods-form').submit();
+      }
+    });
+  });
+  
+  $('#good_type').change(function(){
+  
+  $('#search-goods-form').submit();
+  });

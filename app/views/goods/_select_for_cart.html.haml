@@ -1,0 +1,42 @@
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %th 编号
+      %th 商品名称
+      %th 商品分类
+      %th 零售价
+      %th 商品总数
+      %th 库房商品数
+      %th 前台商品数
+      %th 操作
+
+  %tbody
+    - @goods.each_with_index do |good, index|
+      %tr.table_items{:entry_id => good.id}
+        %td= index + 1
+        %td= good.name
+        %td= generate_good_type_str(good.good_type)
+        %td= good.price
+        %td= good.count_total_now
+        %td= good.count_back_stock
+        %td= good.count_front_stock
+        %td
+          = form_tag add_to_cart_good_path(good) do |f|
+            = link_to "<<", "#", :class => "remove"
+            = text_field_tag :quantity, cart.quantity_for_good(good), :class => "quantity span1"
+            = link_to ">>", "#", :class => "add"
+            = submit_tag "购买", :class => "btn btn-primary"
+
+
+
+:javascript
+  $(document).ready(function(){
+    $('.remove').click(function(){
+      var quantity = $(this).parent().find('.quantity');
+      quantity.attr('value', parseInt(quantity.val()) - 1);
+   });
+    $('.add').click(function(){
+      var quantity = $(this).parent().find('.quantity');
+      quantity.attr('value', parseInt(quantity.val()) + 1);
+    });
+  });

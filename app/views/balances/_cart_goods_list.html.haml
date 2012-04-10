@@ -1,21 +1,20 @@
 %tbody
   - cart.line_items.each_with_index do |li,index|
     %tr
-      %td index + 1
-      %td li.product.name
-      %td li.product.price
-      %td li.quantity
+      %td= index + 1
+      %td= li.product.name
+      %td= li.product.price
+      %td= li.quantity
       %td
         %select.discount{:name => "discount"}= raw discount_options(li.discount)
       %td
         = text_field_tag :real_total_price,li.real_total_price ,:class=>"li_real_total_price"
         = hidden_field_tag "total_price",li.sub_total_price,:class=>"total_price"
         = hidden_field_tag "good_id",li.product_id,:class=> "good_id"
-      %td
-        = link_to "删除", destroy_good_balances_path(:id => li.product_id), |
-          :class => 'destory_order_item',:method => :delete                   |
+      %td= link_to raw("<i class = 'icon-trash'></i>"), destroy_good_balances_path(:id => li.product_id), :method => :delete                   |
+
   %tr
     %td 合计
-    %td
+    %td{:colspan => 6}
       = cart.total_price
       元

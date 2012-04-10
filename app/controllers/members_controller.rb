@@ -318,7 +318,7 @@ class MembersController < ApplicationController
 
   def member_cards_list
     @card_list = Member.find(params[:id]).all_members_cards
-    render :json => @card_list.to_json(:only => [:id, :card_serial_num, :order_tip_message, :can_buy_good, :member_info, :card_info])
+    render :json => @card_list.to_json(:only => [:id, :card_serial_num],:methods => [ :card_type_in_chinese, :remaining_money_and_amount_in_chinese, :members_card_info])
   end
 
   def switch_state

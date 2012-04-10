@@ -64,9 +64,9 @@ function userAutocomplete(){
 	        {
                 options = '';
                 $(returned_data).each(function(i,node){ options +=("<option value='" + node.members_card.id +
-                    "' order_tip_message='" + node.members_card.order_tip_message+ 
+                    "' order_tip_message='" + node.members_card.members_card_info + 
                     "' can_buy_good='" + node.members_card.can_buy_good+ 
-                    "' member_info='" + node.members_card.member_info+ 
+                    "' member_info='" + node.members_card.remaining_money_and_amount_in_chinese + 
                     "' card_info='" + node.members_card.card_info+ 
                     "'>"
                     + node.members_card.card_serial_num + "</option>") 
@@ -77,8 +77,8 @@ function userAutocomplete(){
                 $('#cards').html( "<select name='member_card_id'>" + options + "</select>");
                 $('#cards select').live('change',function(){
                   var selected = $(this).find("option:selected");
-                  $('#member_card_info').text(selected.attr('card_info') + selected.attr('order_tip_message'));
-                  $('#member_info').text(selected.attr('member_info'));
+                  $('#member_info').text(selected.attr('order_tip_message'));
+                  $('#member_card_info').text(selected.attr('member_info'));
                   if(selected.attr('can_buy_good') == "no"){ $('#member_card_info').append("  [此卡不可消费商品]");}
                 });
                 $('#cards select').trigger("change");

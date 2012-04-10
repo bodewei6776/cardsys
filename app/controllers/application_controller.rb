@@ -94,7 +94,7 @@ class ApplicationController < ActionController::Base
   end
 
   def cart
-    session[:cart] || Cart.new
+    session[:cart] ||= Cart.new
   end
 
   def log_action(desc,log_type, user = nil)

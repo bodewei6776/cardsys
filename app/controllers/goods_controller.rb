@@ -128,25 +128,26 @@ class GoodsController < ApplicationController
     render :layout => "small_main"
   end
 
+
+  def select_for_cart
+    if params[:name]
+      name = "%#{params[:name]}%"
+      @goods = Good.enabled.where(["name like ? or name_pinyin like ? or pinyin_abbr like ?",
+                                      name, name, name ]).order('count_back_stock_out desc').limit(20)
+    else
+      @goods = Good.enabled.order('count_back_stock_out desc').limit(20)
+    end
+    render :layout => "small_main"
+  end
+
   def to_buy
     @goods = Good.enabled.order('sale_count desc').limit(20)
     render :action => 'goods'
   end
 
   def add_to_cart
-    goods = []
-    (params[:goods]||[]).map{|hash_good|
-      next if  hash_good[:count].to_i <= 0
-      good = Good.find(hash_good[:id])
-      good.order_count = hash_good[:count].to_i
-      goods << good
-    }
-    order = Order.find(params[:order_id])
-    unless (good_items = order.order_goods(goods)).blank?
-      render :partial => "/orders/order_item", :locals => {:good_items => good_items,:order => order}
-    else
-      render :text => "<span class='error' style='color:red'>#{order.errors.full_messages.join('<br/>')}</span>"
-    end
+    @good = Good.find(params[:id])
+    cart.add(@good.id, Integer(params[:quantity]))
   end
 
   def load_good

@@ -214,6 +214,7 @@ Cardsys::Application.routes.draw do
       put :back_store_update
       get :back_store_manage
       put :switch_state
+      post :add_to_cart
     end
     collection do
       get :change_status
@@ -221,9 +222,9 @@ Cardsys::Application.routes.draw do
       get :autocomplete_good
       get :goods
       get :find_goods
-      get :add_to_cart
       get :front
       get :back
+      get :select_for_cart
     end
   end
 

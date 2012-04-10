@@ -1,5 +1,4 @@
 # -*- encoding : utf-8 -*-
-
 class LI
   attr_accessor :product_id,:quantity,:real_total_price,:discount
 
@@ -39,7 +38,7 @@ class Cart
     self.line_items.collect(&:to_s).join(",")
   end
 
-  def add(product_id,quantity)
+  def add(product_id, quantity)
     quantity = quantity.abs
     li = line_items.select {|li| li.product_id == product_id}.first
     actual_quantity = quantity
@@ -103,6 +102,10 @@ class Cart
 
   def discount?
     self.line_items.any?{|li| li.discount.to_f < 1}
+  end
+
+  def quantity_for_good(good)
+    self.line_items.find{|li| li.product_id == good.id}.try(:quantity) || 0
   end
 
 end

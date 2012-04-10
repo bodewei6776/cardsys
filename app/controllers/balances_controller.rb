@@ -35,7 +35,6 @@ class BalancesController < ApplicationController
   end
 
   def new_good_buy
-    @order = Order.new
   end
 
   def clear_goods
@@ -52,7 +51,7 @@ class BalancesController < ApplicationController
   end
 
   def destroy_good
-    session[:cart].remove(params[:id])
+    session[:cart].remove(Integer(params[:id]))
     redirect_to new_good_buy_balances_path
   end
 
@@ -69,32 +68,32 @@ class BalancesController < ApplicationController
 
   def create_good_buy
     if cart.blank?
-      redirect_to new_good_buy_balances_path ,:notice => "购物车还是空的啊" and return
+      redirect_to new_good_buy_balances_path ,:notice => "购物车是空的" and return
     end
-
     is_member = params[:member] == 'member'
 
-    @order = Order.new(:order_time => Time.now,:user_id => current_user.id)
-    member_card = MemberCard.find_by_id(params[:member_card_id]) || MemberCard.find_by_card_serial_num(params[:member_card_id])
-    member= Member.find_by_id(params[:member_id])
-    @order.parent_id = 0
-    @order.member_type = is_member ? 1 : 0 
-    @order.member_name = is_member ? member.name : params[:sanke_name]
-    @order.member_id = is_member ? member.id : -1
-    @order.member_card_id = is_member ? member_card.id : -1
-    @order.book_record_id = -1
-    @order.save(false)
-    cart.touch
-    @order.order_goods(cart.products)
-    balance = @order.balance
-    balance.operation = "balance"
-    balance.balance_way = params[:balance_way]
-    balance.change_note = "折后价格" if cart.discount?
-    balance.do_balance!
+    @order = Order.new(:user_id => current_user.id, :state => "cart_loaded")
+    @order.is_member = is_member 
+    if is_member
+      member_card = MembersCard.find(params[:member_card_id]) 
+      member= Member.find(params[:member_id])
+      @order.member_id = member.id
+      @order.members_card_id = member_card.id 
+    else
+      @order.non_member =  NonMember.new(:name => params[:sanke_name])
+    end
+    cart.line_items.each do |li|
+      @order.order_items.build({:item => li.product,
+                               :quantity => li.quantity,
+                               :total_money_price => li.sub_total_price,
+                               :unit_money_price => li.product.price, 
+                               :price_after_discount => li.real_total_price,
+                               :discount => li.discount})
+    end
+
+    @order.save(:validate => false)
     cart.empty!
-    redirect_to new_good_buy_balances_path(:popup => true, :id => balance.id), :notice => "支付成功"
-  rescue Exception => e
-    redirect_to new_good_buy_balances_path, :notice => e.message
+    redirect_to order_balances_path(@order)
   end
 
   def destroy
