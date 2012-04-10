@@ -15,9 +15,9 @@ module ReportsHelper
   def book_record_amount_desc(b, pay_ways)
     return 0 if pay_ways.blank?
     if pay_ways.include?("counter") && b.balance_way == "counter"
-      "#{b.final_price}次"
+      "#{}次"
     else
-      "#{b.final_price}元"
+      "#{b.book_record_amount(pay_ways)}元"
     end
   end
 
@@ -55,7 +55,7 @@ module ReportsHelper
       table << "<td>#{link_to(b.order.member_name,order_balance_path(b.order,b),:target => "_blank")}</td>"
       table << "<td>#{b.money_spent_on}</td>"
       table << "<td>#{b.order.members_card.card_serial_num rescue ""}</td>"
-      table << "<td class='mon'>#{ book_record_amount_desc(b,pay_ways)}</td>"
+      table << "<td class='mon'>#{ book_record_amount_desc(b, pay_ways)}</td>"
       table << "<td class='mon'>#{b.coach_amount(pay_ways)}</td>"
       Category.roots.each do |gt|
       table << "<td class='mon'>#{b.good_amount_by_type(gt,pay_ways)}</td>"

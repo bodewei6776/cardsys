@@ -149,7 +149,7 @@
     $("#select_deselect_all").change(function(){
       var select_deselect_all = $(this)
       select_deselect_all.parent().parent().parent().parent().find("input[type=checkbox]").each(function(index, node){
-        $(node).attr("checked", select_deselect_all.attr("checked"));
+        if(select_deselect_all.attr('checked')){ $(node).attr("checked", true) } else{ $(node).attr("checked", false)}
       });
     })
 
@@ -181,6 +181,7 @@
         $(".court span").text($(".court .total_cost_hidden").val());
         $("#new_total_price_node").val("");
         $("#new_price_node").val("");
+        $(".checkbox_marker").map(function(i, node){ $(node).attr("checked", false) });
       }
     });
 
