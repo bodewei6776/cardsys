@@ -6,3 +6,11 @@
 //= require rails
 //= require bootstrap-alert
 //= require bootstrap-tab
+//= require bootstrap-tooltip
+
+
+
+
+$(document).ready(function(){
+	$('a').tooltip();
+});

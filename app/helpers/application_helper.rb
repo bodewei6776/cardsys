@@ -24,11 +24,11 @@ module ApplicationHelper
 
   def operations_panel(object, operations = [:show, :edit, :destroy, :switch_state])
    array = []
-   (array << (link_to raw("<i class = 'icon-search'></i>"), object)) if operations.include?(:show) 
-   (array << (link_to raw("<i class = 'icon-edit'></i>"), send("edit_#{object.class.name.underscore}_path", object))) if operations.include?(:edit) 
-   (array << (link_to raw("<i class = 'icon-trash'></i>"), send("#{object.class.name.underscore}_path", object), :confirm => "确认要删除么？", :method => :delete)) if operations.include?(:destroy) 
-   (array << (link_to raw("<i class = 'icon-folder-open'></i>"), send("switch_state_#{object.class.name.underscore}_path", object), :confirm => "确认要启用么？", :method => :put)) if operations.include?(:switch_state) && object.disabled? 
-   (array << (link_to raw("<i class = 'icon-lock'></i>"), send("switch_state_#{object.class.name.underscore}_path", object), :confirm => "确认要禁用么？", :method => :put)) if operations.include?(:switch_state) && object.enabled? 
+   (array << (link_to raw("<i class = 'icon-search'></i>"), object, :title => "搜索")) if operations.include?(:show) 
+   (array << (link_to raw("<i class = 'icon-edit'></i>"), send("edit_#{object.class.name.underscore}_path", object), :title => "编辑")) if operations.include?(:edit) 
+   (array << (link_to raw("<i class = 'icon-trash'></i>"), send("#{object.class.name.underscore}_path", object), :confirm => "确认要删除么？", :method => :delete, :title => "删除")) if operations.include?(:destroy) 
+   (array << (link_to raw("<i class = 'icon-folder-open'></i>"), send("switch_state_#{object.class.name.underscore}_path", object), :confirm => "确认要启用么？", :method => :put, :title => "启用")) if operations.include?(:switch_state) && object.disabled? 
+   (array << (link_to raw("<i class = 'icon-lock'></i>"), send("switch_state_#{object.class.name.underscore}_path", object), :confirm => "确认要禁用么？", :method => :put, :title => "禁用")) if operations.include?(:switch_state) && object.enabled? 
    (array << (link_to raw("<i class = 'icon-edit'></i>"), department_power_index_department_path(object)))  if object.is_a?Department
    raw array.join(" ")
   end

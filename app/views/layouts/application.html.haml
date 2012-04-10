@@ -36,6 +36,8 @@
             }
             window.location.href=urls.join('');
         }
+
+
     
       $(document).ready(function() {
         WdatePicker({startDate:'#{Date.today.strftime("%Y-%m-%d")}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true})
