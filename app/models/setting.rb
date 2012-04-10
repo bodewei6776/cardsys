@@ -3,6 +3,14 @@ class Setting
   class << self
     include ActionView::Helpers::FormOptionsHelper
 
+    def minimum_warn_count
+      2
+    end
+
+    def minimum_warn_amount
+      1000
+    end
+
     def can_cancel_time_before_activate
       1.day
     end

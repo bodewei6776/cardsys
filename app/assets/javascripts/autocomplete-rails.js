@@ -63,13 +63,13 @@ function userAutocomplete(){
 	        $.get(reqest_url,function(returned_data)
 	        {
                 options = '';
-                $(returned_data).each(function(i,node){ options +=("<option value='" + node.member_card.id +
-                    "' order_tip_message='" + node.member_card.order_tip_message+ 
-                    "' can_buy_good='" + node.member_card.can_buy_good+ 
-                    "' member_info='" + node.member_card.member_info+ 
-                    "' card_info='" + node.member_card.card_info+ 
+                $(returned_data).each(function(i,node){ options +=("<option value='" + node.members_card.id +
+                    "' order_tip_message='" + node.members_card.order_tip_message+ 
+                    "' can_buy_good='" + node.members_card.can_buy_good+ 
+                    "' member_info='" + node.members_card.member_info+ 
+                    "' card_info='" + node.members_card.card_info+ 
                     "'>"
-                    + node.member_card.card_serial_num + "</option>") 
+                    + node.members_card.card_serial_num + "</option>") 
                     });
 
 

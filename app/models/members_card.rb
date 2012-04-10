@@ -128,11 +128,11 @@ class MembersCard < ActiveRecord::Base
   end
 
   def has_less_count?
-    (card.is_counter_card? || card.is_zige_card?) && left_times < Free_Count_Limit
+    (card.is_counter_card? || card.is_zige_card?) && left_times < Setting.minimum_warn_count
   end
 
   def has_less_fee?
-    (!card.is_counter_card? || card.is_zige_card?) && left_fee < Free_Amount_limit
+    (!card.is_counter_card? || card.is_zige_card?) && left_fee < Setting.minimum_warn_amount
   end
 
   def less_fee_desc
@@ -147,6 +147,10 @@ class MembersCard < ActiveRecord::Base
 
   def should_recharge_amount?
     card.is_zige_card? || !card.is_counter_card?
+  end
+  
+  def is_avalible?
+    self.state == "enabled"
   end
 
   def order_tip_message
