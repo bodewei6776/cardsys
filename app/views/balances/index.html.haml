@@ -50,7 +50,7 @@
             %td= item.price
             %td= item.final_price
             %td= item.created_at.to_chinese_ymd
-            %td= item.user.try(:name)
+            %td= item.user.try(:login)
             %td= link_to "打印", print_balance_path(item)
 
 

@@ -51,7 +51,8 @@ class Balance < ActiveRecord::Base
     self.members_card.save(:validate => false)
 
     if self.order.reload.order_items.all?(&:balanced?)
-      self.order.balance!
+      # skip callbacks 
+      self.order.update_column(:state, "balanced")
     end
 
     true
@@ -59,13 +60,13 @@ class Balance < ActiveRecord::Base
 
   def order_items_attributes=(attrs)
     attrs.each do |key, element|
-      next if   element["checked"].nil? or element["checked"] == "0"
+      next if  element["checked"].nil? or element["checked"] == "0"
       oi = OrderItem.find(element["id"])
       oi.discount = element["discount"]
       oi.price_after_discount = element["price_after_discount"]
       oi.balanced = true
       self.order_items << oi
-    end  
+    end
   end
 
 
@@ -182,8 +183,8 @@ class Balance < ActiveRecord::Base
   end
 
   def good_amount_by_type(type, ways)
-    return 0 unless ways.include?(self.balance_way)
-    return self.order_items.select{|oi| (oi.item.is_a? Good) && oi.item.category == type }.sum(&:price_after_discount)
+    #return 0 unless ways.include?(self.balance_way)
+    return self.order_items.select{|oi| (oi.item.is_a? Good) && oi.item.category.parent == type }.sum(&:price_after_discount)
   end
 
   def self.total_book_records_balance_on_date_any_ways(date, ways)
@@ -191,8 +192,8 @@ class Balance < ActiveRecord::Base
     sum = 0
     count = 0
     data.each do |element|
-      sum += element.final_price if element.balance_way != "counter" && ways.include?(element.balance_way)
-      count += element.final_price if element.balance_way == "counter" && ways.include?("counter")
+      sum += element.book_record_amount(ways) if element.balance_way != "counter" && ways.include?(element.balance_way)
+      count += element.book_record_amount(ways) if element.balance_way == "counter" && ways.include?("counter")
     end
 
     "#{sum}元/#{count}次"
