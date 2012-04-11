@@ -2,7 +2,7 @@
 
 = form_tag("/courts/coach_status_search", :class => "form-horizontal") do
   - control_helper(:name, "教练") do
-    = select_tag :name, options_for_select(Setting.coach_types), :id => "good_type"
+    = text_field_tag :name
 
   - control_helper("start_date", "开始日期") do
     = text_field_tag :start_date, params[:start_date], :class => "select-date"
