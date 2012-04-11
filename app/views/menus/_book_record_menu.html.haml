@@ -1,8 +1,7 @@
-%li
-  %a{:href => "/orders"} 新场地预定
-%li
-  %a{:href => "/advanced_orders/new"} 新场地周期性预定
-%li
-  %a{:href => "/courts/court_status_search"} 场地预定情况查询
-%li
-  %a{:href => "/courts/coach_status_search"} 教练日程查询
+- url_text_map = { orders_path => "新场地预订", new_advanced_order_path => "新场地周期性预定", court_status_search_courts_path=> "场地预定情况查询", coach_status_search_courts_path => "教练日程查询"}
+
+%li.nav-stack-header
+  %a 场地管理
+- url_text_map.each_pair do |k, v|
+  %li{:class => left_nav_active?(k)}
+    = link_to v, k

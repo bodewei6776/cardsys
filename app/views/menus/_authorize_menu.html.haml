@@ -1,4 +1,6 @@
-%li
-  %a{:href => "/users"} 用户管理
-%li
-  %a{:href => "/departments"} 部门管理
+- url_text_map = { users_path => "用户管理", departments_path => "部门管理"}
+%li.nav-stack-header
+  %a 权限管理
+- url_text_map.each_pair do |k, v|
+  %li{:class => left_nav_active?(k)}
+    = link_to v, k

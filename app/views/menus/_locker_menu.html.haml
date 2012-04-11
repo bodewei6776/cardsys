@@ -1,4 +1,6 @@
-%li
-  %a{:href => "/rents"} 出租管理
-%li
-  %a{:href => "/lockers"} 储物柜管理
+- url_text_map = { rents_path => "出租管理", lockers_path => "储物柜管理" }
+%li.nav-stack-header
+  %a 储物柜管理
+- url_text_map.each_pair do |k, v|
+  %li{:class => left_nav_active?(k)}
+    = link_to v, k
