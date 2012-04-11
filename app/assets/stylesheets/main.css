@@ -88,6 +88,8 @@ table.report_table tr.report_title td{
   color: black;
 }
 
-
+.index_order_table td, .index_order_table th{
+  padding: 1px;
+}
 
 

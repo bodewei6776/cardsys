@@ -142,7 +142,7 @@ module OrdersHelper
     content = "(授)" + content if order.is_member? and order.members_card.granters.include?(order.member)
     content = "(固)" +  content if order.advanced_order
     content << "(教练:#{order.coaches.map(&:name).join(',')})" if order.coaches.present?
-    content << "(结算人: #{order.balances.first.who_balance.try(:login) || ""})" if order.balanced?
+    content << "(结: #{order.balances.first.who_balance.try(:login) || ""})" if order.balanced?
     content
   end
 
