@@ -20,13 +20,13 @@ class Setting
     end
 
     def site_name
-     "博德维"
+     "Kevin" || "博德维"
     end
-
 
     def site_url
       "www.localhost:300"
     end
+
     def coach_types
      ["全职教练", "客人自带"] 
     end

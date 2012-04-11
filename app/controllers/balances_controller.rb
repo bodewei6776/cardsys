@@ -20,7 +20,7 @@ class BalancesController < ApplicationController
   def create
     @order = Order.find(params[:balance][:order_id])
     @balances = @order.balances
-    @balance = @order.balances.new(params[:balance]) 
+    @balance = @order.balances.new(params[:balance].merge(:user_id => current_user.id)) 
     if @balance.order_items.present? && @balance.order_items.all?(&:valid?) && @balance.save
       flash[:notice] = "结算成功"
     else

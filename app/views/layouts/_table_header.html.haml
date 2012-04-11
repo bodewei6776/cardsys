@@ -1,5 +1,5 @@
-%span.btn.btn-primary.disabled= title
-
+%span{:style=> "height: 25px; font-size:20px; line-height: 25px;"}= title
+%div{:style => "height: 3px;"}
 - if link.present?
   %span.pull-right
     =link_to raw("<i class='icon-plus'></i>"), link, :class => "btn"
