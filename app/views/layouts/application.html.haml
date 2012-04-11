@@ -72,10 +72,8 @@
         .row
           .span2
             #datepicker
-            .well.sidebar-nav
-              %ul.nav.nav-pills.nav-stacked
-                %li.nav
-                =render :partial => "layouts/menu"
+            %ul.nav-tabs.nav-stacked.nav
+              =render :partial => "layouts/menu"
           .span10
             - if flash[:notice]
               .alert

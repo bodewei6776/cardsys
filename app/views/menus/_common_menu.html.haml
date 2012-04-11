@@ -1,5 +1,7 @@
 - url_text_map = { period_prices_path => "时段价格管理", cards_path => "卡模版管理", courts_path => "场地管理", vacations_path => "节假日管理", coaches_path => "教练管理", list_lockers_path => "储物柜管理"}
 
+%li.nav-stack-header
+  %a 基本信息管理
 - url_text_map.each_pair do |k, v|
   %li{:class => left_nav_active?(k)}
     = link_to v, k
