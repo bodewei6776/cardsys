@@ -25,3 +25,10 @@ zh:
         password: 
         remember_me: 
   
+activerecord:
+  errors:
+    models:
+      order:
+        attributes:
+          state:
+            invalid_transition: "状态不对"

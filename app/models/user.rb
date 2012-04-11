@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
     self.powers = self.departments.collect(&:powers).flatten
   end
 
-  def is_admin?
+  def admin?
     self.login == 'admin'
   end
 
