@@ -97,8 +97,8 @@ class ApplicationController < ActionController::Base
     session[:cart] ||= Cart.new
   end
 
-  def log_action(desc,log_type, user = nil)
-    Log.log(self,desc,log_type, user) 
+  def log_action(item, log_type, user = nil, desc = nil)
+    Log.log(self, item, log_type, user, desc) 
   end
 
   def login_and_password_valid?

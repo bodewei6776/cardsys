@@ -20,7 +20,7 @@
     = time.blank? ? "未知" : time.strftime("%Y-%m-%d")
 
   - control_helper("recharge_expire_date", "修改有效期") do
-    = f.text_field :recharge_expire_date, :class => "date-input-type", :value => @members_card.expire_date.strftime("%Y-%m-%d")
+    = f.text_field :recharge_expire_date, :class => "select-date", :value => @members_card.expire_date.strftime("%Y-%m-%d")
 
 
   - control_helper("recharge_times", "卡内次数") do
@@ -31,11 +31,15 @@
     = f.text_field :recharge_times
 
   - control_helper("login", "充值人") do
-    = f.text_field :login
+    = f.text_field :login, :value => current_user.login
 
   - control_helper("password", "密码") do
-    = f.text_field :password
+    = f.password_field :password
 
   .form-actions
     = f.submit "充值", :class => "btn btn-primary"
 
+
+:javascript
+  $(".select-date").new_datepicker();
+  

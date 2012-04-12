@@ -8,11 +8,11 @@
         :style => "font-size:14px;color:black;padding:5px 10px!important;" ,                                 |
         :class => "#{ (params[:t].presence && k == params[:t].to_sym)?  "current_log" : ""}"                 |
   - control_helper("start", "开始时间") do
-    = text_field_tag "start",params[:start],:id => "start"
+    = text_field_tag "start",params[:start],:id => "start", :class => "select-date"
 
 
   - control_helper("end", "结束时间") do
-    = text_field_tag "end",params[:end],:id => "end"
+    = text_field_tag "end", params[:end],:id => "end", :class => "select-date"
 
 
   - control_helper("user", "操作人") do
@@ -22,6 +22,6 @@
     = submit_tag "提交", :class => "btn btn-primary"
 
 
-- columns = { :user_name => "用户", :created_at => "时间", :desc => "描述" }
-= table_helper(:collection => @logs, :columns => columns )
+- columns = { :user_name => "用户", :created_at => "时间", :description => "描述" }
+= table_helper(:collection => @logs, :columns => columns, :no_operation => true)
 = render :partial => "layouts/page_nav" ,:locals => { :objs => @logs }

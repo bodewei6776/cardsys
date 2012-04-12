@@ -16,6 +16,8 @@ class Order < ActiveRecord::Base
   has_one     :non_member
   belongs_to  :advanced_order
 
+  has_many :logs, :as => :item
+
   validates  :members_card_id, :presence => { :message => "请选择会员卡" }, :if => proc { |order| order.is_member? }
   validates  :member_id, :presence => { :message => "请选择会员" }, :if => proc { |order| order.is_member? }
   validate   :coach_valid

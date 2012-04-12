@@ -1,5 +1,6 @@
 # -*- encoding : utf-8 -*-
 class Balance < ActiveRecord::Base
+  has_many :logs, :as => :item
 
   BALANCE_WAYS = {
     "card" => "记账",

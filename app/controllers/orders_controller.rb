@@ -32,12 +32,14 @@ class OrdersController < ApplicationController
     case params[:commit]
     when "代卖"
       if @order.split params[:order]
+        log_action(@order.court_book_record.court, "sell")
         render :action => "create"
       else
         render :action => "edit", :layout => "small_main"
       end
     when "变更"
       if @order.update_attributes(params[:order])
+        log_action(@order.court_book_record.court, "change")
         flash[:notice] = "场地修改成功"
         render :action => "create", :layout => "small_main"
       else
@@ -45,6 +47,7 @@ class OrdersController < ApplicationController
       end
     when "开场", "申请代卖", "取消代卖", "取消预订", "连续取消", "连续变更"
       be_action = Order::OPMAP.invert[params[:commit]]
+      log_action(@order.court_book_record.court, be_action)
       if @order.update_attributes(params[:order].slice(:login, :password)) && @order.send(be_action)
         flash[:notice] = "场地#{params[:commit]}成功"
         render :action => "create", :layout => "small_main"
@@ -58,6 +61,7 @@ class OrdersController < ApplicationController
     @order = Order.new(params[:order])
     @order.state = "booked"
     if @order.save
+      log_action(@order.court_book_record.court, "book")
       flash[:notice] = "场地预订成功"
       render :layout => "small_main"
     else

@@ -4,6 +4,7 @@ class MembersCard < ActiveRecord::Base
 
   include Authenticateable
   include HashColumnState
+  has_many :logs, :as => :item
 
   belongs_to  :card
   belongs_to  :member
