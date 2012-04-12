@@ -23,6 +23,7 @@ class OrdersController < ApplicationController
 
   def edit
     @order = Order.find(params[:id])
+    @order.activate! if @order.ought_to_activate?
     @order.build_non_member(:is_member => "1") if @order.is_member
     render :layout => "small_main"
   end

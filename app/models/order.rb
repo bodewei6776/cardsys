@@ -29,7 +29,7 @@ class Order < ActiveRecord::Base
   attr_accessor :coach_ids, :split_from_other
   after_save :save_order_items_for_court_and_coaches
 
-  delegate :alloc_date, :end_hour, :start_hour, :hours, :to => :court_book_record
+  delegate :alloc_date, :end_hour, :start_hour, :hours, :start_time, :end_time, :to => :court_book_record
 
   validation_conditions << proc {|obj|  obj.new_record? && !obj.split_from_other }
   validation_conditions << proc {|obj|  obj.state == "to_be_sold" && obj.state_was == "booked" }
@@ -192,6 +192,10 @@ class Order < ActiveRecord::Base
       result = []
       possible_ways.each{ |k| result << [Balance::BALANCE_WAYS[k], k] }
       result
+    end
+
+    def ought_to_activate?
+      (self.booked? || self.to_be_sold?) && Time.now > self.end_time
     end
 
     def auto_generate_coaches_items

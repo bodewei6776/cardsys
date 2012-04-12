@@ -19,6 +19,8 @@ class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user
 
   skip_before_filter :verify_authenticity_token
+
+  rescue_from Exception, :with => :render_404
   
   protected
 
@@ -105,6 +107,13 @@ class ApplicationController < ActionController::Base
     @user = User.find_by_login(params[:user_name])
     @user.try(:valid_password?,params[:password])
   end
+
+
+
+  def render_404
+    render :template => 'layouts/404', :layout => false, :status => :not_found
+  end
+
 
 end
 
