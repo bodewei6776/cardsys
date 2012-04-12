@@ -89,6 +89,7 @@ table.report_table tr.report_title td{
 }
 
 .index_order_table td, .index_order_table th{
+  vertical-align: middle;
   padding: 1px;
 }
 
