@@ -61,7 +61,7 @@ class OrdersController < ApplicationController
       flash[:notice] = "场地预订成功"
       render :layout => "small_main"
     else
-      @order.build_non_member(:is_member => "1")
+      @order.build_non_member(:is_member => @order.is_member, :earnest => 0)
       render :action => "new", :layout => "small_main"
     end
   end
