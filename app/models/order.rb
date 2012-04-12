@@ -31,6 +31,7 @@ class Order < ActiveRecord::Base
 
   validation_conditions << proc {|obj|  obj.new_record? && !obj.split_from_other }
   validation_conditions << proc {|obj|  obj.state == "to_be_sold" && obj.state_was == "booked" }
+  validation_conditions << proc {|obj|  obj.state == "canceld" }
 
   def save_order_items_for_court_and_coaches
     return unless court_book_record
