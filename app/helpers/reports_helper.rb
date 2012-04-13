@@ -5,7 +5,7 @@ module ReportsHelper
     map = [["记账", "card"],["计次", "counter"],["现金" , "cash"],["POS机" , "pos"],["支票" , "check"],["银行转账" , "bank"], ["挂账" , "guazhang"]]
     html = ""
     map.each do |way|
-      html << content_tag(:input,raw("#{way[0]}"),:type => "checkbox",:name => "way[]",:value => way[1],:checked => checked.include?(way[1].to_s),:onclick=> "recalculate();" ,:class=>"pay_ways")
+      html << content_tag(:input,raw("#{way[0]}"),:type => "checkbox",:name => "pay_ways[]", :value => way[1], :checked => checked.include?(way[1].to_s), :onclick=> "recalculate();" , :class=>"pay_ways")
     end
 
     html
@@ -86,7 +86,7 @@ module ReportsHelper
   end
 
 
-  def display_month_income_report(date,selected_way,pay_ways)
+  def display_month_income_report(date, selected_way, pay_ways)
     table_width = 5 + Category.roots.count
 
     table = ''
@@ -119,12 +119,12 @@ module ReportsHelper
       table << "<tr class='report_item'>"
       table <<"<td>#{index+1}</td>"
       table << "<td> #{ current_date}</td>"
-      table << "<td class='mon'>#{Balance.total_book_records_balance_on_date_any_ways(current_date,pay_ways)}</td>"
-      table << "<td class='mon'>#{Balance.total_coach_balance_on_date_any_ways(current_date,pay_ways)}</td>"
+      table << "<td class='mon'>#{Balance.total_book_records_balance_on_date_any_ways(current_date, pay_ways)}</td>"
+      table << "<td class='mon'>#{Balance.total_coach_balance_on_date_any_ways(current_date, pay_ways)}</td>"
       Category.roots.each do |gt|
-      table << "<td class='mon'>#{Balance.total_goods_balance_on_date_any_ways(current_date,pay_ways,gt)}</td>"
+      table << "<td class='mon'>#{Balance.total_goods_balance_on_date_any_ways(current_date, pay_ways,gt)}</td>"
       end
-      table << "<td class='mon'>#{Balance.total_balance_on_date_any_ways(current_date,pay_ways)} </td>"
+      table << "<td class='mon'>#{Balance.total_balance_on_date_any_ways(current_date, pay_ways)} </td>"
       table << "</tr>"
     end
 
@@ -135,7 +135,7 @@ module ReportsHelper
     table << "<td class='mon'> #{Balance.total_book_records_balance_on_month_any_ways(date,pay_ways)} </td>"
     table << "<td class='mon'> #{Balance.total_coach_balance_on_month_any_ways(date,pay_ways)}</td>"
   Category.roots.each do |gt|
-    table << "<td class='mon'> #{Balance.total_goods_balance_on_month_any_ways(date,pay_ways,gt)}</td>"
+    table << "<td class='mon'> #{Balance.total_goods_balance_on_month_any_ways(date, pay_ways, gt)}</td>"
       end
     table << "<td>合计: #{Balance.total_balance_on_month_any_ways(date,pay_ways)}</td>"
     table << "</tr>"

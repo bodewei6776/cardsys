@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
 
   skip_before_filter :verify_authenticity_token
 
-  rescue_from Exception, :with => :render_404
+  #rescue_from Exception, :with => :render_404
   
   protected
 

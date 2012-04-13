@@ -43,6 +43,7 @@ class Balance < ActiveRecord::Base
   delegate :members_card, :to => :order
 
   def deduct_money_from_card_and_mark_order_as_paid
+    return true  unless self.order.is_member?
     if self.balance_way == "counter"
       self.members_card.left_times -= self.price
     elsif self.balance_way == "card" && self.order.members_card
@@ -65,6 +66,9 @@ class Balance < ActiveRecord::Base
       oi = OrderItem.find(element["id"])
       oi.discount = element["discount"]
       oi.price_after_discount = element["price_after_discount"]
+      if CourtBookRecord === oi.item && self.balance_way == "counter"
+        oi.price_after_discount = self.order.hours
+      end
       oi.balanced = true
       self.order_items << oi
     end
@@ -142,7 +146,7 @@ class Balance < ActiveRecord::Base
   end
 
   def self.total_balance_on_month_any_ways(date, ways)
-    data =  balances_on_month_and_ways(date,ways)
+    data =  balances_on_month_and_ways(date, ways)
     if ways.include?("counter")
       money = data.select{|balance| balance.balance_way != "counter" }.sum(&:final_price)
       count = data.select{|balance| balance.balance_way == "counter"}.sum(&:final_price)
@@ -180,7 +184,7 @@ class Balance < ActiveRecord::Base
 
   def goods_amount(type, ways)
     return 0 unless ways.include?(self.balance_way)
-    return self.order_items.select{|oi| oi.item.is_a? Good}.sum(&:price_after_discount)
+    return self.order_items.select{|oi| (oi.item.is_a? Good) && oi.item.category == type}.sum(&:price_after_discount)
   end
 
   def good_amount_by_type(type, ways)
@@ -201,12 +205,12 @@ class Balance < ActiveRecord::Base
   end
 
   def self.total_book_records_balance_on_month_any_ways(date, ways)
-    data = balances_on_month_and_ways(date,ways)
+    data = balances_on_month_and_ways(date, ways)
     sum = 0
     count = 0
     data.each do |element|
-      sum += balance.final_price if self.balance_way != "counter" && ways.include?(self.balance_way)
-      count += balance.final_price if self.balance_way == "counter" && ways.include?("counter")
+      sum += element.book_record_amount(ways) if element.balance_way != "counter" && ways.include?(element.balance_way)
+      count += element.book_record_amount(ways) if element.balance_way == "counter" && ways.include?("counter")
     end
 
     "#{sum}元/#{count}次"
@@ -230,9 +234,9 @@ class Balance < ActiveRecord::Base
     data.present? ? data.inject(0){|sum,b| sum += b.good_amount_by_type(gt, ways) } : 0
   end
 
-  def self.total_goods_balance_on_month_any_ways(date,ways,gt)
-    data = balances_on_month_and_ways(date,ways)
-    data.present? ? data.inject(0){|sum,b| sum += b.goods_amount(ways) } : 0
+  def self.total_goods_balance_on_month_any_ways(date, ways, gt)
+    data = balances_on_month_and_ways(date, ways)
+    data.present? ? data.inject(0){|sum, b| sum += b.goods_amount(gt, ways) } : 0
   end
 
   def book_record_span

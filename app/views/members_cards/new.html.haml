@@ -1,7 +1,7 @@
 = form_header(:title => "会员卡绑定", :link => members_cards_path)
 =render :partial => "layouts/errors", :locals => {:target => @members_card}
 = form_for(@members_card, :html => { :class => "form-horizontal well" }) do |f|
-  - control_helper("member_id", "会员名称") do
+  - control_helper("member_id", "会员姓名") do
     = text_field_tag :members_name, @members_card.member.try(:name) || "", "member-name-autocomplete" => "/members/autocomplete_name"
     = f.hidden_field :member_id
 
