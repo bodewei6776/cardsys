@@ -47,7 +47,6 @@
 
     
       $(document).ready(function() {
-        //WdatePicker({startDate:'#{Date.today.strftime("%Y-%m-%d")}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true, specialDates:['#{@date.strftime("%Y-%m-%d")}']})
         $("#datepicker").datepicker({ changeMonth: true, 
           changeYear: true,
           onSelect: function(dateText, inst){ jump_to_somewhere(dateText)}, 

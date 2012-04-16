@@ -37,7 +37,7 @@ module OrdersHelper
         display_content =if book_record.order.is_member?
                            "#{book_record.order.member.name}:#{book_record.order.members_card.card_serial_num}" 
                          else
-                           "#{book_record.order.non_member.name}:无卡预定" 
+                           "#{book_record.order.non_member.name}:散客" 
                          end
         display_content = "(授)" + display_content if (book_record.order.members_card_id.present? and \
                                                        book_record.order.is_member? and \

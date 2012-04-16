@@ -43,14 +43,13 @@ class Balance < ActiveRecord::Base
   delegate :members_card, :to => :order
 
   def deduct_money_from_card_and_mark_order_as_paid
-    return true  unless self.order.is_member?
-    if self.balance_way == "counter"
+    if self.balance_way == "counter" && self.order.members_card
       self.members_card.left_times -= self.price
     elsif self.balance_way == "card" && self.order.members_card
       self.members_card.left_fee -= self.final_price
     end
 
-    self.members_card.save(:validate => false)
+    self.members_card.save(:validate => false) if self.members_card
 
     if self.order.reload.order_items.all?(&:balanced?)
       # skip callbacks 
