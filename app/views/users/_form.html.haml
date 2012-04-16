@@ -1,34 +1,25 @@
-= form_for @user do |f|
-  = render :partial => "layouts/errors", :locals => {:target => @user}
-  .fformbox_nr
-    %ul
-      %li
-        .w1 用户名：
-        .w2
-          = f.text_field :login
-      %li
-        .w1 昵&nbsp;&nbsp;&nbsp;称：
-        .w2
-          = f.text_field :user_name
+= render :partial => "layouts/errors", :locals => {:target => @user}
+= form_header(:title => "新用户", :link => users_path)
+= form_for @user, :html => { :class => "form-horizontal" } do |f|
+  - control_helper("login", "用户名") do
+    = f.text_field :login
+
+  - control_helper("user_name", "昵称") do
+    = f.text_field :user_name
 
 
-    %ul
-      %li
-        .w1 密&nbsp;&nbsp;&nbsp;码：
-        .w2
-          = f.password_field :password
-      %li
-        .w1 密码确认：
-        .w2
-          = f.password_field :password_confirmation
-    %ul
-      %li
-        .w1 所属部门：
-        %div{:style => "width:500px;"}
-          - @departments.each do |d|
-            = check_box_tag "dep[]",d.id.to_s, @user.departments.presence && @user.departments.include?(d)
-            = d.name
+  - control_helper("password", "密码") do
+    = f.password_field :password
 
-    %ul
-      %li
-        = f.submit "提交", :class => "submit1 float_right"
+
+  - control_helper("password_confirmation", "密码确认") do
+    = f.password_field :password_confirmation
+
+
+  - control_helper("password_confirmation", "所属部门") do
+    - @departments.each do |d|
+      = check_box_tag "dep[]",d.id.to_s, @user.departments.presence && @user.departments.include?(d)
+      = d.name
+
+  .form-actions
+    = f.submit "提交", :class => "btn"

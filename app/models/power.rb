@@ -3,11 +3,8 @@ class Power < ActiveRecord::Base
   has_many   :user_powers,:dependent => :destroy
   has_many :users,:through => :user_powers
   has_many   :department_powers,:dependent => :destroy
+  has_many :children, :class_name => "Power", :foreign_key => :parent_id
   scope :tops, lambda { {:conditions =>  "parent_id = 0" }}
-
-  #default_scope where(:will_show  => true)
-  #scope :all,where(:will_show => true)
-  #:scope :all_include_hide,all
 
   after_create do |p| p.update_attribute(:will_show , true) end
 
@@ -23,7 +20,7 @@ class Power < ActiveRecord::Base
     self.children.where(:will_show => true)
   end
 
-  acts_as_tree
+
 
   def self.tree_top
     where(:parent_id => 0,:will_show => true)

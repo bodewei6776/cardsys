@@ -47,8 +47,8 @@ class MembersCardsController < ApplicationController
     @cards = Card.enabled
     @members_card = MembersCard.new(:member_id => @member.try(:id), 
                                     :expire_date => 6.month.from_now,
-                                    :left_fee => 1000,
-                                    :left_times => 100)
+                                    :left_fee => 0,
+                                    :left_times => 0)
     @members_cards = @member.try(:all_members_cards) || []
   end
 

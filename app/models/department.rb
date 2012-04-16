@@ -8,7 +8,12 @@ class Department < ActiveRecord::Base
   has_many :department_powers
   has_many  :powers,:through => :department_powers
 
+
   def has_power? power
     self.powers and self.powers.include?(power)
+  end
+
+  def can_view?
+    false
   end
 end

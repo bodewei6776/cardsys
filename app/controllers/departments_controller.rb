@@ -34,7 +34,11 @@ class DepartmentsController < ApplicationController
   end
 
   def destroy
-    @department.destroy
+    if @department.users.present?
+      flash[:notice] = "部门下面有用户， 不可以删除"
+    else
+      @department.destroy
+    end
     redirect_to departments_url
   end
 

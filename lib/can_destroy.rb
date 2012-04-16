@@ -1,6 +1,6 @@
 class ActiveRecord::Base
   def can_view?
-    false
+    true
   end
 
   def can_destroy?
