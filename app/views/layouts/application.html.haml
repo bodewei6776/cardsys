@@ -16,11 +16,10 @@
     = stylesheet_link_tag "application", :media => "all"
     / Le fav and touch icons
 
-    = javascript_include_tag "application", "m97/WdatePicker", "new_datepicker"
+    = javascript_include_tag "application"
     :javascript
-      function jump_to_somewhere(dp){
-        var dateText = dp.cal.getDateStr();
-          $("#calendar_con").val(dateText);
+      function jump_to_somewhere(dateText, inst){
+            $("#calendar_con").val(dateText);
             var domain = document.domain;
             var port = window.location.port;
             var urls = ["http://",domain];
@@ -38,12 +37,27 @@
         }
 
 
+      var specialDays = ['#{@date.strftime("%Y-%m-%d")}'];
+      function hightLightSpecialDates(thedate){
+          var theday = $.datepicker.formatDate('yy-mm-dd', thedate);
+          if( $.inArray(theday, specialDays) == -1 ) return [true,""]; 
+          console.log(thedate);
+          return [true, "specialDate"]; 
+      }
+
     
       $(document).ready(function() {
-        WdatePicker({startDate:'#{Date.today.strftime("%Y-%m-%d")}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true, specialDates:['#{@date.strftime("%Y-%m-%d")}']})
+        //WdatePicker({startDate:'#{Date.today.strftime("%Y-%m-%d")}',eCont:'datepicker',onpicked:function(dp){jump_to_somewhere(dp);}, lang:"zh-cn",isShowToday:true, specialDates:['#{@date.strftime("%Y-%m-%d")}']})
+        $("#datepicker").datepicker({ changeMonth: true, 
+          changeYear: true,
+          onSelect: function(dateText, inst){ jump_to_somewhere(dateText)}, 
+          beforeShowDay: hightLightSpecialDates
+          }, 
+        $.datepicker.regional['zh-CN']); 
+        $("#datepicker").datepicker( "setDate" , '#{@date.strftime("%Y-%m-%d")}');
         $(".popup-new-window").colorbox({width:"900", height:"600", iframe:true});
-        $(".date-type-input").new_datepicker();
-        $(".select-date").new_datepicker();})
+        $(".date-type-input, .select-date").datepicker({ changeMonth: true, changeYear: true });
+      });
     
 
       $(document).ready(function() {

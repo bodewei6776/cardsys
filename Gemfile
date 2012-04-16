@@ -26,6 +26,7 @@ end
 
 gem 'twitter-bootstrap-rails', '2.0.3'
 
+gem 'jquery-ui-rails'
 
   
 # Gems used only for assets and not required

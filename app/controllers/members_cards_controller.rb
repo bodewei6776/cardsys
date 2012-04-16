@@ -86,7 +86,8 @@ class MembersCardsController < ApplicationController
         :card_type_in_chinese => @members_card.card_type_in_chinese,
         :remaining_money_and_amount_in_chinese => @members_card.remaining_money_and_amount_in_chinese,
         :members_card_info => @members_card.members_card_info,
-        :mobile => @members_card.member.mobile
+        :mobile => @members_card.member.mobile,
+        :id => @members_card.id
       }} 
     end
   end

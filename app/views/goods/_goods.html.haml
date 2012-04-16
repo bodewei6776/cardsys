@@ -5,8 +5,6 @@
       %th 商品名称
       %th 商品分类
       %th 零售价
-      %th 商品总数
-      %th 库房商品数
       %th 前台商品数
       %th 操作
 
@@ -17,8 +15,6 @@
         %td= good.name
         %td= generate_good_type_str(good.good_type)
         %td= good.price
-        %td= good.count_total_now
-        %td= good.count_back_stock
         %td= good.count_front_stock
         %td
           - @order_item = OrderItem.new_by_good(good, @order.id)

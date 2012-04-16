@@ -1,33 +1,35 @@
 = javascript_include_tag "autocomplete-rails"
 = render :partial => "layouts/errors", :locals => {:target => @order_item} if @order_item && @order_item.errors
 
-= table_header(:title => "商品查询", :link => edit_order_path(@order))
+= form_header(:title => "商品查询", :link => edit_order_path(@order))
 = form_tag "/goods/goods",{:id => "search-goods-form", :class => "well form-horizontal", :method => :get} do |f|
   = hidden_field_tag :order_id, params[:order_id]
   - control_helper("good_type", "商品类型") do
-    = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
+    = select_tag "good_type", raw(generate_good_type_options(params[:good_type])), :id => "good_type",:class=> "select"
 
 
   - control_helper("name", "商品名称") do
     = text_field_tag :name, params[:name], :autocomplete => "/goods/autocomplete_name"
 
+  .form-actions
+    = submit_tag "搜索", :class => "btn"
 
-= table_header(:title => "商品列表", :link => edit_order_path(@order))
+= table_header(:title => "商品列表", :link => "")
 #goods
   = render :partial => "goods", :locals => { :goods => @goods }
-%script{:charset => "utf-8", :type => "text/javascript"}
+
+:javascript
   $(document).ready(function(){
-  $('#name').autocomplete({
-  source: "/goods/autocomplete_name",
-  select: function(ui, li){
-  var item = li.item;
-  $(this).val(item.value);
-  $('#search-goods-form').submit();
-  }
-  });
+    $('#name').autocomplete({
+      source: "/goods/autocomplete_name",
+      select: function(ui, li){
+        var item = li.item;
+        $(this).val(item.value);
+        $('#search-goods-form').submit();
+      }
+    });
   });
   
   $('#good_type').change(function(){
-  
-  $('#search-goods-form').submit();
+    $('#search-goods-form').submit();
   });
