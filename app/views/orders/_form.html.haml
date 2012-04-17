@@ -38,7 +38,7 @@
       #remaining
         = @order.members_card.try(:remaining_money_and_amount_in_chinese)
 
-    - control_helper("is_member", "卡状态", :left) do
+    - control_helper("is_member", "卡状态", :right) do
       #members_card_info
         = @order.members_card.try(:members_card_info)
 
