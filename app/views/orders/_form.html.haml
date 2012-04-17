@@ -45,18 +45,18 @@
 
   #is_non_member{:style => "display:#{!@order.is_member? ? 'block;' : 'none;'}"}
     = f.fields_for :non_member do |nm|
-      - control_helper("name", "散客姓名") do
+      - control_helper("name", "散客姓名", :left) do
         = nm.text_field :name
         = nm.hidden_field :is_member, :id => "order_non_member_attributes_is_member"
 
-      - control_helper("name", "标准收费") do
+      - control_helper("name", "标准收费", :right) do
         #non_member_price
           = @order.court_book_record.price
 
-      - control_helper("telephone", "手机/座机") do
+      - control_helper("telephone", "手机/座机", :left) do
         = nm.text_field :telephone
 
-      - control_helper("earnest", "定金") do
+      - control_helper("earnest", "定金", :right) do
         = nm.text_field :earnest
 
 
