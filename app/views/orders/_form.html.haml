@@ -20,7 +20,7 @@
       = f.hidden_field :member_id
 
 
-    - control_helper("card_serial_num", "卡号", :left) do
+    - control_helper("card_serial_num", "卡号", :right) do
       #cards
         = text_field_tag :card_serial_num, @order.members_card.try(:card_serial_num), :id => "order_member_card_serial_num"
         = f.hidden_field :members_card_id
@@ -29,7 +29,7 @@
     - control_helper("telephone", "联系电话", :left) do
       = f.text_field :telephone, :id => "mobile"
 
-    - control_helper("is_member", "卡类型", :left) do
+    - control_helper("is_member", "卡类型", :right) do
       #card_type
         = @order.members_card.try(:card_type_in_chinese)
 
