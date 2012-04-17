@@ -20,7 +20,7 @@ class Setting
     end
 
     def site_name
-      "ceshi" || "博德维"
+       "博德维"
     end
 
     def site_url

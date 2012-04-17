@@ -43,7 +43,6 @@
         = @order.members_card.try(:members_card_info)
 
 
-
   #is_non_member{:style => "display:#{!@order.is_member? ? 'block;' : 'none;'}"}
     = f.fields_for :non_member do |nm|
       - control_helper("name", "散客姓名") do
@@ -61,12 +60,12 @@
         = nm.text_field :earnest
 
 
-  - control_helper("coach_ids", "教练") do
+  - control_helper("coach_ids", "教练", :left) do
     = f.text_field :coach_ids
 
 
 
-  - control_helper("memo", "备注") do
+  - control_helper("memo", "备注", :right) do
     = f.text_field:memo
 
 
