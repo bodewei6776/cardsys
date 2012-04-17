@@ -41,7 +41,6 @@
       function hightLightSpecialDates(thedate){
           var theday = $.datepicker.formatDate('yy-mm-dd', thedate);
           if( $.inArray(theday, specialDays) == -1 ) return [true,""]; 
-          console.log(thedate);
           return [true, "specialDate"]; 
       }
 
@@ -54,6 +53,7 @@
           }, 
         $.datepicker.regional['zh-CN']); 
         $("#datepicker").datepicker( "setDate" , '#{@date.strftime("%Y-%m-%d")}');
+
         $(".popup-new-window").colorbox({width:"900", height:"600", iframe:true});
         $(".date-type-input, .select-date").datepicker({ changeMonth: true, changeYear: true });
       });
