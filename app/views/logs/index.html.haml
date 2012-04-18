@@ -22,6 +22,20 @@
     = submit_tag "提交", :class => "btn btn-primary"
 
 
-- columns = { :user_name => "用户", :created_at => "时间", :description => "描述" }
-= table_helper(:collection => @logs, :columns => columns, :no_operation => true)
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %th 编号
+      %th 用户
+      %th 时间
+      %th 描述
+
+  %tbody
+    - @logs.each_with_index do |e, index|
+      %tr
+        %td= index + 1
+        %td= e.user_name
+        %td= e.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        %td= e.description
+
 = render :partial => "layouts/page_nav" ,:locals => { :objs => @logs }

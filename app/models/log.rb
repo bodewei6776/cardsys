@@ -25,13 +25,13 @@ class Log < ActiveRecord::Base
   end
 
   def description
-    item_name + LOG_TYPE[self.log_type.intern] + (self.desc || "")
+    item_name + LOG_TYPE[self.log_type.intern] + ("(#{self.desc})" || "")
   end
 
   def item_name
     case item
     when Court
-      item.name
+      item.name 
     when MembersCard
       item.card_serial_num
     else
