@@ -76,7 +76,7 @@
     = f.password_field :password
 
   .form-actions
-    = f.submit @order.new_record? ? "预订" : "变更", :class => "btn"
+    = f.submit @order.new_record? ? "预订" : "变更", :class => "btn" if !@order.to_be_sold?
     = f.submit "代卖", :class => "btn" if @order.can_sell?
     = display_enable_buttons(@order) if !@order.new_record?
 
