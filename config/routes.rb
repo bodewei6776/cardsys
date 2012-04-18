@@ -243,7 +243,7 @@ Cardsys::Application.routes.draw do
   resources :departments do
     member do
       get :department_power_index
-      post :department_power_update
+      put :department_power_update
     end
   end
   

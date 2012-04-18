@@ -9,8 +9,8 @@ class User < ActiveRecord::Base
   acts_as_authentic do |c|
     c.merge_validates_length_of_login_field_options(:allow_blank => true, :message => "登陆名长度")
     c.merge_validates_format_of_login_field_options(:allow_blank => true)
-    c.merge_validates_length_of_password_field_options(:allow_blank => true)
-    c.merge_validates_length_of_password_confirmation_field_options(:allow_blank => true)
+    c.merge_validates_length_of_password_field_options(:allow_blank => true, :message => "长度太短")
+    c.merge_validates_length_of_password_confirmation_field_options(:allow_blank => true, :message => "长度太短")
   end
 
   has_many   :user_powers

@@ -1,11 +1,14 @@
 :javascript
   $(document).ready(function(){
-    $("input[type=checkbox]").click(function(){
-        if($(this).is(":checked") && $(this).attr('parent_id') == undefined){
-          $("input[type=checkbox][value=" + $(this).attr('parent_id') +"]").attr('checked','checked');
-        }
+    $(".first input").click(function(){
+      if($(this).is(":checked")){ $(this).parent().find("li.second input[type=checkbox]").attr('checked', true); }
+      else {$(this).parent().find("li.second input[type=checkbox]").attr('checked', false);}
       });
 
+
+    $(".second input").click(function(){
+      if($(this).is(":checked")){ $(this).closest("li.first").children("input").attr('checked', true); }
+    });
    });
 
 
