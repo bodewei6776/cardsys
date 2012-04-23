@@ -1,15 +1,10 @@
 = form_tag form_url, :class => "form-horizontal well", :method => :get  do
-  .control-group
-    %label.control-label 按照商品类别
-    .controls
-      = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
+  - control_helper(:good_type, "按照商品类别", :left) do
+    = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
 
-  .control-group
-    %label.control-label 按照商品名称
-    .controls
-      = text_field_tag :name, "#{params[:name]}", :autocomplete_name => "/goods/autocomplete_name"
+  - control_helper(:name, "按照商品名称", :right) do
+    = text_field_tag :name, "#{params[:name]}", :autocomplete_name => "/goods/autocomplete_name"
 
-  .control-group
-    .controls
-      = submit_tag "查询", :class => "btn btn-primary"
+  .form-actions
+    = submit_tag "查询", :class => "btn"
  

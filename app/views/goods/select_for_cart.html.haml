@@ -1,6 +1,6 @@
 = javascript_include_tag "autocomplete-rails"
 
-= table_header(:title => "商品查询", :link => new_good_buy_balances_path)
+= table_header(:title => "商品查询", :link => "")
 = form_tag select_for_cart_goods_path, {:id => "search-goods-form", :class => "well form-horizontal", :method => :get} do |f|
   - control_helper("good_type", "商品类型") do
     = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"

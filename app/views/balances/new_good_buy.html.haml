@@ -1,28 +1,29 @@
 %span.btn.btn-primary=link_to "购买商品", select_for_cart_goods_path, :id => "goods_list", :style => "color:white;"
 
 = form_tag  create_good_buy_balances_path ,:id => "balance_form", :class => "form-horizontal well"  do |f|
-  - control_helper("", "会员") do
+  - control_helper("", "会员", :left) do
     = radio_button_tag "","",false,:onclick => "show_div($(this),'member')",:id => "radio_yes"
     = "是"
     = radio_button_tag "","",false,:onclick => "show_div($(this),'sanke')",:id => "radio_no"
     = "否"
     = hidden_field_tag "member","member",:id=> "member_or_not"
+
   #member
-    - control_helper("member_name", "会员姓名") do
+    - control_helper("member_name", "会员姓名", :right) do
       = text_field_tag :member_name, "", :user_autocomplete => "/book_records/complete_for_members", :id => "member_name"
       = hidden_field_tag :member_id, :id => "member_id"
 
-    - control_helper("member_card_id", "会员卡号") do
+    - control_helper("member_card_id", "会员卡号", :left) do
       %p#cards
         = text_field_tag :member_card, "", :member_card_autocomplete => "/member_cards/autocomplete_card_serial_num", :id => "member_card_name_field"
         = hidden_field_tag :member_card_id, :id => "member_card_hidden_id"
 
-    - control_helper("member_info", "卡主信息") do
-      %p#member_info{:style => "color:red;"} 未知
+    - control_helper("member_info", "卡主信息", :right) do
+      %p#member_info{:style => "color:red; float: left;"} 未知 
       %p#member_card_info{:style => "color:red"} 未知
 
   #sanke
-    - control_helper("sanke_name", "散客姓名") do
+    - control_helper("sanke_name", "散客姓名", :right) do
       = text_field_tag :sanke_name
 
   .form-actions
