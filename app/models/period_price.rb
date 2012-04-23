@@ -15,12 +15,12 @@ class PeriodPrice < ActiveRecord::Base
 
   def validate_start_time_end_time
     self.errors.add(:base, "开始时间应小于结束时间") if self.start_time >= self.end_time 
-    conflict_period = self.class.where(["start_time < :end_time AND end_time > :start_time AND period_type=#{period_type}",
-        {:start_time => start_time,:end_time => end_time}])
-    conflict_period = conflict_period.where("id <> #{id}") unless new_record?
-    if conflict_period.first
-      errors['base'] << "时段冲突，#{start_time}-#{end_time}已经存在"
-    end
+    #conflict_period = self.class.where(["start_time < :end_time AND end_time > :start_time AND period_type=#{period_type}",
+    #    {:start_time => start_time,:end_time => end_time}])
+    #conflict_period = conflict_period.where("id <> #{id}") unless new_record?
+    #if conflict_period.first
+    #  errors['base'] << "时段冲突，#{start_time}-#{end_time}已经存在"
+    #end
   end
 
   def period_type_in_chinese
