@@ -1,6 +1,13 @@
 = form_header(:title => "预订#{@order.court_book_record.alloc_date.to_chinese_ymd}(#{chinese_week_day(Time.parse(@order.court_book_record.alloc_date.to_s).wday)})", :link => "" )
 =render :partial => "layouts/errors", :locals => {:target => @order}
 = form_for @order, :html => {:class => "form-horizontal well order_form"} do |f|
+  - control_helper("end_date", "截至日期") do
+    - if @order.persisted?
+      = @order.end_date.to_chinese_ymd
+      = "（连续预订）" if @order.is_advance_order?
+    - else
+      = f.text_field :end_date, :class => "select-date date-type-input"
+
   = f.hidden_field :order_date
   - control_helper("start_hour", "预订") do
     = f.fields_for :court_book_record do |cbr|

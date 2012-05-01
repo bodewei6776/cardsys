@@ -1,4 +1,6 @@
 # -*- encoding : utf-8 -*-
+
+
 class OrdersController < ApplicationController
 
   def index
@@ -16,6 +18,7 @@ class OrdersController < ApplicationController
     @order.court_book_record.resource_type = 'Court'
     @order.member = Member.new
     @order.order_date = @order.court_book_record.alloc_date
+    @order.end_date = @order.order_date 
     @order.non_member = NonMember.new(:is_member => "1", :earnest => 0)
     @order.telephone = @order.member.telephone
     render :layout => "small_main"
@@ -46,7 +49,15 @@ class OrdersController < ApplicationController
       else
         render :action => "edit", :layout => "small_main"
       end
-    when "开场", "申请代卖", "取消代卖", "取消预订", "连续取消", "连续变更"
+    when "连续变更"
+      if @order.all_update_attributes(params[:order])
+        log_action(@order.court_book_record.court, "all_change", current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00")
+        flash[:notice] = "场地连续变更成功"
+        render :action => "create", :layout => "small_main"
+      else
+        render :action => "edit", :layout => "small_main"
+      end
+    when "开场", "申请代卖", "取消代卖", "取消预订", "连续取消"
       be_action = Order::OPMAP.invert[params[:commit]]
       log_action(@order.court_book_record.court, be_action, current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00")
       if @order.update_attributes(params[:order].slice(:login, :password)) && @order.send(be_action)
@@ -61,6 +72,7 @@ class OrdersController < ApplicationController
   def create
     @order = Order.new(params[:order])
     @order.state = "booked"
+    @order.possible_batch_order = true
     if @order.save
       log_action(@order.court_book_record.court, "book", current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00")
       flash[:notice] = "场地预订成功"

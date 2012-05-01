@@ -1,7 +1,9 @@
 # -*- encoding : utf-8 -*-
+require 'digest/sha1'
 class Order < ActiveRecord::Base
   OPMAP = { "activate"         => "开场",
             "want_sell"        => "申请代卖",
+            "all_cancel"       => "连续取消",
             "cancel_want_sell" => "取消代卖",
             "cancel"           => "取消预订" }
   include Authenticateable
@@ -22,12 +24,16 @@ class Order < ActiveRecord::Base
   validates  :member_id, :presence => { :message => "请选择会员" }, :if => proc { |order| order.is_member? }
   validate   :coach_valid
   validate   :card_avaliable_in_time_span
+  validate   :end_date_later_than_today
 
   accepts_nested_attributes_for :court_book_record
   accepts_nested_attributes_for :coach_book_records
   accepts_nested_attributes_for :non_member, :reject_if => proc { |non_member| non_member[:is_member] == "1" }
-  attr_accessor :coach_ids, :split_from_other
+  attr_accessor :coach_ids, :split_from_other, :possible_batch_order
   after_save :save_order_items_for_court_and_coaches
+
+  before_create :assign_batch_number
+  after_create :batch_order
 
   delegate :alloc_date, :end_hour, :start_hour, :hours, :start_time, :end_time, :to => :court_book_record
 
@@ -61,6 +67,53 @@ class Order < ActiveRecord::Base
     true
   end
 
+  def assign_batch_number
+    self.batch_number = Digest::SHA1.hexdigest Time.now.to_s
+  end
+
+  def end_date_later_than_today
+    self.errors.add(:end_date, "结束日期至少大于当天") if self.end_date < self.order_date
+  end
+
+  def batch_order
+    return true unless self.possible_batch_order
+      
+    self.class.wdate_between(self.order_date, self.end_date).each do |date|
+      new_order = Order.new(self.attributes.except("id"))
+      # prevent for futher copy, orelse this may lead to loop
+      new_order.possible_batch_order = false
+      new_order.court_book_record = CourtBookRecord.new(self.court_book_record.attributes.except("id").merge(:alloc_date => date))
+      self.coach_book_records.each do |cbr| 
+        new_order.coach_book_records << CoachBookRecord.new(cbr.attributes.except("id").merge(:alloc_date => date))
+      end
+
+      new_order.is_advance_order = true
+      self.update_column(:is_advance_order, true)
+      new_order.save(:validate => false)
+    end
+  end
+
+  def all_update_attributes(order_attributes)
+    self.advance_order_siblings.each do |element|
+      #element.update_attributes(order_attributes)
+
+    end
+
+    self.update_attributes(order_attributes)
+  end
+
+  def self.wdate_between(begin_date, end_date)
+    days = []
+    offset_date = begin_date + 7.days
+
+    while( offset_date <= end_date ) do
+      days.push offset_date
+      offset_date += 7.day
+    end
+
+    days
+  end
+
   def card_avaliable_in_time_span
     return true unless self.members_card
     return true unless self.court_book_record
@@ -88,6 +141,7 @@ class Order < ActiveRecord::Base
 
   state_machine  :initial => :booked do
     after_transition :on => :cancel , :do => :destroy
+    after_transition :on => :all_cancel , :do => :advance_destroy
 
     event :activate do
       transition :booked => :activated
@@ -108,6 +162,11 @@ class Order < ActiveRecord::Base
 
     event :cancel do
       transition [:to_be_sold, :booked] => :canceld
+    end
+
+
+    event :all_cancel do
+      transition [:to_be_sold, :booked] => :all_canceld
     end
 
     event :balance do
@@ -133,6 +192,13 @@ class Order < ActiveRecord::Base
       end
     end
 
+    def advance_destroy
+      ap '1' * 1000
+      ap self.advance_order_siblings
+      self.advance_order_siblings.collect(&:destroy)
+      self.destroy
+    end
+
     def can_sell?
       to_be_sold?
     end
@@ -150,11 +216,11 @@ class Order < ActiveRecord::Base
     end
 
     def can_cancel_all?
-      activated? && is_advanced_order?
+      booked? && is_advance_order?
     end
 
     def can_update_all?
-      booked? && is_advanced_order?
+      booked? && is_advance_order?
     end
 
     def book_time_due?
@@ -284,10 +350,6 @@ class Order < ActiveRecord::Base
       order
     end
 
-    def is_advanced_order?
-      !!advanced_order
-    end
-
     def is_order_use_zige_card?
       is_member? && members_card.card.is_zige_card?
     end
@@ -356,5 +418,11 @@ class Order < ActiveRecord::Base
       is_member? ? member.name : non_member.name
     end
 
+    def advance_order_siblings(from_date = nil)
+      from_date ||= self.alloc_date
+      Order.all(:conditions => ["book_records.alloc_date > :from_date && batch_number = :batch_number",
+                { :from_date => from_date, :batch_number => self.batch_number}], :joins => :court_book_record)
+    end
 
-  end
+
+    end
