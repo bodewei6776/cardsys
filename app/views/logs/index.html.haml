@@ -1,11 +1,10 @@
 = form_header(:title =>"操作记录", :link => "")
 = form_tag(logs_path, :class => "form-horizontal well", :method => :get) do
   - control_helper("abc", "类别") do
-    = link_to "全部",logs_path(:user => params[:user],:start => params[:start],:end => params[:end]),:style => "font-size:14px;color:black;padding:5px 10px!important;", |
+    = link_to "全部",logs_path(:user => params[:user],:start => params[:start],:end => params[:end]), |
       :class => "#{params[:t].present? ? "" : "current_log"}"                                                                                                              |
     - Log::LOG_TYPE.each do |k,v|
       = link_to v,logs_path(:t => k,:user => params[:user],:start => params[:start],:end => params[:end] ) , |
-        :style => "font-size:14px;color:black;padding:5px 10px!important;" ,                                 |
         :class => "#{ (params[:t].presence && k == params[:t].to_sym)?  "current_log" : ""}"                 |
   - control_helper("start", "开始时间") do
     = text_field_tag "start",params[:start],:id => "start", :class => "select-date"

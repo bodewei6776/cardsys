@@ -94,12 +94,14 @@ class Order < ActiveRecord::Base
   end
 
   def all_update_attributes(order_attributes)
-    self.advance_order_siblings.each do |element|
-      #element.update_attributes(order_attributes)
-
+    self.update_attributes(order_attributes)
+    self.advance_order_siblings(self.alloc_date).each do |element|
+      order_attributes["court_book_record_attributes"]["id"] = element.court_book_record.id
+      order_attributes["court_book_record_attributes"]["alloc_date"] = element.alloc_date
+      ap element.readonly?
+      element.update_attributes order_attributes
     end
 
-    self.update_attributes(order_attributes)
   end
 
   def self.wdate_between(begin_date, end_date)
@@ -129,7 +131,7 @@ class Order < ActiveRecord::Base
     coach_book_records.each do |c|
       c.start_hour = start_hour 
       c.end_hour = end_hour
-      c.alloc_date = order_date
+      c.alloc_date = alloc_date
       errors.add(:base, c.conflict_book_record.to_s + "已经被预约") if c.conflict?
     end
   end
@@ -193,8 +195,6 @@ class Order < ActiveRecord::Base
     end
 
     def advance_destroy
-      ap '1' * 1000
-      ap self.advance_order_siblings
       self.advance_order_siblings.collect(&:destroy)
       self.destroy
     end
@@ -421,7 +421,11 @@ class Order < ActiveRecord::Base
     def advance_order_siblings(from_date = nil)
       from_date ||= self.alloc_date
       Order.all(:conditions => ["book_records.alloc_date > :from_date && batch_number = :batch_number",
-                { :from_date => from_date, :batch_number => self.batch_number}], :joins => :court_book_record)
+                { :from_date => from_date, :batch_number => self.batch_number}], :include => :court_book_record)
+      #Order.find_by_sql("SELECT `book_records`.* FROM `book_records` WHERE " + 
+      #                  "`book_records`.`resource_id` = 1 AND `book_records`.`resource_type` = 'Coach'" + 
+      #                  "AND `book_records`.`alloc_date` = '2012-05-20' AND (order_id != 616)" +
+      #                  "AND (start_hour < 8 AND end_hour > 7) LIMIT 1")
     end
 
 

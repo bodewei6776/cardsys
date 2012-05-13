@@ -25,7 +25,7 @@ class Log < ActiveRecord::Base
   end
 
   def description
-    item_name + LOG_TYPE[self.log_type.intern] + ("(#{self.desc})" || "")
+    item_name + ( LOG_TYPE[self.log_type.intern] || "" ) + ("(#{self.desc})" || "")
   end
 
   def item_name
