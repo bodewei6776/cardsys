@@ -7,7 +7,7 @@ class PeriodPrice < ActiveRecord::Base
 
   validates :name,  :presence => {:message => "时段名称不能为空！"}
   validates :price, :numericality => {:message => "时段价格必须为数字！"}
-  validates :period_type, :uniqueness => {:scope => [:start_time, :end_time], :message => "该价格时段已经存在，请重新设置价格时段！"}
+  #validates :period_type, :uniqueness => {:scope => [:start_time, :end_time], :message => "该价格时段已经存在，请重新设置价格时段！"}
 
   validate :validate_start_time_end_time
 

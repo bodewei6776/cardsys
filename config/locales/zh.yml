@@ -32,3 +32,8 @@ activerecord:
         attributes:
           state:
             invalid_transition: "状态不对"
+      user:
+        attributes:
+          password:
+            confirmation: "确认密码" 
+
