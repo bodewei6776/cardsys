@@ -19,7 +19,7 @@ class CommonResourceDetail < ActiveRecord::Base
   end
 
   def can_edit?
-    false
+    true
   end
 
   def can_view?

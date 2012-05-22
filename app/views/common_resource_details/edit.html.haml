@@ -1,2 +1,8 @@
-%h1 CommonResourceDetails#edit
-%p Find me in app/views/common_resource_details/edit.html.haml
+=render :partial => "layouts/errors", :locals => { :target => @common_resource_detail}
+= form_for([@common_resource, @common_resource_detail], :html => {:class => "form-horizontal well" }) do |f|
+  - control_helper("detail_name", "值") do
+    = f.text_field :detail_name
+
+  .form-actions
+    = f.submit "修改", :class => "btn btn-primary"
+
