@@ -32,7 +32,7 @@ class CommonResourceDetailsController < ApplicationController
 
   def destroy
     CommonResourceDetail.find( params[:id]).destroy
-    redirect_to common_resource_common_resource_details_path(@common_resource)
+    redirect_to common_resources_path
   end
 
   def index

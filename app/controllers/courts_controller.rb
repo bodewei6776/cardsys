@@ -12,6 +12,7 @@ class CourtsController < ApplicationController
 
   def new
     @court = Court.new
+    @court.period_prices =  PeriodPrice.all
   end
 
   def edit
@@ -24,9 +25,9 @@ class CourtsController < ApplicationController
     format_court_period_price @court
 
     if @court.save
-      redirect_to(edit_court_path(@court), :notice => '场地信息添加成功！') 
+      redirect_to(courts_path, :notice => '场地信息添加成功！') 
     else
-      render :action => "new" 
+      render :action => "edit"
     end
   end
 
@@ -34,9 +35,9 @@ class CourtsController < ApplicationController
     @court = Court.find(params[:id])
     format_court_period_price @court
     if @court.update_attributes(params[:court])
-      redirect_to(edit_court_path(@court), :notice => '场地信息修改成功！') 
+      redirect_to(courts_path, :notice => '场地信息修改成功！') 
     else
-      render :action => "edit" 
+      render :action => "edit"
     end
   end
 
