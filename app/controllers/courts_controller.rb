@@ -12,7 +12,6 @@ class CourtsController < ApplicationController
 
   def new
     @court = Court.new
-    @court.period_prices =  PeriodPrice.all
   end
 
   def edit

@@ -18,7 +18,7 @@ class CardsController < ApplicationController
     format_card_period_price @card 
 
     if @card.save
-      redirect_to(@card, :notice => '卡信息创建成功！') 
+      redirect_to(cards_path, :notice => '卡信息创建成功！') 
     else
       render :action => "new" 
     end
@@ -29,7 +29,7 @@ class CardsController < ApplicationController
     format_card_period_price @card
 
     if @card.update_attributes(params[:card]) 
-      redirect_to(@card, :notice => '卡信息修改成功！') 
+      redirect_to(cards_path, :notice => '卡信息修改成功！') 
     else
       render :action => "edit" 
     end

@@ -31,7 +31,7 @@ class CoachesController < ApplicationController
   def create
     @coach = Coach.new(params[:coach])
     if @coach.save
-      redirect_to(edit_coach_path(@coach), :notice => '教练信息添加成功！') 
+      redirect_to(coaches_path, :notice => '教练信息添加成功！') 
     else
       render :action => "new" 
     end
@@ -41,7 +41,7 @@ class CoachesController < ApplicationController
     @coach = Coach.find(params[:id])
     @coach.telephone = params[:coach][:telephone]
     if @coach.update_attributes(params[:coach])
-      redirect_to(edit_coach_path(@coach), :notice => '教练信息修改成功！') 
+      redirect_to(coaches_path, :notice => '教练信息修改成功！') 
     else
       render :action => "edit" 
     end

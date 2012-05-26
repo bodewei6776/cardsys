@@ -63,7 +63,7 @@ class GoodsController < ApplicationController
     @good.count_total_now = @good.count_back_stock
     @good.count_front_stock = 0
     if @good.save
-      redirect_to(edit_good_path(@good), :notice => '商品信息添加成功！') 
+      redirect_to(goods_path, :notice => '商品信息添加成功！') 
     else
       render :action => "new" 
     end

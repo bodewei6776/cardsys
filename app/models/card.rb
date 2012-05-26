@@ -6,7 +6,6 @@ class Card < ActiveRecord::Base
   CONSUME_TYPE_2 = 2 #可买商品
 
   CARD_TYPE = {
-    "member_card" => "会员卡",
     "balance_card" => "储值卡",
     "counter_card" => "计次卡",
     "zige_card" => "资格卡"
