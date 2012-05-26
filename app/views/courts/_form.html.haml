@@ -32,7 +32,7 @@
         %th 说明
     %tbody
       - PeriodPrice.all.each_with_index do |pp,index|
-        - available_period = @court.period_prices
+        - available_period = @court.period_prices.include? pp
         %tr
           %td= index.succ
           %td= pp.name + "#{pp.start_time}:00-#{pp.end_time}:00"

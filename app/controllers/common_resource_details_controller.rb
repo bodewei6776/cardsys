@@ -1,6 +1,6 @@
 # -*- encoding : utf-8 -*-
 class CommonResourceDetailsController < ApplicationController
-  before_filter :find_common_resource, :only => [:new, :edit, :index, :create, :destroy]
+  before_filter :find_common_resource, :only => [:new, :edit, :index, :create]
 
   def new
     @common_resource_detail = @common_resource.common_resource_details.build
@@ -31,7 +31,7 @@ class CommonResourceDetailsController < ApplicationController
 
 
   def destroy
-    @common_resource.common_resource_details.find( params[:id]).destroy
+    CommonResourceDetail.find( params[:id]).destroy
     redirect_to common_resource_common_resource_details_path(@common_resource)
   end
 
