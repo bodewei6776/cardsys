@@ -1,7 +1,5 @@
 = render :partial => "highlight_hover"
-.w96
-  = raw display_income_report(@date, @pay_ways)
-.h10
+= raw display_income_report(@date, @pay_ways)
 :javascript
   function recalculate(){
      params = "date=" +$('#date_year').val() + "-" + $('#date_month').val() + "-" + $("#date_day").val(); 
