@@ -33,17 +33,22 @@ class OrdersController < ApplicationController
 
   def update
     @order = Order.find(params[:id])
+    @original_member_name = @order.member_name
     case params[:commit]
     when "代卖"
-      if @order.split params[:order]
-        log_action(@order.court_book_record.court, "sell", current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00")
+      if @order = @order.split(params[:order])
+        log_action(@order.court_book_record, "sell", current_user, 
+                   "#{@order.start_hour}:00-#{@order.end_hour}:00 " + " #{ '原预订人: ' + @original_member_name if @original_member_name != @order.member_name}"
+                  )
         render :action => "create"
       else
         render :action => "edit", :layout => "small_main"
       end
     when "变更"
       if @order.update_attributes(params[:order])
-        log_action(@order.court_book_record.court, "change", current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00")
+        log_action(@order.court_book_record, "change", current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00"  +
+              " #{ '原预订人: ' + @original_member_name if @original_member_name != @order.member_name}"
+                  )
         flash[:notice] = "场地修改成功"
         render :action => "create", :layout => "small_main"
       else
@@ -51,7 +56,8 @@ class OrdersController < ApplicationController
       end
     when "连续变更"
       if @order.all_update_attributes(params[:order])
-        log_action(@order.court_book_record.court, "all_change", current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00")
+        log_action(@order.court_book_record, "all_change", current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00" + " #{ '原预订人: ' + @original_member_name if @original_member_name != @order.member_name}"
+                  )
         flash[:notice] = "场地连续变更成功"
         render :action => "create", :layout => "small_main"
       else
@@ -59,7 +65,7 @@ class OrdersController < ApplicationController
       end
     when "开场", "申请代卖", "取消代卖", "取消预订", "连续取消"
       be_action = Order::OPMAP.invert[params[:commit]]
-      log_action(@order.court_book_record.court, be_action, current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00")
+      log_action(@order.court_book_record, be_action, current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00")
       if @order.update_attributes(params[:order].slice(:login, :password)) && @order.send(be_action)
         flash[:notice] = "场地#{params[:commit]}成功"
         render :action => "create", :layout => "small_main"
@@ -74,7 +80,7 @@ class OrdersController < ApplicationController
     @order.state = "booked"
     @order.possible_batch_order = true
     if @order.save
-      log_action(@order.court_book_record.court, "book", current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00")
+      log_action(@order.court_book_record, "book", current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00")
       flash[:notice] = "场地预订成功"
       render :layout => "small_main"
     else

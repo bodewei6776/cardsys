@@ -25,7 +25,11 @@
   %thead
     %tr
       %th 编号
-      %th 用户
+      %th 操作人
+      %th 预订人
+      %th 场地/卡号
+      %th 预订日期
+      %th 时段
       %th 时间
       %th 描述
 
@@ -34,6 +38,10 @@
       %tr
         %td= index + 1
         %td= e.user_name
+        %td= e.order_person
+        %td= e.item_name
+        %td= e.order_time
+        %td= e.period
         %td= e.created_at.strftime("%Y-%m-%d %H:%M:%S")
         %td= e.description
 

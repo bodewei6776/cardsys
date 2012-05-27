@@ -72,7 +72,7 @@ class Order < ActiveRecord::Base
   end
 
   def end_date_later_than_today
-    self.errors.add(:end_date, "结束日期至少大于当天") if self.end_date < self.order_date
+    self.errors.add(:end_date, "结束日期至少大于当天") if self.end_date and self.end_date < self.order_date
   end
 
   def batch_order
@@ -286,6 +286,7 @@ class Order < ActiveRecord::Base
     def split(order_attributes)
       new_order = Order.new(order_attributes.deep_except('id'))
       new_order.state = "booked"
+      new_order.end_date = Date.today
       new_order.split_from_other = true
       #  begin
       Order.transaction do
