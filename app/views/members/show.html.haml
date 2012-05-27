@@ -1,191 +1,105 @@
-.w96
-  .r_bt
-    .r_bt_l
-      .r_bt_l_a
-      .r_bt_l_c.fb.white 会员详细资料
-    .r_bt_r
-  .info
-    .infobox
-      .infobox_bt
-        %p
-          会员 #{@member.name} 的基本资料
-      .infobox_nr
-        %ul
-          %li
-            .w1 会员名称：
-            .w2
-              = @member.name
-            .w1 注册日期：
-            .w2
-              = @member.created_at.to_chinese_ymd
-        %ul
-          %li
-            .w1 会员昵称：
-            .w2
-              = @member.nickname.blank? ?  "未知" : @member.nickname
-            .w1 会员性别：
-            .w2
-              = gender_desc(@member.gender)
-        %ul
-          %li
-            .w1 移动电话：
-            .w2
-              = @member.mobile
-            .w1 固定电话：
-            .w2
-              = @member.telephone.blank? ? '无' : @member.telephone
-        %ul
-          %li
-            .w1 电子邮箱：
-            .w2
-              = @member.email.blank? ? '无' : @member.email
-            .w1 备用电话：
-            .w2
-              = @member.standby_phone.blank? ? '无' : @member.standby_phone
-        %ul
-          %li
-            .w1 证件类型：
-            .w2
-              = Setting.cert_type_detail_name(@member.cert_type)
-            .w1 证件号码：
-            .w2
-              = @member.cert_num
-        %ul
-          %li
-            .w1 联系地址：
-            .w2
-              = @member.address.blank? ? '无' : @member.address
-            .w1 介绍人：
-            .w2
-              = @member.mentor.blank? ? '无' : @member.mentor
-        %ul
-          %li
-            .w1 会员生日：
-            .w2= @member.birthday.blank? ? "未知" : @member.birthday.to_chinese_mdh
-            .w1 备注：
-            .w2= @member.description
-    .h10
-    .infobox
-      .infobox_bt
-        %p
-          会员 #{@member.name}信息统计
-      .infobox_nr
-        %ul
-          %li
-            .w1 刷卡次数：
-            .w2
-              = @member.balance_times
-            .w1 最近来店：
-            .w2
-              = @member.latest_comer_date.blank? ? '无' : @member.latest_comer_date
-        %ul
-          %li
-            .w1 消费总金额：
-            .w2
-              = @member.member_consume_amounts
-            .w1 卡内余额：
-            .w2
-              = @member.member_card_left_fees
-        %ul
-          %li
-            .w1 总充值金额：
-            .w2
-              = @member.recharge_fees
-            .w1 总充值次数：
-            .w2
-              = @member.recharge_times
-              次
-        %ul
-          %li
-            .w1 卡付金额：
-            .w2
-              = @member.use_card_price_amount
-              元
-            .w1 卡付小时数：
-            .w2
-              = @member.use_card_amount
-              次
-        %ul
-          %li
-            .w1 现金支付：
-            .w2
-              = @member.use_cash_amount
-              元
-            .w1 卡内小时数：
-            .w2
-              = @member.member_card_left_times
-    .h10
-    .infobox
-      .infobox_bt
-        %p
-          会员 #{@member.name} 的卡列表
-      .table2
-        %ul.bttitle.black.fb
-          %li.w5 序号
-          %li.w10 卡号
-          %li.w10 卡状态
-          %li.w15 卡内余额
-          %li.w10 卡内次数
-          %li.w10 卡有效期
-          %li.w15 授权人
-        - @members_cards.each_with_index do |card,index|
-          %ul.table_items
-            %input#member_id{:type => "hidden", :value => @member.id}/
-            %li.w5= index + 1
-            %li.w10= card.card_serial_num
-            %li.w10= card.state_desc
-            %li.w15= card.left_fee
-            %li.w10= card.left_times
-            %li.w10= card.expire_date.to_chinese_mdh
-            %li.w15
-              - for granter in generate_granter_options(@member)
-                - if @member.is_granter(granter[1], card.id)
-                  = granter[0]
-    .h10
-    .infobox
-      .infobox_bt
-        %p
-          会员 #{@member.name} 的充值记录列表
-      .table2
-        %ul.bttitle.black.fb
-          %li.w5 序号
-          %li.w15 卡号
-          %li.w15 充值金额(￥)/次数
-          %li.w15 充值日期
-          %li.w15 操作人
-        - @recharge_records.each_with_index  do |recharge_record,index|
-          %ul.table_items
-            %li.w5= index + 1
-            %li.w15= recharge_record.member_card.card_serial_num
-            %li.w15= recharge_record.display_recharge_info
-            %li.w15= recharge_record.created_at.to_chinese_mdh
-            %li.w15= recharge_record.recharge_person_name
-    .h10
-    .infobox
-      .infobox_bt
-        %p
-          会员 #{@member.name} 的消费记录列表
-      .table2
-        %ul.bttitle.black.fb
-          %li.w5 序号
-          %li.w15 时间
-          %li.w15 消费金额(次)
-          %li.w10 场地支付方式
-          %li.w10 商品支付方式
-          %li.w10 授权人消费
-          %li.w10 操作
-        - @balances.each_with_index do |balance,index|
-          %ul.table_items
-            %li.w5= index + 1
-            %li.w15= balance.created_at.to_s(:db)
-            %li.w15= balance.balance_amount_desc
-            %li.w10= balance.balance_way_desc
-            %li.w10= balance.goods_balance_type_desc
-            %li.w10= balance.balance_person_desc
-            %li.w10
-              %a.balance_detail{:href => "#{order_balance_path(balance)}?layout=false", :title => "\347\202\271\345\207\273\345\261\225\345\274\200\346\230\216\347\273\206"} 明细
-    .h10
-    .input_bd
-      =# back_to members_path
-    .clear
-  .h10
+.form-horizontal
+  = form_header(:title => "会员详细资料", :link => "members_path")
+  
+  - show_helper(:name, "会员名称", :left) do
+    = @member.name
+  
+  - show_helper(:created_at, "注册日期", :right) do
+    = @member.created_at.to_chinese_ymd
+  
+  - show_helper(:nickname, "会员昵称", :left) do
+    = @member.nickname.blank? ?  "未知" : @member.nickname
+  
+  - show_helper(:gender, "会员性别", :right) do
+    = @member.gender_desc
+  
+  
+  - show_helper(:mobile, "移动电话", :left) do
+    = @member.mobile
+  
+  
+  - show_helper(:mobile, "固定电话", :right) do
+    = @member.telephone.blank? ? '无' : @member.telephone
+  
+  
+  - show_helper(:email, "电子邮箱", :left) do
+    = @member.email.blank? ? '无' : @member.email
+  
+  - show_helper(:standby_phone, "备用电话", :right) do
+    = @member.standby_phone.blank? ? '无' : @member.standby_phone
+  
+  - show_helper(:cert_type, "证件类型", :left) do
+    = Setting.cert_type_detail_name(@member.cert_type)
+  
+  - show_helper(:cert_num, "证件号码", :right) do
+    = @member.cert_num
+  
+  - show_helper(:address, "联系地址", :right) do
+    = @member.address.blank? ? '无' : @member.address
+  
+  
+  - show_helper(:mentor, "介绍人", :right) do
+    = @member.mentor.blank? ? '无' : @member.mentor
+  
+  
+  - show_helper(:birthday, "会员生日", :right) do
+    = @member.birthday.blank? ? "未知" : @member.birthday.to_chinese_mdh
+  
+  - show_helper(:description, "备注", :right) do
+    = @member.description
+  
+  = form_header(:title => "会员 #{@member.name}信息统计", :link => "members_path")
+  - show_helper(:balance_times, "刷卡次数", :left) do
+    = @member.balance_times
+  
+  - show_helper(:latest_comer_date, "最近来店", :right) do
+    = @member.latest_comer_date.blank? ? '无' : @member.latest_comer_date
+  
+  - show_helper(:member_consume_amounts, "消费总金额", :left) do
+    = @member.member_consume_amounts
+  
+  
+  - show_helper(:member_card_left_fees, "卡内余额", :left) do
+    = @member.member_card_left_fees
+  
+  - show_helper(:recharge_fees, "总充值金额", :left) do
+    = @member.recharge_fees
+  
+  
+  - show_helper(:recharge_times, "总充值次数", :left) do
+    = @member.recharge_times
+    次
+  
+  - show_helper(:use_card_price_amount, "卡付金额", :left) do
+    = @member.use_card_price_amount
+    元
+  
+  - show_helper(:use_card_amount, "卡付小时数", :left) do
+    = @member.use_card_amount
+    次
+  
+  - show_helper(:use_cash_amount, "现金支付", :left) do
+    = @member.use_cash_amount
+  
+  
+  - show_helper(:member_card_left_times, "卡内小时数", :left) do
+    = @member.member_card_left_times
+
+= table_header(:title => " 会员#{@member.name} 的卡列表 ", :link => "")
+- columns = {:card_serial_num => "卡号", :state_desc => "卡状态", :left_fee => "卡内余额",
+  :left_times=> "卡内次数", "expire_date" => "卡有效期" }
+- collection = @members_cards
+=render :partial => "layouts/table", :locals => { :collection => collection, :columns => columns }
+
+
+= table_header(:title => " 会员 #{@member.name} 的充值记录列表 ", :link => "")
+- columns = {"member_card.card_serial_num" => "卡号", :display_recharge_info => " 充值金额(￥)/次数 ",
+  "created_at.to_chinese_mdh" => "充值日期",:recharge_person_name => "操作人"}
+- collection = @recharge_records
+=render :partial => "layouts/table", :locals => { :collection => collection, :columns => columns }
+
+
+= table_header(:title => " 会员 #{@member.name} 的消费记录列表 ", :link => "")
+- columns = {"created_at.to_s(:db)" => "时间", :balance_amount_desc => "消费金额", "balance_way_desc" => "支付方式"}
+- collection = @balances
+=render :partial => "layouts/table", :locals => { :collection => collection, :columns => columns }

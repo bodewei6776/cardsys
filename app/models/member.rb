@@ -97,4 +97,9 @@ class Member < ActiveRecord::Base
 
   def use_card_amount
   end
+
+
+  def gender_desc
+    gender == "1" ? '男' : '女'
+  end
 end

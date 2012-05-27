@@ -293,4 +293,20 @@ module ApplicationHelper
     end
 
 
+  def show_helper(field, text, float = :oneline, &block)
+    style = case float
+            when :oneline
+              "clear: both;"
+            when :left
+              "width: 50%; float: left;"
+            when :right
+              "width: 50%; float: right;"
+            else
+            end
+    concat(content_tag(:div,
+                       content_tag(:label, text + " :", :class => "control-label", :for => field) +
+                       content_tag(:div, capture(&block), :class => "controls"), 
+                       :class => "control-group", :style => style))
+
+  end
 end
