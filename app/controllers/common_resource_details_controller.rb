@@ -2,6 +2,8 @@
 class CommonResourceDetailsController < ApplicationController
   before_filter :find_common_resource, :only => [:new, :edit, :index, :create]
 
+  skip_before_filter :require_user
+
   def new
     @common_resource_detail = @common_resource.common_resource_details.build
   end
