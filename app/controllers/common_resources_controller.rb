@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class CommonResourcesController < ApplicationController
-  before_filter :super_admin_required
+  skip_before_filter :require_user
+  #before_filter :super_admin_required
 
   def super_admin_required
     redirect_to about_path and return unless current_user.login == "admin"

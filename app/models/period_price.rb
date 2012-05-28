@@ -43,7 +43,7 @@ class PeriodPrice < ActiveRecord::Base
   def self.all_periods_in_time_span(date = Date.today, start_time=nil, end_time=nil)
     start_time ||= PERIOD_START_TIME
     end_time   ||= PERIOD_END_TIME
-    @date_type ||= CommonResource.date_type(date||Date.today)
+    @date_type ||= CommonResource.date_type(date || Date.today)
     @pp ||= PeriodPrice.where(:period_type => @date_type.id).order("start_time asc")
     @pp.select{ |element| element.start_time < end_time && element.end_time > start_time }
   end
