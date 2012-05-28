@@ -3,7 +3,6 @@ class CommonResource < ActiveRecord::Base
 
   has_many :common_resource_details,:dependent => :destroy
 
-
   CARD_TYPE = 'card_type'
   PERIOD_TYPE = 'period_type'
   COACH_TYPE = 'coach_type'

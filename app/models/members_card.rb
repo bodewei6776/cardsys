@@ -206,6 +206,10 @@ class MembersCard < ActiveRecord::Base
     granters.collect(&:name).join(" ,")
   end
 
+  def can_edit?
+    false
+  end
+
   private
   def has_enough_amount_to_order?(order)
     #TODO
@@ -220,4 +224,5 @@ class MembersCard < ActiveRecord::Base
       order_errors << I18n.t('order_msg.member_card.invalid_time_span',:unusable_span => unsuable_span_info)
     end
   end
+
 end

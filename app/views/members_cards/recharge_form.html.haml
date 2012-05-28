@@ -12,7 +12,7 @@
     = @members_card.left_fee
     = "￥"
 
-  - control_helper("recharge_fee", "充金额") do
+  - control_helper("recharge_fee", "充值金额") do
     = f.text_field :recharge_fee, :value => "0"
 
   - control_helper("recharge_expire_date", "有效期") do
@@ -28,7 +28,7 @@
 
 
   - control_helper("recharge_times", "充值次数") do
-    = f.text_field :recharge_times
+    = f.text_field :recharge_times, :value => "0"
 
   - control_helper("login", "充值人") do
     = f.text_field :login, :value => current_user.login

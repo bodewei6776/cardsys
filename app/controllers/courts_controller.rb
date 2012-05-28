@@ -88,7 +88,8 @@ class CourtsController < ApplicationController
   private
 
   def format_court_period_price(court)
-    for period_price in PeriodPrice.search_order
+    court.court_period_prices = []
+    for period_price in (PeriodPrice.find params[:time_available] || [])
       court.court_period_prices << CourtPeriodPrice.new(:period_price_id => period_price.id,
                                                         :court_price =>  period_price.price)
     end

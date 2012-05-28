@@ -19,10 +19,12 @@ class WelcomeController < ApplicationController
     # Standard Ruby distribution provides the following useful extension
     #backup_script = "mysqldump -u#{username}  #{database} > #{file_name}"
     `#{backup_script}`
+    puts backup_script
     redirect_to backup_path
   end
 
   def delete_backup
+    puts params[:name]
     system("rm #{params[:name]}")
     redirect_to backup_path
   end

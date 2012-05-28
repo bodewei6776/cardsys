@@ -15,7 +15,7 @@
       %tr
         %td= index + 1
         %td= backup.ctime.strftime("%Y-%m-%d %H:%M")
-        %td= number_to_human(backup.size, :units => {:unit => "", :thousand => "KB"})
+        %td= backup.size#number_to_human(backup.size, :units => {:unit => "", :thousand => "KB"})
         %td= backup.basename.expand_path.to_s
         %td= link_to '删除', welcome_delete_backup_path(:name => backup.basename.expand_path.to_s), :confirm => '确定删除？', :method => :delete
 
