@@ -20,7 +20,6 @@ class CourtsController < ApplicationController
 
   def create
     @court = Court.new(params[:court])
-
     format_court_period_price @court
 
     if @court.save

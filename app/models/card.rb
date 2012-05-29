@@ -13,6 +13,7 @@ class Card < ActiveRecord::Base
   
   has_many :members_cards
   has_many :card_period_prices
+  has_many :period_prices, :through => :card_period_prices
 
   
   validates :name, :presence => {:message => "卡名称不能为空！"}
@@ -55,11 +56,9 @@ class Card < ActiveRecord::Base
       [!card_period_price.nil? ,card_period_price.card_price]
     end
   end
-  
+
   def avaliable_in_time_span?(date, start_hour, end_hour)
-    PeriodPrice.all_periods_in_time_span(date, start_hour, end_hour).any? do |pp|
-      self.card_period_prices.first(:conditions => "period_price_id=#{pp.id}")
-    end
+    (period_prices & PeriodPrice.all_periods_in_time_span(date, start_hour, end_hour)).present?
   end
 
   def total_money_in_time_span(date,start_hour,end_hour)
@@ -96,7 +95,7 @@ class Card < ActiveRecord::Base
   def should_advanced_order?
     is_member_card?
   end
-  
+
   def card_type_opt
     (is_member_card? || is_balance_card?) ? "充值" : "充次"
   end
