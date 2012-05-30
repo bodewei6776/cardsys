@@ -1,5 +1,4 @@
 = render :partial => "layouts/errors", :locals => {:target => @user}
-= form_header(:title => "新用户", :link => users_path)
 = form_for @user, :html => { :class => "form-horizontal" } do |f|
   - control_helper("login", "用户名") do
     = f.text_field :login

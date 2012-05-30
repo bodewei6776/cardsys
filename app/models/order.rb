@@ -28,7 +28,7 @@ class Order < ActiveRecord::Base
 
   accepts_nested_attributes_for :court_book_record
   accepts_nested_attributes_for :coach_book_records
-  accepts_nested_attributes_for :non_member, :reject_if => proc { |non_member| non_member[:is_member] == "1" }
+  accepts_nested_attributes_for :non_member, :reject_if => proc { |non_member| non_member[:is_member] == "1" || non_member[:is_member] == "true" }
   attr_accessor :coach_ids, :split_from_other, :possible_batch_order
   after_save :save_order_items_for_court_and_coaches
 
