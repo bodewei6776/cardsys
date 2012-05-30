@@ -61,7 +61,7 @@ class PeriodPrice < ActiveRecord::Base
     period_prices.sort!{|fst,scd| scd.start_time <=> fst.start_time }
     amount,leave_end_hour = 0,end_hour
     period_prices.each do |period_price|
-      condition,price = yield period_price
+      condition, price = yield period_price
       realy_end_hour = [start_hour,period_price.start_time].max
       next unless condition
       amount += (leave_end_hour - realy_end_hour)*price

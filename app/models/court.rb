@@ -57,9 +57,9 @@ class Court < ActiveRecord::Base
 
 
   def calculate_amount_in_time_span(date, start_hour, end_hour)
-    PeriodPrice.calculate_amount_in_time_spans(date,start_hour,end_hour) do |period_price|
+    PeriodPrice.calculate_amount_in_time_spans(date, start_hour, end_hour) do |period_price|
       court_period_price = court_period_prices.where("period_price_id=#{period_price.id}").first
-      [!court_period_price.nil? ,court_period_price.court_price]
+      [!court_period_price.nil? ,court_period_price.try(:court_price) || 0]
     end
   end
 
