@@ -1,24 +1,11 @@
-=render :partial => "layouts/errors", :locals => { :target => @locker }
+= form_for @locker, :html => {:class => "form-horizontal well order_form"} do |f|
+  - control_helper("locker_type", "储物柜类型") do
+    = f.select :locker_type, Setting.locker_type_options(@locker.locker_type)
 
-= form_for(@locker) do |f|
-  .fform
-    .fformbox
-      .fformbox_bt
-        %p 储物柜基本信息
-      .fformbox_nr
-        %ul
-          %li
-            .w1
-              = f.label :locker_type,"储物柜类型"
-            .w2= f.select :locker_type, Setting.locker_type_options(@locker.locker_type)
-        %ul
-          %li
-            .w1= f.label :num,"编号"
-            .w2= f.text_field :num
-        %ul
-          %li
-            .w1= f.label :remark,"备注"
-            .w2= f.text_field :remark
-        %ul
-          %li
-            = f.submit @locker.new_record? ? "创建" : "更新"
+  - control_helper("num", "编号") do
+    = f.text_field :num
+  - control_helper("remark", "备注") do
+    = f.text_field :remark
+
+  .form-actions
+    = f.submit @locker.new_record? ? "创建" : "更新", :class => "btn"

@@ -11,6 +11,8 @@ class Rent < ActiveRecord::Base
     "total_fee"  => "租用费用"
   }
 
+  delegate :num, :to => :locker
+
   attr_accessor :card_num,:password,:user_name
 
   [:locker_id,:start_date,:end_date, :pay_way, :total_fee].each do |c|

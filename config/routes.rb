@@ -3,11 +3,6 @@ Cardsys::Application.routes.draw do
 
   resources :common_resource_details
 
-  resources :rents do
-    collection do
-      get :complete_member_infos
-    end
-  end
 
   resources :lockers do
     collection do

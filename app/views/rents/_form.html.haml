@@ -1,70 +1,49 @@
-.fformbox
-  .fformbox_bt
-    %p 请填写预定信息
-  .fformbox_nr
-    = form_for(@rent) do |f|
-      = error_messages_for :rent
-      = f.hidden_field :locker_id
-      %ul
-        %li
-          .w1 编号：
-          .w2= @locker.num
-        %li
-          .w1  储物柜类型：
-          .w2= @locker.locker_type_in_word
-      %ul
-        %li
-          .w1 是否是会员：
-          .w2
-            = f.radio_button :is_member,true,:onclick=> "toggle_is_member();",:id => "is_member_radio"
-            是
-            \#{f.radio_button :is_member,false,:onclick=> "toggle_is_member();",:id => "is_member_radio"}否
-      #is_not_member_div
-        %ul
-          %li
-            .w1 预定人1：
-            .w2= f.text_field :random_member_name
-      #is_member_div
-      = render :partial => "card_info",:locals => {:rent => @rent}
-  %ul
-    %li
-      .w1 起租时间：
-      .w2= f.text_field :start_date,:class => "date_select" ,:id => "begin_date"
-    %li
-      .w1  退租时间：
-      .w2= f.text_field :end_date,:class => "date_select",:id => "end_date"
-  %ul
-    %li
-      .w1 租用费用：
-      .w2= f.text_field :total_fee
-  %ul
-    %li
-      .w1 支付方式：
-      .w2
-        = f.radio_button :pay_way, Balance::Balance_Way_Use_Card,:class => 'pay_way'
-        记账
-        \#{f.radio_button :pay_way, Balance::Balance_Way_Use_Cash,:class => 'pay_way'}现金
-        \#{f.radio_button :pay_way, Balance::Balance_Way_Use_Post,:class => 'pay_way'}POS机
-        \#{f.radio_button :pay_way, Balance::Balance_Way_Use_Check ,:class => 'pay_way'}支票
-        \#{f.radio_button :pay_way, Balance::Balance_Way_Use_Guazhang,:class => 'pay_way'}挂账
-        \#{f.radio_button :pay_way, Balance::Balance_Way_Use_Bank,:class => 'pay_way'}银行
-  %ul
-    %li
-      .w1 备注：
-      .w2= f.text_field :remark,:id => "remark_area"
-  %ul
-    %li
-      .w1 经手人：
-      .w2= f.text_field :user_name,:id => "user_name", :user_autocomplete=>"/users/autocomplete_user_name"
-    %li
-      .w1  密码：
-      .w2= f.password_field :password,:id => "password"
-  %ul
-    %li.w1
-      = f.submit "#{@rent.new_record? ? "出租" : "续租"}"
-    %li.w1
-      - if @rent.locker.rented?
-        = f.submit "退租"
+= form_header(:title => "请填写预定信息", :link => "")
+= form_for @rent, :html => {:class => "form-horizontal well order_form"} do |f|
+  = f.hidden_field :locker_id
+  - control_helper("num", "编号") do
+    = @locker.num
+
+  - control_helper("locker_type_in_word", "储物柜类型") do
+    = @locker.locker_type_in_word
+
+
+  - control_helper("is_member", "是否是会员") do
+    = f.radio_button :is_member,true,:onclick=> "toggle_is_member();",:id => "is_member_radio"
+    是
+    = f.radio_button :is_member,false,:onclick=> "toggle_is_member();",:id => "is_member_radio"
+    否
+  #is_not_member_div
+    - control_helper("random_member_name", "预订人") do
+      = f.text_field :random_member_name
+  #is_member_div
+    =# render :partial => "card_info",:locals => {:rent => @rent}
+
+  - control_helper("start_date", "起租时间") do
+    = f.text_field :start_date,:class => "select-date" 
+
+  - control_helper("end_date", "退租时间") do
+    = f.text_field :end_date ,:class => "select-date" 
+
+  - control_helper("total_fee", "租用费用") do
+    = f.text_field :total_fee
+
+
+  - control_helper("remark", "备注") do
+    = f.text_field :remark
+
+  - control_helper("user_name", "经手人") do
+    = f.text_field :user_name,:id => "user_name", :user_autocomplete=>"/users/autocomplete_user_name"
+
+
+  - control_helper("password", "密码") do
+    = f.password_field :password,:id => "password"
+
+  .form-actions
+    = f.submit "#{@rent.new_record? ? "出租" : "续租"}"
+    - if @rent.locker.rented?
+      = f.submit "退租"
+
 :javascript
   function toggle_is_member(){
     if($('input:radio:checked').attr('value')  == "false"){
@@ -79,18 +58,18 @@
     }
   }
 
-function card_num_change(){
-  var card_num = $('#card_num option:selected').text();
-  var begin_date = $('#begin_date').attr('value');
-  var reqest_url  = "/rents/complete_member_infos?id=" + card_num + "&start_date=" + begin_date;
-  $.get(reqest_url,function(returned_data){});
-}
+  function card_num_change(){
+    var card_num = $('#card_num option:selected').text();
+    var begin_date = $('#begin_date').attr('value');
+    var reqest_url  = "/rents/complete_member_infos?id=" + card_num + "&start_date=" + begin_date;
+    $.get(reqest_url,function(returned_data){});
+  }
 
-$(document).ready(function(){
+  $(document).ready(function(){
     rentAutocomplete();
-    toggle_is_member();
-    $("#begin_date").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
-    $("#end_date").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
+      toggle_is_member();
+      $("#begin_date").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
+      $("#end_date").new_datepicker({dateFormat: 'yy-mm-dd',changeYear:true,changeMonth:true});
 
-    });
-  
+      });
+

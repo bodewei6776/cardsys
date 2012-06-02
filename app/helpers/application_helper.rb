@@ -42,7 +42,7 @@ module ApplicationHelper
      {:image_offset => "2", :link => "/goods",        :sub_menu => "goods_menu", :display => "库存管理"},
      {:image_offset => "5", :link => "/reports/income", :sub_menu => "report_menu", :display => "分析报表"},
      {:image_offset => "7", :link => "/balances/new_good_buy", :sub_menu => "balance_menu", :display => "消费结算"},
-     {:image_offset => "8", :link => "/rents", :sub_menu => "locker_menu", :display => "储物柜管理"},
+     {:image_offset => "8", :link => "/lockers", :sub_menu => "locker_menu", :display => "储物柜管理"},
      {:image_offset => "9", :link => "/users",  :sub_menu => "authorize_menu", :display => "权限管理"},
      {:image_offset => "1", :link => "/logs",  :sub_menu => "system_menu", :display => "系统管理"}
     ].select{|menu| current_user.powers.tops.collect(&:subject).include? menu[:display]}

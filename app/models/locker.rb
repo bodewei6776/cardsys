@@ -76,4 +76,24 @@ class Locker < ActiveRecord::Base
 
   def generate_num
   end
+
+  def locker_type_in_words
+    CommonResourceDetail.find(type).detail_name rescue "未知"
+  end
+
+  def state_desc
+    self.locker_state_in_words
+  end
+
+  def locker_state_in_words 
+    Locker::LOCKER_STATE[state.intern] rescue "未知"
+  end
+
+  def respond_to? a
+    if a == :state
+      false
+    else
+      super a
+    end
+  end
 end
