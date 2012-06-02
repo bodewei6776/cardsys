@@ -13,14 +13,14 @@
       %p#member_info{:style => "color:red; float: left;"} 未知 
       %p#member_card_info{:style => "color:red"} 未知
 
-    - control_helper("member_name", "会员姓名", :right) do
-      = text_field_tag :member_name, "", :user_autocomplete => "/book_records/complete_for_members", :id => "member_name"
-      = hidden_field_tag :member_id, :id => "member_id"
-
     - control_helper("member_card_id", "会员卡号", :left) do
       %p#cards
         = text_field_tag :member_card, "", :member_card_autocomplete => "/member_cards/autocomplete_card_serial_num", :id => "member_card_name_field"
         = hidden_field_tag :member_card_id, :id => "member_card_hidden_id"
+    - control_helper("member_name", "会员姓名", :right) do
+      = text_field_tag :member_name, "", :user_autocomplete => "/book_records/complete_for_members", :id => "member_name"
+      = hidden_field_tag :member_id, :id => "member_id"
+
 
   #sanke
     - control_helper("sanke_name", "散客姓名", :right) do

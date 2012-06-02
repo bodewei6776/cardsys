@@ -1,44 +1,41 @@
 = table_header(:title => "高级查询", :link => "")
 
-= form_tag "" , :class => "form-horizontal well" do
+= form_tag "" , :class => "form-horizontal well advanced_search" do
   - show_helper(:card_id, "注册日期", :left) do
     %input#reg_date_start{:name => "reg_date_start", :value => params[:reg_date_start], :class => "select-date"}/
-    \-
     %input#reg_date_end{:name => "reg_date_end", :value => params[:reg_date_end], :class => "select-date"}/
   - show_helper(:card_id, "到期时间", :right) do
     %input#expire_date_start{:name => "expire_date_start",   :value => params[:expire_date_start], :class => "select-date"}/
-    \-
     %input#expire_date_end{:name => "expire_date_end",   :value => params[:expire_date_end], :class => "select-date"}/
   - show_helper(:card_id, "来店日期", :left) do
     %input#comer_date_start{:name => "comer_date_start",   :value => params[:comer_date_start], :class => "select-date"}/
-    \-
     %input#comer_date_end{:name => "comer_date_end",   :value => params[:comer_date_end], :class => "select-date"}/
   - show_helper(:card_id, "刷卡次数", :left) do
     %input{:name => "consume_count_start", :tabindex => "1",  :value => params[:consume_count_start]}/
-    \-
     %input{:name => "consume_count_end", :tabindex => "1",  :value => params[:consume_count_end]}/
   - show_helper(:card_id, "消费总额", :left) do
     %input{:name => "consume_fees_start",   :value => params[:consume_fees_start]}/
-    \-
     %input{:name => "consume_fees_end",   :value => params[:consume_fees_end]}/
   - show_helper(:card_id, "卡内余额", :left) do
     %input{:name => "left_fees_start",   :value => params[:left_fees_start]}/
-    \-
     %input{:name => "left_fees_end",   :value => params[:left_fees_end]}/
   - show_helper(:card_id, "卡内余次", :left) do
     %input{:name => "left_times_start",   :value => params[:left_times_start]}/
-    \-
     %input{:name => "left_times_end",   :value => params[:left_times_end]}/
   - show_helper(:card_id, "会员生日", :left) do
     %input.birthday_input{:name => "member_birthday_start",   :value => params[:member_birthday_start], :class => "select-date"}/
-    \-
     %input.birthday_input{:name => "member_birthday_end",   :value => params[:member_birthday_end], :class => "select-date"}/
-  - show_helper(:card_id, "会员性别", :left) do
+  - show_helper(:card_id, "会员性别", :both) do
     - gender = params[:member_gender]
-    = radio_button_tag("member_gender","", ( gender.to_i == "")?true:false)
-    全部
-    \#{radio_button_tag("member_gender",CommonResource::Gender_Man, ( gender.to_i == CommonResource::Gender_Man)?true:false)}男
-    \#{radio_button_tag("member_gender",CommonResource::Gender_Woman, (gender.to_i == CommonResource::Gender_Woman)?true:false)}女
+    %p
+      = radio_button_tag("member_gender","", ( gender.to_i == "")?true:false)
+      全部
+    %p
+      = radio_button_tag("member_gender",CommonResource::Gender_Man, ( gender.to_i == CommonResource::Gender_Man)?true:false)
+      男
+    %p
+      = radio_button_tag("member_gender",CommonResource::Gender_Woman, (gender.to_i == CommonResource::Gender_Woman)?true:false)
+      女
   .form-actions
     = submit_tag "提交", :class => "btn"
 

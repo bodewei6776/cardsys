@@ -58,7 +58,9 @@ class MembersCardsController < ApplicationController
       log_action(@members_card, "kaika")
       flash[:notice] = "会员卡创建成功"
     else
+      @members_cards = []
       render new_members_card_path
+      return
     end
     redirect_to new_members_card_path(:card_serial_num => @members_card.card_serial_num)
   end

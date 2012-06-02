@@ -43,7 +43,7 @@ class Court < ActiveRecord::Base
 
   def is_useable_in_time_span?(period_price)
     @period_prices ||= period_prices
-    @period_prices.include? period_price
+    (@period_prices & period_price).present?
   end
 
   def daily_period_prices(date = Date.today)
