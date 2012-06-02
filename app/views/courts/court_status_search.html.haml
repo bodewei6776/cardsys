@@ -1,6 +1,6 @@
 = form_header(:title => "场地信息查询", :link => "")
 
-= form_tag("/courts/court_status_search", :class => "form-horizontal") do
+= form_tag("/courts/court_status_search", :class => "form-horizontal well") do
   - control_helper("name", "场地名称") do
     = text_field_tag :name, params[:name]
 
