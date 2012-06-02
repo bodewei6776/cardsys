@@ -11,6 +11,7 @@ class MembersCard < ActiveRecord::Base
   has_many    :orders
   has_many    :member_card_granters, :foreign_key => "member_card_id"
   has_many    :granters, :class_name => "Member", :through => :member_card_granters
+  has_many    :balances
 
   scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num.downcase}%'").limit(10) }
 

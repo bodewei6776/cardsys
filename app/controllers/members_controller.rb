@@ -133,7 +133,7 @@ class MembersController < ApplicationController
     @member = Member.find(params[:id])
     @members_cards = @member.all_members_cards
     @recharge_records = RechargeRecord.where(:member_id => params[:id])
-    @balances = @member.members_cards.collect{|mc| mc.balances }.flatten.uniq rescue []
+    @balances = @member.balances
   end
 
   def new
