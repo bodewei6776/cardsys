@@ -26,12 +26,7 @@
         %td
           = record.balance_real_amount_desc
           (#{record.balance_way_desc})
-        - if !defined?no_operation
-          %td
-            - operations = record.can_view? ? [:show]  : []
-            - operations << :destroy if record.can_destroy?
-            - operations << :edit if record.can_edit?
-            = operations_panel(record, operations)
+        %td= link_to raw("<i class = 'icon-search'></i>"),  order_balances_path(record.order), :title => "编辑", :class => "popup-new-window"
 
 
 
