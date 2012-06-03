@@ -422,7 +422,11 @@ class Order < ActiveRecord::Base
     end
 
     def member_name
-      is_member? ? member.name : non_member.name
+      begin
+        is_member? ? member.name : non_member.name
+      rescue 
+        ""
+      end
     end
 
     def advance_order_siblings(from_date = nil)

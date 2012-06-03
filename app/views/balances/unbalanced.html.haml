@@ -9,31 +9,25 @@
       %th 场地号
       %th 日期
       %th 时段
-      %th 场地费
+      %th 费用
       %th 结算人
 
   %tbody
-    - @balances.each_with_index do |record,index|
+    - @unbalanced_orders.each_with_index do |record,index|
       %tr
         %td= index + 1
-        %td= h record.order.member_name
-        %td= h record.members_card.card_serial_num
-        %td= h record.order.court_book_record.court.name
+        %td= h record.member_name
+        %td= h record.members_card.try(:card_serial_num)
+        %td= h record.court_book_record.try(:court).try(:name)
         %td= record.created_at.to_chinese_ymd
         %td
-          = record.order.court_book_record.start_hour
-          \:00-#{h record.order.court_book_record.end_hour}:00
+          = record.court_book_record.try(:start_hour)
+          = ":00-"
+          = record.court_book_record.try(:end_hour)
+          = ":00"
         %td
-          = record.balance_real_amount_desc
-          (#{record.balance_way_desc})
-        %td= record.order.balance_record.user.login rescue ""
-        - if !defined?no_operation
-          %td
-            - operations = record.can_view? ? [:show]  : []
-            - operations << :destroy if record.can_destroy?
-            - operations << :edit if record.can_edit?
-            = operations_panel(record, operations)
+          = record.order_items.sum(&:total_money_price)
+        %td= link_to raw("<i class = 'icon-edit'></i>"),  edit_order_path(record), :title => "编辑", :class => "popup-new-window"
 
 
-
-=render :partial => "layouts/page_nav", :locals => {:objs => @balances }
+=render :partial => "layouts/page_nav", :locals => {:objs => @unbalanced_orders}
