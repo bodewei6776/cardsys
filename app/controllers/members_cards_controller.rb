@@ -5,7 +5,7 @@ class MembersCardsController < ApplicationController
   autocomplete :members, :name
 
   def index
-    redirect_to new_members_card_path
+    @members_cards = MembersCard.paginate default_paginate_options
   end
 
 
@@ -62,7 +62,7 @@ class MembersCardsController < ApplicationController
       render new_members_card_path
       return
     end
-    redirect_to new_members_card_path(:card_serial_num => @members_card.card_serial_num)
+    redirect_to members_cards_path# new_members_card_path(:card_serial_num => @members_card.card_serial_num)
   end
 
   def update
@@ -79,6 +79,15 @@ class MembersCardsController < ApplicationController
     end
   end
 
+  def destroy
+    @members_card = MembersCard.find  params[:id]
+    @name = @members_card.member.name
+    if @members_card.destroy
+      flash[:notice] = "会员卡删除成功"
+    end
+
+    redirect_to :action => "new", :member_name => @name
+  end
 
   def show
     @members_card = MembersCard.find(params[:id])
