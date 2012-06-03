@@ -61,11 +61,20 @@ class Card < ActiveRecord::Base
     (period_prices & PeriodPrice.all_periods_in_time_span(date, start_hour, end_hour)).present?
   end
 
-  def total_money_in_time_span(date,start_hour,end_hour)
-    PeriodPrice.all_periods_in_time_span(date, start_hour, end_hour).collect do |pp|
-      card_period_price = self.card_period_prices.first(:conditions => "period_price_id=#{pp.id}")
-      card_period_price.try(:card_price) || 0
-    end.sum
+  def total_money_in_time_span(court_book_record, date, start_hour, end_hour)
+    start_hour, end_hour = start_hour.to_i, end_hour.to_i
+    period_prices = court_book_record.period_prices
+    period_prices.sort!{|fst,scd| scd.start_time <=> fst.start_time }
+    ap period_prices.collect(&:name)
+    total_price = 0
+    period_prices.each do |period_price|
+      real_start_hour = [start_hour, period_price.start_time].max
+      real_end_hour  =  [end_hour, period_price.end_time].min
+      price = self.card_period_prices.first(:conditions => {:period_price_id => period_price.id}).try(:card_price) || 0
+      total_price += (real_end_hour - real_start_hour) * price
+      leave_end_hour = real_end_hour
+    end
+    total_price    
   end
 
   def all_periods_in_time_span(date = Date.today, start_time=nil, end_time=nil)

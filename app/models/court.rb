@@ -86,4 +86,10 @@ class Court < ActiveRecord::Base
     perod_prices.blank? ? 0 : perod_prices.last.end_time
   end
 
+  def period_prices_in_time_span(date, start_hour, end_hour)
+    self.period_prices.select { |element|
+      element.is_fit_for?(date) and ((element.start_time..element.end_time).to_a & (start_hour..end_hour).to_a).present? 
+    }
+  end
+
 end
