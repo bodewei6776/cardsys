@@ -18,11 +18,13 @@
         %td= index + 1
         %td= h record.order.member_name
         %td= h record.members_card.card_serial_num
-        %td= h record.order.court_book_record.court.name
+        %td= h record.order.court_book_record.try(:court).try(:name)
         %td= record.created_at.to_chinese_ymd
         %td
-          = record.order.court_book_record.start_hour
-          \:00-#{h record.order.court_book_record.end_hour}:00
+          = record.order.court_book_record.try(:start_hour)
+          :00-
+          = record.order.court_book_record.try(:end_hour)
+          :00
         %td
           = record.balance_real_amount_desc
           (#{record.balance_way_desc})
