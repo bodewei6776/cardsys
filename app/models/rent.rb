@@ -1,21 +1,21 @@
 # -*- encoding : utf-8 -*-
 class Rent < ActiveRecord::Base
+  include Authenticateable
   belongs_to :locker
-  belongs_to :member_card,:foreign_key => :card_id
+  belongs_to :members_card,:foreign_key => :card_id
   belongs_to :member
 
   HUMAN_NAME = {
     "start_date" => "起租时间",
     "end_date"   => "退租时间",
-    "pay_way"    => "支付方式",
     "total_fee"  => "租用费用"
   }
 
-  delegate :num, :to => :locker
+  delegate :num, :state_desc, :to => :locker
 
   attr_accessor :card_num,:password,:user_name
 
-  [:locker_id,:start_date,:end_date, :pay_way, :total_fee].each do |c|
+  [:locker_id,:start_date,:end_date, :total_fee].each do |c|
     validates_presence_of c, :message => "#{HUMAN_NAME[c.to_s]}不能为空" 
   end
 
@@ -46,24 +46,12 @@ class Rent < ActiveRecord::Base
   end
 
   def pay
-    self.card_id = self.card_num
-    self.member_id = Member.find_by_name(self.member_name).id rescue nil
-
-    if self.pay_way ==Balance::Balance_Way_Use_Card && member_card.nil?
-      self.errors.add(:base,"会员卡不存在") and return false
-    end 
-
-    if self.pay_way == Balance::Balance_Way_Use_Card && member_card.left_fee < self.total_fee
-      self.errors.add(:base,"卡内余额不足") and return false
-    end
-
-    if self.pay_way == Balance::Balance_Way_Use_Card
-      member_card.update_attribute(:left_fee,member_card.left_fee -= self.total_fee)
-    end
     true
   end
 
   def expire?(date = Date.today)
     date > self.end_date
   end
+
+    
 end
