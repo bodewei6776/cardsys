@@ -108,7 +108,9 @@ class BalancesController < ApplicationController
   end
 
 
-
+  def show
+    @balance = Balance.find params[:id]
+  end
   protected
   def pre_date_for_new_create
     @book_record  = @order.book_record

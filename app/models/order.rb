@@ -369,6 +369,10 @@ class Order < ActiveRecord::Base
       is_member? && members_card.card.is_counter_card? ? hours : book_record_item.amount
     end
 
+    def product_items
+      self.order_items.select{|oi| Good === oi.item} 
+    end
+
     def product_amount
       p_amount = product_items.map(&:amount).sum
       p_amount += coach_items.map(&:amount).sum unless coach_items.blank?
