@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   end
 
   def menus
-    (self.powers.collect(&:subject) + self.departments.collect(&:powers).flatten).uniq
+    (self.powers + self.departments.collect(&:powers).flatten).uniq.collect(&:subject)
   end
 
   def can_book_when_time_due?
