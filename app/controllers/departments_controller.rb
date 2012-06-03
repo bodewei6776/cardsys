@@ -48,7 +48,7 @@ class DepartmentsController < ApplicationController
   end
 
   def department_power_update
-    @department.powers = Power.find(params[:powers])
+    @department.powers = Power.find(params[:powers]) rescue []
     @department.save
     redirect_to :action => "department_power_index", :id => @department.id
   end
