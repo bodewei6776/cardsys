@@ -120,7 +120,7 @@ class Order < ActiveRecord::Base
     return true unless self.members_card
     return true unless self.court_book_record
     self.errors.add(:members_card_id, "此卡已经被锁定，解锁后预订") if self.members_card.disabled?
-    self.errors.add(:members_card_id, "卡在此时段不可用") unless self.members_card.card.avaliable_in_time_span?(self.alloc_date, self.start_hour, self.end_hour)
+    self.errors.add(:members_card_id, "卡在此时段不可用") unless (self.court_book_record.period_prices & self.members_card.card.period_prices).present?
   end
 
   def replace_by(order_attributes)
