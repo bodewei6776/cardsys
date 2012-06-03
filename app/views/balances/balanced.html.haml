@@ -22,9 +22,7 @@
         %td= record.created_at.to_chinese_ymd
         %td
           = record.order.court_book_record.try(:start_hour)
-          :00-
           = record.order.court_book_record.try(:end_hour)
-          :00
         %td
           = record.balance_real_amount_desc
           (#{record.balance_way_desc})

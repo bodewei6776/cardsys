@@ -61,7 +61,7 @@
           %td= f.text_field :final_price, :id => "new_total_price_node", :class => "span1"
           %td 
           %td 
-          %td= f.submit "结算", :class => "btn btn-primary"
+          %td= f.submit "结算", :class => "btn btn-primary balance_submit"
 
 
     = table_header(:title => "商品列表", :link => "")
@@ -69,7 +69,7 @@
     %table.table.table-striped.table-bordered.table-condensed
       %thead
         %tr
-          %th= check_box_tag "select_deselect_all", :id => "select_deselect_all"
+          %th 选中
           %th 名称
           %th 类型
           %th 数量/时间段
@@ -91,6 +91,7 @@
               %span= oi.object.total_cost
               = hidden_field_tag "total_count", oi.object.total_count, :class => "total_count_hidden" if oi.object.item.is_a?CourtBookRecord
               = hidden_field_tag "total_cost", oi.object.total_cost, :class => "total_cost_hidden"
+              = hidden_field_tag "total_money_price", oi.object.total_money_price, :class => "total_money_price_hidden"
             %td= oi.object.balanced? ? oi.object.discount : (oi.text_field :discount, :class => "discount span1")
             %td= oi.object.balanced? ? oi.object.price_after_discount : (oi.text_field :price_after_discount, :class => "price_after_discount span1" )
             %td= oi.object.balanced? ? "已结算" : "未结算"
@@ -127,7 +128,6 @@
         return;
       }
       else{
-        //price_node.parent().parent().find(".checkbox_marker").attr("checked", "checked");
         var closest_price_after_discount_node = price_node.parent().parent().find(".price_after_discount");
         closest_price_after_discount_node.val(price * total_cost * 0.1);
       }
@@ -145,13 +145,13 @@
   }
 
   $(document).ready(function(){
+    $(".balance_submit").click(function(){
+      if($(".checkbox_marker:checked").length == 0){
+        alert("选择要结算项");
+        return false; 
+      }
+    });
     $("#new_total_price_node, #new_price_node").focus(function(){ $(this).blur() });
-    $("#select_deselect_all").change(function(){
-      var select_deselect_all = $(this)
-      select_deselect_all.parent().parent().parent().parent().find("input[type=checkbox]").each(function(index, node){
-        if(select_deselect_all.attr('checked')){ $(node).attr("checked", true) } else{ $(node).attr("checked", false)}
-      });
-    })
 
     $(".discount").blur(function(){
       var price = $(this);
@@ -176,12 +176,13 @@
         $("#new_total_price_node").val(total_count);
         $("#new_price_node").val(total_count);
       }else{
-        $(".other_product").show(); 
-        $(".court input").attr("disabled", false);
-        $(".court span").text($(".court .total_cost_hidden").val());
-        $("#new_total_price_node").val("");
-        $("#new_price_node").val("");
         $(".checkbox_marker").map(function(i, node){ $(node).attr("checked", false) });
+        $(".other_product").show(); 
+        $("#new_price_node").val("");
+        $("#new_total_price_node").val("");
+        $(".court span").text($('.court .total_money_price_hidden').val());
+        $(".checkbox_marker").trigger("change");
+        $(".court input").attr("disabled", false);
       }
     });
 
@@ -195,5 +196,6 @@
     });
 
     $(".checkbox_marker").trigger("click");
+    $("#balance_balance_way").trigger("change");
 
   })
