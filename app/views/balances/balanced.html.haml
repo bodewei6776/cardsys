@@ -10,7 +10,7 @@
       %th 日期
       %th 时段
       %th 场地费
-      %th 结算人
+      %th 操作
 
   %tbody
     - @balances.each_with_index do |record,index|
@@ -26,7 +26,6 @@
         %td
           = record.balance_real_amount_desc
           (#{record.balance_way_desc})
-        %td= record.order.balance_record.user.login rescue ""
         - if !defined?no_operation
           %td
             - operations = record.can_view? ? [:show]  : []
