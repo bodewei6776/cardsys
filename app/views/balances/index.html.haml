@@ -54,7 +54,7 @@
             %td= link_to "打印", print_balance_path(item)
 
 
-        %tr
+        %tr.form_tr
           %td= @balances.count + 1
           %td= f.select :balance_way, options_for_select(@order.possible_balance_ways, @balance.balance_way), {}, :class => "span2"
           %td= f.text_field :price, :id => "new_price_node", :class => "span1"
@@ -79,7 +79,7 @@
           %th 折后价格
           %th 受否结算
 
-      %tbody
+      %tbody.tbody
         = f.fields_for :order_items do |oi|
           %tr.table_items{:class => (oi.object.item.is_a? CourtBookRecord) ? "court" : "other_product"}
             %td= oi.check_box :checked, :class => "checkbox_marker" unless oi.object.balanced?
@@ -200,4 +200,8 @@
 
     $("#balance_balance_way").trigger("change");
 
-  })
+    if($("tr:contains('未结算')").length == 0){
+      $(".form_tr").hide();
+    }
+
+  });
