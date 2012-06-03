@@ -166,7 +166,6 @@
     $("#balance_balance_way").change(function(){
       if($(this).val() == "counter"){
         $(".other_product .checkbox_marker").attr("checked", false);
-        $(".other_product").hide(); 
         $(".court input[type*=text]").attr("disabled", true);
         var total_count = $(".court .total_count_hidden").val();
         var total_count_hidden_val = $(".court .total_count_hidden").val() + "次";
@@ -177,7 +176,6 @@
         $("#new_price_node").val(total_count);
       }else{
         $(".checkbox_marker").map(function(i, node){ $(node).attr("checked", false) });
-        $(".other_product").show(); 
         $("#new_price_node").val("");
         $("#new_total_price_node").val("");
         $(".court span").text($('.court .total_money_price_hidden').val());
@@ -187,6 +185,11 @@
     });
 
     $(".checkbox_marker").change(function(){
+      if($("#balance_balance_way").val() == "counter" && $(this).is(':checked') && $(this).parents('.other_product').length == 1)
+      {
+        $(this).attr("checked", false); 
+        alert("此商品不能通过计次结算!!");
+      }
       var marker = $(this);
       var price = marker.parent().parent().find(".discount");
       update_discount_value("discount", price);
@@ -195,7 +198,6 @@
       update_discount_value("price_after_discount", price_after_discount);
     });
 
-    $(".checkbox_marker").trigger("click");
     $("#balance_balance_way").trigger("change");
 
   })
