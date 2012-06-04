@@ -1,4 +1,4 @@
-%span.btn.btn-primary=link_to "购买商品", select_for_cart_goods_path, :id => "goods_list", :style => "color:white;"
+%span.btn.=link_to "购买商品", select_for_cart_goods_path, :id => "goods_list", :style => "color:white;"
 
 = form_tag  create_good_buy_balances_path ,:id => "balance_form", :class => "form-horizontal well"  do |f|
   - control_helper("", "会员", :left) do
@@ -28,8 +28,8 @@
       = text_field_tag :sanke_name
 
   .form-actions
-    = submit_tag "付款",:class => "btn btn-primary"
-    = link_to "清空购物车",clear_goods_balances_path, :class => "btn btn-danger"
+    = submit_tag "付款",:class => "btn"
+    = link_to "清空购物车",clear_goods_balances_path, :class => "btn"
 
 = table_header(:title => "商品消费列表", :link => "")
 %table.table.table-striped.table-bordered.table-condensed

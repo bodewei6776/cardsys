@@ -36,8 +36,8 @@
     %p
       = radio_button_tag("member_gender",CommonResource::Gender_Woman, (gender.to_i == CommonResource::Gender_Woman)?true:false)
       女
-  .form-actions
-    = submit_tag "提交", :class => "btn"
+.form-actions{:style => "padding-left: 300px"}
+  = submit_tag "提交", :class => "btn "
 
 = table_header(:title => "会员列表", :link => "")
 
