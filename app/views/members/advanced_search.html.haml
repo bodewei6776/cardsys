@@ -28,13 +28,13 @@
   - show_helper(:card_id, "会员性别", :both) do
     - gender = params[:member_gender]
     %p
-      = radio_button_tag("member_gender","", ( gender.to_i == "")?true:false)
+      = radio_button_tag("member_gender","", ( gender.to_i == "")?true:false, :style => "width: 30px")
       全部
     %p
-      = radio_button_tag("member_gender",CommonResource::Gender_Man, ( gender.to_i == CommonResource::Gender_Man)?true:false)
+      = radio_button_tag("member_gender",CommonResource::Gender_Man, ( gender.to_i == CommonResource::Gender_Man)?true:false, :style => "width: 30px")
       男
     %p
-      = radio_button_tag("member_gender",CommonResource::Gender_Woman, (gender.to_i == CommonResource::Gender_Woman)?true:false)
+      = radio_button_tag("member_gender",CommonResource::Gender_Woman, (gender.to_i == CommonResource::Gender_Woman)?true:false, :style => "width: 30px")
       女
 .form-actions{:style => "padding-left: 300px"}
   = submit_tag "提交", :class => "btn "
