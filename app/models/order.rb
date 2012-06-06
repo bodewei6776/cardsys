@@ -119,7 +119,8 @@ class Order < ActiveRecord::Base
   def card_avaliable_in_time_span
     return true unless self.members_card
     return true unless self.court_book_record
-    self.errors.add(:members_card_id, "卡在此时段不可用") unless self.members_card.card.avaliable_in_time_span?(self.alloc_date, self.start_hour, self.end_hour)
+    self.errors.add(:members_card_id, "此卡已经被锁定，解锁后预订") if self.members_card.disabled?
+    self.errors.add(:members_card_id, "卡在此时段不可用") unless (self.court_book_record.period_prices & self.members_card.card.period_prices).present?
   end
 
   def replace_by(order_attributes)
@@ -204,11 +205,16 @@ class Order < ActiveRecord::Base
     end
 
     def can_cancel?
-      true #booked? && Setting.can_cancel_time_before_activate.from_now < court_book_record.start_time
+      #booked? && Setting.can_cancel_time_before_activate.from_now < court_book_record.start_time
+      not balanced?
     end
 
     def can_want_sell?
       booked?
+    end
+
+    def can_change?
+      not self.to_be_sold? and not self.balanced?
     end
 
     def can_cancel_want_sell?
@@ -363,6 +369,10 @@ class Order < ActiveRecord::Base
       is_member? && members_card.card.is_counter_card? ? hours : book_record_item.amount
     end
 
+    def product_items
+      self.order_items.select{|oi| Good === oi.item} 
+    end
+
     def product_amount
       p_amount = product_items.map(&:amount).sum
       p_amount += coach_items.map(&:amount).sum unless coach_items.blank?
@@ -416,7 +426,11 @@ class Order < ActiveRecord::Base
     end
 
     def member_name
-      is_member? ? member.name : non_member.name
+      begin
+        is_member? ? member.name : non_member.name
+      rescue 
+        ""
+      end
     end
 
     def advance_order_siblings(from_date = nil)

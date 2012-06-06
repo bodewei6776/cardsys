@@ -47,7 +47,8 @@ class Member < ActiveRecord::Base
   end
 
   def all_members_cards
-    members_cards.enabled + granted_member_cards.enabled
+    #members_cards.enabled + granted_member_cards.enabled
+    members_cards + granted_member_cards
   end
 
   def card_serial_nums

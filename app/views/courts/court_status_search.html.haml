@@ -1,6 +1,6 @@
 = form_header(:title => "场地信息查询", :link => "")
 
-= form_tag("/courts/court_status_search", :class => "form-horizontal") do
+= form_tag("/courts/court_status_search", :class => "form-horizontal well") do
   - control_helper("name", "场地名称") do
     = text_field_tag :name, params[:name]
 
@@ -18,7 +18,7 @@
     = select_tag :end_hour, options_for_select((0..23).to_a), :onchange => "check_time();"
 
   .form-actions
-    = submit_tag "搜索", :class => "btn btn-primary"
+    = submit_tag "搜索", :class => "btn "
 
 
 
@@ -38,8 +38,8 @@
     - @court_book_records.each_with_index do |court_book_record,index|
       %tr
         %td= index + 1
-        %td= court_book_record.court.name
-        %td= court_book_record.order.member_name
+        %td= court_book_record.court.try(:name)
+        %td= court_book_record.order.try(:member_name)
         %td= court_book_record.alloc_date.to_chinese_ymd
         %td
           = court_book_record.start_hour
@@ -49,7 +49,7 @@
 %td
 
 
-=# render :partial => "layouts/page_nav", :locals => {:objs => @court_book_records}
+= render :partial => "layouts/page_nav", :locals => { :objs => @court_book_records }
 
 :javascript
   $(".record_detail").colorbox({width:"80%", height:"80%", iframe:false});

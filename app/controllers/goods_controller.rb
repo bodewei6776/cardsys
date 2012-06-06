@@ -118,8 +118,9 @@ class GoodsController < ApplicationController
 
   def goods
     @order = Order.find(params[:order_id])
-    @goods = Good.enabled.where(["name like :name or name_pinyin like :name or pinyin_abbr like :name",{:name => params[:name]} ])
-    @goods = @goods.where({:good_type => params[:good_type]}) if params[:good_type] != "0"
+    name = params[:name] || ""
+    @goods = Good.enabled.where("name like '%#{name}%' or name_pinyin like '%#{name}%' or pinyin_abbr like '%#{name}%'" )
+    @goods = @goods.where({:good_type => params[:good_type]}) if params[:good_type] and params[:good_type] != "0"
     @goods = @goods.limit(20)
     render :layout => "small_main"
   end

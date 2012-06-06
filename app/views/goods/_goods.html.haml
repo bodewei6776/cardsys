@@ -18,14 +18,14 @@
         %td= good.count_front_stock
         %td
           - @order_item = OrderItem.new_by_good(good, @order.id)
-          = form_for [@order, @order_item] do |f|
+          = form_for [@order, @order_item], :html => { :class => "form-inline td-form" }  do |f|
             = f.hidden_field :item_id
             = f.hidden_field :item_type
             = f.hidden_field :order_id
             = link_to "<<", "#", :class => "remove"
             = f.text_field :quantity, :class => "quantity span1"
             = link_to ">>", "#", :class => "add"
-            = f.submit "购买", :class => "btn btn-primary"
+            = f.submit "购买", :class => "btn "
 
 
 

@@ -248,11 +248,11 @@ class Balance < ActiveRecord::Base
     product_items = product_items.flatten.uniq
     hash = {}
     product_items.each do |pi| 
-      next if pi.good.category.parent_id != type.id
-      if hash[pi.good]
-        hash[pi.good] = hash[pi.good] + pi.quantity 
+      next if pi.item.category.parent_id != type.id
+      if hash[pi.item]
+        hash[pi.item] = hash[pi.item] + pi.quantity 
       else
-        hash[pi.good] = pi.quantity
+        hash[pi.item] = pi.quantity
       end
     end
     hash

@@ -51,7 +51,7 @@ module ReportsHelper
     # data tr
     Balance.balances_on_date_and_ways(date, pay_ways).each_with_index do |b,index|
       table << "<tr class='report_item'>"
-      table <<"<td>#{index+1}  #{b.id}</td>"
+      table <<"<td>#{index+1} </td>"
       table << "<td>#{link_to(b.order.member_name,order_balance_path(b.order,b),:target => "_blank")}</td>"
       table << "<td>#{b.money_spent_on}</td>"
       table << "<td>#{b.order.members_card.card_serial_num rescue ""}</td>"

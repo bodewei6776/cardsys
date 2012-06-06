@@ -1,0 +1,97 @@
+%table.span10{:cellpadding=>"1", :cellspacing=>"2", :border=>"1"}
+  - if @balance.order.court_book_record
+    %tr.goods.goods_title
+      %td{:colspan => "5"}
+        消费时段：#{balance_time_span_in_word(@balance)}
+  - if @balance.order.is_member?
+    %tr
+      %td{:colspan => "3"}
+        姓名: #{@balance.order.member.name}
+      %td{:colspan => "2"}
+        卡号: #{@balance.order.is_member?  ? @balance.order.members_card.card_serial_num : "无卡 "}
+    %tr
+      %td{:colspan => "5"}
+        卡到期时间：#{@balance.order.members_card.expire_date.strftime("%Y-%m-%d")}
+  - else
+    %tr
+      %td{:colspan => "5"}
+        散客姓名: #{@balance.order.member.name}
+  %tr.goods.goods_title
+    %td.left 商品名称
+    %td 单价
+    %td 数量
+    %td 优惠
+    %td.right 小计
+  - @balance.order_items.each do |oi|
+    - case oi.item
+    - when CourtBookRecord
+      %tr.goods
+        %td.left 场地预定费
+        - if @balance.balance_way == "counter"
+          %td= 1
+          %td= @balance.order.court_book_record.end_hour - @balance.order.court_book_record.start_hour
+          %td 无
+          %td.right
+            = @balance.final_price
+            次
+        - else
+          %td --
+          %td 1
+          %td= @balance.order.court_book_record.price(oi.order.members_card) - oi.price_after_discount
+          %td.right= @balance.order.court_book_record.price(oi.order.members_card)
+    - when CoachBookRecord
+      %tr.goods
+        %td.left
+          教练(#{oi.item.coach.name})
+        %td= oi.item.coach.fee
+        %td= oi.item.hours
+        %td= oi.item.hours * oi.item.coach.fee - oi.price_after_discount
+        %td.right= oi.price_after_discount
+    - when Good
+      - good = oi.item
+      %tr.goods
+        %td.left
+          = good.name
+        %td= good.price
+        %td= oi.quantity
+        %td= oi.quantity * good.price - oi.price_after_discount
+        %td.right= oi.quantity * good.price
+
+  %tr.total
+    %td{:colspan => "2"}
+      %td{:colspan => "1"}  合计:
+    %td.amount{:colspan => "2"}
+      %span
+        = @balance.balance_real_amount_desc
+  - if @balance.order.is_member?
+    %tr.total_remain
+      %td{:colspan => "2"}
+        %td  剩余金额:
+      %td.amount{:colspan => "2"}
+        %span
+          = @balance.order.members_card.left_fee
+        元
+    %tr.total_remain
+      %td{:colspan => "2"}
+        %td  剩余次数:
+      %td.amount{:colspan => "2"}
+        %span>
+          = @balance.order.members_card.left_times
+        次
+  %tr
+    %td{:colspan => "5"}
+       备注:
+      \#{@balance.change_note}
+  %tr
+    %td{:colspan => "5"}
+       结算时间:
+      \#{@balance.created_at.to_chinese_ymd}
+  %tr
+    %td{:colspan => "5"}
+       操作员编号:
+      \#{@balance.who_balance.try(:login) || "未知"}
+  %tr
+    %td{:colspan => "5"}
+       支付方式:
+      = @balance.balance_way_desc
+

@@ -11,6 +11,9 @@ class MembersCard < ActiveRecord::Base
   has_many    :orders
   has_many    :member_card_granters, :foreign_key => "member_card_id"
   has_many    :granters, :class_name => "Member", :through => :member_card_granters
+  has_many    :balances
+
+  delegate :name, :to => :member
 
   scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num.downcase}%'").limit(10) }
 
@@ -22,7 +25,7 @@ class MembersCard < ActiveRecord::Base
   validates_uniqueness_of :card_serial_num, :message => "会员卡号冲突", :allow_blank => true
 
   attr_accessor :recharge_times, :recharge_fee, :recharge_expire_date, :recharging
-  validates_numericality_of :recharge_times, :greater_than => 0, :message => "充值次数必须为大于零的整数", :if => proc {|obj| obj.recharging }
+  validates_numericality_of :recharge_times, :greater_than => -1, :message => "充值次数必须为大于零的整数", :if => proc {|obj| obj.recharging }
   validates_numericality_of :recharge_fee, :greater_than => 0, :message => "充值金额必须为大于零的整数", :if => proc { |obj| obj.recharging }
 
   validation_conditions << proc {|obj| obj.recharging }

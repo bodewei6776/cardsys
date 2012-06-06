@@ -1,0 +1,6 @@
+=# table_header(:title => "会员卡查询", :link => "")
+=# render :partial => "soso", :locals => { :form_url => members_cards_path }
+- columns = { :name => "姓名", :card_serial_num => "会员卡", :created_at => "注册时间", :left_fee=> "现有金额", :left_times => "现有次数" }
+= table_header(:title => "会员卡列表", :link => "")
+= render :partial => "layouts/table", :locals => {:collection => @members_cards, :columns => columns}
+= render :partial => "layouts/page_nav", :locals => { :objs => @members_cards}

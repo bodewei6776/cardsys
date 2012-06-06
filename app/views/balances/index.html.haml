@@ -54,14 +54,14 @@
             %td= link_to "打印", print_balance_path(item)
 
 
-        %tr
+        %tr.form_tr
           %td= @balances.count + 1
           %td= f.select :balance_way, options_for_select(@order.possible_balance_ways, @balance.balance_way), {}, :class => "span2"
           %td= f.text_field :price, :id => "new_price_node", :class => "span1"
           %td= f.text_field :final_price, :id => "new_total_price_node", :class => "span1"
           %td 
           %td 
-          %td= f.submit "结算", :class => "btn btn-primary"
+          %td= f.submit "结算", :class => "btn  balance_submit"
 
 
     = table_header(:title => "商品列表", :link => "")
@@ -69,7 +69,7 @@
     %table.table.table-striped.table-bordered.table-condensed
       %thead
         %tr
-          %th= check_box_tag "select_deselect_all", :id => "select_deselect_all"
+          %th 选中
           %th 名称
           %th 类型
           %th 数量/时间段
@@ -79,7 +79,7 @@
           %th 折后价格
           %th 受否结算
 
-      %tbody
+      %tbody.tbody
         = f.fields_for :order_items do |oi|
           %tr.table_items{:class => (oi.object.item.is_a? CourtBookRecord) ? "court" : "other_product"}
             %td= oi.check_box :checked, :class => "checkbox_marker" unless oi.object.balanced?
@@ -91,6 +91,7 @@
               %span= oi.object.total_cost
               = hidden_field_tag "total_count", oi.object.total_count, :class => "total_count_hidden" if oi.object.item.is_a?CourtBookRecord
               = hidden_field_tag "total_cost", oi.object.total_cost, :class => "total_cost_hidden"
+              = hidden_field_tag "total_money_price", oi.object.total_money_price, :class => "total_money_price_hidden"
             %td= oi.object.balanced? ? oi.object.discount : (oi.text_field :discount, :class => "discount span1")
             %td= oi.object.balanced? ? oi.object.price_after_discount : (oi.text_field :price_after_discount, :class => "price_after_discount span1" )
             %td= oi.object.balanced? ? "已结算" : "未结算"
@@ -127,7 +128,6 @@
         return;
       }
       else{
-        //price_node.parent().parent().find(".checkbox_marker").attr("checked", "checked");
         var closest_price_after_discount_node = price_node.parent().parent().find(".price_after_discount");
         closest_price_after_discount_node.val(price * total_cost * 0.1);
       }
@@ -145,13 +145,13 @@
   }
 
   $(document).ready(function(){
+    $(".balance_submit").click(function(){
+      if($(".checkbox_marker:checked").length == 0){
+        alert("选择要结算项");
+        return false; 
+      }
+    });
     $("#new_total_price_node, #new_price_node").focus(function(){ $(this).blur() });
-    $("#select_deselect_all").change(function(){
-      var select_deselect_all = $(this)
-      select_deselect_all.parent().parent().parent().parent().find("input[type=checkbox]").each(function(index, node){
-        if(select_deselect_all.attr('checked')){ $(node).attr("checked", true) } else{ $(node).attr("checked", false)}
-      });
-    })
 
     $(".discount").blur(function(){
       var price = $(this);
@@ -166,7 +166,6 @@
     $("#balance_balance_way").change(function(){
       if($(this).val() == "counter"){
         $(".other_product .checkbox_marker").attr("checked", false);
-        $(".other_product").hide(); 
         $(".court input[type*=text]").attr("disabled", true);
         var total_count = $(".court .total_count_hidden").val();
         var total_count_hidden_val = $(".court .total_count_hidden").val() + "次";
@@ -176,16 +175,21 @@
         $("#new_total_price_node").val(total_count);
         $("#new_price_node").val(total_count);
       }else{
-        $(".other_product").show(); 
-        $(".court input").attr("disabled", false);
-        $(".court span").text($(".court .total_cost_hidden").val());
-        $("#new_total_price_node").val("");
-        $("#new_price_node").val("");
         $(".checkbox_marker").map(function(i, node){ $(node).attr("checked", false) });
+        $("#new_price_node").val("");
+        $("#new_total_price_node").val("");
+        $(".court span").text($('.court .total_money_price_hidden').val());
+        $(".checkbox_marker").trigger("change");
+        $(".court input").attr("disabled", false);
       }
     });
 
     $(".checkbox_marker").change(function(){
+      if($("#balance_balance_way").val() == "counter" && $(this).is(':checked') && $(this).parents('.other_product').length == 1)
+      {
+        $(this).attr("checked", false); 
+        alert("此商品不能通过计次结算!!");
+      }
       var marker = $(this);
       var price = marker.parent().parent().find(".discount");
       update_discount_value("discount", price);
@@ -194,6 +198,10 @@
       update_discount_value("price_after_discount", price_after_discount);
     });
 
-    $(".checkbox_marker").trigger("click");
+    $("#balance_balance_way").trigger("change");
 
-  })
+    if($("tr:contains('未结算')").length == 0){
+      $(".form_tr").hide();
+    }
+
+  });

@@ -48,8 +48,10 @@ class DepartmentsController < ApplicationController
   end
 
   def department_power_update
-    @department.powers = Power.find(params[:powers])
-    @department.save
+    @department.powers = Power.find(params[:powers]) rescue []
+    if @department.save
+      flash[:notice] = "权限修改成功"
+    end
     redirect_to :action => "department_power_index", :id => @department.id
   end
   

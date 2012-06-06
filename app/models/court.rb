@@ -43,7 +43,7 @@ class Court < ActiveRecord::Base
 
   def is_useable_in_time_span?(period_price)
     @period_prices ||= period_prices
-    @period_prices.include? period_price
+    (@period_prices & period_price).present?
   end
 
   def daily_period_prices(date = Date.today)
@@ -84,6 +84,12 @@ class Court < ActiveRecord::Base
   def end_hour(date=Date.today)
     perod_prices = daily_period_prices(date)
     perod_prices.blank? ? 0 : perod_prices.last.end_time
+  end
+
+  def period_prices_in_time_span(date, start_hour, end_hour)
+    self.period_prices.select { |element|
+      element.is_fit_for?(date) and ((element.start_time..element.end_time).to_a & (start_hour..end_hour).to_a).present? 
+    }
   end
 
 end

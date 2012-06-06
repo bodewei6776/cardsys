@@ -14,7 +14,7 @@ class BalancesController < ApplicationController
   end
 
   def unbalanced
-    @balances = Balance.unbalanced.order('created_at desc').paginate(default_paginate_options_without_created_at)
+    @unbalanced_orders = Order.paginate(default_paginate_options.merge(:conditions => ["state = ? ", "activated"]))
   end
 
   def create
@@ -31,6 +31,7 @@ class BalancesController < ApplicationController
 
   def print 
     @balance  = Balance.find(params[:id])
+    @order = @balance.order
     render :layout => false
   end
 
@@ -107,7 +108,9 @@ class BalancesController < ApplicationController
   end
 
 
-
+  def show
+    @balance = Balance.find params[:id]
+  end
   protected
   def pre_date_for_new_create
     @book_record  = @order.book_record

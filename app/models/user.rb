@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
     c.merge_validates_length_of_password_confirmation_field_options(:allow_blank => true, :message => "长度太短")
   end
 
-  has_many   :user_powers
+  has_many :user_powers
   has_many :powers, :through => :user_powers
 
   before_save :set_powers
@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   end
 
   def menus
-    self.powers.collect(&:subject)
+    (self.powers + self.departments.collect(&:powers).flatten).uniq.collect(&:subject)
   end
 
   def can_book_when_time_due?

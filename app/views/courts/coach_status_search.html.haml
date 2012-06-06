@@ -22,7 +22,7 @@
 
 
   .form-actions
-    = submit_tag "搜索", :class => "btn btn-primary"
+    = submit_tag "搜索", :class => "btn "
 
 = form_header(:title => "教练预订列表", :link => "")
 %table.table.table-striped.table-bordered.table-condensed
@@ -39,10 +39,10 @@
     - @coach_book_records.each_with_index do |coach_book_record, index|
       %tr
         %td= index + 1
-        %td= coach_book_record.coach.name
-        %td= coach_book_record.order.member.name
+        %td= coach_book_record.coach.try(:name)
+        %td= coach_book_record.order.member_name
         %td= coach_book_record.start_time.to_chinese_mdh
-        %td= coach_book_record.order.court_book_record.court.name
+        %td= coach_book_record.order.court_book_record.court.try(:name)
         %td
           = coach_book_record.start_hour
           点 - #{coach_book_record.end_hour}点

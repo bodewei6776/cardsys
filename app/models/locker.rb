@@ -7,7 +7,7 @@ class Locker < ActiveRecord::Base
   has_many :rents,:dependent => :destroy
   validate :num,:state,:locker_type ,:presence => true,:message => "{column}以上字段不能空"
 
-  scope :rented,where({:state => :rented }) 
+  scope :rented, where({:state => :rented }) 
   
   def current_rent(date = Date.today)
     self.rents.select {|r| r.start_date.to_date <= date && date <= r.end_date.to_date }.first
@@ -75,5 +75,25 @@ class Locker < ActiveRecord::Base
   end
 
   def generate_num
+  end
+
+  def locker_type_in_words
+    CommonResourceDetail.find(type).detail_name rescue "未知"
+  end
+
+  def state_desc
+    self.locker_state_in_words
+  end
+
+  def locker_state_in_words 
+    Locker::LOCKER_STATE[state.intern] rescue "未知"
+  end
+
+  def respond_to? a
+    if a == :state
+      false
+    else
+      super a
+    end
   end
 end

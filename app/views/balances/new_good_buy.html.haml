@@ -13,9 +13,10 @@
       %p#member_info{:style => "color:red; float: left;"} 未知 
       %p#member_card_info{:style => "color:red"} 未知
 
-    - control_helper("member_name", "会员姓名", :right) do
+    - control_helper("member_name", "会员姓名", :left) do
       = text_field_tag :member_name, "", :user_autocomplete => "/book_records/complete_for_members", :id => "member_name"
       = hidden_field_tag :member_id, :id => "member_id"
+
 
     - control_helper("member_card_id", "会员卡号", :left) do
       %p#cards
@@ -27,8 +28,8 @@
       = text_field_tag :sanke_name
 
   .form-actions
-    = submit_tag "付款",:class => "btn btn-primary"
-    = link_to "清空购物车",clear_goods_balances_path, :class => "btn btn-danger"
+    = submit_tag "付款",:class => "btn"
+    = link_to "清空购物车",clear_goods_balances_path, :class => "btn"
 
 = table_header(:title => "商品消费列表", :link => "")
 %table.table.table-striped.table-bordered.table-condensed
