@@ -20,11 +20,11 @@ class Setting
     end
 
     def site_name
-       "博德维"
+       "国家网球中心"
     end
 
     def site_url
-      "www.localhost:300"
+      "www.broadwell.cn"
     end
 
     def coach_types
