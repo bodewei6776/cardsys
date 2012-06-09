@@ -205,8 +205,7 @@ class Order < ActiveRecord::Base
     end
 
     def can_cancel?
-      #booked? && Setting.can_cancel_time_before_activate.from_now < court_book_record.start_time
-      not balanced?
+       Setting.can_cancel_time_before_activate.from_now < court_book_record.start_time && (not balanced?)
     end
 
     def can_want_sell?
@@ -222,7 +221,7 @@ class Order < ActiveRecord::Base
     end
 
     def can_cancel_all?
-      booked? && is_advance_order?
+       is_advance_order? && Setting.can_cancel_time_before_activate.from_now < court_book_record.start_time && (not balanced?)
     end
 
     def can_update_all?
