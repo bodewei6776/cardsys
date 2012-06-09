@@ -17,7 +17,7 @@
       %tr
         %td= index + 1
         %td= h record.order.member_name
-        %td= h record.members_card.card_serial_num
+        %td= h record.members_card.try:(card_serial_num)
         %td= h record.order.court_book_record.try(:court).try(:name)
         %td= record.created_at.to_chinese_ymd
         %td
