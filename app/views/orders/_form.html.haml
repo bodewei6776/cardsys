@@ -123,6 +123,7 @@
             dataType: 'json',
             success: function(response){
               $('#members_card_info').text(response.members_card_info);
+              $('#members_card_info').css({"color":"red"});
               $('#card_type').text(response.card_type_in_chinese);
               $('#remaining').text(response.remaining_money_and_amount_in_chinese);
               $('#mobile').val(response.mobile);
