@@ -24,7 +24,7 @@ class Setting
     end
 
     def site_url
-      "www.broadwell.cn"
+      "http://www.broadwell.cn"
     end
 
     def coach_types
