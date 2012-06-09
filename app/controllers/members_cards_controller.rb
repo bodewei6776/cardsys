@@ -55,7 +55,7 @@ class MembersCardsController < ApplicationController
   def create
     @members_card = MembersCard.new(params[:members_card])
     if @members_card.save
-      log_action(@members_card, "kaika")
+      log_action(@members_card, "kaika", @members_card.user || current_user)
       flash[:notice] = "会员卡创建成功"
     else
       @members_cards = []
@@ -69,7 +69,7 @@ class MembersCardsController < ApplicationController
     @members_card = MembersCard.find(params[:id])
     if @members_card.update_attributes(params[:members_card])
       if params[:commit] == "充值"
-        log_action(@members_card, "chongzhi", current_user, "#{params[:members_card][:recharge_fee]}元，#{params[:members_card][:recharge_times]}次")
+        log_action(@members_card, "chongzhi", @members_card.user || current_user, "#{params[:members_card][:recharge_fee]}元，#{params[:members_card][:recharge_times]}次")
         flash[:notice] = "会员卡充值成功, 卡内总值为#{@members_card.left_fee}, 卡内次数#{@members_card.left_times}"
       end
       redirect_to recharge_members_cards_path(:card_serial_num => @members_card.card_serial_num)
