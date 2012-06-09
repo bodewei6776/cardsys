@@ -92,6 +92,7 @@ class GoodsController < ApplicationController
 
   def front_store_manage
     @good = Good.find params[:id]
+    @good.count_front_stock_in = 0
     render :layout => false
   end
 
