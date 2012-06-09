@@ -12,6 +12,7 @@ class MembersCard < ActiveRecord::Base
   has_many    :member_card_granters, :foreign_key => "member_card_id"
   has_many    :granters, :class_name => "Member", :through => :member_card_granters
   has_many    :balances
+  has_many :recharge_records, :foreign_key => :member_card_id
 
   delegate :name, :to => :member
 

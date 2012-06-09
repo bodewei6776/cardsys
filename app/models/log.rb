@@ -24,7 +24,7 @@ class Log < ActiveRecord::Base
   def self.log(controller, item, log_type, user, desc)
     user = user || controller.send("current_user")
     new(:remote_ip =>controller.request.remote_ip,
-        :user_name => user.login,
+        :user_name => user.user_name,
         :user_id => user.id,
         :item => item,
         :log_type => log_type, 

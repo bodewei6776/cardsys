@@ -93,8 +93,8 @@
 
 
 = table_header(:title => " 会员 #{@member.name} 的充值记录列表 ", :link => "")
-- columns = {"member_card.card_serial_num" => "卡号", :display_recharge_info => " 充值金额(￥)/次数 ",
-  "created_at.to_chinese_mdh" => "充值日期",:recharge_person_name => "操作人"}
+- columns = {"card_serial_num" => "卡号", :display_recharge_info => " 充值金额(￥)/次数 ",
+  "created_at" => "充值日期",:recharge_person_name => "操作人"}
 - collection = @recharge_records
 =render :partial => "layouts/table", :locals => { :collection => collection, :columns => columns, :no_operation => true}
 

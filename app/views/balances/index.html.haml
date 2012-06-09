@@ -3,7 +3,7 @@
 
 .form-horizontal.well
   .control-group
-    %label.control-label 是否会员
+    %label.control-label 会员
     .controls
       = @order.is_member? ? "是" : "否" 
 
@@ -50,7 +50,7 @@
             %td= item.price
             %td= item.final_price
             %td= item.created_at.to_chinese_ymd
-            %td= item.user.try(:login)
+            %td= item.user.try(:user_name)
             %td= link_to "打印", print_balance_path(item)
 
 

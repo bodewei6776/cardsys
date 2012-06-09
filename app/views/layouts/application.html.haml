@@ -79,7 +79,7 @@
             %ul.nav
               = render :partial => "layouts/header_menu"
             %ul.nav.pull-right
-              %li= link_to current_user.login, account_path
+              %li= link_to current_user.user_name, account_path
               %li= link_to "退出", user_session_path, :method => :destroy
 
     .container
