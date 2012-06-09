@@ -118,7 +118,7 @@ module ReportsHelper
       current_date = date + index
       table << "<tr class='report_item'>"
       table <<"<td>#{index+1}</td>"
-      table << "<td> #{ current_date}</td>"
+      table << "<td> #{ link_to current_date, reports_income_path(:date => current_date) }</td>"
       table << "<td class='mon'>#{Balance.total_book_records_balance_on_date_any_ways(current_date, pay_ways)}</td>"
       table << "<td class='mon'>#{Balance.total_coach_balance_on_date_any_ways(current_date, pay_ways)}</td>"
       Category.roots.each do |gt|

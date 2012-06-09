@@ -1,5 +1,9 @@
+%span.pull-right
+  =link_to raw("<i class='icon-print'> </i>  ") , "javascript: window.print();",  :class => "btn btn-mini", :title => "打印"
+
 = render :partial => "highlight_hover"
 = raw display_income_report(@date, @pay_ways)
+
 :javascript
   function recalculate(){
      params = "date=" +$('#date_year').val() + "-" + $('#date_month').val() + "-" + $("#date_day").val(); 

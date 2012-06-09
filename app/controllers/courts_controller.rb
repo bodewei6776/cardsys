@@ -51,8 +51,6 @@ class CourtsController < ApplicationController
     redirect_to courts_url
   end
 
-
-
   def court_status_search
     @court_book_records = CourtBookRecord.paginate(default_paginate_options.merge!(:order => "id asc"))
   end
