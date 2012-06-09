@@ -14,8 +14,8 @@
 
 
   - control_helper("start_hour", "预订时段") do
-    = select_tag :start_hour, options_for_select((0..23).to_a), :onchange => "check_time();"
-    = select_tag :end_hour, options_for_select((0..23).to_a), :onchange => "check_time();"
+    = select_tag :start_hour, options_for_select((0..23).to_a), :onchange => "check_time();", :style => "width: 110px;"
+    = select_tag :end_hour, options_for_select((0..23).to_a, 23), :onchange => "check_time();", :style => "width: 110px;"
 
   .form-actions
     = submit_tag "搜索", :class => "btn "
