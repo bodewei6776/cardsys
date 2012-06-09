@@ -73,7 +73,8 @@ class MembersCardsController < ApplicationController
         flash[:notice] = "会员卡充值成功, 卡内总值为#{@members_card.left_fee}, 卡内次数#{@members_card.left_times}"
         @members_card.recharge_records.create(:member_id => @members_card.member_id,
                                               :recharge_fee => params[:members_card][:recharge_fee],
-                                              :recharge_times => params[:members_card][:recharge_times])
+                                              :recharge_times => params[:members_card][:recharge_times],
+                                              :recharge_person_name => @members_card.user.try(:user_name) || current_user.user_name)
       end
       redirect_to recharge_members_cards_path(:card_serial_num => @members_card.card_serial_num)
     else
