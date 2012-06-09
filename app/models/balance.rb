@@ -83,9 +83,9 @@ class Balance < ActiveRecord::Base
         when CourtBookRecord
           "#{self.order.court_book_record.court.name} #{self.book_record_span}"
         when CoachBookRecord
-          "#{oi.item.name} #{self.book_record_span}"
+          #"#{oi.item.name} #{self.book_record_span}"
         when Good
-          "#{oi.item.name}"
+          # "#{oi.item.name}"
         end
       end.join("/")
     end
