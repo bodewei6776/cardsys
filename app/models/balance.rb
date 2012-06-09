@@ -87,7 +87,7 @@ class Balance < ActiveRecord::Base
         when Good
           # "#{oi.item.name}"
         end
-      end.join("/")
+      end#.join("/")
     end
   end
 
