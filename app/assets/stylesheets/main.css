@@ -67,6 +67,8 @@ table.report_table tr.report_title td{
 
 .index_order_table tr.court_name{
   background-color: #eee;
+  height: 31px;
+  font-style: bold;
 }
 
 .index_order_table tr.court_name td{

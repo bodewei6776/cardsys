@@ -1,9 +1,8 @@
-
 - url_text_map = { "/reports/income"=> "日收入报表", "/reports/income_by_month" => "月收入报表" }
-
 
 %li.nav-stack-header
   %a 报表管理
 - url_text_map.each_pair do |k, v|
+  - next unless current_user.menus.include? v
   %li{:class => left_nav_active?(k)}
     = link_to v, k

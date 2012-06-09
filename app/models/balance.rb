@@ -112,6 +112,14 @@ class Balance < ActiveRecord::Base
     end
   end
 
+  def balance_final_amount_desc
+    if balance_way == "counter"
+      "#{final_price}次"
+    else
+      "￥#{self.order_items.sum(&:price_after_discount).to_i}元"
+    end
+  end
+
   def balance_amount_by_ways(ways)
     if self.balance_way == "counter"
       "#{self.final_price}次"

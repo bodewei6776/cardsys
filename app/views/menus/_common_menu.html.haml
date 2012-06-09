@@ -3,5 +3,6 @@
 %li.nav-stack-header
   %a 基本信息管理
 - url_text_map.each_pair do |k, v|
+  - next unless current_user.menus.include? v
   %li{:class => left_nav_active?(k)}
     = link_to v, k

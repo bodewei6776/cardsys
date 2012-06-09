@@ -55,7 +55,7 @@
               %td --
               %td 1
               %td= @balance.order.court_book_record.price(oi.order.members_card) - oi.price_after_discount
-              %td.right= @balance.order.court_book_record.price(oi.order.members_card)
+              %td.right=oi.price_after_discount
         - when CoachBookRecord
           %tr.goods
             %td.left
@@ -72,7 +72,7 @@
             %td= good.price
             %td= oi.quantity
             %td= oi.quantity * good.price - oi.price_after_discount
-            %td.right= oi.quantity * good.price
+            %td.right= oi.price_after_discount
 
       %tr.total
         %td{:colspan => "2"}
@@ -105,8 +105,8 @@
           \#{@balance.created_at.to_chinese_ymd}
       %tr
         %td{:colspan => "5"}
-           操作员编号:
-          \#{@balance.who_balance.try(:login) || "未知"}
+           操作员:
+          \#{@balance.who_balance.try(:user_name) || "未知"}
       %tr
         %td{:colspan => "5"}
            支付方式:

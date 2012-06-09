@@ -11,10 +11,10 @@
   = f.hidden_field :order_date
   - control_helper("start_hour", "预订") do
     = f.fields_for :court_book_record do |cbr|
-      = cbr.select :start_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.start_hour), {}, { :class => "span2" }
-      = cbr.select :end_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.end_hour),{}, {:class => "span2"}
+      = cbr.select :start_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.start_hour), {}, { :style=> "width:65px" }
+      = cbr.select :end_hour, options_for_select(@order.court_book_record.court.open_hours_range(@date).to_a.collect{|h| ["#{h}:00", h]}, @order.court_book_record.end_hour),{}, {:style=> "width:65px"}
       = "(周期性预定)" if @order.advanced_order?
-      = cbr.select :resource_id, options_for_select(Court.enabled.collect{|c| [c.name, c.id]}, @order.court_book_record.resource_id), {}, { :class => "span2" }
+      = cbr.select :resource_id, options_for_select(Court.enabled.collect{|c| [c.name, c.id]}, @order.court_book_record.resource_id), {}, { :style => "width: 80px" }
       = cbr.hidden_field :alloc_date
       = cbr.hidden_field :resource_type 
 

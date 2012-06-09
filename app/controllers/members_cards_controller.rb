@@ -70,6 +70,7 @@ class MembersCardsController < ApplicationController
     if @members_card.update_attributes(params[:members_card])
       if params[:commit] == "充值"
         log_action(@members_card, "chongzhi", current_user, "#{params[:members_card][:recharge_fee]}元，#{params[:members_card][:recharge_times]}次")
+        flash[:notice] = "会员卡充值成功, 卡内总值为#{@members_card.left_fee}, 卡内次数#{@members_card.left_times}"
       end
       redirect_to recharge_members_cards_path(:card_serial_num => @members_card.card_serial_num)
     else

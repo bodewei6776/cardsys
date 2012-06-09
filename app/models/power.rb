@@ -20,8 +20,6 @@ class Power < ActiveRecord::Base
     self.children.where(:will_show => true)
   end
 
-
-
   def self.tree_top
     where(:parent_id => 0,:will_show => true)
   end
@@ -29,7 +27,6 @@ class Power < ActiveRecord::Base
   def self.all_tree_top
     where(:parent_id => 0)
   end
-
 
   def show!
     self.update_attribute(:will_show,true)
