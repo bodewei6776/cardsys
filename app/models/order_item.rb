@@ -25,7 +25,7 @@ class OrderItem < ActiveRecord::Base
   before_destroy :update_good_inventory_before_destroy
   after_create :set_default_discount_and_discount_price
 
-  validates_numericality_of :quantity, :only_integer => true, :greater_than => 0
+  validates_numericality_of :quantity, :only_integer => true, :greater_than => -1
   validates_numericality_of :discount, :greater_than => 0, :less_or_equal_than => 10, :allow_blank => true
   validates_numericality_of :price_after_discount, :greater_or_equal_than => 0, :allow_blank => true
 
