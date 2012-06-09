@@ -27,13 +27,10 @@
         .alert
           %a{:class => "close", "data-dismiss" => "alert"} x
           %strong= flash[:notice]
-      .row
+      .row.well{:style => "background-color: whiteSmoke"}
         .span5
-          .well
- 
-            %h3 企业介绍：
-            %p
-              = "博德维网球俱乐部是中国首个采用全进口智能化充气膜建筑建造的高档室内网球馆。网球馆以其新颖的造型，独特的建筑理念，舒适的球馆享受载誉业界。俱乐部位于朝阳公园网球中心，周边环境优美，运动气氛浓厚，拥有6片符合国际顶级硬场地赛事标准的网球场地，对球馆内部的灯光、温度、湿度、通风采用全电脑控制，四季恒温，给会员带来最高档的运动享受。 同时，俱乐部还配备欧式高尚会所，提供最温馨的休息场所和配餐饮食；俱乐部所属的多名专业外籍教练，多年经验，为会员提供个性化教学和培训服务。舒适的环境、贴心的服务，让会员真正获得运动的乐趣与身心的愉悦。 "
+          %p
+            = image_tag "user_session_new.jpg"
 
 
         .span1{:style => "border-right: 2px solid black;"}

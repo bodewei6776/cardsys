@@ -1,7 +1,6 @@
 - if target.errors.any?
   .alert.alert-block
     %a.close{ "data-dismiss" => "alert" }x
-    %h4.alert-heading 注意
     - target.errors.each_with_index do |(node, msg), index|
       %strong 
         = "#{index + 1}. "

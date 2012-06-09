@@ -7,7 +7,8 @@ class OrderItemsController < ApplicationController
     respond_to do |wants|
       if @order_item.update_attributes(params[:order_item])
         @order_item.set_price_for_good
-        wants.html {  redirect_to edit_order_path(@order) }
+        flash[:notice] = "商品购买成功"
+        wants.html {  redirect_to goods_order_goods_path(@order) }
       else
         wants.html { redirect_to :back }
       end
@@ -20,7 +21,8 @@ class OrderItemsController < ApplicationController
     respond_to do |wants|
       if @order_item.update_attributes(params[:order_item])
         @order_item.set_price_for_good
-        wants.html {  redirect_to edit_order_path(@order) }
+        flash[:notice] = "商品购买成功"
+        wants.html {  redirect_to goods_order_goods_path(@order) }
       else
         wants.html { redirect_to :back }
       end
