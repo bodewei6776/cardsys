@@ -91,7 +91,7 @@
               =render :partial => "layouts/menu"
           .span10
             - if flash[:notice]
-              .alert
+              .alert.alert-info
                 %a{:class => "close", "data-dismiss" => "alert"} x
                 %strong= flash[:notice]
             = yield

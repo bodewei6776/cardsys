@@ -24,7 +24,7 @@
     
     .container
       - if flash[:notice]
-        .alert
+        .alert.alert-info
           %a{:class => "close", "data-dismiss" => "alert"} x
           %strong= flash[:notice]
       .row.well{:style => "background-color: whiteSmoke"}

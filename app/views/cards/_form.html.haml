@@ -28,7 +28,7 @@
     - f.text_field :max_shared_count
 
   - control_helper(:min_amount, "提醒金额") do 
-    - f.text_field :min_amount
+    - f.text_field(:min_amount) + "元"
 
 
   - control_helper(:min_count, "提醒次数") do 
