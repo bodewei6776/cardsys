@@ -92,4 +92,10 @@ class UsersController < ApplicationController
     redirect_to change_password_users_path
   end
 
+
+  def switch_state
+    @user = User.find(params[:id])
+    @user.switch_state!
+    redirect_to(users_path) 
+  end
 end

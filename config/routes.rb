@@ -232,6 +232,10 @@ Cardsys::Application.routes.draw do
       get :change_password
       post :change_pass
     end
+
+    member do
+      put :switch_state
+    end
   end
 
   resource :user_session

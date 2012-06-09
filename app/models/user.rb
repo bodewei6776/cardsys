@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class User < ActiveRecord::Base
   include HasPinyinColumn
+  include HashColumnState
   set_pinyin_field :user_name_pinyin, :user_name
 
   has_many :department_users
@@ -42,5 +43,9 @@ class User < ActiveRecord::Base
 
   def departments_names
     self.departments.collect(&:name).join(", ")
+  end
+
+  def  can_destroy?
+   false 
   end
 end
