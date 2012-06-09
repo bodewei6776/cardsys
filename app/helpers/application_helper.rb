@@ -206,7 +206,7 @@ module ApplicationHelper
   end
 
 
-  def powers_tree(powers)
+  def powers_tree(powers, mark = true)
     html = "<ul class='tree'>"
     Power.tree_top.each do |parent| 
       html << "<li class='first'>"
@@ -215,6 +215,7 @@ module ApplicationHelper
       if parent.children_without_hide.count > 0
         html << "<ul class='indent'>"
         parent.children_without_hide.each do |child|
+          next if !mark && !powers.include?(child)
           html << "<li class='second'>"
           html << content_tag(:input,"",{:type => "checkbox",:name => "powers[]",:value => child.id,:checked => powers.include?(child),:parent_id => parent.id})
           html << content_tag(:label,child.subject)

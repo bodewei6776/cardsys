@@ -10,3 +10,8 @@
   
   - show_helper(:last_login_ip, "最后登陆IP", :both) do
     = @user.current_login_ip
+
+
+
+.well#power_tree
+  = raw powers_tree(@user.powers, false)
