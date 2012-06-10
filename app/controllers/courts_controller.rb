@@ -52,11 +52,24 @@ class CourtsController < ApplicationController
   end
 
   def court_status_search
-    @court_book_records = CourtBookRecord.paginate(default_paginate_options.merge!(:order => "id asc"))
+    @court_book_records = CourtBookRecord.all
+    @court_book_records = @court_book_records.select{ |cbr| cbr.court.try(:name) == params[:name].strip } if params[:name].present?
+    @court_book_records = @court_book_records.select{ |cbr| cbr.order.try(:member_name) == params[:member_name].strip } if params[:member_name].present?
+    @court_book_records = @court_book_records.select{ |cbr| cbr.alloc_date.strftime("%Y-%m-%d") == params[:search_date].strip } if params[:search_date].present?
+    @court_book_records = @court_book_records.select{ |cbr| cbr.try(:start_hour) >= params[:start_hour].strip.to_i } if params[:start_hour].present?
+    @court_book_records = @court_book_records.select{ |cbr| cbr.try(:end_hour) <= params[:end_hour].strip.to_i } if params[:end_hour].present?
+    @court_book_records = @court_book_records.paginate(default_paginate_options.merge!(:order => "id asc"))
   end
 
   def coach_status_search
-    @coach_book_records = CoachBookRecord.paginate(default_paginate_options.merge!(:order => "id asc"))
+
+    @coach_book_records = CoachBookRecord.all
+    @coach_book_records = @coach_book_records.select{ |cbr| cbr.coach.try(:name) == params[:name].strip } if params[:name].present?
+    @coach_book_records = @coach_book_records.select{ |cbr| cbr.order.try(:member_name) == params[:member_name].strip } if params[:member_name].present?
+    @coach_book_records = @coach_book_records.select{ |cbr| cbr.alloc_date.strftime("%Y-%m-%d") == params[:search_date].strip } if params[:search_date].present?
+    @coach_book_records = @coach_book_records.select{ |cbr| cbr.try(:start_hour) >= params[:start_hour].strip.to_i } if params[:start_hour].present?
+    @coach_book_records = @coach_book_records.select{ |cbr| cbr.try(:end_hour) <= params[:end_hour].strip.to_i } if params[:end_hour].present?
+    @coach_book_records = @coach_book_records.paginate(default_paginate_options.merge!(:order => "id asc"))
   end
 
   def court_record_detail

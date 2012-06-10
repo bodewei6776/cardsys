@@ -2,15 +2,13 @@
 
 = form_tag("/courts/coach_status_search", :class => "form-horizontal") do
   - control_helper(:name, "教练") do
-    = text_field_tag :name
+    = text_field_tag :name, params[:name]
+  - control_helper("member_name", "预订会员") do
+    = text_field_tag :member_name, params[:member_name], :autocomplete => "/members/autocomplete_name"
+
 
   - control_helper("start_date", "开始日期") do
-    = text_field_tag :start_date, params[:start_date], :class => "select-date"
-
-
-  - control_helper("end_date", "结束日期") do
-    = text_field_tag :end_date, params[:end_date], :class => "select-date"
-
+    = text_field_tag :search_date, params[:search_date], :class => "select-date"
 
 
   - control_helper("start_hour", "预订时段") do
