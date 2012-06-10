@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class Balance < ActiveRecord::Base
   has_many :logs, :as => :item
+  include Authenticateable
 
   BALANCE_WAYS = {
     "card" => "记账",
@@ -12,10 +13,11 @@ class Balance < ActiveRecord::Base
     "check" => "支票"
   }
 
+  validation_conditions << proc {|obj|  obj.new_record? }
+
   belongs_to :who_balance, :class_name => "User", :foreign_key => "user_id"
   belongs_to :order
   belongs_to :member
-  belongs_to :user
   has_many :order_items
 
   scope :with_balance_way, lambda { |balance_way| { :conditions => { :balance_way => balance_way } } }

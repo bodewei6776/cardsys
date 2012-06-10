@@ -1,5 +1,4 @@
 = form_header(:title => "结算", :link => edit_order_path(@order))
-= render :partial => "layouts/errors", :locals => { :target => @balance }
 
 .form-horizontal.well
   .control-group
@@ -25,6 +24,7 @@
       .controls
         = @order.members_card.long_description
 
+  = render :partial => "layouts/errors", :locals => { :target => @balance }
 
   = form_for @balance, :url => balances_path, :method => :post, :html => { :class => "form-horizontal well" } do |f|
     = f.hidden_field :order_id
@@ -60,7 +60,10 @@
           %td= f.text_field :price, :id => "new_price_node", :class => "span1"
           %td= f.text_field :final_price, :id => "new_total_price_node", :class => "span1"
           %td 
-          %td 
+          %td
+            = f.text_field :login, :value => current_user.login, :class => "span1"
+            = f.password_field :password, :class => "span1"
+
           %td= f.submit "结算", :class => "btn  balance_submit"
 
 

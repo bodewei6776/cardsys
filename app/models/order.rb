@@ -13,7 +13,7 @@ class Order < ActiveRecord::Base
   has_many    :balances, :dependent => :destroy
   has_one     :court_book_record, :dependent => :destroy
   has_many    :coach_book_records, :dependent => :destroy
-  has_many    :order_items
+  has_many    :order_items, :dependent => :destroy
   belongs_to  :member
   has_one     :non_member
   belongs_to  :advanced_order
@@ -422,6 +422,20 @@ class Order < ActiveRecord::Base
               else "color02"
               end
       color
+    end
+
+    def return_money
+      self.balances.each do |balance|
+        next unless ["counter", "card"].include? balance.balance_way 
+        if balance.balance_way == "counter"
+          self.members_card.update_column(:left_times, self.members_card.left_times + balance.final_price.to_i)
+        end
+
+        if balance.balance_way == "card"
+          self.members_card.update_column(:left_fee, self.members_card.left_fee + balance.final_price)
+        end
+      end
+      true
     end
 
     def member_name

@@ -20,13 +20,16 @@ class BalancesController < ApplicationController
   def create
     @order = Order.find(params[:balance][:order_id])
     @balances = @order.balances
-    @balance = @order.balances.new(params[:balance].merge(:user_id => current_user.id)) 
+    @balance = @order.balances.new(params[:balance]) 
     if  @balance.save
+      log_action(@order.court_book_record, "balance", @balance.user || current_user, 
+                 "#{@order.start_hour}:00-#{@order.end_hour}:00 ")
       flash[:notice] = "结算成功"
+      redirect_to :action => "index", :order_id => @order.id
     else
-      flash[:notice] = "结算失败"
+      flash[:notice] =  @balance.errors.messages.values.collect(&:first).join(", ")
+      redirect_to :action => "index", :order_id => @order.id
     end
-    redirect_to :action => "index", :order_id => @order.id
   end
 
   def print 
@@ -99,7 +102,7 @@ class BalancesController < ApplicationController
 
   def destroy
     @balance = Balance.find(params[:id])
-    if @balance.order.destroy && @balance.destroy
+    if @balance.order.return_money && @balance.order.destroy && @balance.destroy
       flash[:notice] = "删除成功"
     else
       flash[:notice] = "删除失败"

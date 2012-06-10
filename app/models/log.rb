@@ -9,6 +9,7 @@ class Log < ActiveRecord::Base
     :book => "预定",
     :want_sell => "申请代卖",
     :sell => "代卖",
+    :balance => "结算",
     :activate => "开场",
     :cancel => "取消预定",
     :change => "变更"
