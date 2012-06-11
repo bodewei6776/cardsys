@@ -6,15 +6,38 @@
       %td= li.product.price
       %td= li.quantity
       %td
-        %select.discount{:name => "discount"}= raw discount_options(li.discount)
+        %select.discount.span1{:name => "discount"}
+          = raw discount_options(li.discount)
       %td
-        = text_field_tag :real_total_price,li.real_total_price ,:class=>"li_real_total_price"
+        = text_field_tag :real_total_price,li.real_total_price ,:class=>"li_real_total_price span1" 
         = hidden_field_tag "total_price",li.sub_total_price,:class=>"total_price"
         = hidden_field_tag "good_id",li.product_id,:class=> "good_id"
       %td= link_to raw("<i class = 'icon-trash'></i>"), destroy_good_balances_path(:id => li.product_id), :method => :delete                   |
+
+
+  %tr
+    = form_tag "/goods/add_to_cart" do
+      %td{:colspan=>4}
+        = hidden_field_tag :good_id, :id => "good_id"
+      %td
+        = text_field_tag :name, "", :id => "name", :class => "span1"
+      %td 
+        = text_field_tag :quantity, "1", :class => "span1"
+      %td
+        = submit_tag "加入购物车", :class => "btn"
 
   %tr
     %td 合计
     %td{:colspan => 6}
       = cart.total_price
       元
+:javascript
+  $(document).ready(function(){
+    $('#name').autocomplete({
+      source: "/goods/autocomplete_name",
+      select: function(ui, li){
+        var item = li.item;
+        $("#good_id").val(item.value);
+      }
+    });
+  });

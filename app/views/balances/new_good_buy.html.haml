@@ -1,6 +1,21 @@
-%span.btn.btn-primary=link_to "购买商品", select_for_cart_goods_path, :id => "goods_list", :style => "color:white;"
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %th 序号
+      %th 商品名称
+      %th 商品价格
+      %th 数量
+      %th 折扣
+      %th 总额
+      %th 操作
 
-= form_tag  create_good_buy_balances_path ,:id => "balance_form", :class => "form-horizontal well"  do |f|
+  #cart_goods_list
+    = render :partial => "cart_goods_list"
+
+= form_tag create_good_buy_balances_path ,:id => "balance_form", :class => "form-horizontal well"  do |f|
+
+  %br
+  %br
   - control_helper("", "会员", :left) do
     = radio_button_tag "","",false,:onclick => "show_div($(this),'member')",:id => "radio_yes"
     = "是"
@@ -30,21 +45,6 @@
   .form-actions
     = submit_tag "付款",:class => "btn"
     = link_to "清空购物车",clear_goods_balances_path, :class => "btn"
-
-= table_header(:title => "商品消费列表", :link => "")
-%table.table.table-striped.table-bordered.table-condensed
-  %thead
-    %tr
-      %th 序号
-      %th 商品名称
-      %th 商品价格
-      %th 数量
-      %th 折扣
-      %th 总额
-      %th 操作
-
-  #cart_goods_list
-    = render :partial => "cart_goods_list"
 
 
 :javascript
@@ -87,15 +87,16 @@
       if(!confirm("确认支付？")){ return false;}
 
       });
-  
+
   function update_discount(pid,price,discount){
     if(isNaN(price) || parseFloat(price) < 0){ alert('价格有问题'); return;}
-    $.post("/balances/change_li_real_total_price",{product_id: "" + pid, real_total_price: "" + price,discount:discount},
-        function(reply){ $('#cart_goods_list').html(reply); highlight_table();});
+      $.post("/balances/change_li_real_total_price",{product_id: "" + pid, real_total_price: "" + price, discount:discount}, function(){
+        window.location.reload(); 
+      });
   }
-  
+
   $(document).ready(function(){
-      member_card_Autocomplete();
+    member_card_Autocomplete();
       $('select.discount').live('change',function(){
         var good_id = $(this).parent().parent().find('.good_id'); 
         var total_price = $(this).parent().parent().find('.total_price'); 
@@ -113,4 +114,4 @@
 
       $("#radio_yes").trigger("click");
       });
-  
+

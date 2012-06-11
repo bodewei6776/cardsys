@@ -65,7 +65,7 @@ class Cart
   end
 
   def change_li_real_total_price(product_id,real_total_price,discount)
-    li = @line_items.find{|li| li.product_id == product_id}
+    li = @line_items.find{|li| li.product_id.to_s == product_id.to_s}
     li.real_total_price = real_total_price.to_f
     li.discount = discount
   end

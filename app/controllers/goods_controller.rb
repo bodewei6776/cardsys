@@ -127,25 +127,15 @@ class GoodsController < ApplicationController
   end
 
 
-  def select_for_cart
-    if params[:name]
-      name = "%#{params[:name]}%"
-      @goods = Good.enabled.where(["name like ? or name_pinyin like ? or pinyin_abbr like ?",
-                                  name, name, name ]).order('count_back_stock_out desc').limit(20)
-    else
-      @goods = Good.enabled.order('count_back_stock_out desc').limit(20)
-    end
-    render :layout => "small_main"
-  end
-
   def to_buy
     @goods = Good.enabled.order('sale_count desc').limit(20)
     render :action => 'goods'
   end
 
   def add_to_cart
-    @good = Good.find(params[:id])
-    cart.add(@good.id, Integer(params[:quantity]))
+    @good = Good.find_by_id(params[:id]) || Good.find_by_name(params[:name])
+    cart.add(@good.id, Integer(params[:quantity])) if @good
+    redirect_to new_good_buy_balances_path
   end
 
   def load_good

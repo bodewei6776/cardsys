@@ -61,7 +61,7 @@ class BalancesController < ApplicationController
 
   def change_li_real_total_price
     session[:cart].change_li_real_total_price(params[:product_id],params[:real_total_price],params[:discount])
-    render :partial => "cart_goods_list"
+    redirect_to new_good_buy_balances_path
   end
 
   def member_by_member_card_serial_num
