@@ -6,6 +6,10 @@ class GoodsController < ApplicationController
     render :json => Good.where(["pinyin_abbr like ? or name like ? ","%#{params[:term]}%","%#{params[:term]}%"]).all.collect(&:name).to_json
   end
 
+  def by_category
+   render :json => Good.all(:conditions => {:good_type =>  params[:category]}).to_json
+  end
+
 
   def autocomplete_good
     goods = []

@@ -9,7 +9,6 @@ class Good < ActiveRecord::Base
 
   validates :name, :presence => {:message => "名称不能为空！"}, :uniqueness => {:on => :create, :message => '名称已经存在！', 
     :if => Proc.new { |member| !member.name.nil? && !member.name.blank? }}
-  validates :purchasing_price, :numericality => {:message => "入库价格必须为数字！"}
   validates :price, :numericality => {:message => "零售价格必须为数字！"}
   validates :count_back_stock, :numericality => {:message => "初次入库数必须为数字！"}
   validates :count_back_stock_in, :numericality => {:message => "新入大库数必须为数字！", :allow_blank => true}

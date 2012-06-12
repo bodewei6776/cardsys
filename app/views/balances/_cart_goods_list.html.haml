@@ -17,10 +17,13 @@
 
   %tr
     = form_tag "/goods/add_to_cart" do
-      %td{:colspan=>4}
-        = hidden_field_tag :good_id, :id => "good_id"
+      = hidden_field_tag :good_id, :id => "good_id"
+      %td{:colspan=>3}
       %td
-        = text_field_tag :name, "", :id => "name", :class => "span1"
+        = select_tag  "category", options_for_select(Category.all.collect{|c| [c.name, c.id]}, params[:category]), :class => "span2", :id => "category_select"
+
+      %td
+        = select_tag  "name", "", :class => "span2", :id => "name_select"
       %td 
         = text_field_tag :quantity, "1", :class => "span1"
       %td
@@ -33,11 +36,15 @@
       元
 :javascript
   $(document).ready(function(){
-    $('#name').autocomplete({
-      source: "/goods/autocomplete_name",
-      select: function(ui, li){
-        var item = li.item;
-        $("#good_id").val(item.value);
-      }
+    $("#category_select").change(function(){
+      $.get("/goods/by_category", {category: $(this).val()}, function(response){
+        options = [];
+        $.each(response, function(index, item){
+          options.push("<option value=" + item.good.name + ">" + item.good.name + "</option>");
+        });
+        $("#name_select").html(options.join());
+      }) 
     });
+
+    $("#category_select").trigger("change");
   });

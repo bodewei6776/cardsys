@@ -9,10 +9,6 @@
     = f.select :good_type, option_groups_from_collection_for_select(Category.roots,:children,:name,:id,:name,@good.good_type)
 
 
-  - control_helper("purchasing_price", "入库价格") do
-    = f.text_field :purchasing_price
-
-
   - control_helper("count_back_stock", "入库数量") do
     - if f.object.new_record?
       = f.text_field :count_back_stock
