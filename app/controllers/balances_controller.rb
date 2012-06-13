@@ -22,8 +22,7 @@ class BalancesController < ApplicationController
     @balances = @order.balances
     @balance = @order.balances.new(params[:balance]) 
     if  @balance.save
-      log_action(@order.court_book_record, "balance", @balance.user || current_user, 
-                 "#{@order.start_hour}:00-#{@order.end_hour}:00 ")
+      log_action(@order.court_book_record, "balance", @balance.user || current_user, "")
       flash[:notice] = "结算成功"
       redirect_to :action => "index", :order_id => @order.id
     else
