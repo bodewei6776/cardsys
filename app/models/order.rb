@@ -164,7 +164,7 @@ class Order < ActiveRecord::Base
     end
 
     event :cancel do
-      transition [:to_be_sold, :booked] => :canceld
+      transition [:to_be_sold, :booked, :activated] => :canceld
     end
 
 

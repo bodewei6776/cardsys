@@ -78,9 +78,8 @@ class OrderItem < ActiveRecord::Base
   end
 
   def set_default_discount_and_discount_price
-    self.discount = 10
-    self.price_after_discount = self.total_money_price
-    save
+    self.update_column :discount, 10
+    self.update_column :price_after_discount, self.total_money_price
   end
 
 

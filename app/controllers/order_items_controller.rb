@@ -3,7 +3,7 @@ class OrderItemsController < ApplicationController
 
   def create
     @order = Order.find(params[:order_id])
-    @order_item = @order.order_items.find_by_item_type_and_item_id(params[:order_item][:item_type],params[:order_item][:item_id]) || @order.order_items.new(params[:order_item])
+    @order_item = @order.order_items.find_by_item_type_and_item_id(params[:order_item][:item_type],params[:order_item][:item_id]) || OrderItem.new(params[:order_item].merge(:order_id => @order.id))
     respond_to do |wants|
       if @order_item.update_attributes(params[:order_item])
         @order_item.set_price_for_good

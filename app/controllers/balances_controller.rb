@@ -101,6 +101,8 @@ class BalancesController < ApplicationController
 
   def destroy
     @balance = Balance.find(params[:id])
+    @order = @balance.order
+    log_action(@order.court_book_record, "destroy", current_user)
     if @balance.order.return_money && @balance.order.destroy && @balance.destroy
       flash[:notice] = "删除成功"
     else

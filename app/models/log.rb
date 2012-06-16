@@ -12,7 +12,9 @@ class Log < ActiveRecord::Base
     :balance => "结算",
     :activate => "开场",
     :cancel => "取消预定",
+    :destroy => "场地删除",
     :change => "变更"
+
   }
   before_save do |obj|
     obj.order_person = self.order_person_getter
