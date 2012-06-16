@@ -1,5 +1,5 @@
 .form-horizontal
-  = form_header(:title => "会员详细资料", :link => "members_path")
+  = form_header(:title => "会员详细资料", :link => members_path)
   
   - show_helper(:name, "会员名称", :left) do
     = @member.name
@@ -50,7 +50,6 @@
   
 
 .form-horizontal
-  = form_header(:title => "会员 #{@member.name}信息统计", :link => "members_path")
   - show_helper(:balance_times, "刷卡次数", :left) do
     = @member.balance_times
   
@@ -105,3 +104,4 @@
 - columns = {"created_at" => "时间", :balance_real_amount_desc => "消费金额", "balance_way_desc" => "支付方式"}
 - collection = @balances
 =render :partial => "layouts/table", :locals => { :collection => collection, :columns => columns , :no_operation => true}
+= render :partial => "layouts/page_nav", :locals => {:objs => @balances}

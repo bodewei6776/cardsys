@@ -18,15 +18,12 @@
   %tr
     = form_tag "/goods/add_to_cart" do
       = hidden_field_tag :good_id, :id => "good_id"
-      %td{:colspan=>3}
-      %td
-        = select_tag  "category", options_for_select(Category.all.collect{|c| [c.name, c.id]}, params[:category]), :class => "span2", :id => "category_select"
-
-      %td
-        = select_tag  "name", "", :class => "span2", :id => "name_select"
-      %td 
+      %td{:colspan=>7, :style => "text-align: right;"}
+        = "商品类型: "
+        = select_tag  "category", options_for_select(Category.all.collect{|c| [c.name, c.id]}, params[:category]), :class => "span1", :id => "category_select"
+        = "商品名称: "
+        = select_tag  "name", "", :class => "span1", :id => "name_select"
         = text_field_tag :quantity, "1", :class => "span1"
-      %td
         = submit_tag "加入购物车", :class => "btn"
 
   %tr

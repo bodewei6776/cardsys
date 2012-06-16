@@ -133,7 +133,7 @@ class MembersController < ApplicationController
     @member = Member.find(params[:id])
     @members_cards = @member.all_members_cards
     @recharge_records = RechargeRecord.where(:member_id => params[:id])
-    @balances = @member.balances
+    @balances = @member.balances.paginate(default_paginate_options.merge(:per_page=> 10))
   end
 
   def new

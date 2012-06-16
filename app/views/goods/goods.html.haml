@@ -4,11 +4,11 @@
 = form_header(:title => "商品查询", :link => edit_order_path(@order))
 = form_tag "/goods/goods",{:id => "search-goods-form", :class => "well form-horizontal", :method => :get} do |f|
   = hidden_field_tag :order_id, params[:order_id]
-  - control_helper("good_type", "商品类型") do
+  - control_helper("good_type", "商品类型", :left) do
     = select_tag "good_type", raw(generate_good_type_options(params[:good_type])), :id => "good_type",:class=> "select"
 
 
-  - control_helper("name", "商品名称") do
+  - control_helper("name", "商品名称", :right) do
     = text_field_tag :name, params[:name], :autocomplete => "/goods/autocomplete_name"
 
   .form-actions

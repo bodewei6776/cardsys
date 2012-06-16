@@ -80,6 +80,7 @@
               = render :partial => "layouts/header_menu"
             %ul.nav.pull-right
               %li= link_to current_user.user_name, account_path
+              %li= link_to "修改密码", change_password_users_path
               %li= link_to "退出", user_session_path, :method => :destroy
 
     .container
