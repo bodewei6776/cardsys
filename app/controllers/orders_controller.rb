@@ -45,6 +45,7 @@ class OrdersController < ApplicationController
         render :action => "edit", :layout => "small_main"
       end
     when "变更"
+      @order.validate_in_condition_needed = true
       if @order.update_attributes(params[:order])
         log_action(@order.court_book_record, "change", @order.user || current_user, "#{@order.start_hour}:00-#{@order.end_hour}:00"  +
               " #{ '原预订人: ' + @original_member_name if @original_member_name != @order.member_name}"

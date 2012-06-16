@@ -84,7 +84,11 @@
     = f.password_field :password
 
   .form-actions
-    = f.submit @order.new_record? ? "预订" : "变更", :class => "btn" if @order.can_change?
+    - if @order.new_record?
+      = f.submit "预订", :class => "btn"
+    - if !@order.new_record? && @order.can_change? && current_user.menus.include?("修改场地")
+      = f.submit "变更", :class => "btn"
+
     = f.submit "代卖", :class => "btn" if @order.can_sell?
     = display_enable_buttons(@order) if !@order.new_record?
 

@@ -104,7 +104,7 @@ module OrdersHelper
       htmls << order_action_button("取消预订", "", "cancel") if order.can_cancel?
       htmls << order_action_button("连续取消", "", "cancel_all") if order.can_cancel_all?
     end
-    htmls << order_action_button("连续变更", "", "update_all") if order.can_update_all?
+    htmls << order_action_button("连续变更", "", "update_all") if order.can_update_all? && user.menus.include?("修改场地")
     htmls << order_action_button("开场", "", "activate") if order.can_activate?
     htmls << order_action_link("预订已过期，请结算", order_balances_path(order), :method => :get) if order.book_time_due?
     htmls << order_action_link("代卖已过期，请结算", order_balances_path(order), :method => :get) if order.to_be_sold_time_due?

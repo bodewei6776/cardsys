@@ -9,7 +9,7 @@ module Authenticateable
     self.validation_conditions = []
 
     class_eval do
-      attr_accessor :login, :password, :user
+      attr_accessor :login, :password, :user, :validate_in_condition_needed
 
       validates_presence_of :login, :message => "请填写账号", :if => :validate_in_condition
       validates_presence_of :password, :message => "密码不正确", :if => :validate_in_condition
@@ -25,7 +25,7 @@ module Authenticateable
 
       def validate_in_condition
         #proc { |obj| validation_conditions.any?{ |c| c.call(obj) } }
-        validation_conditions.any?{ |c| c.call(self) } 
+        validate_in_condition_needed || validation_conditions.any?{ |c| c.call(self) } 
       end
     end
   end

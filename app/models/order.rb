@@ -68,7 +68,7 @@ class Order < ActiveRecord::Base
   end
 
   def assign_batch_number
-    self.batch_number = Digest::SHA1.hexdigest Time.now.to_s
+    self.batch_number = Digest::SHA1.hexdigest Time.now.to_s if self.batch_number.blank?
   end
 
   def end_date_later_than_today
@@ -89,6 +89,7 @@ class Order < ActiveRecord::Base
 
       new_order.is_advance_order = true
       self.update_column(:is_advance_order, true)
+      self.update_column(:batch_number, self.batch_number)
       new_order.save(:validate => false)
     end
   end
@@ -98,7 +99,6 @@ class Order < ActiveRecord::Base
     self.advance_order_siblings(self.alloc_date).each do |element|
       order_attributes["court_book_record_attributes"]["id"] = element.court_book_record.id
       order_attributes["court_book_record_attributes"]["alloc_date"] = element.alloc_date
-      ap element.readonly?
       element.update_attributes order_attributes
     end
 
