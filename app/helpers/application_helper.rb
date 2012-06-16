@@ -120,8 +120,7 @@ module ApplicationHelper
     indent_category_options(good_type)
   end
   def generate_good_type_options_without_all(good_type)
-    options = generate_res_options CommonResource::GOOD_TYPE
-    options_for_select(options, (good_type.nil? || good_type == "") ? '' : good_type.to_i)
+    indent_category_options(good_type, false)
   end
 
 
