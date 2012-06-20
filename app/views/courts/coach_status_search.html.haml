@@ -1,4 +1,9 @@
-= form_header(:title => "教练预订信息查询", :link => "")
+
+%span.pull-right
+  =link_to raw("<i class='icon-print'> </i>  ") , "javascript: window.print();",  :class => "btn btn-mini", :title => "打印"
+
+= table_header(:title => "教练预订信息查询", :link => "")
+
 
 %br
 
@@ -22,8 +27,8 @@
     = submit_tag "搜索", :class => "btn "
 
 %BR
-= form_header(:title => "教练预订列表", :link => "")
-%table.table.table-striped.table-bordered.table-condensed
+= table_header(:title => "教练预订列表", :link => "")
+%table.table.table-striped.table-bordered.table-condensed#section_to_print
   %thead
     %tr
       %th 编号

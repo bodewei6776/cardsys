@@ -15,14 +15,15 @@
 
 
   - control_helper(:consume_type, "可消费类型") do 
-    = @card.consume_type
+    = @card.consume_type == 1 ? "仅限场地消费" : "全部消费"
 
 
   - control_helper(:max_shared_count, "签字权") do 
-    = @card.max_shared_count
+    = "#{@card.max_shared_count} 人"
+
 
   - control_helper(:min_amount, "提醒金额") do 
-    = @card.min_amount
+    = "#{ @card.min_amount} 元"
 
 
   - control_helper(:min_count, "提醒次数") do 
@@ -30,7 +31,7 @@
 
 
   - control_helper(:min_time, "预期提醒") do 
-    = @card.min_time
+    = "#{@card.min_time} 天"
 
 
   - control_helper(:description, "说明") do 
