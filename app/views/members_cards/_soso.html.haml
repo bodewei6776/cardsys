@@ -1,8 +1,8 @@
 = form_tag "", :class =>  "form-horizontal well"  do
-  - control_helper("member_name", "会员姓名") do
+  - control_helper("member_name", "会员姓名", :left) do
     = text_field_tag :member_name, params[:member_name], :id => "member_name"
 
-  - control_helper("card_serial_num", "卡号") do
+  - control_helper("card_serial_num", "卡号", :right) do
     #cards
       = text_field_tag :card_serial_num, params[:card_serial_num], :id => "member_card_serial_num"
 

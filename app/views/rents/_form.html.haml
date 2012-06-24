@@ -1,30 +1,32 @@
+
+= render :partial => "layouts/errors", :locals => {:target => @rent }
 = form_header(:title => "请填写预定信息", :link => "")
 = form_for @rent, :html => {:class => "form-horizontal well order_form"} do |f|
   = f.hidden_field :locker_id
   - control_helper("num", "编号", :left) do
     = @locker.num
 
-  - control_helper("locker_type_in_word", "储物柜类型", :right) do
-    = @locker.locker_type_in_word
+  - control_helper("locker_type_in_words", "储物柜类型", :right) do
+    = @locker.locker_type_in_words
 
 
   - control_helper("is_member", "是否是会员") do
-    = f.radio_button :is_member,true,:onclick=> "toggle_is_member();",:id => "is_member_radio"
+    = f.radio_button :is_member,true, :onclick=> "toggle_is_member();",:id => "is_member_radio"
     是
     = f.radio_button :is_member,false,:onclick=> "toggle_is_member();",:id => "is_member_radio"
     否
+
   #is_not_member_div
     - control_helper("random_member_name", "预订人") do
       = f.text_field :random_member_name
   #is_member_div
     - control_helper("member_name", "会员姓名", :left) do
-      = text_field_tag :member_name, @rent.member.try(:name), :id => "order_member_name"
+      = text_field_tag :member_name, @rent.member.try(:name), :id => "member_name"
       = f.hidden_field :member_id
-
 
     - control_helper("card_serial_num", "卡号", :right) do
       #cards
-        = text_field_tag :card_serial_num, @rent.members_card.try(:card_serial_num), :id => "order_member_card_serial_num"
+        = text_field_tag :card_serial_num, @rent.members_card.try(:card_serial_num), :id => "member_card_serial_num"
         = f.hidden_field :card_id
 
 
@@ -70,3 +72,39 @@
       toggle_is_member();
   });
 
+
+
+:javascript
+  $(document).ready(function(){
+    $('#member_name').autocomplete({
+      source:  '/members/autocomplete_name',
+        select:  function(ui,li){
+          var item = li.item;
+            var reqest_url  = "/members/" + item.id + "/member_cards_list";
+              $('#rent_member_id').val(item.id);
+                $.get(reqest_url,function(returned_data)
+                  {
+                    options = "";
+                   $(returned_data).each(function(i,node){
+                     options +=("<option value='" + node.members_card.id+
+                       "'>" + node.members_card.card_serial_num + "</option>") 
+                    });
+                    $('#cards').html( "<select name='rent[card_id]'>" + options + "</select>");
+                     $("#cards select").bind("change", function(){
+                       $("#rent_member_id").val(($("#cards select").val()));
+                     });
+                     $("#cards select").trigger("change");
+                  });
+               }			
+            });
+
+    $('#member_card_serial_num').autocomplete({
+      source:  '#{autocomplete_card_serial_num_members_cards_path}',
+      select:  function(ui,li){
+        var item = li.item;
+          $('#member_name').val(item.member_name);
+          $('#rent_member_id').val(item.member_id);
+              }			
+           });
+
+   });

@@ -15,7 +15,7 @@ class Rent < ActiveRecord::Base
 
   attr_accessor :card_num,:password,:user_name
 
-  [:locker_id,:start_date,:end_date, :total_fee].each do |c|
+  [:locker_id, :start_date, :end_date, :total_fee].each do |c|
     validates_presence_of c, :message => "#{HUMAN_NAME[c.to_s]}不能为空" 
   end
 
@@ -23,7 +23,7 @@ class Rent < ActiveRecord::Base
     #validates_presence_of c, :message => "#{c.to_s}不能为空" if Proc.new {|o| o.is_member?  }
   end
 
-  validates_numericality_of :total_fee, :only_integer => true, :greater_than_or_equal_to => 0, :allow_nil => true
+  validates_numericality_of :total_fee, :greater_than_or_equal_to => 0, :allow_nil => true
 
   validate do |rent|
     self.errors.add(:base,"开始时间应该小于结束时间") if rent.start_date && rent.end_date && \
@@ -32,8 +32,7 @@ class Rent < ActiveRecord::Base
 
 
   before_validation do |rent|
-    rent.card_id = self.card_num
-    rent.member_id = Member.find_by_name(self.member_name).id rescue nil
+    self.validate_in_condition_needed = true
   end
 
   after_create do 

@@ -64,7 +64,7 @@ class BalancesController < ApplicationController
   end
 
   def member_by_member_card_serial_num
-    @card = MemberCard.find_by_card_serial_num(params[:serial_num])
+    @card = MembersCard.find_by_card_serial_num(params[:serial_num])
     @member = @card.member
     render :json => {:name => @member.name,:id => @member.id}
   end
@@ -75,7 +75,7 @@ class BalancesController < ApplicationController
     end
     is_member = params[:member] == 'member'
 
-    @order = Order.new(:user_id => current_user.id, :state => "cart_loaded")
+    @order = Order.new(:user_id => current_user.id)
     @order.is_member = is_member 
     if is_member
       member_card = MembersCard.find(params[:member_card_id]) 
@@ -94,9 +94,21 @@ class BalancesController < ApplicationController
                                :discount => li.discount})
     end
 
-    @order.save(:validate => false)
-    cart.empty!
-    redirect_to order_balances_path(@order)
+
+    if @order.save(:validate => false)
+      @balance = @order.balances.build(params[:balance])
+      @balance.price = @order.order_items.sum(&:total_money_price)
+      @balance.final_price = @order.order_items.sum(&:price_after_discount)
+      @order.order_items.sum(&:price_after_discount)
+      @balance.price
+      @balance.final_price
+      @balance.save && @order.update_column(:state, "balanced")
+      cart.empty!
+      flash[:notice] = "商品购买成功"
+    else
+      flash[:notice] = "支付失败" + @balance.errors.full_messages.join(", ")
+    end
+    redirect_to new_good_buy_balances_path
   end
 
   def destroy

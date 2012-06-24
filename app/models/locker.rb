@@ -13,8 +13,8 @@ class Locker < ActiveRecord::Base
     self.rents.select {|r| r.start_date.to_date <= date && date <= r.end_date.to_date }.first
   end
 
-  def locker_type_in_word
-    CommonResourceDetail.find(self.locker_type).detail_name rescue "未知"
+  def locker_type_in_words
+    CommonResourceDetail.find_by_id(self.locker_type).try(:detail_name) || "未知"
   end
 
   before_create do |record|
@@ -77,9 +77,6 @@ class Locker < ActiveRecord::Base
   def generate_num
   end
 
-  def locker_type_in_words
-    CommonResourceDetail.find(type).detail_name rescue "未知"
-  end
 
   def state_desc
     self.locker_state_in_words

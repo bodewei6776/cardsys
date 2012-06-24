@@ -35,12 +35,23 @@
 
     - control_helper("member_card_id", "会员卡号", :left) do
       %p#cards
-        = text_field_tag :member_card, "", :member_card_autocomplete => "/member_cards/autocomplete_card_serial_num", :id => "member_card_name_field"
+        = text_field_tag :member_card, "", :member_card_autocomplete => "/members_cards/autocomplete_card_serial_num", :id => "member_card_name_field"
         = hidden_field_tag :member_card_id, :id => "member_card_hidden_id"
 
   #sanke
     - control_helper("sanke_name", "散客姓名", :right) do
       = text_field_tag :sanke_name
+
+
+  - control_helper("login", "操作人", :left) do
+    = text_field_tag "balance[login]", {}, :value => current_user.login
+
+  - control_helper("password", "密码", :right) do
+    = password_field_tag "balance[password]"
+
+  - control_helper("balance_way", "支付方式", :both) do
+    = select_tag "balance[balance_way]", options_for_select(Balance::BALANCE_WAYS.invert)
+
 
   .form-actions
     = submit_tag "付款",:class => "btn"

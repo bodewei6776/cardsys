@@ -7,6 +7,7 @@ class RentsController < ApplicationController
   def new
     @locker = Locker.find params[:locker_id]
     @rent = @locker.rents.build
+    @rent.is_member = true
     render :layout => "small_main"
   end
 
@@ -19,6 +20,25 @@ class RentsController < ApplicationController
    else
      render :action => "new", :layout => "small_main"
    end
+  end
+
+  def update
+    @rent = Rent.find params[:id]
+    @locker = @rent.locker
+    if params[:commit] == "退租"
+      params[:rent][:end_date] = Date.today
+
+      if @rent.update_attributes params[:rent]
+        flash[:notice] = "#{params[:commit]}成功"
+        redirect_to edit_locker_rent_path(@rent.locker, @rent)
+      else
+        flash[:notice] = "#{params[:commit]}失败"
+        render :action => "edit", :layout => "small_main"
+      end
+    else
+
+    end
+
   end
 
   def edit

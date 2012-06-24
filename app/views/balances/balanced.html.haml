@@ -9,7 +9,7 @@
       %th 场地号
       %th 日期
       %th 时段
-      %th 场地费
+      %th 费用
       %th 操作
 
   %tbody
@@ -23,6 +23,7 @@
         %td
           = record.order.court_book_record.try(:start_hour)
           = record.order.court_book_record.try(:end_hour)
+
         %td
           = record.balance_real_amount_desc
           (#{record.balance_way_desc})

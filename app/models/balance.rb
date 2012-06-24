@@ -118,7 +118,7 @@ class Balance < ActiveRecord::Base
     if balance_way == "counter"
       "#{final_price}次"
     else
-      "￥#{self.order_items.sum(&:price_after_discount).to_i}元"
+      "￥#{final_price}元"
     end
   end
 
