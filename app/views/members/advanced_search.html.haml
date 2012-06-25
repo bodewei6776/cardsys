@@ -36,13 +36,14 @@
     %p
       = radio_button_tag("member_gender",CommonResource::Gender_Woman, (gender.to_i == CommonResource::Gender_Woman)?true:false, :style => "width: 30px")
       女
-.form-actions{:style => "padding-left: 300px"}
-  = submit_tag "提交", :class => "btn "
-
+  .form-actions
+    = submit_tag "提交", :class => "btn "
+    .clear
+  
 = table_header(:title => "会员列表", :link => "")
 
-- columns = {"name" => "名称", "card_serial_nums" => "会员卡信息", "mobile" => "移动电话", "created_at" => "注册日期", "member_card_left_fees" => "现有金额"}
-- columns["member_card_left_times"] = "现有次数"
+- columns = {"name" => "名称", "card_serial_nums" => "会员卡信息", "mobile" => "移动电话", "created_at" => "注册日期", "members_card_left_fees" => "现有金额"}
+- columns["members_card_left_times"] = "现有次数"
 - columns["member_consume_amounts"] = "消费金额"
 - columns["balance_times"] = "消费次数"
 - columns["birthday"] = "会员生日"

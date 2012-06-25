@@ -55,11 +55,11 @@ class Member < ActiveRecord::Base
     all_members_cards.collect(&:card_serial_num).join ", "
   end
 
-  def member_card_left_times
+  def members_card_left_times
    self.all_members_cards.collect(&:left_times).sum
   end
 
-  def member_card_left_fees
+  def members_card_left_fees
    self.all_members_cards.collect(&:left_fee).sum
   end
 
@@ -94,9 +94,11 @@ class Member < ActiveRecord::Base
   end
 
   def use_cash_amount
+    self.balances.select{|b| b.balance_way != "counter" && b.balance_way != 'card'}.sum(&:final_price)
   end
 
   def use_card_amount
+    self.balances.select{|b| b.balance_way == "counter"}.sum(&:final_price)
   end
 
 

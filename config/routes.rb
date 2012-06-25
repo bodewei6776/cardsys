@@ -36,7 +36,13 @@ Cardsys::Application.routes.draw do
     end
   end
 
-  resources :vacations
+  resources :vacations do
+    member do
+      put :switch_state
+    end
+
+  end
+
   resources :orders do
     member do
       put :change_state

@@ -17,12 +17,12 @@ class User < ActiveRecord::Base
   has_many :user_powers
   has_many :powers, :through => :user_powers
 
-  before_save :set_powers
+  #before_save :set_powers
 
-  def set_powers
-    return true unless self.departments
-    self.powers = self.departments.collect(&:powers).flatten
-  end
+  #def set_powers
+  #  return true unless self.departments
+  #  self.powers = self.departments.collect(&:powers).flatten
+  #end
 
   def admin?
     self.login == 'admin'

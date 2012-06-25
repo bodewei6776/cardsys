@@ -1,6 +1,5 @@
 # -*- encoding : utf-8 -*-
 class Vacation < ActiveRecord::Base
-  include HashColumnState
 
   STATE_MAP = {"holiday" => "节假日", "workday" => "工作日"}
 
@@ -13,6 +12,7 @@ class Vacation < ActiveRecord::Base
 
   validate :start_date_should_be_after_now
   validate :end_date_should_be_after_now
+  validate :end_date_should_be_start_date
   validate :should_not_duplicate_with_other_time_span
 
   def should_not_duplicate_with_other_time_span
@@ -21,24 +21,25 @@ class Vacation < ActiveRecord::Base
 
   def start_date_should_be_after_now
     return true if self.start_date.nil?
-    self.errors.add(:start_date,"开始时间过了，　别修改啦") if self.start_date < Time.now
+    self.errors.add(:start_date,"开始时间过了，　别修改啦") if self.start_date < Date.today
   end
 
   def end_date_should_be_after_now
     return true if self.end_date.nil?
-    self.errors.add(:end_date,"结束时间过了，　别修改啦") if self.end_date < Time.now
+    self.errors.add(:end_date,"结束时间过了，　别修改啦") if self.end_date < Date.today
   end
 
-  def is_holiday?
-    status == CommonResource::IS_HOLIDAY
-  end
 
-  def is_daily?
-    status == CommonResource::IS_DAILY
+  def end_date_should_be_start_date
+    self.errors.add(:end_date,"结束时间需要大于开始时间") if self.end_date <= self.start_date
   end
 
   def can_edit?
-    self.start_date > Time.now and self.end_date > Time.now
+    false
   end
   
+  def can_view?
+    false
+    
+  end
 end

@@ -1,4 +1,3 @@
-
 %span.pull-right
   =link_to raw("<i class='icon-print'> </i>  ") , "javascript: window.print();",  :class => "btn btn-mini", :title => "打印"
 
@@ -9,7 +8,8 @@
 
 = form_tag("/courts/coach_status_search", :class => "form-horizontal") do
   - control_helper(:name, "教练", :left) do
-    = text_field_tag :name, params[:name]
+    = text_field_tag :name, params[:name], :id => "coach_name"
+
   - control_helper("member_name", "预订会员", :right) do
     = text_field_tag :member_name, params[:member_name], :autocomplete => "/members/autocomplete_name"
 
@@ -26,7 +26,7 @@
   .form-actions
     = submit_tag "搜索", :class => "btn "
 
-%BR
+%br
 = table_header(:title => "教练预订列表", :link => "")
 %table.table.table-striped.table-bordered.table-condensed#section_to_print
   %thead
@@ -50,4 +50,16 @@
           = coach_book_record.start_hour
           点 - #{coach_book_record.end_hour}点
 
+.non-printable
+  = render :partial => "layouts/page_nav", :locals => {:objs => @coach_book_records}
 
+:javascript
+  $(document).ready(function(){
+    $("#coach_name").autocomplete({
+      source: '/coaches/search',
+      select: function(ui, li){
+        var item = li.item;
+        $('#coach_name').val(item.name)
+        }
+      });
+    });

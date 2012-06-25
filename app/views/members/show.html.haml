@@ -1,5 +1,5 @@
 .form-horizontal
-  = form_header(:title => "会员详细资料", :link => members_path)
+  = form_header(:title => "会员资料", :link => members_path)
   
   - show_helper(:name, "会员名称", :left) do
     = @member.name
@@ -43,7 +43,7 @@
   
   
   - show_helper(:birthday, "会员生日", :right) do
-    = @member.birthday.blank? ? "未知" : @member.birthday.to_chinese_mdh
+    = @member.birthday.blank? ? "未知" : @member.birthday.to_chinese_ymd
   
   - show_helper(:description, "备注", :right) do
     = @member.description
@@ -57,14 +57,14 @@
     = @member.latest_comer_date.blank? ? '无' : @member.latest_comer_date
   
   - show_helper(:member_consume_amounts, "消费总金额", :left) do
-    = @member.member_consume_amounts
+    = "#{@member.member_consume_amounts} 元"
   
   
   - show_helper(:member_card_left_fees, "卡内余额", :left) do
-    = @member.member_card_left_fees
+    = "#{@member.member_card_left_fees} 元"
   
   - show_helper(:recharge_fees, "总充值金额", :left) do
-    = @member.recharge_fees
+    = "#{ @member.recharge_fees} 元"
   
   
   - show_helper(:recharge_times, "总充值次数", :left) do
@@ -85,22 +85,23 @@
   
   - show_helper(:member_card_left_times, "卡内小时数", :left) do
     = @member.member_card_left_times
+    次
 
-= table_header(:title => " 会员 #{@member.name} 的卡列表 ", :link => "")
+= table_header(:title => "#{@member.name}卡列表 ", :link => "")
 - columns = {:card_serial_num => "卡号", :state_desc => "卡状态", :left_fee => "卡内余额",
   :left_times=> "卡内次数", "expire_date" => "卡有效期" }
 - collection = @members_cards
 =render :partial => "layouts/table", :locals => { :collection => collection, :columns => columns, :no_operation => true}
 
 
-= table_header(:title => " 会员 #{@member.name} 的充值记录列表 ", :link => "")
+= table_header(:title => "#{@member.name}充值记录 ", :link => "")
 - columns = {"card_serial_num" => "卡号", :display_recharge_info => " 充值金额(￥)/次数 ",
   "created_at" => "充值日期",:recharge_person_name => "操作人"}
 - collection = @recharge_records
 =render :partial => "layouts/table", :locals => { :collection => collection, :columns => columns, :no_operation => true}
 
 
-= table_header(:title => " 会员 #{@member.name} 的消费记录列表 ", :link => "")
+= table_header(:title => "#{@member.name}消费记录 ", :link => "")
 - columns = {"created_at" => "时间", :balance_real_amount_desc => "消费金额", "balance_way_desc" => "支付方式"}
 - collection = @balances
 =render :partial => "layouts/table", :locals => { :collection => collection, :columns => columns , :no_operation => true}

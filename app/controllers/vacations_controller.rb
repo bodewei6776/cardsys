@@ -31,12 +31,10 @@ class VacationsController < ApplicationController
   def update
     @vacation = Vacation.find(params[:id])
 
-    respond_to do |format|
-      if @vacation.update_attributes(params[:vacation])
-        redirect_to(vacations_url, :notice => '节假日修改成功！')
-      else
-        render :action => "edit" 
-      end
+    if @vacation.update_attributes(params[:vacation])
+      redirect_to(vacations_path)
+    else
+      render :action => "edit" 
     end
   end
 

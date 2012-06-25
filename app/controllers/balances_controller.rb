@@ -92,6 +92,8 @@ class BalancesController < ApplicationController
                                :unit_money_price => li.product.price, 
                                :price_after_discount => li.real_total_price,
                                :discount => li.discount})
+      ap li
+      ap @order.order_items
     end
 
 

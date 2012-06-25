@@ -1,8 +1,8 @@
 = form_tag form_url, :class => "form-horizontal well", :method => :get  do
-  - control_helper(:good_type, "按照商品类别", :left) do
+  - control_helper(:good_type, "商品类别", :left) do
     = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
 
-  - control_helper(:name, "按照商品名称", :right) do
+  - control_helper(:name, "商品名称", :right) do
     = text_field_tag :name, "#{params[:name]}", :autocomplete_name => "/goods/autocomplete_name"
 
   .form-actions
