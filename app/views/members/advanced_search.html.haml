@@ -39,6 +39,7 @@
   .form-actions
     = submit_tag "提交", :class => "btn "
     .clear
+
   
 = table_header(:title => "会员列表", :link => "")
 
@@ -54,5 +55,6 @@
 :javascript
   $(".member_card_bind_index").colorbox({width:"80%", height:"99%", iframe:false});
   $(".member_card_index").colorbox({width:"80%", height:"99%", iframe:false});
+  $(".birthday_input").datepicker( { dateFormat: "mm-dd",   showMonthAfterYear: true });
 
  

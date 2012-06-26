@@ -19,6 +19,7 @@ class WelcomeController < ApplicationController
     # Standard Ruby distribution provides the following useful extension
     #backup_script = "mysqldump -u#{username}  #{database} > #{file_name}"
     `#{backup_script}`
+    logger.debug backup_script
     puts backup_script
     redirect_to backup_path
   end
