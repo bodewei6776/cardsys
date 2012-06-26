@@ -10,6 +10,9 @@
   - control_helper("end_date", "结束时间") do
     = f.text_field :end_date, :value => @vacation.end_date, :class => "select-date"
 
+  - control_helper("vacation_type", "类型") do
+    = f.select :vacation_type, options_for_select(Vacation::VACATION_TYPE_MAP.invert, f.object.vacation_type)
+
   .form-actions
     = f.submit "提交", :class => "btn "
     = link_to "返回", vacations_path, :class => "btn"

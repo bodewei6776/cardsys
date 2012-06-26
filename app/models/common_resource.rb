@@ -72,7 +72,8 @@ class CommonResource < ActiveRecord::Base
     end
 
     def is_holiday?(date = Date.today)
-      Vacation.where(["start_date <= :date and end_date >= :date",  {:date => date}]).first.present?
+      vacation = Vacation.where(["start_date <= :date and end_date >= :date",  {:date => date}]).first
+      vacation ? vacation.is_holiday? : is_weekend?(date)
     end
 
     def date_type(date = Date.today)

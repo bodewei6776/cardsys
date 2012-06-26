@@ -44,7 +44,7 @@
         %td
           = court_book_record.start_hour
           \- #{court_book_record.end_hour}
-        %td= link_to "详情", court_status_search_courts_path(:name => court_book_record.court.try(:name))
+        %td= link_to "详情", edit_order_path(court_book_record.order), :class => "popup-new-window" 
 
 
 %td

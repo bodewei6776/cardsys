@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class Vacation < ActiveRecord::Base
 
-  STATE_MAP = {"holiday" => "节假日", "workday" => "工作日"}
+  VACATION_TYPE_MAP = {"holiday" => "节假日", "workday" => "工作日"}
 
   validates :name, :presence => {:message => "名称不能为空！"}
   validates :name, :uniqueness => {:on => :create, :message => '名称已经存在！', :if => Proc.new { |vacation| !vacation.name.nil? && !vacation.name.blank? }}
@@ -40,6 +40,17 @@ class Vacation < ActiveRecord::Base
   
   def can_view?
     false
-    
+  end
+
+  def is_holiday?
+    self.vacation_type == "holiday"
+  end
+
+  def is_workday?
+    self.vacation_type == "workday"
+  end
+
+  def vacation_type_in_word
+    VACATION_TYPE_MAP[self.vacation_type]
   end
 end
