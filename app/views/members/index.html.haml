@@ -1,6 +1,6 @@
 = table_header(:title => "会员查询", :link => new_member_path)
 = render :partial => "soso", :locals => { :form_url => members_path }
-- columns = {:name => "名称", :card_serial_nums => "会员卡", :mobile => "电话", :created_at => "注册时间", :member_card_left_fees=> "现有金额", :member_card_left_times => "现有次数", :member_consume_amounts => "消费金额", :member_consume_times => "消费次数", :birthday => "生日"}
+- columns = {:name => "名称", :card_serial_nums => "会员卡", :mobile => "电话", :created_at => "注册时间", :members_card_left_fees=> "现有金额", :members_card_left_times => "现有次数", :member_consume_amounts => "消费金额", :member_consume_times => "消费次数", :birthday => "生日"}
 = table_header(:title => "会员列表", :link => "")
 = render :partial => "layouts/table", :locals => {:collection => @members, :columns => columns}
 = render :partial => "layouts/page_nav", :locals => { :objs => @members }
