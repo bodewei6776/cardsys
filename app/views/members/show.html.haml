@@ -60,8 +60,8 @@
     = "#{@member.member_consume_amounts} 元"
   
   
-  - show_helper(:member_card_left_fees, "卡内余额", :left) do
-    = "#{@member.member_card_left_fees} 元"
+  - show_helper(:members_card_left_fees, "卡内余额", :left) do
+    = "#{@member.members_card_left_fees} 元"
   
   - show_helper(:recharge_fees, "总充值金额", :left) do
     = "#{ @member.recharge_fees} 元"
@@ -84,7 +84,7 @@
   
   
   - show_helper(:member_card_left_times, "卡内小时数", :left) do
-    = @member.member_card_left_times
+    = @member.members_card_left_times
     次
 
 = table_header(:title => "#{@member.name}卡列表 ", :link => "")
