@@ -14,6 +14,9 @@ class User < ActiveRecord::Base
     c.merge_validates_length_of_password_confirmation_field_options(:allow_blank => true, :message => "长度太短")
   end
 
+  def powers
+    self.departments.collect(&:powers).flatten.uniq
+  end
 
   #before_save :set_powers
 
