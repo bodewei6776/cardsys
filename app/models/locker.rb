@@ -10,7 +10,7 @@ class Locker < ActiveRecord::Base
   scope :rented, where({:state => :rented }) 
   
   def current_rent(date = Date.today)
-    self.rents.select {|r| r.start_date.to_date <= date && date <= r.end_date.to_date }.first
+    self.rents.select {|r| r.rent_state == "enable" && r.start_date.to_date <= date && date <= r.end_date.to_date }.first
   end
 
   def locker_type_in_words

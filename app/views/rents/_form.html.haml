@@ -31,13 +31,18 @@
 
 
   - control_helper("start_date", "起租时间", :left) do
-    = f.text_field :start_date,:class => "select-date" 
+    = f.text_field :start_date,:class => "select-date" , :value => Date.today
 
   - control_helper("end_date", "退租时间", :right) do
     = f.text_field :end_date ,:class => "select-date" 
 
-  - control_helper("total_fee", "租用费用", :left) do
-    = f.text_field :total_fee
+  - if @rent.new_record?
+    - control_helper("total_fee", "租用费用", :left) do
+      = f.text_field :total_fee, :value => ""
+
+  - else
+    - control_helper("total_fee", "续租费用", :left) do
+      = f.text_field :total_fee, :value => ""
 
 
   - control_helper("remark", "备注", :right) do

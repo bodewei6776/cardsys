@@ -85,15 +85,16 @@ class BalancesController < ApplicationController
     else
       @order.non_member =  NonMember.new(:name => params[:sanke_name])
     end
+    @order.save(:validate => false)
     cart.line_items.each do |li|
-      @order.order_items.build({:item => li.product,
+      oi = @order.order_items.create({:item => li.product,
                                :quantity => li.quantity,
-                               :total_money_price => li.sub_total_price,
+                               :total_money_price => li.sub_total_price(),
                                :unit_money_price => li.product.price, 
                                :price_after_discount => li.real_total_price,
                                :discount => li.discount})
-      ap li
-      ap @order.order_items
+      oi.update_column(:discount , li.discount)
+      oi.update_column(:price_after_discount , li.real_total_price)
     end
 
 
@@ -105,12 +106,16 @@ class BalancesController < ApplicationController
       @balance.price
       @balance.final_price
       @balance.save && @order.update_column(:state, "balanced")
+      @order.order_items.each do |element|
+        element.update_column(:balance_id, @balance.id)
+        element.update_column(:balanced, true)
+      end
       cart.empty!
       flash[:notice] = "商品购买成功"
     else
       flash[:notice] = "支付失败" + @balance.errors.full_messages.join(", ")
     end
-    redirect_to new_good_buy_balances_path
+    redirect_to balanced_balances_path
   end
 
   def destroy
