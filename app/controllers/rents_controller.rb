@@ -42,6 +42,7 @@ class RentsController < ApplicationController
       @rent = Rent.new  params[:rent]
       @locker = @rent.locker
       if @rent.save
+        @old_rent.update_column :rent_state, 'disable'
         flash[:notice] = "续订成功"
         render :action => "create", :layout => "small_main"
       else
