@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 class RentsController < ApplicationController
   def index
-    @rents = Rent.all
+    @rents = Rent.paginate default_paginate_options
   end
 
   def new
@@ -27,6 +27,8 @@ class RentsController < ApplicationController
     @locker = @rent.locker
     if params[:commit] == "退租"
       params[:rent][:end_date] = Date.today
+      params[:rent][:total_fee] = @rent.total_fee
+      params[:rent][:rent_state] = "disable"
 
       if @rent.update_attributes params[:rent]
         flash[:notice] = "#{params[:commit]}成功"
@@ -36,7 +38,15 @@ class RentsController < ApplicationController
         render :action => "edit", :layout => "small_main"
       end
     else
-
+      @old_rent = Rent.find params[:id]
+      @rent = Rent.new  params[:rent]
+      @locker = @rent.locker
+      if @rent.save
+        flash[:notice] = "续订成功"
+        render :action => "create", :layout => "small_main"
+      else
+        render :action => "new", :layout => "small_main"
+      end
     end
 
   end

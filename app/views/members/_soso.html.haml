@@ -6,7 +6,7 @@
     = text_field_tag :card_serial_num, "", :autocomplete => "/members/autocomplete_card_serial_num", :onclick => '$("#name").attr("value","");', :value => params[:card_serial_num], :id => "card_serial_num"
 
   
-.pull-right
-  = submit_tag "查询", :class => "btn "
+  .form-actions
+    = submit_tag "查询", :class => "btn "
  
 .clear

@@ -27,7 +27,7 @@ class Rent < ActiveRecord::Base
 
   validate do |rent|
     self.errors.add(:base,"开始时间应该小于结束时间") if rent.start_date && rent.end_date && \
-      rent.start_date >= rent.end_date
+      rent.start_date > rent.end_date
   end
 
 
@@ -35,10 +35,18 @@ class Rent < ActiveRecord::Base
     self.validate_in_condition_needed = true
   end
 
-  after_create do 
-    self.locker.update_attribute(:state,"rented")
+  before_create do
+    self.rent_state = "enable"
   end
 
+  after_create do 
+    self.locker.update_attribute(:state, "rented")
+  end
+
+
+  def rent_member_name
+   is_member? ? member.name : member_name 
+  end
 
   def almost_due?(date = Date.today)
     CommonResource.locker_due_time.days.from_now > self.end_date && date < self.end_date
