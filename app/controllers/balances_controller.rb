@@ -83,6 +83,10 @@ class BalancesController < ApplicationController
       @order.member_id = member.id
       @order.members_card_id = member_card.id 
     else
+      if ["card", "counter"].include? params[:balance][:balance_way]
+        flash[:notice] = "散客消费不能记账或者计次结算"
+        redirect_to new_good_buy_balances_path and return
+      end
       @order.non_member =  NonMember.new(:name => params[:sanke_name])
     end
     @order.save(:validate => false)
