@@ -45,7 +45,7 @@ class Rent < ActiveRecord::Base
 
 
   def rent_member_name
-   is_member? ? member.name : member_name 
+   is_member? ? member.try(:name) : member_name 
   end
 
   def almost_due?(date = Date.today)

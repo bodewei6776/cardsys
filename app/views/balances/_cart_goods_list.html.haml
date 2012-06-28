@@ -23,6 +23,7 @@
         = select_tag  "category", raw(generate_good_type_options_without_all(params[:category])), :class => "span2", :id => "category_select"
         = "商品名称: "
         = select_tag  "name", "", :class => "span2", :id => "name_select"
+        = "数量: "
         = text_field_tag :quantity, "1", :class => "span1"
         = submit_tag "加入购物车", :class => "btn"
 
