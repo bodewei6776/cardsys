@@ -272,7 +272,7 @@ class Balance < ActiveRecord::Base
     balances = where(["date(created_at) = ?", date])
     product_items = balances.present? ? balances.collect{|b| b.order.product_items } : []
     product_items = product_items.flatten.uniq
-    product_items = product_items.select { |pi| pi.item.category.id == type }
+    product_items = product_items.select { |pi| pi.item.category.parent == type }
     array = []
     product_items.group_by(&:item).each do |good, ois|
        map = []
