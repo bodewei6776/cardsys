@@ -96,7 +96,7 @@
                     });
                     $('#cards').html( "<select name='rent[card_id]'>" + options + "</select>");
                      $("#cards select").bind("change", function(){
-                       $("#rent_member_id").val(($("#cards select").val()));
+                       $("#rent_card_id").val(($("#cards select").val()));
                      });
                      $("#cards select").trigger("change");
                   });
