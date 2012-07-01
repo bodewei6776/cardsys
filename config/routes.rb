@@ -229,6 +229,7 @@ Cardsys::Application.routes.draw do
       get :select_for_cart
       get :by_category
       post :add_to_cart
+      get :price
     end
   end
 

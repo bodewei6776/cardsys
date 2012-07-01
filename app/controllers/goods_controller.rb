@@ -155,4 +155,9 @@ class GoodsController < ApplicationController
     redirect_to(back_goods_url) 
   end
 
+  def price
+    @good = Good.find_by_name(params[:name])
+    render :json => {:id => @good.id, :price => @good.price }
+  end
+
 end
