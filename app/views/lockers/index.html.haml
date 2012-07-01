@@ -1,6 +1,6 @@
 :css
   .content {
-    color:white;
+    color:black;
     }
     
   #rent_table{
@@ -40,7 +40,7 @@
   = rents_in_table(@lockers, @date)
 .h10
 .color
-  %span.color03 紫色-使用中
-  %span.color05 褐色-即将到期
-  %span.color04 绿色-空
+  %span.rented 绿色-使用中
+  %span.almost_due 红色-到期
+  %span.empty 白色-空
 .h10

@@ -28,15 +28,8 @@ class Locker < ActiveRecord::Base
     num.succ
   end
 
-  def color(date = Date.today)
-    case self.state_at(date)
-    when "empty" 
-      "green"
-    when "rented" 
-      "purple"
-    when  "almost_due"
-      "#933"
-    end
+  def style(date = Date.today)
+    self.state_at(date)
   end
 
   def state_in_words(date = Date.today)

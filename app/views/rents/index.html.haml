@@ -1,5 +1,5 @@
 = table_header(:title => "租用记录", :link => "")
-- columns = {:state_desc => "租用状态", :rent_member_name => "会员姓名", :created_at => "登记日期",
+- columns = {:num => "储物柜编号", :state_desc => "租用状态", :rent_member_name => "会员姓名", :created_at => "登记日期",
   :start_date => "起租日", :end_date => "到租日", :total_fee => "租用费" }
 = render :partial => "layouts/table", :locals => { :columns => columns, :collection => @rents, :no_operation => true}
 = render :partial => "layouts/page_nav", :locals => {:objs => @rents}

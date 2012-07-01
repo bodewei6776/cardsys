@@ -34,7 +34,7 @@ module RentsHelper
   end
 
   def locker_widget(locker,date = Date.today)
-    div = "<div style='background-color:#{locker.color(date)};' class='locker_div popup-new-window hand'" 
+    div = "<div class=' #{locker.style(date)} locker_div popup-new-window hand'" 
     div += " href='#{locker.rented? ? edit_locker_rent_path(locker,locker.current_rent) : new_locker_rent_path(locker,:date => date)}'>"
     div += locker.num 
     div += "</div>"
