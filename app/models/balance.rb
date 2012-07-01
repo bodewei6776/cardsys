@@ -284,9 +284,9 @@ class Balance < ActiveRecord::Base
   end
 
   def self.good_total_per_date_by_type(date,type)
-    stat = self.good_stat_per_date_by_type(date,type)
+    stat = self.good_stat_per_date_by_type_with_order_item(date,type)
     if stat.present?
-      stat.inject(0){|sum,record| sum + record[0].price * record[1]} 
+      stat.inject(0){|sum,record| sum + record[2]} 
     else
       0
     end

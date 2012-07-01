@@ -177,7 +177,7 @@ module ReportsHelper
     table << "<td></td>"
     table << "<td></td>"
     table << "<td></td>"
-    table << "<td class='mon'>#{Balance.good_total_per_date_by_type(date,good_type)}</td>"
+    table << "<td class='mon'>#{Balance.good_total_per_date_by_type(date, good_type)}</td>"
     table << "</tr>"
 
 
