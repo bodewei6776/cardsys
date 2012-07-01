@@ -161,13 +161,13 @@ module ReportsHelper
     table << "</tr>"
 
     i = 1
-    Balance.good_stat_per_date_by_type(date,good_type).each do |good,quantity|
+    Balance.good_stat_per_date_by_type_with_order_item(date, good_type).each do |good, quantity, price_after_discount|
     table << "<tr>"
     table << "<td>#{i}</td>"
     table << "<td>#{good.name}</td>"
     table << "<td class='mon'>#{quantity}</td>"
     table << "<td class='mon'>#{good.price}</td>"
-    table << "<td class='mon'>#{quantity * good.price}</td>"
+    table << "<td class='mon'>#{price_after_discount}</td>"
     table << "</tr>"
     i = i+1
     end

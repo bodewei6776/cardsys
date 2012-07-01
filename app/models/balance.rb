@@ -268,6 +268,21 @@ class Balance < ActiveRecord::Base
     hash
   end
 
+  def self.good_stat_per_date_by_type_with_order_item(date, type)
+    balances = where(["date(created_at) = ?", date])
+    product_items = balances.present? ? balances.collect{|b| b.order.product_items } : []
+    product_items = product_items.flatten.uniq
+    array = []
+    product_items.group_by(&:item).each do |good, ois|
+       map = []
+       map << good
+       map << ois.sum(&:quantity)
+       map << ois.sum(&:price_after_discount)
+       array << map
+    end
+    array 
+  end
+
   def self.good_total_per_date_by_type(date,type)
     stat = self.good_stat_per_date_by_type(date,type)
     if stat.present?

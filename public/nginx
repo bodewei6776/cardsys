@@ -3,6 +3,9 @@
 # chkconfig: - 85 15
 # description: Nginx is a World Wide Web server.
 # processname: nginx
+# 在/etc/init.d中建立脚本nginx，添加脚本进去，chmod+x
+# /usr/sbin/update-rc.d -f nginx defaults
+
 
 
 nginx=/opt/nginx/sbin/nginx
