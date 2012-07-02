@@ -27,7 +27,7 @@ class MembersCard < ActiveRecord::Base
 
   attr_accessor :recharge_times, :recharge_fee, :recharge_expire_date, :recharging
   validates_numericality_of :recharge_times, :greater_than => -1, :message => "充值次数必须为大于零的整数", :if => proc {|obj| obj.recharging }
-  validates_numericality_of :recharge_fee, :greater_than => 0, :message => "充值金额必须为大于零的整数", :if => proc { |obj| obj.recharging }
+  #validates_numericality_of :recharge_fee, :greater_than => 0, :message => "充值金额必须为大于零的整数", :if => proc { |obj| obj.recharging }
 
   validation_conditions << proc {|obj| obj.recharging }
 

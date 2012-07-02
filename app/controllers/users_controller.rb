@@ -43,7 +43,7 @@ class UsersController < ApplicationController
 
   def update
     @user =User.find(params[:id]) 
-    @user.departments = @user.departments | Department.find(params[:dep])
+    @user.departments = Department.find(params[:dep])
     if @user.update_attributes(params[:user])
       redirect_to users_path, :notice => "用户修改成功"
     else
@@ -70,7 +70,7 @@ class UsersController < ApplicationController
   end
 
   def change_pass
-    if params[:password].blank? or params[:new_password].blank? or params[:password_confirm].blank?
+    if params[:password].blank? or params[:new_password].blank? or params[:password_confirmation].blank?
       flash[:notice] = "不能为空呀"
       redirect_to change_password_users_path and return
     end
@@ -78,7 +78,7 @@ class UsersController < ApplicationController
       redirect_to change_password_users_path,:notice => "原来的密码错误" and return
     end
 
-    unless params[:new_password] == params[:password_confirm]
+    unless params[:new_password] == params[:password_confirmation]
       redirect_to change_password_users_path,:notice => "两次密码输入需相同" and return
     end
 

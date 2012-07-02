@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
   set_pinyin_field :user_name_pinyin, :user_name
 
   has_many :department_users
-  has_many :departments,:through => :department_users
+  has_many :departments, :through => :department_users
 
   acts_as_authentic do |c|
     c.merge_validates_length_of_login_field_options(:allow_blank => true, :message => "登陆名长度")

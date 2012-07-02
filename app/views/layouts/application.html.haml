@@ -46,7 +46,8 @@
 
     
       $(document).ready(function() {
-        $("#datepicker").datepicker({ changeMonth: true, 
+        $("#datepicker").datepicker({
+          changeMonth: true, 
           changeYear: true,
           onSelect: function(dateText, inst){ jump_to_somewhere(dateText)}, 
           beforeShowDay: hightLightSpecialDates

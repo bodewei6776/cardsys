@@ -28,7 +28,7 @@
           = record.balance_real_amount_desc
           (#{record.balance_way_desc})
         %td
-          = link_to raw("<i class = 'icon-search'></i>"),  order_balances_path(record.order), :title => "编辑", :class => "popup-new-window"
+          = link_to raw("<i class = 'icon-search'></i>"),  order_balances_path(record.order), :title => "查看", :class => "popup-new-window"
           = link_to raw("<i class = 'icon-print'></i>"),  print_balance_path(record), :title => "打印", :class => "popup-new-window"
           - if current_user.menus.include?("删除结算信息")
             = link_to raw("<i class = 'icon-trash'></i>"),  order_balance_path(record.order, record), :title => "删除", :method => :delete, :confirm => "确认要删除？"
