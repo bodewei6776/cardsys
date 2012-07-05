@@ -229,4 +229,8 @@ class MembersCard < ActiveRecord::Base
     end
   end
 
+  def expire_date_to_s
+    self.expire_date.to_s(:db)
+  end
+
 end

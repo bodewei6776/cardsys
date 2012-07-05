@@ -36,6 +36,11 @@ class OrdersController < ApplicationController
     @original_member_name = @order.member_name
     case params[:commit]
     when "代卖"
+      if  params[:order][:court_book_record_attributes][:resource_id].to_i != @order.court_book_record.resource_id
+        flash[:notice] = "代卖不能换场地"
+        render :action => "edit", :layout => "small_main"
+        return
+      end
       if @order = @order.split(params[:order])
         log_action(@order.court_book_record, "sell", @order.user || current_user, 
                    "#{@order.start_hour}:00-#{@order.end_hour}:00 " + " #{ '原预订人: ' + @original_member_name if @original_member_name != @order.member_name}"
