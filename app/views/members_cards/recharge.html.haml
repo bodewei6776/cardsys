@@ -8,7 +8,7 @@
   function jump(card_serial_num){
     $("#recharge_form_div").load("#{recharge_form_members_cards_path}?card_serial_num=" + card_serial_num); 
     $("#recharge_form_div select-date").live("click", function(){
-        WdatePicker({onpicked:function(dp){}, lang:"zh-cn",isShowToday:true})
+        $(".select-date").datepicker({ changeMonth: true, changeYear: true});
       });
   }
 
