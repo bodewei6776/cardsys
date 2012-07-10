@@ -1,0 +1,51 @@
+= table_header(:title => "授权人管理", :link => "")
+.form-horizontal
+  - unless @members_card.blank?
+    .well
+      - control_helper("created_at", "注册日期") do
+        = @members_card.created_at.to_chinese_mdh
+  
+  
+      - control_helper("expire_date", "有效期") do
+        = @members_card.expire_date.to_chinese_mdh
+  
+      - control_helper("left_fee_value", "余额/余次") do
+        = @members_card.left_fee_value
+  
+  
+      - control_helper("state_desc", "会员卡状态") do
+        = @members_card.state_desc
+  
+  
+      - control_helper("max_shared_count", "可授权人数") do
+        = @members_card.max_shared_count
+  
+  
+  - if @members_card
+    = table_header(:title => "授权人列表", :link => new_member_path(:members_card_id => @members_card.id))
+  - else
+    = table_header(:title => "授权人列表", :link => "")
+
+
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %th 编号
+      %th 会员姓名
+      %th 会员卡信息
+      %th 移动电话
+      %th 注册日期
+      %th 会员生日
+      %th 操作
+
+  %tbody
+    - (@members_card.try(:granters) || []).each_with_index do |member,index|
+      %tr
+        %td= index + 1
+        %td= link_to member.name, member
+        %td= raw member.card_serial_nums
+        %td= member.mobile
+        %td= member.created_at.to_chinese_mdh
+        %td= member.birthday.try(:to_chinese_mdh)
+
+

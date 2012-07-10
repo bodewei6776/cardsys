@@ -37,7 +37,7 @@
     = f.text_field :telephone
 
   - control_helper("birthday", "会员生日") do
-    = f.text_field :birthday, :class => "select-date"
+    = f.text_field :birthday, :class => "select-date", :start_year => 1940
 
 
   - control_helper("email", "电子邮件") do
