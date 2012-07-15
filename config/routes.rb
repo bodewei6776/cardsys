@@ -168,6 +168,7 @@ Cardsys::Application.routes.draw do
     collection do
       get :recharge
       get :recharge_form
+      get :granter_form
       get :granters
       get :status
       get :autocomplete_name
