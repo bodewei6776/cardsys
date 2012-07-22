@@ -45,7 +45,7 @@ class Log < ActiveRecord::Base
 
   def order_time_getter
     return "" unless BookRecord === self.item 
-    self.item.order.created_at
+    self.item.order.alloc_date + self.item.order.start_hour.hours
   end
 
   def order_person_getter

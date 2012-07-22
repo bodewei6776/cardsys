@@ -23,6 +23,7 @@ Cardsys::Application.routes.draw do
   get "welcome/backup_db"
 
   get "reports/coach"
+  get "reports/good_search"
   get "reports/income"
   get "reports/income_by_month"
   get "reports/good_type_day"
