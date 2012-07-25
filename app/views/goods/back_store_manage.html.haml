@@ -7,7 +7,7 @@
 商品出入库登记
 = form_for @good, :url => back_store_update_good_path(@good), :html => { :class => "form-horizontal well" } do |f|
   - control_helper("name", "商品名称") do
-    = @good.name
+    = f.text_field :name
 
   - control_helper("count_front_stock_in", "现存") do
     = "前台:#{@good.count_front_stock};后台:#{@good.count_back_stock}"

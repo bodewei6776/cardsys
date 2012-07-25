@@ -108,6 +108,7 @@ class GoodsController < ApplicationController
     @good.count_back_stock  -= count_back_stock_out
     @good.count_total_now += count_back_stock_in 
     @good.count_total_now -= count_back_stock_out
+    @good.name = params[:good][:name]
     @good.save
     redirect_to back_goods_path
   end
