@@ -21,7 +21,7 @@ class Good < ActiveRecord::Base
   attr_accessor :order_count
 
   def good_type_in_chinese
-    self.category.name
+    self.category.try(:name)
   end
 
   def amount(order_item)
