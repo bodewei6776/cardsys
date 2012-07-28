@@ -49,7 +49,7 @@ class Order < ActiveRecord::Base
                                                    :total_count => court_book_record.hours,
                                                    :total_money_price => court_book_record.price(self.members_card),
                                                    :discount => 10,
-                                                   :price_after_discount => court_book_record.price)
+                                                   :price_after_discount => court_book_record.price(self.members_card))
 
     self.coach_book_records.each do |cbr|
       coach_order_item = self.order_items.find_or_initialize_by_item_type_and_item_id("CoachBookRecord", cbr.id) 
