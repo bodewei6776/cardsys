@@ -31,6 +31,10 @@ class MembersCard < ActiveRecord::Base
 
   validation_conditions << proc {|obj| obj.recharging }
 
+  def can_destroy?
+    false
+  end
+
   def recharge_times= recharge_times
     self.recharging = true
     self.left_times += recharge_times.to_i
