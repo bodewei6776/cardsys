@@ -134,11 +134,11 @@ class Balance < ActiveRecord::Base
   ####### for reports #########
 
   def self.balances_on_date_and_ways(date, ways)
-    where(["date(created_at) = ? and (balance_way in (?))", date, ways])
+    where(["created_at > ? and created_at < ? and (balance_way in (?))", date.beginning_of_day, date.end_of_day, ways])
   end
 
   def self.balances_on_month_and_ways(date,ways)
-    where(["date_format(created_at,'%Y-%m') = ? and balance_way in (?)", date.strftime("%Y-%m"),ways])
+    where(["created_at > ? and created_at < ? and balance_way in (?)", date.beginning_of_month, date.end_of_month, ways])
   end
 
 
@@ -167,14 +167,14 @@ class Balance < ActiveRecord::Base
   end
 
   def self.total_count_on_date_any_ways(date, ways)
-    data = where(["date(created_at) = ? and (balance_way in (?))", date, ways])
+    data = where(["created_at > ? and created_at < ? and (balance_way in (?))", date.beginning_of_day, date.end_of_day, ways])
     data.present? ? data.inject(0){|sum,b|
       sum += ((b.balance_way == "counter") ? b.final_price : 0)
     } : 0
   end
 
-  def self.total_count_on_month_any_ways(date,ways)
-    data = where(["date_format(created_at,'%Y-%m') = ? and (balance_way = 'counter' )", date.strftime("%Y-%m")])
+  def self.total_count_on_month_any_ways(date, ways)
+    data = where(["created_at > ?  and created_at < ? and (balance_way = 'counter' )", date.beginning_of_month, date.end_of_month])
     data.present? ? data.inject(0){|sum,b|
       sum +=  b.count_amount 
     } : 0
@@ -253,7 +253,7 @@ class Balance < ActiveRecord::Base
   end
 
   def self.good_stat_per_date_by_type(date,type)
-    balances = where(["date(created_at) = ?", date])
+    balances = where(["created_at > ? and created_at < ?", date.beginning_of_day, date.end_of_month])
     product_items = balances.present? ? balances.collect{|b| b.order.product_items } : []
     product_items = product_items.flatten.uniq
     hash = {}
@@ -269,7 +269,7 @@ class Balance < ActiveRecord::Base
   end
 
   def self.good_stat_per_date_by_type_with_order_item(date, type)
-    balances = where(["date(created_at) = ?", date])
+    balances = where(["created_at > ? and created_at < ?", date.beginning_of_day, date.end_of_month])
     product_items = balances.present? ? balances.collect{|b| b.order.product_items } : []
     product_items = product_items.flatten.uniq
     product_items = product_items.select { |pi| pi.item.category.parent == type }
