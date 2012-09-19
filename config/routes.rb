@@ -172,6 +172,7 @@ Cardsys::Application.routes.draw do
       get :granter_form
       get :granters
       get :status
+      get :status_html
       get :autocomplete_name
       get :autocomplete_card_serial_num
     end

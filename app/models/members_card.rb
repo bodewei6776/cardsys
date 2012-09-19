@@ -16,7 +16,7 @@ class MembersCard < ActiveRecord::Base
 
   delegate :name, :to => :member
 
-  scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num.downcase}%'").limit(10) }
+  scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num}%'").limit(10) }
 
   delegate :card_type_in_chinese, :is_counter_card?, :max_shared_count, :to => :card
   before_create :left_times_and_left_money_can_not_be_blank

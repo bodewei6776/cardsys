@@ -1,11 +1,10 @@
-= form_header(:title => "会员查询", :link => "")
 =render :partial => "soso"
-  
 :javascript
   function jump(card_serial_num){
-    window.location.href = ("#{status_members_cards_path}" +"?card_serial_num=" + card_serial_num);
+    $("#status_display_div").load("#{status_html_members_cards_path}?card_serial_num=" + card_serial_num); 
   }
 
 
-- columns = {"card_serial_num" => "名称", "card_type_in_chinese" => "卡类型", "left_fee_value" => "余额/余次", "expire_date_to_s" => "有效期", "granter_names" => "授权人"}
-= table_helper(:collection => @members_cards, :columns => columns)
+#status_display_div
+  - columns = {"card_serial_num" => "名称", "card_type_in_chinese" => "卡类型", "left_fee_value" => "余额/余次", "expire_date_to_s" => "有效期", "granter_names" => "授权人"}
+  = table_helper(:collection => @members_cards, :columns => columns)
