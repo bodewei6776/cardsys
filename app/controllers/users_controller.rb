@@ -79,7 +79,6 @@ class UsersController < ApplicationController
     end
 
     unless params[:new_password] == params[:password_confirmation]
-
       redirect_to change_password_users_path,:notice => "两次密码输入需相同" and return
     end
 

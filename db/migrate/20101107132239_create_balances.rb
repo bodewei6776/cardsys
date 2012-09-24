@@ -6,7 +6,7 @@ class CreateBalances < ActiveRecord::Migration
       t.integer   :order_id
       t.decimal   :price ,:final_price, :precision => 10, :scale => 2 
       t.string    :change_note
-      t.string    :balance_way,
+      t.string    :balance_way
       t.timestamps
     end
   end

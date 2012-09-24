@@ -35,7 +35,7 @@ class Setting
        options_for_select(CommonResource.options_by_identifier("cert_type").collect{ |crd| [crd.detail_name, crd.id] }, default_value)
     end
 
-    def good_source_options(default_value)
+    def good_source_options(default_value = 0)
        options_for_select(CommonResource.options_by_identifier("good_source").collect{ |crd| [crd.detail_name, crd.id] }, default_value)
     end
 

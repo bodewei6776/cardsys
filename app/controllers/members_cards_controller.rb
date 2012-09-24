@@ -114,17 +114,26 @@ class MembersCardsController < ApplicationController
   end
 
 
+  def granter_form 
+    @members_card = MembersCard.find_by_card_serial_num(params[:card_serial_num])
+    params[:member_name] = @members_card.try(:member).try(:name)
+    render :layout => false
+  end
+
+
   def status
     conditions = {}
-    if params[:name].present? and Member.find_by_name(params[:name]).present?
-      conditions.merge!(:member_id => Member.find_by_name(params[:name]).id)
-    end
+    @members_cards = MembersCard.where(conditions).paginate(default_paginate_options)
+  end
 
+  def status_html
+    conditions = {}
     if params[:card_serial_num].present?
       conditions.merge!(:card_serial_num => params[:card_serial_num])
     end
 
     @members_cards = MembersCard.where(conditions).paginate(default_paginate_options)
+    render :layout => "small_main"
   end
 
 

@@ -30,7 +30,7 @@
       %th 场地/卡号
       %th 预订日期
       %th 时段
-      %th 时间
+      %th 操作时间
       %th 描述
 
   %tbody
@@ -40,7 +40,7 @@
         %td= e.user_name
         %td= e.order_person
         %td= e.item_name
-        %td= e.order_time.try(:strftime, "%Y-%m-%d %H:%M:%S")
+        %td= e.order_time.try(:strftime, "%Y-%m-%d")
         %td= e.period
         %td= e.created_at.strftime("%Y-%m-%d %H:%M:%S")
         %td= e.description

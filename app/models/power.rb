@@ -21,7 +21,7 @@ class Power < ActiveRecord::Base
   end
 
   def self.tree_top
-    where(:parent_id => 0,:will_show => true)
+    where(:parent_id => 0, :will_show => true)
   end
 
   def self.all_tree_top

@@ -16,7 +16,7 @@ class MembersCard < ActiveRecord::Base
 
   delegate :name, :to => :member
 
-  scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num.downcase}%'").limit(10) }
+  scope :autocomplete_for, lambda {|num| where("state = 'enabled' and lower(card_serial_num) like '#{num}%'").limit(10) }
 
   delegate :card_type_in_chinese, :is_counter_card?, :max_shared_count, :to => :card
   before_create :left_times_and_left_money_can_not_be_blank
@@ -27,9 +27,13 @@ class MembersCard < ActiveRecord::Base
 
   attr_accessor :recharge_times, :recharge_fee, :recharge_expire_date, :recharging
   validates_numericality_of :recharge_times, :greater_than => -1, :message => "充值次数必须为大于零的整数", :if => proc {|obj| obj.recharging }
-  validates_numericality_of :recharge_fee, :greater_than => 0, :message => "充值金额必须为大于零的整数", :if => proc { |obj| obj.recharging }
+  #validates_numericality_of :recharge_fee, :greater_than => 0, :message => "充值金额必须为大于零的整数", :if => proc { |obj| obj.recharging }
 
   validation_conditions << proc {|obj| obj.recharging }
+
+  def can_destroy?
+    false
+  end
 
   def recharge_times= recharge_times
     self.recharging = true
@@ -99,12 +103,12 @@ class MembersCard < ActiveRecord::Base
   end
 
   def has_enough_money_to_balance?(balance)
-    self.left_fee > balance.final_price
+    self.left_fee >= balance.final_price
   end
 
   
   def has_enough_count_to_balance?(balance)
-    self.left_times > balance.final_price
+    self.left_times >= balance.final_price
   end
 
   def member_card_type_opt
@@ -227,6 +231,10 @@ class MembersCard < ActiveRecord::Base
       unsuable_span_info = unusable_time_spans.map{|s,e|"#{s}:00-#{e}:00"}.join(';')
       order_errors << I18n.t('order_msg.member_card.invalid_time_span',:unusable_span => unsuable_span_info)
     end
+  end
+
+  def expire_date_to_s
+    self.expire_date.to_s(:db)
   end
 
 end

@@ -32,7 +32,11 @@ class CategoriesController < ApplicationController
   end
 
   def destroy
-    @category.destroy
+    if @category.goods.present?
+      flash[:notice] = "分类下面有商品， 不能删除"
+    else
+      @category.destroy
+    end
     redirect_to categories_url
   end
 

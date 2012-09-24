@@ -23,6 +23,7 @@ Cardsys::Application.routes.draw do
   get "welcome/backup_db"
 
   get "reports/coach"
+  get "reports/good_search"
   get "reports/income"
   get "reports/income_by_month"
   get "reports/good_type_day"
@@ -168,8 +169,10 @@ Cardsys::Application.routes.draw do
     collection do
       get :recharge
       get :recharge_form
+      get :granter_form
       get :granters
       get :status
+      get :status_html
       get :autocomplete_name
       get :autocomplete_card_serial_num
     end

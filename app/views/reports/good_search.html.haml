@@ -1,0 +1,59 @@
+= table_header(:title => "销售统计查询", :link => "")
+
+= form_tag "/reports/good_search", :class => "form-horizontal well", :method => :get  do
+  - control_helper(:good_type, "商品类别", :left) do
+    = select_tag "good_type",raw(generate_good_type_options(params[:good_type])),:id => "good_type",:class=> "select"
+
+  - control_helper(:name, "商品名称", :right) do
+    = text_field_tag :name, "#{params[:name]}", :autocomplete_name => "/goods/autocomplete_name"
+
+  - control_helper(:name, "商品来源", :left) do
+    = select_tag :good_source, Setting.good_source_options(params[:good_source])
+
+  - control_helper(:good_source, "销售时间", :right) do
+    = text_field_tag :begin_time, "#{params[:begin_time]}", :class => "span1 select-date"
+    = raw "&nbsp;&nbsp;-&nbsp;&nbsp;"
+    = text_field_tag :end_time, "#{params[:end_time]}", :class => "span1 select-date"
+
+  .form-actions
+    = submit_tag "查询", :class => "btn"
+ 
+
+%table.table.table-striped.table-bordered.table-condensed
+  %thead
+    %tr
+      %th 编号
+      %th 名称
+      %th 数量
+      %th 总价
+      %th 折后价
+      %th 时间
+      %th 支付方式
+
+  %tbody
+    - @order_items.each_with_index do |e, index|
+      %tr
+        %td= index + 1
+        %td= e.item.try :name
+        %td= e.quantity
+        %td= e.total_money_price
+        %td= e.price_after_discount
+        %td= e.balance.try(:created_at).try(:to_s, :db)
+        %td= e.balance.try(:balance_way_desc)
+
+
+
+
+= will_paginate @order_items, :next_label => "下一页", :previous_label => "上一页"
+:javascript
+  $(document).ready(function(){
+    $('#name').autocomplete({
+      source: "/goods/autocomplete_name",
+      select: function(ui, li){
+        var item = li.item;
+        $(this).val(item.value);
+      }
+    });
+  });
+  
+

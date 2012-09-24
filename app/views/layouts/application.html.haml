@@ -46,7 +46,8 @@
 
     
       $(document).ready(function() {
-        $("#datepicker").datepicker({ changeMonth: true, 
+        $("#datepicker").datepicker({
+          changeMonth: true, 
           changeYear: true,
           onSelect: function(dateText, inst){ jump_to_somewhere(dateText)}, 
           beforeShowDay: hightLightSpecialDates
@@ -57,7 +58,7 @@
         $(".popup-new-window").colorbox({width:"900", height:"600", iframe:true, onClosed:function(){
           window.location.reload();
         }});
-        $(".date-type-input, .select-date").datepicker({ changeMonth: true, changeYear: true });
+        $(".date-type-input, .select-date").datepicker({ changeMonth: true, changeYear: true, yearRange: '1950:2020' });
       });
     
 
