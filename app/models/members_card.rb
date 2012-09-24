@@ -103,12 +103,12 @@ class MembersCard < ActiveRecord::Base
   end
 
   def has_enough_money_to_balance?(balance)
-    self.left_fee > balance.final_price
+    self.left_fee >= balance.final_price
   end
 
   
   def has_enough_count_to_balance?(balance)
-    self.left_times > balance.final_price
+    self.left_times >= balance.final_price
   end
 
   def member_card_type_opt
