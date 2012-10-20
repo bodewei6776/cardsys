@@ -104,7 +104,10 @@ class MembersCardsController < ApplicationController
         :members_card_info => @members_card.members_card_info,
         :mobile => @members_card.member.mobile,
         :id => @members_card.id
-      }} 
+      }
+      
+      
+      } 
     end
   end
 

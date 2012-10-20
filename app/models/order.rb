@@ -23,6 +23,7 @@ class Order < ActiveRecord::Base
   validates  :members_card_id, :presence => { :message => "请选择会员卡" }, :if => proc { |order| order.is_member? }
   validates  :member_id, :presence => { :message => "请选择会员" }, :if => proc { |order| order.is_member? }
   validate   :coach_valid
+  validate   :court_valid
   validate   :card_avaliable_in_time_span
   validate   :end_date_later_than_today
 
@@ -135,6 +136,16 @@ class Order < ActiveRecord::Base
       c.alloc_date = alloc_date
       errors.add(:base, c.conflict_book_record.to_s + "已经被预约") if c.conflict?
     end
+  end
+
+
+  def court_valid
+    self.errors.add(:court_id, "此场地已被预定") if\
+      CourtBookRecord.where(:alloc_date => self.court_book_record.alloc_date, 
+                              :resource_id => self.court_book_record.resource_id)
+    .where(["start_hour <= :end_time AND end_hour >= :start_time",
+            {:start_time => self.court_book_record.start_hour,
+             :end_time => self.court_book_record.end_hour}]).present?
   end
 
   def coach_order_items
