@@ -19,10 +19,13 @@
     = form_tag "/goods/add_to_cart" do
       = hidden_field_tag :good_id, :id => "good_id"
       %td{:colspan=>7, :style => "text-align: right;"}
-        = "商品类型: "
-        = select_tag  "category", raw(generate_good_type_options_without_all(params[:category])), :class => "span2", :id => "category_select"
-        = "商品名称: "
-        = select_tag  "name", "", :class => "span2", :id => "name_select"
+        - unless Setting.barcode_scanner_enabled
+          = "商品类型: "
+          = select_tag  "category", raw(generate_good_type_options_without_all(params[:category])), :class => "span2", :id => "category_select"
+          = "商品名称: "
+          = select_tag  "name", "", :class => "span2", :id => "name_select"
+        - else
+          = text_field_tag "barcode", "", :id => "barcode"
         = "单价: "
         = text_field_tag :price, "0", :class => "span1", :id => 'price'
         = "数量: "
@@ -36,6 +39,13 @@
       元
 :javascript
   $(document).ready(function(){
+
+    $("#barcode").change(function(){
+      $.get("/goods/price", {name: $(this).val()}, function(response){
+        $("#price").val(response.price);
+        $("#good_id").val(response.id);
+      }) 
+    });
 
     $("#name_select").change(function(){
       $.get("/goods/price", {name: $(this).val()}, function(response){

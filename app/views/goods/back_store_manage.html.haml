@@ -6,6 +6,10 @@
 
 商品出入库登记
 = form_for @good, :url => back_store_update_good_path(@good), :html => { :class => "form-horizontal well" } do |f|
+
+  - control_helper("barcode", "扫描码") do
+    = f.text_field :barcode
+
   - control_helper("name", "商品名称") do
     = f.text_field :name
 
@@ -22,3 +26,4 @@
 
   .form-actions
     = f.submit "提交", :class => "btn "
+

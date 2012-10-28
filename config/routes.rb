@@ -225,6 +225,7 @@ Cardsys::Application.routes.draw do
       get :change_status
       get :autocomplete_name
       get :autocomplete_good
+      get :autocomplete_barcode
       get :goods
       get :find_goods
       get :front

@@ -1,6 +1,12 @@
 # -*- encoding : utf-8 -*-
 class GoodsController < ApplicationController
   before_filter :load_good, :only => [:show, :edit, :update,:destroy, :store_manage_update]
+  before_filter :search_goods, :only => [:index, :back, :front]
+
+  def autocomplete_barcode
+    render :json => Good.where(["barcode = ? ","#{params[:term].strip}"]).all.collect(&:name).to_json
+  end
+
 
   def autocomplete_name
     render :json => Good.where(["pinyin_abbr like ? or name like ? ","%#{params[:term]}%","%#{params[:term]}%"]).all.collect(&:name).to_json
@@ -20,33 +26,12 @@ class GoodsController < ApplicationController
 
 
   def index
-    @p = params[:p]
-    @good_type = params[:good_type]
-    @name = params[:name]
-    @category = Category.find_by_id(@good_type)
-    @goods = @category.nil? ? Good.order("id DESC") :  @category.all_goods.order("id DESC")
-    @goods = @goods.where(["pinyin_abbr LIKE ? OR name LIKE ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
-    @goods = @goods.paginate(default_paginate_options)
   end
 
   def back
-    @p = params[:p]
-    @good_type = params[:good_type]
-    @name = params[:name]
-    @category = Category.find_by_id(@good_type)
-    @goods = @category.nil? ? Good.order("id DESC") :  @category.all_goods.order("id DESC")
-    @goods = @goods.where(["pinyin_abbr LIKE ? OR name LIKE ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
-    @goods = @goods.paginate(default_paginate_options)
   end
 
   def front
-    @p = params[:p]
-    @good_type = params[:good_type]
-    @name = params[:name]
-    @category = Category.find_by_id(@good_type)
-    @goods = @category.nil? ? Good.order("id DESC") :  @category.all_goods.order("id DESC")
-    @goods = @goods.where(["pinyin_abbr LIKE ? OR name LIKE ? ","%#{@name}%","%#{@name}%"]) unless params[:name].blank?
-    @goods = @goods.paginate(default_paginate_options)
   end
 
 
@@ -109,6 +94,7 @@ class GoodsController < ApplicationController
     @good.count_total_now += count_back_stock_in 
     @good.count_total_now -= count_back_stock_out
     @good.name = params[:good][:name]
+    @good.barcode = params[:good][:barcode]
     @good.save
     redirect_to back_goods_path
   end
@@ -124,10 +110,15 @@ class GoodsController < ApplicationController
 
   def goods
     @order = Order.find(params[:order_id])
-    name = params[:name] || ""
-    @goods = Good.enabled.where("name like '%#{name}%' or name_pinyin like '%#{name}%' or pinyin_abbr like '%#{name}%'" )
-    @goods = @goods.where({:good_type => params[:good_type]}) if params[:good_type] and params[:good_type] != "0"
-    @goods = @goods.limit(20)
+    @goods = Good.enabled
+    if params[:barcode].present?
+      @goods = @goods.where(["barcode = ?", params[:barcode]]) if params[:barcode].present?
+    else
+      name = params[:name] || ""
+      @goods = @goods.where("name like '%#{name}%' or name_pinyin like '%#{name}%' or pinyin_abbr like '%#{name}%'" )
+      @goods = @goods.where({:good_type => params[:good_type]}) if params[:good_type] and params[:good_type] != "0"
+      @goods = @goods.limit(20)
+    end
     render :layout => "small_main"
   end
 
@@ -138,7 +129,7 @@ class GoodsController < ApplicationController
   end
 
   def add_to_cart
-    @good = Good.find_by_id(params[:id]) || Good.find_by_name(params[:name])
+    @good = Good.find_by_id(params[:id]) || Good.find_by_name(params[:name]) || Good.find_by_id(params[:good_id])
     cart.add(@good.id, Integer(params[:quantity])) if @good
     redirect_to new_good_buy_balances_path
   end
@@ -157,8 +148,21 @@ class GoodsController < ApplicationController
   end
 
   def price
-    @good = Good.find_by_name(params[:name])
+    if params[:name] =~ /\d+/
+      @good = Good.find_by_barcode(params[:name])
+    else
+      @good = Good.find_by_name(params[:name])
+    end
     render :json => {:id => @good.id, :price => @good.price }
+  end
+
+  def search_goods
+    @category = Category.find_by_id(params[:good_type])
+    @goods = @category.nil? ? Good.order("id DESC") :  @category.all_goods.order("id DESC")
+    @goods = @goods.where(["pinyin_abbr LIKE ?", params[:name]]) if params[:name].present?
+    @goods = @goods.where(["name LIKE ?", params[:name]]) if params[:name].present?
+    @goods = @goods.where(["barcode = ?", params[:barcode]]) if params[:barcode].present?
+    @goods = @goods.paginate(default_paginate_options)
   end
 
 end

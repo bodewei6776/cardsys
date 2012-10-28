@@ -60,5 +60,14 @@ class Setting
        options_for_select(CommonResource.options_by_identifier("locker_type").collect{ |crd| [crd.detail_name, crd.id] }, default_value)
     end
 
+    # 是否支持条码扫描
+    def barcode_scanner_enabled
+      true
+    end
+
+    # 月开始时间
+    def month_start_date
+    end
+
   end
 end

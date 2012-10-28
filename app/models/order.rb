@@ -141,6 +141,7 @@ class Order < ActiveRecord::Base
 
   def court_valid
     self.errors.add(:court_id, "此场地已被预定") if\
+      self.new_record? && \
       CourtBookRecord.where(:alloc_date => self.court_book_record.alloc_date, 
                               :resource_id => self.court_book_record.resource_id)
     .where(["start_hour <= :end_time AND end_hour >= :start_time",

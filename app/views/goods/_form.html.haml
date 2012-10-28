@@ -1,6 +1,10 @@
 = form_header(:title => "创建商品", :link => goods_path)
 = render :partial => "layouts/errors", :locals => { :target => @good }
 = form_for(@good, :html => {:class => "form-horizontal well"}) do |f|
+
+  - control_helper("barcode", "扫描码") do
+    = f.text_field :barcode, :id => "barcode"
+
   - control_helper("name", "商品名称") do
     = f.text_field :name
 
@@ -27,3 +31,8 @@
   .form-actions
     = f.submit "提交", :class => "btn "
     = link_to "返回", goods_path, :class => "btn"
+
+
+
+:javascript
+  $("#barcode").focus()

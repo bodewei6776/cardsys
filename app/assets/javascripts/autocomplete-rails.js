@@ -131,3 +131,21 @@ function member_card_Autocomplete(){
 
 
 
+function goodBarcodeAutocomplete(){
+  $('input[autocomplete_barcode]').each(function(i){
+    $(this).autocomplete({
+      source:  "/goods/autocomplete_barcode",
+      select:  function(ui,li){
+               var item = li.item;
+               var sub_total = item.price;
+               $('#price').text(item.price);
+               $('#good_id').val(item.id);
+               if($('#quantity').val() != "1"){
+                sub_total = Number(item.price) * parseInt($('#quantity').val());
+               }
+               $('#sub_total').text(sub_total);
+             }
+    }		);	
+  });
+}
+
