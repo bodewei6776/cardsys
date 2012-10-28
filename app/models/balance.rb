@@ -1,4 +1,7 @@
 # -*- encoding : utf-8 -*-
+
+require 'custom_date_for_report'
+
 class Balance < ActiveRecord::Base
   has_many :logs, :as => :item
   include Authenticateable
@@ -138,6 +141,7 @@ class Balance < ActiveRecord::Base
   end
 
   def self.balances_on_month_and_ways(date,ways)
+    date = CustomDateForReport.new( date, Setting.financial_begin_day_of_every_month)
     where(["created_at > ? and created_at < ? and balance_way in (?)", date.beginning_of_month, date.end_of_month, ways])
   end
 

@@ -66,7 +66,8 @@ class Setting
     end
 
     # 月开始时间
-    def month_start_date
+    def financial_begin_day_of_every_month
+      25
     end
 
   end

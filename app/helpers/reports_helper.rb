@@ -114,10 +114,10 @@ module ReportsHelper
     table << "</tr>"
 
     # data tr
-    (1..(days_in_month(date.year,date.month))).each_with_index do |day,index|
-      current_date = date + index
+    CustomDateForReport.new(date, Setting.financial_begin_day_of_every_month).each_day_of_this_financial_month do |day|
+      current_date = day
       table << "<tr class='report_item'>"
-      table <<"<td>#{index+1}</td>"
+      table <<"<td>#{current_date.month}/#{current_date.day}</td>"
       table << "<td> #{ link_to current_date, reports_income_path(:date => current_date), :target => "_blank"}</td>"
       table << "<td class='mon'>#{Balance.total_book_records_balance_on_date_any_ways(current_date, pay_ways)}</td>"
       table << "<td class='mon'>#{Balance.total_coach_balance_on_date_any_ways(current_date, pay_ways)}</td>"
