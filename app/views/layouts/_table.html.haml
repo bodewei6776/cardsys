@@ -13,7 +13,7 @@
         %td= index + 1
         - columns.each_key do |k|
           %td
-            - if k.to_s == "start_date" || k.to_s == "end_date" || k.to_s == "created_at" || k.to_s == "birthday"
+            - if k.to_s == "start_date" || k.to_s == "end_date" || k.to_s == "created_at" || k.to_s == "birthday" || k.to_s == "expire_date"
               = (e.send k).try(:to_chinese_ymd)
             - else
               =e.send k

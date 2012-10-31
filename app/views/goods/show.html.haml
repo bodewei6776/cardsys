@@ -23,3 +23,6 @@
   - control_helper("good_source", "商品来源") do
     = f.select :good_source, Setting.good_source_options(@good.good_source)
 
+  .form-actions
+    = f.submit "提交", :class => "btn "
+
