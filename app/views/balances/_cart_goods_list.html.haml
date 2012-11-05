@@ -25,7 +25,7 @@
           = "商品名称: "
           = select_tag  "name", "", :class => "span2", :id => "name_select"
         - else
-          = text_field_tag "barcode", "", :id => "barcode"
+          = text_field_tag "barcode", "", :id => "barcode",:autocomplete => "/goods/autocomplete_name"
         = "单价: "
         = text_field_tag :price, "0", :class => "span1", :id => 'price'
         = "数量: "
@@ -39,19 +39,17 @@
       元
 :javascript
   $(document).ready(function(){
-
-    $("#barcode").change(function(){
-      $.get("/goods/price", {name: $(this).val()}, function(response){
+    function search(name) {
+      $.get("/goods/price", {name: name}, function(response){
         $("#price").val(response.price);
         $("#good_id").val(response.id);
       }) 
+    }
+
+    $("#barcode").blur(function(){
+      console.log($("#barcode").attr('value'));
     });
 
-    $("#name_select").change(function(){
-      $.get("/goods/price", {name: $(this).val()}, function(response){
-        $("#price").val(response.price);
-      }) 
-    });
     $("#category_select").change(function(){
       $.get("/goods/by_category", {category: $(this).val()}, function(response){
         options = [];
