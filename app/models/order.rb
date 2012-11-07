@@ -143,7 +143,7 @@ class Order < ActiveRecord::Base
     self.errors.add(:court_id, "此场地已被预定") if\
       CourtBookRecord.where(:alloc_date => self.court_book_record.alloc_date, 
                               :resource_id => self.court_book_record.resource_id)
-    .where(["start_hour <= :end_time AND end_hour >= :start_time",
+    .where(["start_hour < :end_time AND end_hour > :start_time",
             {:start_time => self.court_book_record.start_hour,
              :end_time => self.court_book_record.end_hour}]).present?
   end
