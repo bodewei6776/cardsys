@@ -70,5 +70,10 @@ class Setting
       25
     end
 
+    def user_session_image
+      #"user_session_new.jpg"
+      "bdwuser_session_new.jpeg"
+    end
+
   end
 end

@@ -224,7 +224,7 @@ class BookRecordsController < ApplicationController
     user = User.find_by_login(params[:user_name])
 
     respond_to do |format|
-      if user.valid_password?(params[:password]) && user.can?("删除场地预定")
+      if user.valid_password?(params[:password]) && user.can?("取消场地")
         if @order.is_advanced_order?
           @order.order_and_order_after.collect(&:destroy)
         else

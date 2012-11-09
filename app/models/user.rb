@@ -18,13 +18,6 @@ class User < ActiveRecord::Base
     self.departments.collect(&:powers).flatten.uniq
   end
 
-  #before_save :set_powers
-
-  #def set_powers
-  #  return true unless self.departments
-  #  self.powers = self.departments.collect(&:powers).flatten
-  #end
-
   def admin?
     self.login == 'admin'
   end

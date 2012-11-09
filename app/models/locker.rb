@@ -7,18 +7,12 @@ class Locker < ActiveRecord::Base
   has_many :rents,:dependent => :destroy
   validate :num,:state,:locker_type ,:presence => true,:message => "{column}以上字段不能空"
 
-  scope :rented, where({:state => :rented }) 
-  
   def current_rent(date = Date.today)
-    self.rents.select {|r| r.rent_state == "enable" && r.start_date.to_date <= date && date <= r.end_date.to_date }.first
+    self.rents.select {|r| r.rent_state == "enable" }.first
   end
 
   def locker_type_in_words
     CommonResourceDetail.find_by_id(self.locker_type).try(:detail_name) || "未知"
-  end
-
-  before_create do |record|
-   record.state = "empty"
   end
 
   before_create :generate_num
@@ -44,7 +38,7 @@ class Locker < ActiveRecord::Base
   end
 
   def almost_due?(date)
-    self.state == "rented" && self.current_rent && self.current_rent.almost_due?(date)
+    self.current_rent && self.current_rent.almost_due?(date)
   end
 
   def state_at(date)

@@ -62,4 +62,12 @@ class CoachesController < ApplicationController
     @coach.update_attribute("status", params[:status])
     redirect_to(coaches_url) 
   end
+
+
+  def switch_state
+    @coach = Coach.find(params[:id])
+    @coach.switch_state!
+    @coach.state
+    redirect_to(coaches_url) 
+  end
 end

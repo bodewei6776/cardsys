@@ -26,7 +26,7 @@ class Rent < ActiveRecord::Base
   validates_numericality_of :total_fee, :greater_than_or_equal_to => 0, :allow_nil => true
 
   validate do |rent|
-    self.errors.add(:base,"开始时间应该小于结束时间") if rent.start_date && rent.end_date && \
+    self.errors.add(:base,"起租时间应该小于退租时间") if rent.start_date && rent.end_date && \
       rent.start_date > rent.end_date
   end
 
@@ -39,17 +39,16 @@ class Rent < ActiveRecord::Base
     self.rent_state = "enable"
   end
 
-  after_create do 
-    self.locker.update_attribute(:state, "rented")
-  end
-
-
   def rent_member_name
    is_member? ? member.try(:name) : member_name 
   end
 
   def almost_due?(date = Date.today)
     CommonResource.locker_due_time.days.from_now > self.end_date && date < self.end_date
+  end
+
+  def state_desc
+    self.locker.state_in_words
   end
 
   def pay
@@ -59,6 +58,4 @@ class Rent < ActiveRecord::Base
   def expire?(date = Date.today)
     date > self.end_date
   end
-
-    
 end
