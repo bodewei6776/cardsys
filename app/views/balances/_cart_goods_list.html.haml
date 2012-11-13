@@ -19,14 +19,14 @@
     = form_tag "/goods/add_to_cart" do
       = hidden_field_tag :good_id, :id => "good_id"
       %td{:colspan=>7, :style => "text-align: right;"}
-        - unless Setting.barcode_scanner_enabled
+        - if Setting.barcode_scanner_enabled
+          = text_field_tag "barcode", "", :id => "barcode"
+        - else
           = "商品类型: "
           = select_tag  "category", raw(generate_good_type_options_without_all(params[:category])), :class => "span2", :id => "category_select"
           = "商品名称: "
           = select_tag  "name", "", :class => "span2", :id => "name_select"
-        - else
-          = text_field_tag "barcode", "", :id => "barcode",:autocomplete => "/goods/autocomplete_name"
-        = "单价: "
+          = "单价: "
         = text_field_tag :price, "0", :class => "span1", :id => 'price'
         = "数量: "
         = text_field_tag :quantity, "1", :class => "span1"
@@ -39,15 +39,25 @@
       元
 :javascript
   $(document).ready(function(){
+    barcode_field = $("#barcode");
+    if(barcode_field){
+      barcode_field.focus();
+      function stopRKey(evt) { 
+      var evt = (evt) ? evt : ((event) ? event : null); 
+      var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null); 
+      if ((evt.keyCode == 13) && (node.type=="text"))  {return false;} 
+      }
+      document.onkeypress = stopRKey;
+    }
     function search(name) {
       $.get("/goods/price", {name: name}, function(response){
         $("#price").val(response.price);
         $("#good_id").val(response.id);
-      }) 
-    }
-
-    $("#barcode").blur(function(){
-    });
+        });
+    };
+    $("#name_select").change(function(){
+      search($(this).val());
+      });
 
     $("#category_select").change(function(){
       $.get("/goods/by_category", {category: $(this).val()}, function(response){
@@ -58,10 +68,15 @@
         $("#name_select").html(options.join());
         if($("#name_select").val())
           $("#name_select").trigger("change");
-      }) 
+      })
     });
-
 
     $("#category_select").trigger("change");
 
+    $("#barcode").autocomplete({
+      source: "/goods/autocomplete_name",
+      select: function(ui, li){
+        search(li.item.value);
+        }
+      });
   });

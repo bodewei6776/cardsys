@@ -12,7 +12,7 @@
       = text_field_tag :name, params[:name], :autocomplete => "/goods/autocomplete_name"
   - else
     - control_helper("barcode", "商品条码", :left) do
-      = text_field_tag :barcode, params[:barcode]
+      = text_field_tag :barcode, params[:barcode], :autocomplete => "/goods/autocomplete_name"
     :javascript
       $("#barcode").focus();
 
@@ -25,7 +25,7 @@
 
 :javascript
   $(document).ready(function(){
-    $('#name').autocomplete({
+    $('#name, #barcode').autocomplete({
       source: "/goods/autocomplete_name",
       select: function(ui, li){
         var item = li.item;

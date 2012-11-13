@@ -40,7 +40,9 @@ class Cart
 
   def add(product_id, quantity)
     quantity = quantity.abs
-    li = line_items.select {|li| li.product_id == product_id}.first
+    li = (line_items.select{|li| li.product_id == product_id}).first
+    ap product_id
+    ap li
     actual_quantity = quantity
     if li
       actual_quantity =  li.quantity + quantity

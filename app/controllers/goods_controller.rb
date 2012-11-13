@@ -9,7 +9,7 @@ class GoodsController < ApplicationController
 
 
   def autocomplete_name
-    render :json => Good.where(["pinyin_abbr like ? or name like ? ","%#{params[:term]}%","%#{params[:term]}%"]).all.collect(&:name).to_json
+    render :json => Good.where(["pinyin_abbr like ? or name like ? or barcode like ?","%#{params[:term]}%","%#{params[:term]}%", "%#{params[:term]}%"]).all.collect(&:name).to_json
   end
 
   def by_category
@@ -125,7 +125,7 @@ class GoodsController < ApplicationController
   end
 
   def add_to_cart
-    @good = Good.find_by_id(params[:id]) || Good.find_by_name(params[:name]) || Good.find_by_id(params[:good_id])
+    @good = Good.find_by_id(params[:id]) || Good.find_by_name(params[:name] || params[:barcode]) || Good.find_by_id(params[:good_id]) 
     cart.add(@good.id, Integer(params[:quantity])) if @good
     redirect_to new_good_buy_balances_path
   end
@@ -144,7 +144,7 @@ class GoodsController < ApplicationController
   end
 
   def price
-    if params[:name] =~ /\d+/
+    if params[:name] =~ /^\d+$/
       @good = Good.find_by_barcode(params[:name])
     else
       @good = Good.find_by_name(params[:name])
