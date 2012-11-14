@@ -11,7 +11,7 @@
     - control_helper("name", "商品名称", :right) do
       = text_field_tag :name, params[:name], :autocomplete => "/goods/autocomplete_name"
   - else
-    - control_helper("barcode", "商品条码", :left) do
+    - control_helper("barcode", "商品条码/名称", :left) do
       = text_field_tag :barcode, params[:barcode], :autocomplete => "/goods/autocomplete_name"
     :javascript
       $("#barcode").focus();

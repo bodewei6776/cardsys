@@ -1,18 +1,17 @@
-= form_tag form_url, :class => "form-horizontal well", :method => :get  do
+= form_tag form_url, :class => "form-horizontal well", :method => :get, :id => "search_form"  do
   - unless Setting.barcode_scanner_enabled
     - control_helper(:good_type, "商品类别", :left) do
       = select_tag "good_type",raw(generate_good_type_options(@good_type)),:id => "good_type",:class=> "select"
 
     - control_helper(:name, "商品名称", :right) do
-      = text_field_tag :name, "#{params[:name]}", :autocomplete_name => "/goods/autocomplete_name"
+      = text_field_tag :name, "#{params[:name]}", :autocomplete => "/goods/autocomplete_name"
 
     .form-actions
       = submit_tag "查询", :class => "btn"
 
   - else
-    = javascript_include_tag "autocomplete-rails"
-    - control_helper(:barcode, "商品条码", :left) do
-      = text_field_tag :barcode, "#{params[:barcode]}", :autocomplete_barcode => "/goods/autocomplete_barcode", :id => "barcode"
+    - control_helper(:barcode, "商品条码/名称", :left) do
+      = text_field_tag :barcode, "#{params[:barcode]}", :autocomplete => "/goods/autocomplete_name", :id => "barcode"
     :javascript
       $("#barcode").focus();
 

@@ -20,7 +20,8 @@ class Setting
     end
 
     def site_name
-       "国家网球中心"
+       #"国家网球中心"
+      "博徳维网球中心"
     end
 
     def site_url

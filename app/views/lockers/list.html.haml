@@ -1,4 +1,4 @@
 = table_header(:title => "储物柜列表", :link => new_locker_path)
-- column = { :locker_type_in_words => "储物柜类型", :state_desc => "租用状态", :remark => "备注"}
+- column = {:num => "编号",  :locker_type_in_words => "储物柜类型", :state_desc => "租用状态", :remark => "备注"}
 
 =render :partial => "layouts/table", :locals => {:collection => @lockers, :columns => column}

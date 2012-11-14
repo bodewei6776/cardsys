@@ -9,6 +9,7 @@
     /[if lt IE 9]
       = javascript_include_tag "http://html5shim.googlecode.com/svn/trunk/html5.js"
     / Le styles
+    = javascript_include_tag "application"
     :css
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -23,6 +24,7 @@
           =link_to Setting.site_name, root_path, :class => "brand"
     
     .container
+      #user_agent_warnning
       - if flash[:notice]
         .alert.alert-info
           %a{:class => "close", "data-dismiss" => "alert"} x
@@ -48,4 +50,11 @@
   %hr
   %footer
     %p &copy; Broadwell Club Mangement System  博德维球馆管理系统 #{link_to "www.broadwell.cn","http://www.broadwell.cn"}
-  
+    :javascript
+      $(document).ready(function(){
+      if(!navigator.userAgent.match(/Chrome/)){
+        var user_agent_suggestion = "<div class='alert alert-info'>为了达到更好的显示效果， 推荐您使用"
+        + "<a href='http://www.google.cn/intl/zh-CN/chrome/browser/?installdataindex=chinabookmarkcontrol&brand=CHUN' class='label' target='_blank'>Chrome浏览器</a></div>";
+        $("#user_agent_warnning").html(user_agent_suggestion);
+      }
+      });

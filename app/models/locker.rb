@@ -66,7 +66,7 @@ class Locker < ActiveRecord::Base
 
 
   def state_desc
-    self.locker_state_in_words
+    self.state_in_words
   end
 
   def locker_state_in_words 
@@ -79,5 +79,10 @@ class Locker < ActiveRecord::Base
     else
       super a
     end
+  end
+
+  def can_view?
+    false
+    
   end
 end

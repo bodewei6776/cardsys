@@ -64,14 +64,14 @@ module OrdersHelper
         :class => li_class.join(' '), :id => "book-record-#{book_record.id}")]
       else
         if date < Date.today || (date == Date.today && real_time_span[0] < DateTime.now.hour)
-          unless current_user.can_book_when_time_due?
-            info_htmls << [real_time_span[0],content_tag(:li,
-                                                         tag("input",{:type => 'button', :disabled => 'disabled',:value => '过 期', :class => "color02",:style => "height:#{li_height}px;"}))]
-
-          else
+          if current_user.can_book_when_time_due?
             info_htmls << [real_time_span[0],content_tag(:li,
                                                          content_tag("button","预定",{:type => 'button',:href=> book_url,:value => '预定', 
                                                                      :class => "submit1 hand popup-new-window", :style => "margin-top: 5px;"}) )]
+          else
+            info_htmls << [real_time_span[0],content_tag(:li,
+                                                         tag("input",{:type => 'button', :disabled => 'disabled',:value => '过 期', :class => "color02",:style => "height:#{li_height}px;"}))]
+
           end
         else
           info_htmls << [real_time_span[0],content_tag(:li,content_tag("button",'预定',{:type => 'button', :href => book_url,
@@ -158,7 +158,11 @@ module OrdersHelper
                        :rowspan => book_record.hours, :class => "#{book_record.order.status_color}") if book_record.present? && book_record.order
     new_order_params= {:alloc_date => date.to_s(:db), :resource_id => court.id, :start_hour => start_hour, :end_hour => start_hour + 1}
     book_url = new_order_path(:court_book_record => new_order_params)
-    return content_tag(:td,  content_tag(:a, "预订", :href=> book_url,:class => "popup-new-window btn ")) if court.can_be_book?(date, start_hour)
+    if (date + start_hour.hours) > Time.now || current_user.can_book_when_time_due?
+      return content_tag(:td,  content_tag(:a, "预订", :href=> book_url,:class => "popup-new-window btn ")) if court.can_be_book?(date, start_hour)
+    else
+      return content_tag(:td,  content_tag(:a, "过期",:class => "btn")) if court.can_be_book?(date, start_hour)
+    end
   end
 
 end

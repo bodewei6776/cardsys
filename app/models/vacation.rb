@@ -31,7 +31,7 @@ class Vacation < ActiveRecord::Base
 
 
   def end_date_should_be_start_date
-    self.errors.add(:end_date,"结束时间需要大于开始时间") if self.end_date <= self.start_date
+    self.errors.add(:end_date,"结束时间需要大于/等于开始时间") if self.end_date < self.start_date
   end
 
   def can_edit?

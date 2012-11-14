@@ -11,7 +11,7 @@ class CoachesController < ApplicationController
 
   def search
     params[:q] ||= params[:term]
-    @coaches = Coach.paginate(default_paginate_options.merge(:conditions => "lower(pinyin_name) like '%#{params[:q]}%' or name like '%#{params[:q]}%' "))
+    @coaches = Coach.enabled.paginate(default_paginate_options.merge(:conditions => "lower(pinyin_name) like '%#{params[:q]}%' or name like '%#{params[:q]}%' "))
     respond_to do |wants|
       wants.json { render :json => @coaches.collect{|c| {"label" => c.name, "name" => c.name, "id" => c.id, "pinyin_name" => c.pinyin_name}}.to_json}
     end

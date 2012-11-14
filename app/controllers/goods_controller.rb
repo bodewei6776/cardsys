@@ -157,7 +157,7 @@ class GoodsController < ApplicationController
     @goods = @category.nil? ? Good.order("id DESC") :  @category.all_goods.order("id DESC")
     @goods = @goods.where(["pinyin_abbr LIKE ?", params[:name]]) if params[:name].present?
     @goods = @goods.where(["name LIKE ?", params[:name]]) if params[:name].present?
-    @goods = @goods.where(["barcode = ?", params[:barcode]]) if params[:barcode].present?
+    @goods = @goods.where(["barcode = ? or name LIKE ?", params[:barcode], params[:barcode]]) if params[:barcode].present?
     @goods = @goods.paginate(default_paginate_options)
   end
 
