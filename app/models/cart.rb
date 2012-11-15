@@ -2,10 +2,6 @@
 class LI
   attr_accessor :product_id,:quantity,:real_total_price,:discount
 
-  def to_s
-    "<quantity #{self.quantity},product_id #{self.product_id}"
-  end
-
   def initialize(product_id,quantity)
     quantity = quantity.abs
     self.product_id,self.quantity = product_id,quantity
@@ -41,12 +37,11 @@ class Cart
   def add(product_id, quantity)
     quantity = quantity.abs
     li = (line_items.select{|li| li.product_id == product_id}).first
-    ap product_id
-    ap li
     actual_quantity = quantity
     if li
       actual_quantity =  li.quantity + quantity
     end
+
     self.remove(product_id)
     @line_items << LI.new(product_id,actual_quantity)
   end

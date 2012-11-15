@@ -1,6 +1,10 @@
 # -*- encoding : utf-8 -*-
 Cardsys::Application.routes.draw do 
 
+  get "powers/index"
+
+  get "powers/edit"
+
   resources :common_resource_details
 
   resources :rents
@@ -252,6 +256,7 @@ Cardsys::Application.routes.draw do
   end
 
   resource :user_session
+  resources :powers
 
   resources :departments do
     member do

@@ -2,7 +2,7 @@
   - control_helper("locker_type", "储物柜类型") do
     = f.select :locker_type, Setting.locker_type_options(@locker.locker_type)
 
-  - control_helper("num", "编号") do
+  - control_helper("num", "名称") do
     = f.text_field :num
   - control_helper("remark", "备注") do
     = f.text_field :remark

@@ -1,0 +1,4 @@
+= table_header(:title => "列表", :link => "")
+- columns = {:subject => "名称", :description => "PATH"}
+= render :partial => "layouts/table", :locals => {:collection => @powers, :columns => columns}
+= render :partial => "layouts/page_nav", :locals => {:objs => @powers}

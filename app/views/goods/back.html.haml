@@ -27,7 +27,8 @@
             - else
               =e.send k
         %td
-          - operations = [:show, :destroy, :switch_state]
+          - operations = [:show, :switch_state]
+          - operations.push(:destroy)
           = operations_panel(e, operations)
           = link_to raw("<i class='icon-edit'></i>"), back_store_manage_good_path(e), :class => "store_manage_index"
 

@@ -15,6 +15,7 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_date
   before_filter :require_user
+  before_filter :authentication_required
 
   helper_method :current_user_session, :current_user
 
@@ -57,6 +58,13 @@ class ApplicationController < ActionController::Base
       flash[:notice] = I18n.t("session_user.require_login")
       redirect_to new_user_session_url
       return false
+    end
+  end
+
+  def authentication_required
+    if not current_user.powers.collect(&:description).include? request.path
+      flash[:notice] = "用户无权限访问本页"
+      redirect_to account_url
     end
   end
 

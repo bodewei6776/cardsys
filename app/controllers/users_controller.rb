@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class UsersController < ApplicationController
   skip_before_filter :require_user
+  skip_before_filter :authentication_required
 
   def autocomplete_user_name
     @items = User.where(["user_name_pinyin like ? or login like ?", "%#{params[:term].downcase}%", "%#{params[:term].downcase}%"]).limit(10)
@@ -10,7 +11,6 @@ class UsersController < ApplicationController
   end
 
 
-  
   def index
     @users = User.paginate(default_paginate_options)
   end

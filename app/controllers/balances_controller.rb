@@ -19,6 +19,11 @@ class BalancesController < ApplicationController
 
   def create
     @order = Order.find(params[:balance][:order_id])
+    if @order.balanced?
+      flash[:notice] = "已结算， 请勿重复提交"
+      redirect_to :action => "index", :order_id => @order.id
+      return
+    end
     @balances = @order.balances
     @balance = @order.balances.new(params[:balance]) 
     if  @balance.save

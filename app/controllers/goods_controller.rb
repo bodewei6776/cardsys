@@ -95,7 +95,9 @@ class GoodsController < ApplicationController
     @good.count_total_now -= count_back_stock_out
     @good.name = params[:good][:name]
     @good.barcode = params[:good][:barcode]
-    @good.save
+    unless @good.save
+      flash[:notice] = "保存失败， 查看是否扫描码重复"
+    end
     redirect_to back_goods_path
   end
 

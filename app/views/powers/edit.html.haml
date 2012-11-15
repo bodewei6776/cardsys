@@ -1,0 +1,8 @@
+= form_for @power, :html => {:class => "form-horizontal well order_form"} do |f|
+  - control_helper("subject", "名称") do
+    = f.text_field :subject
+
+  - control_helper("description", "路径") do
+    = f.text_field :description
+  .form-actions
+    = f.submit @power.new_record? ? "创建" : "更新", :class => "btn"

@@ -15,6 +15,7 @@ class Good < ActiveRecord::Base
   validates :count_back_stock_out, :numericality => {:message => "新出大库数必须为数字！", :allow_blank => true}
   validates :count_front_stock_in, :numericality => {:message => "新入小库数必须为数字！", :allow_blank => true}
   validates :count_front_stock_out, :numericality => {:message => "新出小库数必须为数字！", :allow_blank => true}
+  validates_uniqueness_of :barcode, :message => "扫描码不能重复"
 
   has_many :order_items, :as => :item
   

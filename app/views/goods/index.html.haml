@@ -2,7 +2,7 @@
 
 = render :partial => "soso", :locals => { :form_url => goods_path }
 
-= table_header(:title => "商品列表", :link => new_good_path)
+= table_header(:title => "商品列表", :link => "")
 
 - columns = {:name => "名称", :good_type_in_chinese => "类型", :price => "价格", :count_total_now => "商品总数", :count_back_stock => "库存数", :count_front_stock => "前台数" }
 - collection = @goods
