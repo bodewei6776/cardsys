@@ -62,7 +62,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authentication_required
-    if not current_user.powers.collect(&:description).include? request.path
+    if Power.all.collect(&:description).include?(request.path) || (not current_user.powers.collect(&:description).include? request.path)
       flash[:notice] = "用户无权限访问本页"
       redirect_to account_url
     end
