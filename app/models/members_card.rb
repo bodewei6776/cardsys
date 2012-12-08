@@ -179,7 +179,7 @@ class MembersCard < ActiveRecord::Base
   end
 
   def members_card_info
-    desc =  "#{state_desc} "
+    desc =  "#{state_desc}"
     desc += "（#{remain_amount_notice}）"  unless remain_amount_notice.blank?
     desc
   end

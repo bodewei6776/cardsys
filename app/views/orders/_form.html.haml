@@ -151,7 +151,10 @@
                  options = "";
                  $(returned_data).each(function(i,node){
                    options +=("<option value='" + node.members_card.id +
-                     "'>" + node.members_card.card_serial_num + "</option>") 
+                     "'>" + node.members_card.card_serial_num 
+                     + (node.members_card.members_card_info == "禁用" ? "(禁用)" : "")
+                     + "</option>") 
+                     console.log(node.members_card.members_card_info);
                   });
 
                   $('#cards').html( "<select name='order[members_card_id]' class='span2'>" + options + "</select>");
