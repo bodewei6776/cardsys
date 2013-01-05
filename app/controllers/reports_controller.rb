@@ -28,12 +28,15 @@ class ReportsController < ApplicationController
 
 
   def good_search
-    @order_items = OrderItem.paginate default_paginate_options_without_created_at#.merge!(:conditions => {:item_type => "Good", :balanced => true})
-    @order_items.where({:item_type => "Good", :balanced => true})
-    @order_items.where("created_at > #{params[:start_time]}") if params[:start_time].present?
-    @order_items.where("created_at < #{params[:end_time]}") if params[:end_time].present?
-    @order_items.where("goods.name = #{params[:name]}").joins("goods on goods.id = order_items.item_id") if params[:name].present?
-    @order_items.where("goods.good_type = #{params[:good_type]}").joins("goods on goods.id = order_items.item_id") if params[:good_type].present?
+    @order_items = OrderItem.scoped
+    @order_items = @order_items.where({:item_type => "Good", :balanced => true})
+    @order_items = @order_items.where("created_at > #{params[:start_time]}") if params[:start_time].present?
+    @order_items = @order_items.where("created_at < #{params[:end_time]}") if params[:end_time].present?
+    @order_items = @order_items.where("goods.name = #{params[:name]}").joins("join goods").where("goods.id = order_items.item_id") if params[:name].present?
+    puts '1' * 100
+    puts params[:good_type].present?
+    @order_items = @order_items.where("goods.good_type = #{params[:good_type]}").joins("join goods").where("goods.id = order_items.item_id") if params[:good_type].present?
+    @order_items = @order_items.paginate default_paginate_options_without_created_at
   end
 
 

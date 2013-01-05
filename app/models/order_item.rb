@@ -21,7 +21,7 @@ class OrderItem < ActiveRecord::Base
   belongs_to :order
   belongs_to :balance
 
-  before_save :update_good_inventory, :only => :update  
+  before_save :update_good_inventory, :only => :update
   before_destroy :update_good_inventory_before_destroy
   after_create :set_default_discount_and_discount_price
 
