@@ -50,7 +50,7 @@ class BookRecord < ActiveRecord::Base
   end
 
   def name
-    resource.name
+    resource.try(:name)
   end
 
   def agent_to_buy_condition
