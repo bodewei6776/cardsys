@@ -47,6 +47,12 @@
 = will_paginate @order_items, :next_label => "下一页", :previous_label => "上一页"
 :javascript
   $(document).ready(function(){
+    $("#good_type").change(function() {
+      if($("#good_type option:selected").text().indexOf("-")){
+        alert('一级分类不可选!');
+        $("#good_type option:first").attr("selected", "true");
+      }
+    });
     $('#name').autocomplete({
       source: "/goods/autocomplete_name",
       select: function(ui, li){

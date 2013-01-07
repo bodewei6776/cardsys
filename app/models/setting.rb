@@ -37,7 +37,7 @@ class Setting
     end
 
     def good_source_options(default_value = 0)
-       options_for_select(CommonResource.options_by_identifier("good_source").collect{ |crd| [crd.detail_name, crd.id] }, default_value)
+       options_for_select(CommonResource.options_by_identifier("good_source").collect{ |crd| [crd.detail_name, crd.id] }.unshift(["全部", "0"]), default_value)
     end
 
 

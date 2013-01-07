@@ -33,7 +33,8 @@ class ReportsController < ApplicationController
     @order_items = @order_items.where("created_at > '#{Date.parse params[:begin_time]}'") if params[:begin_time].present?
     @order_items = @order_items.where("created_at < '#{Date.parse params[:end_time]}'") if params[:end_time].present?
     @order_items = @order_items.where("goods.name = '#{params[:name].strip}'").joins("join goods").where("goods.id = order_items.item_id") if params[:name].present?
-    @order_items = @order_items.where("goods.good_type = #{params[:good_type]}").joins("join goods").where("goods.id = order_items.item_id") if params[:good_type].present?
+    @order_items = @order_items.where("goods.good_type = #{params[:good_type]}").joins("join goods").where("goods.id = order_items.item_id") if params[:good_type] != '0'
+    @order_items = @order_items.where("goods.good_source = #{params[:good_source]}").joins("join goods").where("goods.id = order_items.item_id") if params[:good_source] != '0'
     @order_items = @order_items.paginate default_paginate_options_without_created_at
   end
 
