@@ -159,7 +159,7 @@ class Order < ActiveRecord::Base
     after_transition :on => :all_cancel , :do => :advance_destroy
 
     event :activate do
-      transition :booked => :activated
+      transition [:booked, :to_be_sold] => :activated
     end
 
     event :want_sell do
