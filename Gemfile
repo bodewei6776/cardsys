@@ -16,8 +16,6 @@ gem 'authlogic', '3.1.0'
 
 gem 'bootstrap-will_paginate'
 
-
-
 group :test do
   gem 'rails3-generators'
   gem 'rspec-rails'
@@ -25,6 +23,8 @@ group :test do
 end
 
 gem 'twitter-bootstrap-rails', '2.0.3'
+gem 'newrelic_rpm',"3.5.8.72"
+gem 'ruby-prof'
 
 gem 'jquery-ui-rails'
 
@@ -34,11 +34,8 @@ gem 'jquery-ui-rails'
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
   gem 'coffee-rails', '~> 3.2.1'
-
   gem 'uglifier', '>= 1.0.3'
 end
-
-
 
 gem 'haml-rails'
 gem 'erb2haml'
