@@ -50,8 +50,13 @@ class PeriodPrice < ActiveRecord::Base
 
 
   def self.period_by_date_and_start_hour(date, start_hour)
-    date_type = CommonResource.date_type(date)
-    pp = PeriodPrice.where(:period_type => date_type.id)
+    @pp_store ||= {}
+    @date_type ||= CommonResource.date_type(date)
+    pp = @pp_store[@date_type.id]
+    unless pp
+      pp = PeriodPrice.where(:period_type => @date_type.id) 
+      @pp_store[@date_type.id] = pp
+    end
     pp.select { |element| element.start_time <= start_hour && element.end_time >= start_hour + 1}
   end
 

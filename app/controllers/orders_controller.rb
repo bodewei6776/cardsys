@@ -4,7 +4,7 @@
 class OrdersController < ApplicationController
 
   def index
-    @courts       = Court.enabled
+    @courts       = Court.enabled#.includes(:book_records)
     @date = params[:date].blank? ? Date.today : Date.parse(params[:date])
     @daily_periods   = PeriodPrice.all_periods_in_time_span(@date)
     @predate      = @date.yesterday.strftime("%Y-%m-%d")

@@ -26,14 +26,14 @@ class Court < ActiveRecord::Base
   end
 
   def can_be_book?(date, hour)
-    @book_records ||= book_records
+    @book_records ||= book_records.where(["alloc_date=?", date])
     @book_records.detect do |element|
       element.alloc_date == date && element.start_hour < hour && element.end_hour > hour
     end.blank?
   end
 
   def book_record_start_at(date, start_hour)
-    @book_records ||= book_records
+    @book_records ||= book_records.where(["alloc_date=?", date])
     @book_records.detect { |element| element.start_hour == start_hour && element.alloc_date == date}
   end
 
