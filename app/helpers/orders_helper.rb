@@ -154,8 +154,8 @@ module OrdersHelper
   def court_status_in_period(date, start_hour, court)
     return "<td>场地不可用</td>" unless court.is_useable_in_time_span?(PeriodPrice.period_by_date_and_start_hour(date, start_hour))
     book_record = court.book_record_start_at(date, start_hour)
-    #return content_tag(:td, content_tag(:a, display_content(book_record),:href=> edit_order_path(book_record.order), :class => "popup-new-window"), 
-                       #:rowspan => book_record.hours, :class => "#{book_record.order.status_color}") if book_record.present? && book_record.order
+    return content_tag(:td, content_tag(:a, display_content(book_record),:href=> edit_order_path(book_record.order), :class => "popup-new-window"), 
+                       :rowspan => book_record.hours, :class => "#{book_record.order.status_color}") if book_record.present? && book_record.order
     new_order_params= {:alloc_date => date.to_s(:db), :resource_id => court.id, :start_hour => start_hour, :end_hour => start_hour + 1}
     book_url = new_order_path(:court_book_record => new_order_params)
     if (date + start_hour.hours) > Time.now || current_user.can_book_when_time_due?

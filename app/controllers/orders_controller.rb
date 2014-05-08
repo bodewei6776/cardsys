@@ -3,6 +3,11 @@
 
 class OrdersController < ApplicationController
 
+  after_filter :only => [:update, :create, :change_state, :edit] do
+    expire_order(@order)
+    true
+  end
+
   def index
     @courts       = Court.enabled#.includes(:book_records)
     @date = params[:date].blank? ? Date.today : Date.parse(params[:date])

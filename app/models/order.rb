@@ -1,5 +1,7 @@
 # -*- encoding : utf-8 -*-
 require 'digest/sha1'
+require "expire_fragment_cache"
+
 class Order < ActiveRecord::Base
   OPMAP = { "activate"         => "开场",
             "want_sell"        => "申请代卖",
@@ -7,6 +9,8 @@ class Order < ActiveRecord::Base
             "cancel_want_sell" => "取消代卖",
             "cancel"           => "取消预订" }
   include Authenticateable
+  include ExpireFragmentCache
+
   belongs_to  :user
   belongs_to  :members_card
   belongs_to  :advanced_order
@@ -37,6 +41,10 @@ class Order < ActiveRecord::Base
   after_create :batch_order
 
   delegate :alloc_date, :end_hour, :start_hour, :hours, :start_time, :end_time, :to => :court_book_record
+
+  before_destroy do |r|
+    expire_order(r)
+  end
 
   validation_conditions << proc {|obj|  obj.new_record? && !obj.split_from_other }
   validation_conditions << proc {|obj|  obj.state == "to_be_sold" && obj.state_was == "booked" }
@@ -78,7 +86,7 @@ class Order < ActiveRecord::Base
 
   def batch_order
     return true unless self.possible_batch_order
-      
+
     self.class.wdate_between(self.order_date, self.end_date).each do |date|
       new_order = Order.new(self.attributes.except("id"))
       # prevent for futher copy, orelse this may lead to loop
@@ -91,7 +99,9 @@ class Order < ActiveRecord::Base
       new_order.is_advance_order = true
       self.update_column(:is_advance_order, true)
       self.update_column(:batch_number, self.batch_number)
-      new_order.save(:validate => false)
+      res = new_order.save(:validate => false)
+      expire_order(new_order)
+      res
     end
   end
 
@@ -100,6 +110,7 @@ class Order < ActiveRecord::Base
     self.advance_order_siblings(self.alloc_date).each do |element|
       order_attributes["court_book_record_attributes"]["id"] = element.court_book_record.id
       order_attributes["court_book_record_attributes"]["alloc_date"] = element.alloc_date
+      expire_orde(element)
       element.update_attributes order_attributes
     end
 
@@ -143,10 +154,10 @@ class Order < ActiveRecord::Base
     self.errors.add(:court_id, "此场地已被预定") if\
       self.new_record? && \
       CourtBookRecord.where(:alloc_date => self.court_book_record.alloc_date, 
-                              :resource_id => self.court_book_record.resource_id)
-    .where(["start_hour < :end_time AND end_hour > :start_time",
-            {:start_time => self.court_book_record.start_hour,
-             :end_time => self.court_book_record.end_hour}]).present?
+                            :resource_id => self.court_book_record.resource_id)
+      .where(["start_hour < :end_time AND end_hour > :start_time",
+              {:start_time => self.court_book_record.start_hour,
+               :end_time => self.court_book_record.end_hour}]).present?
   end
 
   def coach_order_items
@@ -187,286 +198,288 @@ class Order < ActiveRecord::Base
     event :balance do
       transition [:cart_loaded, :activated] => :balanced
     end
-    end
+  end
 
-    def coaches
-      coach_book_records.collect(&:resource)
-    end
+  def coaches
+    coach_book_records.collect(&:resource)
+  end
 
-    def coach_ids
-      coach_book_records.collect(&:resource_id).join(",")
-    end
+  def coach_ids
+    coach_book_records.collect(&:resource_id).join(",")
+  end
 
-    def coach_ids=(ids)
-      @coaches = Coach.find(ids.split(",").uniq)
-      self.coach_book_records = @coaches.collect do |c|
-        cbr = CoachBookRecord.new
-        cbr.resource_type = "Coach"
-        cbr.resource_id =  c.id
-        cbr
+  def coach_ids=(ids)
+    @coaches = Coach.find(ids.split(",").uniq)
+    self.coach_book_records = @coaches.collect do |c|
+      cbr = CoachBookRecord.new
+      cbr.resource_type = "Coach"
+      cbr.resource_id =  c.id
+      cbr
+    end
+  end
+
+  def advance_destroy
+    self.advance_order_siblings.each do |o|
+      o.destroy
+    end
+    self.destroy
+  end
+
+  def can_sell?
+    to_be_sold?
+  end
+
+  def can_cancel?
+    Setting.can_cancel_time_before_activate.from_now < court_book_record.start_time && (!balanced? && !activated?)
+  end
+
+  def can_want_sell?
+    booked?
+  end
+
+  def can_change?
+    not self.to_be_sold? and not self.balanced?
+  end
+
+  def can_cancel_want_sell?
+    to_be_sold?
+  end
+
+  def can_cancel_all?
+    is_advance_order? && Setting.can_cancel_time_before_activate.from_now < court_book_record.start_time && (not balanced? && !activated?)
+  end
+
+  def can_update_all?
+    booked? && is_advance_order?
+  end
+
+  def book_time_due?
+    false
+  end
+
+  def to_be_sold_time_due?
+    false
+  end
+
+  def can_activate?
+    booked?
+  end
+
+  def can_order_goods?
+    activated?
+  end
+
+  def can_print_order_balance?
+    balanced?
+  end
+
+  def possible_balance_ways
+    if self.is_member?
+      possible_ways = []
+      if members_card.left_times > 0
+        possible_ways << "counter"
       end
-    end
-
-    def advance_destroy
-      self.advance_order_siblings.collect(&:destroy)
-      self.destroy
-    end
-
-    def can_sell?
-      to_be_sold?
-    end
-
-    def can_cancel?
-       Setting.can_cancel_time_before_activate.from_now < court_book_record.start_time && (!balanced? && !activated?)
-    end
-
-    def can_want_sell?
-      booked?
-    end
-
-    def can_change?
-      not self.to_be_sold? and not self.balanced?
-    end
-
-    def can_cancel_want_sell?
-      to_be_sold?
-    end
-
-    def can_cancel_all?
-       is_advance_order? && Setting.can_cancel_time_before_activate.from_now < court_book_record.start_time && (not balanced? && !activated?)
-    end
-
-    def can_update_all?
-      booked? && is_advance_order?
-    end
-
-    def book_time_due?
-      false
-    end
-
-    def to_be_sold_time_due?
-      false
-    end
-
-    def can_activate?
-      booked?
-    end
-
-    def can_order_goods?
-      activated?
-    end
-
-    def can_print_order_balance?
-      balanced?
-    end
-
-    def possible_balance_ways
-      if self.is_member?
-        possible_ways = []
-        if members_card.left_times > 0
-          possible_ways << "counter"
-        end
-        if members_card.left_fee > 0
-          possible_ways << "card"
-        end
-      else
-        possible_ways = []
+      if members_card.left_fee > 0
+        possible_ways << "card"
       end
-      possible_ways = possible_ways | ["cash", "pos", "bank", "guazhang", "check"]
-      result = []
-      possible_ways.each{ |k| result << [Balance::BALANCE_WAYS[k], k] }
-      result
+    else
+      possible_ways = []
     end
+    possible_ways = possible_ways | ["cash", "pos", "bank", "guazhang", "check"]
+    result = []
+    possible_ways.each{ |k| result << [Balance::BALANCE_WAYS[k], k] }
+    result
+  end
 
-    def ought_to_activate?
-      (self.booked? || self.to_be_sold?) && Time.now > self.end_time
-    end
+  def ought_to_activate?
+    (self.booked? || self.to_be_sold?) && Time.now > self.end_time
+  end
 
-    def auto_generate_coaches_items
-      OrderItem.order_coaches(self)
-    end
+  def auto_generate_coaches_items
+    OrderItem.order_coaches(self)
+  end
 
-    def auto_generate_book_record_item
-      OrderItem.order_book_record(self)
-    end
+  def auto_generate_book_record_item
+    OrderItem.order_book_record(self)
+  end
 
-    #add to cart
-    def order_goods(goods)
-      goods = [goods] unless goods.is_a?(Array)
-      goods.map { |good| self.order_items.build({:item_type => Good, :item_id => good.id})  }
-    end
+  #add to cart
+  def order_goods(goods)
+    goods = [goods] unless goods.is_a?(Array)
+    goods.map { |good| self.order_items.build({:item_type => Good, :item_id => good.id})  }
+  end
 
-    def hour_range
-      self.start_hour..self.end_hour
-    end
+  def hour_range
+    self.start_hour..self.end_hour
+  end
 
-    def split(order_attributes)
-      new_order = Order.new(order_attributes.deep_except('id'))
-      new_order.state = "booked"
-      new_order.end_date = Date.today
-      new_order.split_from_other = true
-      #  begin
-      Order.transaction do
-        # 无重叠
-        if new_order.hour_range.overlap_window_size(self.hour_range).zero?
-          new_order.errors.add(:base, "时间段与当前预订没有重叠")
-          raise Exception
-          # 新订单时间覆盖当前时间段
-        elsif new_order.hour_range.overlap_window_size(self.hour_range) == self.hours
-          self.destroy
-          new_order.save!
-          # 小于当前时间段
-        elsif self.hour_range.include? new_order.hour_range
-          if self.start_hour == new_order.start_hour
-            self.change_start_hour_to(new_order.end_hour)
-          elsif self.end_hour == new_order.end_hour
-            self.change_end_hour_to(new_order.start_hour)
-          else
-            self.change_end_hour_to(new_order.start_hour)
-            cloned_order = clone_new_order
-            cloned_order.change_start_hour_to(new_order.end_hour)
-          end
-
-          new_order.save!
-          # 部分重叠
-        elsif new_order.hour_range.overlap_window_size(self.hour_range) < self.hours
-          self.start_hour < new_order.start_hour ? self.change_end_hour_to(new_order.start_hour) : self.change_start_hour_to(new_order.end_hour) 
-          new_order.save!
-        end
-      end
-
-      true
-      #  rescue Exception => e
-      #    puts e
-      #    return false
-      #  end
-
-      new_order
-    end
-
-    def change_start_hour_to(new_start_hour)
-      self.court_book_record.update_attributes(:start_hour => new_start_hour)
-      self.coach_book_records.each do |element|
-        element.update_attributes(:start_hour => new_start_hour)
-      end
-    end
-
-    def change_end_hour_to(new_end_hour)
-      self.court_book_record.update_attributes(:end_hour => new_end_hour)
-      self.coach_book_records.each do |element|
-        element.update_attributes(:end_hour => new_end_hour)
-      end
-    end
-
-    def clone_new_order
-      order = Order.new(self.attributes.except("id"))
-      order.court_book_record = CourtBookRecord.new(self.court_book_record.attributes.except("id"))
-      self.coach_book_records.each do |element|
-        order.coach_book_records  << CoachBookRecord.new(element.attributes.except("id"))
-      end
-      order.save
-      order
-    end
-
-    def is_order_use_zige_card?
-      is_member? && members_card.card.is_zige_card?
-    end
-
-    def amount
-      balance.real_amount
-    end
-
-    def book_record_amount
-      is_member? && members_card.card.is_counter_card? ? hours : book_record_item.amount
-    end
-
-    def product_items
-      self.order_items.select{|oi| Good === oi.item} 
-    end
-
-    def product_amount
-      p_amount = product_items.map(&:amount).sum
-      p_amount += coach_items.map(&:amount).sum unless coach_items.blank?
-      p_amount
-    end
-
-    def total_amount
-      self.product_amount + self.book_record_amount
-    end
-
-    def can_consume_goods?
-      members_card && members_card.can_consume_goods? 
-    end
-
-
-    def advanced_order?
-      !!advanced_order
-    end
-
-    def extra_fee_for_no_member
-      return 0 if self.is_member? or self.non_member.nil?
-      return self.total_amount - self.non_member.earnest 
-    end
-
-
-    def expired?
-      Time.now > court_book_record.start_time
-    end
-
-    def status_desc
-      desc = case
-             when  booked?  then           expired? ? "已预订（过期）" : "预订"
-             when  balanced?    then   "已结算"
-             when  to_be_sold?     then
-               expired? ? "停止代买" : "代卖中"
-             when  actived?      then   "开打中"
-             else "过期"
-             end
-      desc
-    end
-
-    def status_color
-      color = case
-              when  booked?         then  "color01"
-              when  balanced?       then  "color05"
-              when  to_be_sold?     then  "color04"
-              when  activated?        then  "color03"
-              else "color02"
-              end
-      color
-    end
-
-    def return_money
-      self.balances.each do |balance|
-        next unless ["counter", "card"].include? balance.balance_way 
-        if balance.balance_way == "counter"
-          self.members_card.update_column(:left_times, self.members_card.left_times + balance.final_price.to_i)
+  def split(order_attributes)
+    new_order = Order.new(order_attributes.deep_except('id'))
+    new_order.state = "booked"
+    new_order.end_date = Date.today
+    new_order.split_from_other = true
+    #  begin
+    Order.transaction do
+      # 无重叠
+      if new_order.hour_range.overlap_window_size(self.hour_range).zero?
+        new_order.errors.add(:base, "时间段与当前预订没有重叠")
+        raise Exception
+        # 新订单时间覆盖当前时间段
+      elsif new_order.hour_range.overlap_window_size(self.hour_range) == self.hours
+        self.destroy
+        new_order.save!
+        # 小于当前时间段
+      elsif self.hour_range.include? new_order.hour_range
+        if self.start_hour == new_order.start_hour
+          self.change_start_hour_to(new_order.end_hour)
+        elsif self.end_hour == new_order.end_hour
+          self.change_end_hour_to(new_order.start_hour)
+        else
+          self.change_end_hour_to(new_order.start_hour)
+          cloned_order = clone_new_order
+          cloned_order.change_start_hour_to(new_order.end_hour)
         end
 
-        if balance.balance_way == "card"
-          self.members_card.update_column(:left_fee, self.members_card.left_fee + balance.final_price)
-        end
-      end
-      true
-    end
-
-    def member_name
-      begin
-        is_member? ? member.name : non_member.name
-      rescue 
-        ""
+        new_order.save!
+        # 部分重叠
+      elsif new_order.hour_range.overlap_window_size(self.hour_range) < self.hours
+        self.start_hour < new_order.start_hour ? self.change_end_hour_to(new_order.start_hour) : self.change_start_hour_to(new_order.end_hour) 
+        new_order.save!
       end
     end
 
-    def advance_order_siblings(from_date = nil)
-      from_date ||= self.alloc_date
-      Order.all(:conditions => ["book_records.alloc_date > :from_date && batch_number = :batch_number",
-                { :from_date => from_date, :batch_number => self.batch_number}], :include => :court_book_record)
-      #Order.find_by_sql("SELECT `book_records`.* FROM `book_records` WHERE " + 
-      #                  "`book_records`.`resource_id` = 1 AND `book_records`.`resource_type` = 'Coach'" + 
-      #                  "AND `book_records`.`alloc_date` = '2012-05-20' AND (order_id != 616)" +
-      #                  "AND (start_hour < 8 AND end_hour > 7) LIMIT 1")
+    true
+    #  rescue Exception => e
+    #    puts e
+    #    return false
+    #  end
+
+    new_order
+  end
+
+  def change_start_hour_to(new_start_hour)
+    self.court_book_record.update_attributes(:start_hour => new_start_hour)
+    self.coach_book_records.each do |element|
+      element.update_attributes(:start_hour => new_start_hour)
     end
+  end
+
+  def change_end_hour_to(new_end_hour)
+    self.court_book_record.update_attributes(:end_hour => new_end_hour)
+    self.coach_book_records.each do |element|
+      element.update_attributes(:end_hour => new_end_hour)
+    end
+  end
+
+  def clone_new_order
+    order = Order.new(self.attributes.except("id"))
+    order.court_book_record = CourtBookRecord.new(self.court_book_record.attributes.except("id"))
+    self.coach_book_records.each do |element|
+      order.coach_book_records  << CoachBookRecord.new(element.attributes.except("id"))
+    end
+    order.save
+    order
+  end
+
+  def is_order_use_zige_card?
+    is_member? && members_card.card.is_zige_card?
+  end
+
+  def amount
+    balance.real_amount
+  end
+
+  def book_record_amount
+    is_member? && members_card.card.is_counter_card? ? hours : book_record_item.amount
+  end
+
+  def product_items
+    self.order_items.select{|oi| Good === oi.item} 
+  end
+
+  def product_amount
+    p_amount = product_items.map(&:amount).sum
+    p_amount += coach_items.map(&:amount).sum unless coach_items.blank?
+    p_amount
+  end
+
+  def total_amount
+    self.product_amount + self.book_record_amount
+  end
+
+  def can_consume_goods?
+    members_card && members_card.can_consume_goods? 
+  end
 
 
+  def advanced_order?
+    !!advanced_order
+  end
+
+  def extra_fee_for_no_member
+    return 0 if self.is_member? or self.non_member.nil?
+    return self.total_amount - self.non_member.earnest 
+  end
+
+
+  def expired?
+    Time.now > court_book_record.start_time
+  end
+
+  def status_desc
+    desc = case
+           when  booked?  then           expired? ? "已预订（过期）" : "预订"
+           when  balanced?    then   "已结算"
+           when  to_be_sold?     then
+             expired? ? "停止代买" : "代卖中"
+           when  actived?      then   "开打中"
+           else "过期"
+           end
+    desc
+  end
+
+  def status_color
+    color = case
+            when  booked?         then  "color01"
+            when  balanced?       then  "color05"
+            when  to_be_sold?     then  "color04"
+            when  activated?        then  "color03"
+            else "color02"
+            end
+    color
+  end
+
+  def return_money
+    self.balances.each do |balance|
+      next unless ["counter", "card"].include? balance.balance_way 
+      if balance.balance_way == "counter"
+        self.members_card.update_column(:left_times, self.members_card.left_times + balance.final_price.to_i)
+      end
+
+      if balance.balance_way == "card"
+        self.members_card.update_column(:left_fee, self.members_card.left_fee + balance.final_price)
+      end
     end
+    true
+  end
+
+  def member_name
+    begin
+      is_member? ? member.name : non_member.name
+    rescue 
+      ""
+    end
+  end
+
+  def advance_order_siblings(from_date = nil)
+    from_date ||= self.alloc_date
+    Order.all(:conditions => ["book_records.alloc_date > :from_date && batch_number = :batch_number",
+                              { :from_date => from_date, :batch_number => self.batch_number}], :include => :court_book_record)
+    #Order.find_by_sql("SELECT `book_records`.* FROM `book_records` WHERE " + 
+    #                  "`book_records`.`resource_id` = 1 AND `book_records`.`resource_type` = 'Coach'" + 
+    #                  "AND `book_records`.`alloc_date` = '2012-05-20' AND (order_id != 616)" +
+    #                  "AND (start_hour < 8 AND end_hour > 7) LIMIT 1")
+  end
+
+
+end

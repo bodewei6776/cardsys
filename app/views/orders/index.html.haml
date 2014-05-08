@@ -32,7 +32,8 @@
                   %td.first_td
                     = "#{hour_start}:00-#{hour_start.next}:00"
                   - slice.each do |court|
-                    = court_status_in_period(@date, hour_start, court)
+                    - cache("#{@date}_#{hour_start}_#{court.id}") do
+                      = court_status_in_period(@date, hour_start, court)
 
 
             %div{:style => "clear:both;"}

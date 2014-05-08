@@ -17,6 +17,7 @@ vender/rails
 .irbrc
 public/system/**
 public/back_dbs/**
+public/cache
 public/ckeditor_assets/**
 public/javascripts/.DS_Store
 .bundle/*

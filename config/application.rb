@@ -55,6 +55,7 @@ module Cardsys
     end
 
 
+    config.cache_store = :file_store, Rails.root.to_s + "/public/cache"
 
     config.assets.enabled = true
 

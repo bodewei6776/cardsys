@@ -34,6 +34,8 @@ class BalancesController < ApplicationController
       flash[:notice] =  @balance.errors.messages.values.collect(&:first).join(", ")
       redirect_to :action => "index", :order_id => @order.id
     end
+
+    expire_order(@order)
   end
 
   def print 

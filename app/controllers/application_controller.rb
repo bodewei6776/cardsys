@@ -3,6 +3,8 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+  require "expire_fragment_cache"
+  include ExpireFragmentCache
 
   helper :all # include all helpers, all the time
 
