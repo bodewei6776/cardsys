@@ -23,8 +23,8 @@ group :test do
 end
 
 gem 'twitter-bootstrap-rails', '2.0.3'
-gem 'newrelic_rpm',"3.5.8.72"
-gem 'ruby-prof'
+#gem 'newrelic_rpm',"3.5.8.72"
+#gem 'ruby-prof'
 
 gem 'jquery-ui-rails'
 
