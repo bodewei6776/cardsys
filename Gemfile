@@ -12,6 +12,7 @@ gem 'jquery-rails'
 gem 'highline'
 gem 'awesome_print', :require => 'ap'
 gem 'authlogic', '3.1.0'
+gem 'whenerver',  :require => false
 
 
 gem 'bootstrap-will_paginate'
