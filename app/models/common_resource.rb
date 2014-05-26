@@ -60,7 +60,8 @@ class CommonResource < ActiveRecord::Base
     end
 
     def is_summer_time?(date = Date.today)
-      summer_time && summer_time.common_resource_details.map(&:detail_name).include?(date.mon.to_s)
+      return true
+      #summer_time && summer_time.common_resource_details.map(&:detail_name).include?(date.mon.to_s)
     end
 
     def is_winter_time?(date = Date.today)
@@ -76,15 +77,32 @@ class CommonResource < ActiveRecord::Base
       vacation ? vacation.is_holiday? : is_weekend?(date)
     end
 
+    #def date_type(date = Date.today)
+      #period_type = where(:name => "period_type").first
+      #return nil unless period_type
+      #unless is_holiday?(date)
+        #detail_name = is_summer_time?(date) ? Summer_Time_Name_CHN : Winner_Tiem_Name_CHN
+        #period_type.common_resource_details.where(:detail_name => detail_name).first
+      #else
+        #period_type.common_resource_details.where(:detail_name => Holiday_Time_Name_CHN).first
+      #end
+    #end
+
     def date_type(date = Date.today)
+      d = date.to_s
+      return @cache[d] if @cache && @cache[d]
+      @cache = {} unless @cache
       period_type = where(:name => "period_type").first
       return nil unless period_type
-      unless is_holiday?(date)
-        detail_name = is_summer_time?(date) ? Summer_Time_Name_CHN : Winner_Tiem_Name_CHN
-        period_type.common_resource_details.where(:detail_name => detail_name).first
-      else
-        period_type.common_resource_details.where(:detail_name => Holiday_Time_Name_CHN).first
-      end
+      res = unless is_holiday?(date)
+              detail_name = is_summer_time?(date) ? Summer_Time_Name_CHN : Winner_Tiem_Name_CHN
+              period_type.common_resource_details.where(:detail_name => detail_name).first
+            else
+              period_type.common_resource_details.where(:detail_name => Holiday_Time_Name_CHN).first
+            end
+
+      @cache[d] = res
+      res
     end
 
     def winter_time
