@@ -40,7 +40,7 @@ jQuery(function($){
         dayNamesMin: ['日','一','二','三','四','五','六'],
         weekHeader: '周',
         dateFormat: 'yy-mm-dd',
-        firstDay: 1,
+        firstDay: 7,
         isRTL: false,
         showMonthAfterYear: true,
         yearSuffix: ''};
