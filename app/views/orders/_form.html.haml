@@ -78,7 +78,7 @@
 
   #div_seprator{:style => "clear: both;"}
   - control_helper("login", "操作人", :left) do
-    = f.text_field :login, :value => current_user.login
+    = f.text_field :login
 
   - control_helper("password", "密码", :right) do
     = f.password_field :password
