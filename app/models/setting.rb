@@ -68,7 +68,7 @@ class Setting
 
     # 月开始时间
     def financial_begin_day_of_every_month
-      25
+      1
     end
 
     def user_session_image
