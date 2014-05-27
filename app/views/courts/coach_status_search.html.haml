@@ -15,13 +15,17 @@
 
 
   - control_helper("start_date", "开始日期", :left) do
-    = text_field_tag :search_date, params[:search_date], :class => "select-date"
+    = text_field_tag :search_begin_date, params[:search_begin_date], :class => "select-date"
+
+  - control_helper("end_date", "结束日期", :right) do
+    = text_field_tag :search_end_date, params[:search_end_date], :class => "select-date"
 
 
-  - control_helper("start_hour", "预订时段", :right) do
+  - control_helper("start_hour", "预订时段", :left) do
     = select_tag :start_hour, options_for_select((0..23).to_a), :onchange => "check_time();", :style => "width: 110px;"
     = select_tag :end_hour, options_for_select((0..23).to_a, 23), :onchange => "check_time();", :style => "width: 110px;"
 
+  %hr
 
   .form-actions
     = submit_tag "搜索", :class => "btn "
@@ -44,7 +48,7 @@
         %td= index + 1
         %td= coach_book_record.coach.try(:name)
         %td= coach_book_record.order.member_name
-        %td= coach_book_record.start_time.to_chinese_mdh
+        %td= coach_book_record.start_time.to_chinese_ymd
         %td= coach_book_record.order.court_book_record.court.try(:name)
         %td
           = coach_book_record.start_hour
