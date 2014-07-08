@@ -110,7 +110,7 @@ class Order < ActiveRecord::Base
     self.advance_order_siblings(self.alloc_date).each do |element|
       order_attributes["court_book_record_attributes"]["id"] = element.court_book_record.id
       order_attributes["court_book_record_attributes"]["alloc_date"] = element.alloc_date
-      expire_orde(element)
+      expire_order(element)
       element.update_attributes order_attributes
     end
 
