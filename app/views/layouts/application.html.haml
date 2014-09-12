@@ -69,7 +69,7 @@
   %body
     .navbar.navbar-fixed-top.non-printable
       .navbar-inner
-        .container
+        .container-fluid
           %a.btn.btn-navbar{"data-target" => ".nav-collapse", "data-toggle" => "collapse"}
             %span.icon-bar
             %span.icon-bar
@@ -84,9 +84,9 @@
               %li= link_to "修改密码", change_password_users_path
               %li= link_to "退出", user_session_path, :method => :destroy
 
-    .container
+    .container-fluid
       .content
-        .row
+        .row-fluid
           .span2.non-printable
             #datepicker
             %ul.nav-tabs.nav-stacked.nav

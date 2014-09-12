@@ -22,6 +22,7 @@ Cardsys::Application.routes.draw do
 
   get "welcome/backup"
   delete "welcome/delete_backup"
+  delete "welcome/clear_cache"
 
   get "welcome/about"
   get "welcome/backup_db"

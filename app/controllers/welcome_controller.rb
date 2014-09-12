@@ -27,6 +27,11 @@ class WelcomeController < ApplicationController
     redirect_to backup_path
   end
 
+  def clear_cache
+    system("rm -rf #{Rails.root.to_s}/public/cache/*")
+    redirect_to :back
+  end
+
   def about
   end
 

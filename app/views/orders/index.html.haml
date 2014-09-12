@@ -20,7 +20,7 @@
     - Setting.court_types.each_with_index do |(id, court_type), index|
       %div{:id => id, :class => index == 0 ? "active tab-pane" : "tab-pane"}
         %table.index_order_table.table
-          - @courts.select{|c| c.court_type == id.to_s }.each_slice(6) do |slice|  
+          - @courts.select{|c| c.court_type == id.to_s }.each_slice(8) do |slice|  
             %tr.court_name
               %td.tit.first_td 时段/场地
               - slice.each_with_index do |court, index|

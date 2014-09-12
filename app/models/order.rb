@@ -107,6 +107,7 @@ class Order < ActiveRecord::Base
 
   def all_update_attributes(order_attributes)
     self.update_attributes(order_attributes)
+    expire_order(self)
     self.advance_order_siblings(self.alloc_date).each do |element|
       order_attributes["court_book_record_attributes"]["id"] = element.court_book_record.id
       order_attributes["court_book_record_attributes"]["alloc_date"] = element.alloc_date
@@ -142,10 +143,10 @@ class Order < ActiveRecord::Base
   def coach_valid
     return true if coach_ids.blank?
     coach_book_records.each do |c|
-      c.start_hour = start_hour 
+      c.start_hour = start_hour
       c.end_hour = end_hour
       c.alloc_date = alloc_date
-      errors.add(:base, c.conflict_book_record.to_s + "已经被预约") if c.conflict?
+      errors.add(:base, c.conflict_book_record.to_s) if c.conflict?
     end
   end
 
