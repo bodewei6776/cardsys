@@ -23,6 +23,7 @@ class Setting
        #"国家网球中心"
       "博徳维网球中心"
       "约顿气膜网球馆"
+      "宏昌竣体育公园网羽俱乐部"
     end
 
     def site_url
@@ -75,6 +76,7 @@ class Setting
     def user_session_image
       #"user_session_new.jpg"
       "bdwuser_session_new.jpeg"
+      "hcjuser_session_new.jpeg"
     end
 
   end
