@@ -152,7 +152,7 @@ module OrdersHelper
   end
 
   def court_status_in_period(date, start_hour, court)
-    return "<td>场地不可用</td>" unless court.is_useable_in_time_span?(PeriodPrice.period_by_date_and_start_hour(date, start_hour))
+    return raw("<td>场地不可用</td>") unless court.is_useable_in_time_span?(PeriodPrice.period_by_date_and_start_hour(date, start_hour))
     book_record = court.book_record_start_at(date, start_hour)
     return content_tag(:td, content_tag(:a, display_content(book_record),:href=> edit_order_path(book_record.order), :class => "popup-new-window"), 
                        :rowspan => book_record.hours, :class => "#{book_record.order.status_color}") if book_record.present? && book_record.order
