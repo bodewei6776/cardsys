@@ -62,6 +62,7 @@ table.report_table tr.report_title td{
 {
   width: 100%;
   font-size:12px;
+  table-layout: fixed;
 }
 
 
