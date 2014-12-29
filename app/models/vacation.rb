@@ -14,10 +14,11 @@ class Vacation < ActiveRecord::Base
   validate :end_date_should_be_after_now
   validate :end_date_should_be_start_date
   validate :should_not_duplicate_with_other_time_span
-
   def should_not_duplicate_with_other_time_span
-    self.errors.add(:base,"时间段冲突了") if self.class.exists?(["(start_date < :end_date and :end_date < end_date) or (start_date < :start_date and :start_date < end_date)",{:start_date => start_date,:end_date => end_date}])
+    self.errors.add(:base,"时间段冲突了") if self.class.exists?(["((start_date < :end_date and :end_date < end_date) or
+                                                                       (start_date < :start_date and :start_date < end_date)) AND :vacation_type",{:start_date => start_date,:end_date => end_date, :vacation_type => :vacation_type}])
   end
+
 
   def start_date_should_be_after_now
     return true if self.start_date.nil?
